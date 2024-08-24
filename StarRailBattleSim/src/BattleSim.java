@@ -1,3 +1,4 @@
+import amelia.Tests;
 import battleLogic.Battle;
 import battleLogic.IBattle;
 import battleLogic.log.DefaultLogger;
@@ -25,12 +26,13 @@ import static teams.PlayerTeam.*;
 public class BattleSim {
 
     public static void main(String[] args) {
-        debugTeam();
+        //debugTeam();
         //generateReportYunli();
         //generateReportFeixiao();
         //generateReportFeixiaoLightconeReport();
         //generateReportFeixiaoRelicReport();
         //ameliasSanityCheck();
+        Tests.runTests();
     }
 
     public static void debugTeam() {
