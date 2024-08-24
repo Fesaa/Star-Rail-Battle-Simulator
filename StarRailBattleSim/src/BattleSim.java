@@ -1,3 +1,4 @@
+import amelia.Tests;
 import battleLogic.Battle;
 import battleLogic.IBattle;
 import battleLogic.log.DefaultLogger;
@@ -5,6 +6,7 @@ import battleLogic.log.lines.metrics.FinalDmgMetrics;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
 import enemies.FireWindImgLightningWeakEnemy;
+import javafx.util.Pair;
 import report.Report;
 import teams.EnemyTeam;
 import teams.PlayerTeam;
@@ -29,7 +31,8 @@ public class BattleSim {
         //generateReportFeixiao();
         //generateReportFeixiaoLightconeReport();
         //generateReportFeixiaoRelicReport();
-        ameliasSanityCheck();
+        //ameliasSanityCheck();
+        Tests.runTests();
     }
 
     public static void debugTeam() {
