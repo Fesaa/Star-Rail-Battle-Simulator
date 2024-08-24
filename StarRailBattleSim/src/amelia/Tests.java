@@ -2,6 +2,7 @@ package amelia;
 
 import battleLogic.Battle;
 import battleLogic.IBattle;
+import battleLogic.log.MetricLogger;
 import battleLogic.log.VoidLogger;
 import battleLogic.log.lines.metrics.BattleMetrics;
 import battleLogic.log.lines.metrics.FinalDmgMetrics;
@@ -22,6 +23,8 @@ import lightcones.hunt.IVentureForthToHunt;
 import lightcones.hunt.OnlySilenceRemains;
 import lightcones.hunt.Swordplay;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -109,12 +112,23 @@ public class Tests {
     }
 
     private static IBattle setupBattle(List<AbstractCharacter<?>> team, List<BattleResult> results) {
+        String key = team
+                .stream()
+                .map(c -> c.getClass().getSimpleName() + "(" + c.lightcone.getClass().getSimpleName() + ")")
+                .collect(Collectors.joining(" - "));
+        PrintStream printStream;
+        try {
+            printStream = new PrintStream(new FileOutputStream("export_tests/" + key + ".log"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         BattleResult result = new BattleResult();
         result.team = team;
-        IBattle battle = new Battle(b -> new VoidLogger(b) {final
+        IBattle battle = new Battle(b -> new MetricLogger(b, printStream) {final
 
             @Override
             public void handle(FinalDmgMetrics finalDmgMetrics) {
+                super.handle(finalDmgMetrics);
                 result.finalDmgMetrics = finalDmgMetrics;
                 synchronized (results) {
                     results.add(result);
@@ -123,11 +137,13 @@ public class Tests {
 
             @Override
             public void handle(BattleMetrics battleMetrics) {
+                super.handle(battleMetrics);
                 result.battleMetrics = battleMetrics;
             }
 
             @Override
             public void handle(PostCombatPlayerMetrics postCombatPlayerMetrics) {
+                super.handle(postCombatPlayerMetrics);
                 result.postCombatPlayerMetrics = postCombatPlayerMetrics;
             }
         });

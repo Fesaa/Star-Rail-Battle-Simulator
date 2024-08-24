@@ -4,6 +4,7 @@ import characters.AbstractCharacter;
 import characters.bronya.Bronya;
 import characters.feixiao.Feixiao;
 import characters.gallagher.Gallagher;
+import characters.goal.shared.ForceAdvanceGoal;
 import characters.huohuo.Huohuo;
 import characters.march.SwordMarch;
 import characters.robin.Robin;
@@ -23,6 +24,7 @@ import relics.ornament.ForgeOfTheKalpagniLatern;
 import relics.ornament.LushakaTheSunkenSeas;
 import relics.ornament.PenaconyLandOfTheDreams;
 import relics.ornament.RutilentArena;
+import relics.ornament.SpringhtlyVonwacq;
 import relics.relics.LongevousDisciple;
 import relics.relics.MessengerTraversingHackerspace;
 import relics.relics.PasserbyOfWanderingCloud;
@@ -67,7 +69,7 @@ public class FeixiaoTeams {
     }
 
     static AbstractCharacter<?> myBroyna(LightConeSupplier lightconeSupplier, int speed) {
-        AbstractCharacter<?> broyna = new Bronya();
+        Bronya broyna = new Bronya();
         broyna.EquipLightcone(lightconeSupplier.get(broyna));
         broyna.EquipRelicSet(new LongevousDisciple(broyna));
         broyna.EquipRelicSet(new BrokenKeel(broyna));
@@ -82,6 +84,9 @@ public class FeixiaoTeams {
                 .addSubStat(RelicStats.Stats.EFFECT_RES, 5);
 
         stats.equipTo(broyna);
+
+        // DMG goes wayyy down if we force advance
+        //broyna.registerGoal(-10, new ForceAdvanceGoal<>(broyna, Robin.NAME));
         return broyna;
     }
 
@@ -121,8 +126,8 @@ public class FeixiaoTeams {
                 addMainStat(RelicStats.Stats.ATK_PER)
                 .addMainStat(RelicStats.Stats.ERR)
                 .addSubStat(RelicStats.Stats.ATK_PER, 7)
-                .addSubStat(RelicStats.Stats.SPEED, 8).
-                addSubStat(RelicStats.Stats.ATK_FLAT, 3)
+                //.addSubStat(RelicStats.Stats.SPEED, 8)
+                .addSubStat(RelicStats.Stats.ATK_FLAT, 3)
                 .addSubStat(RelicStats.Stats.EFFECT_RES, 6);
 
         stats.equipTo(robin);

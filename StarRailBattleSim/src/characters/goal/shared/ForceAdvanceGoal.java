@@ -19,6 +19,10 @@ public class ForceAdvanceGoal<C extends AbstractCharacter<C> & ForceAdvanceGoal.
             return TurnGoalResult.PASS;
         }
 
+        if (!getBattle().getActionValueMap().containsKey(target)) {
+            return TurnGoalResult.PASS;
+        }
+
         if (getBattle().getSkillPoints() > 2) {
             if (target.currentEnergy + target.skillEnergyGain >= target.ultCost) {
                 this.character.setNextAdvance(target);
