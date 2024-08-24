@@ -11,6 +11,7 @@ import characters.ruanmei.RuanMei;
 import lightcones.AbstractLightcone;
 import lightcones.abundance.NightOfFright;
 import lightcones.abundance.QuidProQuo;
+import lightcones.harmony.ButTheBattleIsntOver;
 import lightcones.harmony.FlowingNightglow;
 import lightcones.hunt.CruisingInTheStellarSea;
 import lightcones.hunt.IVentureForthToHunt;
@@ -31,29 +32,34 @@ import relics.relics.ThiefOfShootingMeteor;
 import relics.relics.WatchMakerMasterOfDreamMachinations;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class FeixiaoTeams {
 
-    public static ArrayList<AbstractCharacter<?>> FeixiaoMarchRobinAnyGallaghger(LightConeSupplier lightconeSupplier) {
+    public static List<AbstractCharacter<?>> FeixiaoMarchRobinAnyGallaghger(LightConeSupplier lightconeSupplier) {
         return FeixiaoMarch(
                 () -> myRobin(lightconeSupplier),
                 FeixiaoTeams::myGallagher
         );
     }
 
-    public static ArrayList<AbstractCharacter<?>> FeixiaoMarchSupportAnyGallaghger(Supplier<AbstractCharacter<?>> supportSupplier) {
+    public static List<AbstractCharacter<?>> FeixiaoMarchSupportAnyGallaghger(Supplier<AbstractCharacter<?>> supportSupplier) {
         return FeixiaoMarch(supportSupplier, FeixiaoTeams::myGallagher);
     }
 
-    public static ArrayList<AbstractCharacter<?>> FeixiaoMarch(Supplier<AbstractCharacter<?>> supportSupplier, Supplier<AbstractCharacter<?>> fourthSupplier) {
-        ArrayList<AbstractCharacter<?>> team = new ArrayList<>();
+    public static List<AbstractCharacter<?>> FeixiaoMarch(Supplier<AbstractCharacter<?>> supportSupplier, Supplier<AbstractCharacter<?>> fourthSupplier) {
+        List<AbstractCharacter<?>> team = new ArrayList<>();
         team.add(myFeixiao());
         team.add(myMarch());
         team.add(supportSupplier.get());
         team.add(fourthSupplier.get());
 
         return team;
+    }
+
+    static AbstractCharacter<?> myBroyna() {
+        return myBroyna(ButTheBattleIsntOver::new, 5);
     }
 
     static AbstractCharacter<?> myBroyna(LightConeSupplier lightconeSupplier) {
@@ -147,8 +153,12 @@ public class FeixiaoTeams {
     }
 
     static AbstractCharacter<?> myMarch() {
+        return myMarch(CruisingInTheStellarSea::new);
+    }
+
+    static AbstractCharacter<?> myMarch(LightConeSupplier lightConeSupplier) {
         AbstractCharacter<?> march = new SwordMarch();
-        march.EquipLightcone(new CruisingInTheStellarSea(march));
+        march.EquipLightcone(lightConeSupplier.get(march));
         march.EquipRelicSet(new PrisonerInDeepConfinement(march, false));
         march.EquipRelicSet(new MessengerTraversingHackerspace(march, false));
         march.EquipRelicSet(new RutilentArena(march));
@@ -168,8 +178,12 @@ public class FeixiaoTeams {
     }
 
     static AbstractCharacter<?> myFeixiao() {
+        return myFeixiao(IVentureForthToHunt::new);
+    }
+
+    static AbstractCharacter<?> myFeixiao(LightConeSupplier lightConeSupplier) {
         AbstractCharacter<?> feixiao = new Feixiao();
-        feixiao.EquipLightcone(new IVentureForthToHunt(feixiao));
+        feixiao.EquipLightcone(lightConeSupplier.get(feixiao));
         feixiao.EquipRelicSet(new TheWindSoaringValorous(feixiao));
         feixiao.EquipRelicSet(new DuranDynastyOfRunningWolves(feixiao));
 

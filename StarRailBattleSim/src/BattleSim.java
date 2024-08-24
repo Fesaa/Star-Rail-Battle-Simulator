@@ -6,7 +6,6 @@ import battleLogic.log.lines.metrics.FinalDmgMetrics;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
 import enemies.FireWindImgLightningWeakEnemy;
-import javafx.util.Pair;
 import report.Report;
 import teams.EnemyTeam;
 import teams.PlayerTeam;
@@ -258,7 +257,7 @@ public class BattleSim {
         });
     }
 
-    private static class Pair<K, V> {
+    public static class Pair<K, V> {
         private final K key;
         private final V value;
 

@@ -10,16 +10,25 @@ import battleLogic.log.lines.metrics.StatType;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
 import enemies.FireWindImgLightningWeakEnemy;
+import enemies.PhysFireWeakEnemy;
+import lightcones.AbstractLightcone;
 import lightcones.harmony.ButTheBattleIsntOver;
 import lightcones.harmony.FlowingNightglow;
 import lightcones.harmony.ForTomorrowsJourney;
 import lightcones.harmony.MemoriesOfThePast;
 import lightcones.harmony.PoisedToBloom;
+import lightcones.hunt.CruisingInTheStellarSea;
+import lightcones.hunt.IVentureForthToHunt;
+import lightcones.hunt.OnlySilenceRemains;
+import lightcones.hunt.Swordplay;
 
 import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -38,84 +47,68 @@ public class Tests {
 
     private static final Pattern ANSI_ESCAPE = Pattern.compile("\033\\[[;\\d]*m");
 
-    static final List<BattleResult> results = new ArrayList<>();
+
+    static final List<AbstractCharacter<?>> baseTeam = FeixiaoMarch(
+            () -> myRobin(FlowingNightglow::new),
+            FeixiaoTeams::myGallagher
+    );
+    static final List<AbstractCharacter<?>> baseTeam2 = FeixiaoMarch(
+            () -> myRobin(FlowingNightglow::new),
+            () -> myBroyna(ButTheBattleIsntOver::new)
+    );
     static final List<List<AbstractCharacter<?>>> teams  = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams2  = new ArrayList<>();
 
     static {
-        teams.add(FeixiaoMarch(
-                () -> myRobin(FlowingNightglow::new),
-                FeixiaoTeams::myGallagher
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(ForTomorrowsJourney::new),
-                FeixiaoTeams::myGallagher
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(PoisedToBloom::new),
-                FeixiaoTeams::myGallagher
-        ));
 
-        teams.add(FeixiaoMarch(
-                () -> myRobin(PoisedToBloom::new),
-                () -> myBroyna(ButTheBattleIsntOver::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(PoisedToBloom::new),
-                () -> myBroyna(PoisedToBloom::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(FlowingNightglow::new),
-                () -> myBroyna(ButTheBattleIsntOver::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(FlowingNightglow::new),
-                () -> myBroyna(PoisedToBloom::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(ForTomorrowsJourney::new),
-                () -> myBroyna(ButTheBattleIsntOver::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(ForTomorrowsJourney::new),
-                () -> myBroyna(PoisedToBloom::new)
-        ));
+        repeater((LightConeSupplier robinLightcone) -> {
+            repeater((LightConeSupplier feixiaoLightcone) -> {
+                repeater((LightConeSupplier marchLightcone) -> {
+                    teams.add(
+                      of(
+                              myFeixiao(feixiaoLightcone),
+                              myMarch(marchLightcone),
+                              myRobin(robinLightcone),
+                              myGallagher()
+                      )
+                    );
+                }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
+            }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
+        }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
 
-        teams.add(FeixiaoMarch(
-                () -> myRobin(PoisedToBloom::new),
-                () -> myRuanMei(MemoriesOfThePast::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(PoisedToBloom::new),
-                () -> myRuanMei(PoisedToBloom::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(FlowingNightglow::new),
-                () -> myRuanMei(MemoriesOfThePast::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(FlowingNightglow::new),
-                () -> myRuanMei(PoisedToBloom::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(ForTomorrowsJourney::new),
-                () -> myRuanMei(MemoriesOfThePast::new)
-        ));
-        teams.add(FeixiaoMarch(
-                () -> myRobin(ForTomorrowsJourney::new),
-                () -> myRuanMei(PoisedToBloom::new)
-        ));
+        repeater((LightConeSupplier robinLightcone) -> {
+            repeater((LightConeSupplier feixiaoLightcone) -> {
+                repeater((LightConeSupplier marchLightcone) -> {
+                    teams2.add(
+                            of(
+                                    myFeixiao(feixiaoLightcone),
+                                    myMarch(marchLightcone),
+                                    myRobin(robinLightcone),
+                                    myBroyna()
+                            )
+                    );
+                }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
+            }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
+        }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
     }
 
     public static void runTests() {
-        setupBattle(teams.get(0)).Start(550);
-        teams.parallelStream()
-                .skip(1)
-                .forEach(team -> setupBattle(team).Start(550));
-
-        compareBattleResults();
+        runTests(baseTeam, teams);
+        System.out.println("\n\n\n");
+        runTests(baseTeam2, teams2);
     }
 
-    private static IBattle setupBattle(List<AbstractCharacter<?>> team) {
+    private static void runTests(List<AbstractCharacter<?>> baseTeam, List<List<AbstractCharacter<?>>> teams) {
+        int battleAV = 550;
+        List<BattleResult> results = new ArrayList<>();
+        setupBattle(baseTeam, results).Start(battleAV);
+        teams.parallelStream()
+                .forEach(team -> setupBattle(team, results).Start(battleAV));
+
+        compareBattleResults(results);
+    }
+
+    private static IBattle setupBattle(List<AbstractCharacter<?>> team, List<BattleResult> results) {
         BattleResult result = new BattleResult();
         result.team = team;
         IBattle battle = new Battle(b -> new VoidLogger(b) {final
@@ -123,8 +116,8 @@ public class Tests {
             @Override
             public void handle(FinalDmgMetrics finalDmgMetrics) {
                 result.finalDmgMetrics = finalDmgMetrics;
-                synchronized (Tests.results) {
-                    Tests.results.add(result);
+                synchronized (results) {
+                    results.add(result);
                 }
             }
 
@@ -140,59 +133,108 @@ public class Tests {
         });
         List<AbstractEnemy> enemyTeam = new ArrayList<>();
         enemyTeam.add(new FireWindImgLightningWeakEnemy(0, 0));
+        enemyTeam.add(new PhysFireWeakEnemy(0, 0));
         battle.setEnemyTeam(enemyTeam);
         battle.setPlayerTeam(team);
 
         return battle;
     }
 
-    private static void compareBattleResults() {
-        int baseTotalPlayerDmg = -1;
-        float baseFinalDPAV = -1;
-
+    private static void compareBattleResults(List<BattleResult> results) {
         List<String> headers = new ArrayList<>();
-        headers.add("Team");
-        headers.add("Total Player Dmg");
-        headers.add("Final DPAV");
+        headers.add("Character 1");
+        headers.add("Character 2");
+        headers.add("Character 3");
+        headers.add("Character 4");
+        headers.add("DMG");
+        headers.add("DPAV");
+        headers.add("% base");
+        headers.add("% last");
         List<List<String>> columns = new ArrayList<>();
-        for (BattleResult result : results) {
-            columns.add(formatResult(result, baseTotalPlayerDmg, baseFinalDPAV));
 
-            if (baseTotalPlayerDmg == -1) {
-                baseTotalPlayerDmg = result.finalDmgMetrics.totalPlayerDmg;
-            }
-            if (baseFinalDPAV == -1) {
-                baseFinalDPAV = result.battleMetrics.finalDPAV;
-            }
+        columns.add(formatResult(results.get(0)));
+        columns.add(of("", "", "", "", "", ""));
+
+        float baseFinalDPAV = results.get(0).battleMetrics.finalDPAV;
+        float lastFinalDPAV = results.get(0).battleMetrics.finalDPAV;
+
+        results.remove(0);
+        results = results
+                .stream()
+                .sorted((a, b) -> {
+                    List<String> ca = a.team
+                            .stream()
+                            .map(c -> String.format("%s(%s)", c.name, c.lightcone.toString()))
+                            .collect(Collectors.toList());
+
+                    List<String> cb = b.team
+                            .stream()
+                            .map(c -> String.format("%s(%s)", c.name, c.lightcone.toString()))
+                            .collect(Collectors.toList());
+
+                    return new StringListComparator().compare(ca, cb);
+                }).collect(Collectors.toList());
+
+        for (BattleResult result : results) {
+            List<String> res = formatResult(result, baseFinalDPAV, lastFinalDPAV);
+            if (res != null)
+                columns.add(res);
+
+
+            lastFinalDPAV = result.battleMetrics.finalDPAV;
         }
 
         printTable(System.out, headers, columns);
     }
 
-    private static List<String> formatResult(BattleResult result, int lastTotalPlayerDmg, float lastFinalDPAV) {
+    private static List<String> formatResult(BattleResult result) {
+        return formatResult(result, -1, -1);
+    }
+
+    private static List<String> formatResult(BattleResult result,float baseFinalDPAV, float lastFinalDPAV) {
         int totalPlayerDmg = result.finalDmgMetrics.totalPlayerDmg;
         float finalDPAV = result.battleMetrics.finalDPAV;
 
-        List<String> columns = new ArrayList<>();
+        List<String> columns = result.team
+                .stream()
+                .map(c -> String.format("%s(%s)", c.name, c.lightcone.toString()))
+                .collect(Collectors.toList());
 
-        String ID = result.team.stream().map(c -> String.format("%s(%s)", c.name, c.lightcone.toString())).collect(Collectors.joining(", "));
-        columns.add(ID);
-
-        String totalPlayerDmgStr = "" + totalPlayerDmg;
-        if (lastTotalPlayerDmg != -1) {
-            float per = calculatePercentageChange(lastTotalPlayerDmg, totalPlayerDmg);
-            totalPlayerDmgStr += String.format(" %s(%+.2f%%)%s", per > 0 ? GREEN : RED, per, RESET);
+        columns.add("" + totalPlayerDmg);
+        columns.add("" + finalDPAV);
+        if (baseFinalDPAV != -1) {
+            float per = calculatePercentageChange(baseFinalDPAV, finalDPAV);
+            if (per == 0) {
+                return null;
+            }
+            float per2 = calculatePercentageChange(lastFinalDPAV, finalDPAV);
+            if (per2 == 0) {
+                return null;
+            }
+            columns.add(String.format("%s(%+.2f%%)%s", colour(per), per, RESET));
+            columns.add(String.format("%s(%+.2f%%)%s", colour(per2), per2, RESET));
+        } else {
+            columns.add("");
+            columns.add("");
         }
-        columns.add(totalPlayerDmgStr);
-
-        String finalDPAVStr = "" + finalDPAV;
-        if (lastFinalDPAV != -1) {
-            float per = calculatePercentageChange(lastFinalDPAV, finalDPAV);
-            finalDPAVStr += String.format(" %s(%+.2f%%)%s", per > 0 ? GREEN : RED, per, RESET);
-        }
-        columns.add(finalDPAVStr);
 
         return columns;
+    }
+
+    private static String colour(float per) {
+        if (per > 20) {
+            return BLUE;
+        }
+        if (per > 0) {
+            return GREEN;
+        }
+        if (per < -20) {
+            return RED;
+        }
+        if (per < 0) {
+            return YELLOW;
+        }
+        return RESET;
     }
 
 
@@ -240,7 +282,35 @@ public class Tests {
     }
 
     private static String padRight(String s, int n) {
-        return String.format("%-" + n + "s", s);
+        int diff = s.length() - getStrippedLength(s);
+        return String.format("%-" + (n+diff) + "s", s);
+    }
+
+    @SafeVarargs
+    static <T> List<T> of(T... elements) {
+        return Arrays.asList(elements);
+    }
+
+    @SafeVarargs
+    private static <T> void repeater(Consumer<T> c, T ...s) {
+        for (T t : s) {
+            c.accept(t);
+        }
+    }
+
+    public static class StringListComparator implements Comparator<List<String>> {
+
+        @Override
+        public int compare(List<String> o1, List<String> o2) {
+            int maxIndex = Math.min(o1.size(), o2.size());
+            for (int i = 0; i < maxIndex; i++) {
+                int res = o1.get(i).compareTo(o2.get(i));
+                if (res != 0) {
+                    return res;
+                }
+            }
+            return Integer.compare(o1.size(), o2.size());
+        }
     }
 
 }
