@@ -47,8 +47,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     public float maxEnergy;
     public float currentEnergy;
     public float ultCost;
-    protected int basicEnergyGain = 20;
-    protected int skillEnergyGain = 30;
+    public int basicEnergyGain = 20;
+    public int skillEnergyGain = 30;
     protected int ultEnergyGain = 5;
 
     public int tauntValue;

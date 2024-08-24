@@ -5,6 +5,7 @@ import characters.AbstractCharacter;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
+import characters.goal.shared.ForceAdvanceGoal;
 import enemies.AbstractEnemy;
 import powers.AbstractPower;
 import powers.PermPower;
@@ -14,11 +15,13 @@ import powers.TracePower;
 
 import java.util.ArrayList;
 
-public class Bronya extends AbstractCharacter<Bronya> {
+public class Bronya extends AbstractCharacter<Bronya> implements ForceAdvanceGoal.Advancer {
 
     public static final String NAME = "Bronya";
     public static final String SKILL_POWER_NAME = "BronyaSkillPower";
     public static final String ULT_POWER_NAME = "BronyaUltPower";
+
+    private AbstractCharacter<?> overrideAdvance = null;
 
     public Bronya() {
         super(NAME, 1242, 582, 534, 99, 80, ElementType.WIND, 120, 100, Path.HARMONY);
@@ -33,16 +36,27 @@ public class Bronya extends AbstractCharacter<Bronya> {
     }
 
     public void useSkill() {
-        AbstractPower skillPower = TempPower.create(PowerStat.DAMAGE_BONUS, 66, 1, SKILL_POWER_NAME);
+        if (this.overrideAdvance != null) {
+            this.skillAdvance(this.overrideAdvance);
+            this.overrideAdvance = null;
+            return;
+        }
+
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             if (character.isDPS) {
-                character.addPower(skillPower);
-                getBattle().AdvanceEntity(character, 100);
-                lightcone.onSpecificTrigger(character, null);
+                this.skillAdvance(character);
                 break;
             }
         }
     }
+
+    private void skillAdvance(AbstractCharacter<?> character) {
+        AbstractPower skillPower = TempPower.create(PowerStat.DAMAGE_BONUS, 66, 1, SKILL_POWER_NAME);
+        character.addPower(skillPower);
+        getBattle().AdvanceEntity(character, 100);
+        lightcone.onSpecificTrigger(character, null);
+    }
+
     public void useBasic() {
         ArrayList<DamageType> types = new ArrayList<>();
         types.add(DamageType.BASIC);
@@ -78,6 +92,11 @@ public class Bronya extends AbstractCharacter<Bronya> {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             character.addPower(TempPower.create(PowerStat.ATK_PERCENT, 15, 2, "Bronya Technique Power"));
         }
+    }
+
+    @Override
+    public void setNextAdvance(AbstractCharacter<?> nextAdvance) {
+        this.overrideAdvance = nextAdvance;
     }
 
     private static class BronyaBasicCritPower extends AbstractPower {
