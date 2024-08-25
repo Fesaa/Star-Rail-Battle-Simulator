@@ -82,6 +82,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     private final SortedMap<Integer, UltGoal<C>> ultGoals = new TreeMap<>();
     private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
 
+    public String nameSuffix = "";
+
     public AbstractCharacter(String name, int baseHP, int baseAtk, int baseDef, int baseSpeed, int level, ElementType elementType, float maxEnergy, int tauntValue, Path path) {
         super();
         this.name = name;

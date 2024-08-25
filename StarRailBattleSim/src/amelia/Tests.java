@@ -82,22 +82,24 @@ public class Tests {
         repeater((LightConeSupplier robinLightcone) -> {
             repeater((LightConeSupplier feixiaoLightcone) -> {
                 repeater((LightConeSupplier marchLightcone) -> {
-                    teams2.add(
-                            of(
-                                    myFeixiao(feixiaoLightcone),
-                                    myMarch(marchLightcone),
-                                    myRobin(robinLightcone),
-                                    myBroyna()
-                            )
-                    );
+                    repeater((Boolean b) -> {
+                        teams2.add(
+                                of(
+                                        myFeixiao(feixiaoLightcone, b),
+                                        myMarch(marchLightcone),
+                                        myRobin(robinLightcone),
+                                        myBroyna()
+                                )
+                        );
+                    }, true, false);
                 }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
         }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
     }
 
     public static void runTests() {
-        runTests(baseTeam, teams);
-        System.out.println("\n\n\n");
+        //runTests(baseTeam, teams);
+        //System.out.println("\n\n\n");
         runTests(baseTeam2, teams2);
     }
 
@@ -124,7 +126,7 @@ public class Tests {
         }
         BattleResult result = new BattleResult();
         result.team = team;
-        IBattle battle = new Battle(b -> new MetricLogger(b, printStream) {final
+        IBattle battle = new Battle(b -> new MetricLogger(b, printStream) {
 
             @Override
             public void handle(FinalDmgMetrics finalDmgMetrics) {
@@ -180,12 +182,12 @@ public class Tests {
                 .sorted((a, b) -> {
                     List<String> ca = a.team
                             .stream()
-                            .map(c -> String.format("%s(%s)", c.name, c.lightcone.toString()))
+                            .map(c -> String.format("%s(%s) %s", c.name, c.lightcone.toString(), c.nameSuffix))
                             .collect(Collectors.toList());
 
                     List<String> cb = b.team
                             .stream()
-                            .map(c -> String.format("%s(%s)", c.name, c.lightcone.toString()))
+                            .map(c -> String.format("%s(%s) %s", c.name, c.lightcone.toString(), c.nameSuffix))
                             .collect(Collectors.toList());
 
                     return new StringListComparator().compare(ca, cb);
@@ -213,7 +215,7 @@ public class Tests {
 
         List<String> columns = result.team
                 .stream()
-                .map(c -> String.format("%s(%s)", c.name, c.lightcone.toString()))
+                .map(c -> String.format("%s(%s) %s", c.name, c.lightcone.toString(), c.nameSuffix))
                 .collect(Collectors.toList());
 
         columns.add("" + totalPlayerDmg);

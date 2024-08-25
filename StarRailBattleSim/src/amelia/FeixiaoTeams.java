@@ -3,7 +3,9 @@ package amelia;
 import characters.AbstractCharacter;
 import characters.bronya.Bronya;
 import characters.feixiao.Feixiao;
+import characters.feixiao.FeixiaoBronyaTurnGoal;
 import characters.gallagher.Gallagher;
+import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.ForceAdvanceGoal;
 import characters.huohuo.Huohuo;
 import characters.march.SwordMarch;
@@ -187,7 +189,11 @@ public class FeixiaoTeams {
     }
 
     static AbstractCharacter<?> myFeixiao(LightConeSupplier lightConeSupplier) {
-        AbstractCharacter<?> feixiao = new Feixiao();
+        return myFeixiao(lightConeSupplier, false);
+    }
+
+    static AbstractCharacter<?> myFeixiao(LightConeSupplier lightConeSupplier, boolean aggressive) {
+        Feixiao feixiao = new Feixiao();
         feixiao.EquipLightcone(lightConeSupplier.get(feixiao));
         feixiao.EquipRelicSet(new TheWindSoaringValorous(feixiao));
         feixiao.EquipRelicSet(new DuranDynastyOfRunningWolves(feixiao));
@@ -203,6 +209,14 @@ public class FeixiaoTeams {
                 .addSubStat(RelicStats.Stats.SPEED, 1);
 
         stats.equipTo(feixiao);
+
+        if (aggressive) {
+            feixiao.clearTurnGoals();
+            //feixiao.registerGoal(0, new FeixiaoBronyaTurnGoal(feixiao));
+            feixiao.registerGoal(10, new AlwaysSkillGoal<>(feixiao, 1));
+            feixiao.nameSuffix = " Aggressive ";
+        }
+
         return feixiao;
     }
 
