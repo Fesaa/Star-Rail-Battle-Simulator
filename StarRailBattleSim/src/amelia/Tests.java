@@ -4,6 +4,7 @@ import battleLogic.Battle;
 import battleLogic.IBattle;
 import battleLogic.log.MetricLogger;
 import battleLogic.log.VoidLogger;
+import battleLogic.log.lines.character.TotalDamage;
 import battleLogic.log.lines.metrics.BattleMetrics;
 import battleLogic.log.lines.metrics.FinalDmgMetrics;
 import battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
@@ -13,6 +14,7 @@ import enemies.AbstractEnemy;
 import enemies.FireWindImgLightningWeakEnemy;
 import enemies.PhysFireWeakEnemy;
 import lightcones.AbstractLightcone;
+import lightcones.abundance.QuidProQuo;
 import lightcones.harmony.ButTheBattleIsntOver;
 import lightcones.harmony.FlowingNightglow;
 import lightcones.harmony.ForTomorrowsJourney;
@@ -59,8 +61,22 @@ public class Tests {
             () -> myRobin(FlowingNightglow::new),
             () -> myBroyna(ButTheBattleIsntOver::new)
     );
+
+    static final List<AbstractCharacter<?>> baseTeam3 = FeixiaoMarch(
+            () -> myRobin(ForTomorrowsJourney::new),
+            () -> myGallagher(QuidProQuo::new)
+    );
+
+    static final List<AbstractCharacter<?>> baseTeam4 = FeixiaoMarch(
+            () -> myRobin(ForTomorrowsJourney::new),
+            () -> myBroyna(ButTheBattleIsntOver::new)
+    );
+
     static final List<List<AbstractCharacter<?>>> teams  = new ArrayList<>();
     static final List<List<AbstractCharacter<?>>> teams2  = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams3  = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams4  = new ArrayList<>();
+
 
     static {
 
@@ -95,16 +111,41 @@ public class Tests {
                 }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
         }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
+
+        teams3.add(
+                of(
+                        myFeixiao(),
+                        myMarch(OnlySilenceRemains::new),
+                        robinSpd(ForTomorrowsJourney::new),
+                        myGallagher()
+                )
+        );
+
+        teams4.add(
+                of(
+                        myFeixiao(),
+                        myMarch(OnlySilenceRemains::new),
+                        robinSpd(ForTomorrowsJourney::new),
+                        myBroyna(ButTheBattleIsntOver::new)
+                )
+        );
     }
 
     public static void runTests() {
         //runTests(baseTeam, teams);
         //System.out.println("\n\n\n");
-        runTests(baseTeam2, teams2);
+        //runTests(baseTeam2, teams2);
+        //System.out.println("\n\n\n");
+        runTests(baseTeam3, teams3, 150);
+        System.out.println("\n\n\n");
+        runTests(baseTeam4, teams4, 150);
     }
 
     private static void runTests(List<AbstractCharacter<?>> baseTeam, List<List<AbstractCharacter<?>>> teams) {
-        int battleAV = 550;
+        runTests(baseTeam, teams, 550);
+    }
+
+    private static void runTests(List<AbstractCharacter<?>> baseTeam, List<List<AbstractCharacter<?>>> teams, int battleAV) {
         List<BattleResult> results = new ArrayList<>();
         setupBattle(baseTeam, results).Start(battleAV);
         teams.parallelStream()
@@ -148,10 +189,17 @@ public class Tests {
                 super.handle(postCombatPlayerMetrics);
                 result.postCombatPlayerMetrics = postCombatPlayerMetrics;
             }
+
+            @Override
+            public void handle(TotalDamage totalDamage) {
+                this.out.println(this.getGson().toJson(totalDamage));
+                this.out.println();
+            }
         });
         List<AbstractEnemy> enemyTeam = new ArrayList<>();
-        enemyTeam.add(new FireWindImgLightningWeakEnemy(0, 0));
-        enemyTeam.add(new PhysFireWeakEnemy(0, 0));
+        enemyTeam.add(new Hoolay());
+        //enemyTeam.add(new FireWindImgLightningWeakEnemy(0, 0));
+        //enemyTeam.add(new PhysFireWeakEnemy(0, 0));
         battle.setEnemyTeam(enemyTeam);
         battle.setPlayerTeam(team);
 

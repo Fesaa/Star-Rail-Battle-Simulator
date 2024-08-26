@@ -111,6 +111,27 @@ public class FeixiaoTeams {
         return ruanMei;
     }
 
+    static AbstractCharacter<?> robinSpd(LightConeSupplier lightconeSupplier) {
+        Robin robin = new Robin();
+        robin.EquipLightcone(lightconeSupplier.get(robin));
+        robin.EquipRelicSet(new PrisonerInDeepConfinement(robin, false));
+        robin.EquipRelicSet(new TheWindSoaringValorous(robin, false));
+        robin.EquipRelicSet(new SpringhtlyVonwacq(robin));
+
+        RelicStats stats = new RelicStats();
+        stats.addMainStat(RelicStats.Stats.ATK_PER)
+                .addMainStat(RelicStats.Stats.SPEED)
+                .addMainStat(RelicStats.Stats.ATK_PER)
+                .addMainStat(RelicStats.Stats.ERR)
+                .addSubStat(RelicStats.Stats.ATK_PER, 4)
+                .addSubStat(RelicStats.Stats.SPEED, 12)
+                .addSubStat(RelicStats.Stats.ATK_FLAT, 3)
+                .addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+
+        stats.equipTo(robin);
+        return robin;
+    }
+
     static AbstractCharacter<?> myRobin() {
         return myRobin(FlowingNightglow::new);
     }
