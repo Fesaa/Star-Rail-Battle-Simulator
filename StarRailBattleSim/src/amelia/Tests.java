@@ -24,6 +24,7 @@ import lightcones.hunt.CruisingInTheStellarSea;
 import lightcones.hunt.IVentureForthToHunt;
 import lightcones.hunt.OnlySilenceRemains;
 import lightcones.hunt.Swordplay;
+import teams.PlayerTeam;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -67,9 +68,11 @@ public class Tests {
             () -> myGallagher(QuidProQuo::new)
     );
 
-    static final List<AbstractCharacter<?>> baseTeam4 = FeixiaoMarch(
-            () -> myRobin(ForTomorrowsJourney::new),
-            () -> myBroyna(ButTheBattleIsntOver::new)
+    static final List<AbstractCharacter<?>> baseTeam4 = of(
+            myFeixiao(CruisingInTheStellarSea::new),
+            myMarch(Swordplay::new),
+            myRobin(ForTomorrowsJourney::new),
+            myGallagher(QuidProQuo::new)
     );
 
     static final List<List<AbstractCharacter<?>>> teams  = new ArrayList<>();
@@ -112,21 +115,39 @@ public class Tests {
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
         }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
 
-        teams3.add(
+        teams4.add(
                 of(
-                        myFeixiao(),
-                        myMarch(OnlySilenceRemains::new),
-                        robinSpd(ForTomorrowsJourney::new),
+                        myFeixiao(CruisingInTheStellarSea::new),
+                        myMarch(Swordplay::new),
+                        myRobin(ForTomorrowsJourney::new, true),
                         myGallagher()
                 )
         );
 
         teams4.add(
                 of(
-                        myFeixiao(),
-                        myMarch(OnlySilenceRemains::new),
-                        robinSpd(ForTomorrowsJourney::new),
-                        myBroyna(ButTheBattleIsntOver::new)
+                        myFeixiao(CruisingInTheStellarSea::new),
+                        myMarch(Swordplay::new),
+                        myRobin(FlowingNightglow::new),
+                        myGallagher()
+                )
+        );
+
+        teams4.add(
+                of(
+                        myFeixiao(IVentureForthToHunt::new),
+                        myMarch(Swordplay::new),
+                        myRobin(ForTomorrowsJourney::new),
+                        myGallagher()
+                )
+        );
+
+        teams4.add(
+                of(
+                        myFeixiao(CruisingInTheStellarSea::new),
+                        PlayerTeam.getPrebuiltTopaz(),
+                        myRobin(ForTomorrowsJourney::new),
+                        myGallagher()
                 )
         );
     }
@@ -136,9 +157,9 @@ public class Tests {
         //System.out.println("\n\n\n");
         //runTests(baseTeam2, teams2);
         //System.out.println("\n\n\n");
-        runTests(baseTeam3, teams3, 150);
-        System.out.println("\n\n\n");
-        runTests(baseTeam4, teams4, 150);
+        //runTests(baseTeam3, teams3, 150);
+        //System.out.println("\n\n\n");
+        runTests(baseTeam4, teams4, 550);
     }
 
     private static void runTests(List<AbstractCharacter<?>> baseTeam, List<List<AbstractCharacter<?>>> teams) {
@@ -157,7 +178,7 @@ public class Tests {
     private static IBattle setupBattle(List<AbstractCharacter<?>> team, List<BattleResult> results) {
         String key = team
                 .stream()
-                .map(c -> c.getClass().getSimpleName() + "(" + c.lightcone.getClass().getSimpleName() + ")")
+                .map(c -> c.getClass().getSimpleName() + "(" + c.lightcone.getClass().getSimpleName() + ")"+c.nameSuffix)
                 .collect(Collectors.joining(" - "));
         PrintStream printStream;
         try {
@@ -242,11 +263,7 @@ public class Tests {
                 }).collect(Collectors.toList());
 
         for (BattleResult result : results) {
-            List<String> res = formatResult(result, baseFinalDPAV, lastFinalDPAV);
-            if (res != null)
-                columns.add(res);
-
-
+            columns.add(formatResult(result, baseFinalDPAV, lastFinalDPAV));
             lastFinalDPAV = result.battleMetrics.finalDPAV;
         }
 
@@ -270,13 +287,7 @@ public class Tests {
         columns.add("" + finalDPAV);
         if (baseFinalDPAV != -1) {
             float per = calculatePercentageChange(baseFinalDPAV, finalDPAV);
-            if (per == 0) {
-                return null;
-            }
             float per2 = calculatePercentageChange(lastFinalDPAV, finalDPAV);
-            if (per2 == 0) {
-                return null;
-            }
             columns.add(String.format("%s(%+.2f%%)%s", colour(per), per, RESET));
             columns.add(String.format("%s(%+.2f%%)%s", colour(per2), per2, RESET));
         } else {

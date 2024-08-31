@@ -132,24 +132,37 @@ public class FeixiaoTeams {
         return robin;
     }
 
+    static AbstractCharacter<?> myRobin(boolean e1) {
+        return myRobin(FlowingNightglow::new, e1);
+    }
+
     static AbstractCharacter<?> myRobin() {
-        return myRobin(FlowingNightglow::new);
+        return myRobin(FlowingNightglow::new, false);
     }
 
     static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier) {
-        AbstractCharacter<?> robin = new Robin();
+        return myRobin(lightconeSupplier, false);
+    }
+
+    static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier, boolean e1) {
+        AbstractCharacter<?> robin = new Robin(e1);
+
+        if (e1) {
+            robin.nameSuffix = " E1 ";
+        }
+
         robin.EquipLightcone(lightconeSupplier.get(robin));
         robin.EquipRelicSet(new PrisonerInDeepConfinement(robin, false));
         robin.EquipRelicSet(new TheWindSoaringValorous(robin, false));
-        robin.EquipRelicSet(new LushakaTheSunkenSeas(robin));
+        robin.EquipRelicSet(new SpringhtlyVonwacq(robin));
 
         RelicStats stats = new RelicStats();
         stats.addMainStat(RelicStats.Stats.ATK_PER)
                 .addMainStat(RelicStats.Stats.ATK_PER).
                 addMainStat(RelicStats.Stats.ATK_PER)
                 .addMainStat(RelicStats.Stats.ERR)
-                .addSubStat(RelicStats.Stats.ATK_PER, 7)
-                //.addSubStat(RelicStats.Stats.SPEED, 8)
+                .addSubStat(RelicStats.Stats.ATK_PER, 2)
+                .addSubStat(RelicStats.Stats.SPEED, 8)
                 .addSubStat(RelicStats.Stats.ATK_FLAT, 3)
                 .addSubStat(RelicStats.Stats.EFFECT_RES, 6);
 

@@ -20,7 +20,7 @@ import java.util.Map;
 public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnGoal.SkillCounterCharacter {
 
     PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
-    RobinUltPower ultPower = new RobinUltPower();
+    private final RobinUltPower ultPower;
     RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
     Concerto concerto = new Concerto(this);
 
@@ -32,8 +32,17 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
     public static final String NAME = "Robin";
     public static final String ULT_POWER_NAME = "RobinUltPower";
 
+    private final boolean e1;
+
     public Robin() {
+        this(false);
+    }
+
+    public Robin(boolean e1) {
         super(NAME, 1281, 640, 485, 102, 80, ElementType.PHYSICAL, 160, 100, Path.HARMONY);
+
+        this.e1 = e1;
+        this.ultPower = new RobinUltPower();
 
         this.skillEnergyGain = 35;
 
@@ -198,6 +207,11 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         public RobinUltPower() {
             this.name = ULT_POWER_NAME;
             lastsForever = true;
+
+            if (Robin.this.e1) {
+                this.setStat(PowerStat.RES_PEN, 24);
+            }
+
         }
 
         public void updateAtkBuff() {
