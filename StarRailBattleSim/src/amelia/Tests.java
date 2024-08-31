@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -115,41 +116,25 @@ public class Tests {
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
         }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
 
-        teams4.add(
-                of(
-                        myFeixiao(CruisingInTheStellarSea::new),
-                        myMarch(Swordplay::new),
-                        myRobin(ForTomorrowsJourney::new, true),
-                        myGallagher()
-                )
-        );
+        repeater((Supplier<AbstractCharacter<?>> c) -> {
+            teams4.add(of(
+                    myFeixiao(CruisingInTheStellarSea::new),
+                    c.get(),
+                    myRobin(ForTomorrowsJourney::new, true),
+                    myGallagher()));
 
-        teams4.add(
-                of(
-                        myFeixiao(CruisingInTheStellarSea::new),
-                        myMarch(Swordplay::new),
-                        myRobin(FlowingNightglow::new),
-                        myGallagher()
-                )
-        );
+            teams4.add(of(
+                    myFeixiao(CruisingInTheStellarSea::new),
+                    c.get(),
+                    myRobin(FlowingNightglow::new),
+                    myGallagher()));
 
-        teams4.add(
-                of(
-                        myFeixiao(IVentureForthToHunt::new),
-                        myMarch(Swordplay::new),
-                        myRobin(ForTomorrowsJourney::new),
-                        myGallagher()
-                )
-        );
-
-        teams4.add(
-                of(
-                        myFeixiao(CruisingInTheStellarSea::new),
-                        PlayerTeam.getPrebuiltTopaz(),
-                        myRobin(ForTomorrowsJourney::new),
-                        myGallagher()
-                )
-        );
+            teams4.add(of(
+                    myFeixiao(IVentureForthToHunt::new),
+                    c.get(),
+                    myRobin(ForTomorrowsJourney::new),
+                    myGallagher()));
+        }, () -> myMarch(Swordplay::new), PlayerTeam::getPrebuiltTopaz, FeixiaoTeams::myMoze);
     }
 
     public static void runTests() {

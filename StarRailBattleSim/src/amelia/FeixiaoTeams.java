@@ -9,6 +9,7 @@ import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.ForceAdvanceGoal;
 import characters.huohuo.Huohuo;
 import characters.march.SwordMarch;
+import characters.moze.Moze;
 import characters.robin.Robin;
 import characters.ruanmei.RuanMei;
 import lightcones.AbstractLightcone;
@@ -18,6 +19,7 @@ import lightcones.harmony.ButTheBattleIsntOver;
 import lightcones.harmony.FlowingNightglow;
 import lightcones.hunt.CruisingInTheStellarSea;
 import lightcones.hunt.IVentureForthToHunt;
+import lightcones.hunt.Swordplay;
 import relics.RelicStats;
 import relics.ornament.BrokenKeel;
 import relics.ornament.DuranDynastyOfRunningWolves;
@@ -216,6 +218,31 @@ public class FeixiaoTeams {
 
         stats.equipTo(march);
         return march;
+    }
+
+    static AbstractCharacter<?> myMoze() {
+        return myMoze(Swordplay::new);
+    }
+
+    static AbstractCharacter<?> myMoze(LightConeSupplier lightConeSupplier) {
+        AbstractCharacter<?> moze = new Moze();
+        moze.EquipLightcone(lightConeSupplier.get(moze));
+        moze.EquipRelicSet(new PrisonerInDeepConfinement(moze, false));
+        moze.EquipRelicSet(new MessengerTraversingHackerspace(moze, false));
+        moze.EquipRelicSet(new RutilentArena(moze));
+
+        RelicStats stats = new RelicStats();
+        stats.addMainStat(RelicStats.Stats.CRIT_RATE)
+                .addMainStat(RelicStats.Stats.SPEED)
+                .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
+                .addMainStat(RelicStats.Stats.ATK_PER)
+                .addSubStat(RelicStats.Stats.CRIT_RATE, 7)
+                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11)
+                .addSubStat(RelicStats.Stats.ATK_PER, 6)
+                .addSubStat(RelicStats.Stats.SPEED, 2);
+
+        stats.equipTo(moze);
+        return moze;
     }
 
     static AbstractCharacter<?> myFeixiao() {
