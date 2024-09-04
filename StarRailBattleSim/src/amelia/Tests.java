@@ -26,6 +26,7 @@ import lightcones.hunt.OnlySilenceRemains;
 import lightcones.hunt.Swordplay;
 import teams.PlayerTeam;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -43,6 +44,8 @@ import static amelia.FeixiaoTeams.*;
 
 public class Tests {
 
+    static long startTime = System.currentTimeMillis();
+
     // ANSI escape codes for colors
     public static final String RESET = "\033[0m";  // Reset to default color
     public static final String RED = "\033[0;31m";
@@ -56,12 +59,12 @@ public class Tests {
 
 
     static final List<AbstractCharacter<?>> baseTeam = FeixiaoMarch(
-            () -> myRobin(FlowingNightglow::new),
+            () -> myRobin(ForTomorrowsJourney::new),
             FeixiaoTeams::myGallagher
     );
     static final List<AbstractCharacter<?>> baseTeam2 = FeixiaoMarch(
-            () -> myRobin(FlowingNightglow::new),
-            () -> myBroyna(ButTheBattleIsntOver::new)
+            () -> myRobin(ForTomorrowsJourney::new),
+            () -> myGallagher(QuidProQuo::new)
     );
 
     static final List<AbstractCharacter<?>> baseTeam3 = FeixiaoMarch(
@@ -76,10 +79,26 @@ public class Tests {
             myGallagher(QuidProQuo::new)
     );
 
+    static final List<AbstractCharacter<?>> baseTeam5 = of(
+            myFeixiao(Swordplay::new),
+            myMarch(CruisingInTheStellarSea::new),
+            myRobin(ForTomorrowsJourney::new),
+            myGallagher(QuidProQuo::new)
+    );
+
+    static final List<AbstractCharacter<?>> baseTeam6 = of(
+            PlayerTeam.getPrebuiltFeixiao(),
+            PlayerTeam.getPrebuiltTopaz(),
+            PlayerTeam.getPrebuiltRobin(),
+            PlayerTeam.getPrebuiltAventurine()
+    );
+
     static final List<List<AbstractCharacter<?>>> teams  = new ArrayList<>();
     static final List<List<AbstractCharacter<?>>> teams2  = new ArrayList<>();
     static final List<List<AbstractCharacter<?>>> teams3  = new ArrayList<>();
     static final List<List<AbstractCharacter<?>>> teams4  = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams5  = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams6  = new ArrayList<>();
 
 
     static {
@@ -102,19 +121,17 @@ public class Tests {
         repeater((LightConeSupplier robinLightcone) -> {
             repeater((LightConeSupplier feixiaoLightcone) -> {
                 repeater((LightConeSupplier marchLightcone) -> {
-                    repeater((Boolean b) -> {
                         teams2.add(
                                 of(
-                                        myFeixiao(feixiaoLightcone, b),
+                                        myFeixiao(feixiaoLightcone),
                                         myMarch(marchLightcone),
                                         myRobin(robinLightcone),
-                                        myBroyna()
+                                        myGallagher(QuidProQuo::new)
                                 )
                         );
-                    }, true, false);
                 }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
-        }, ForTomorrowsJourney::new, PoisedToBloom::new, FlowingNightglow::new);
+        }, ForTomorrowsJourney::new);
 
         repeater((Supplier<AbstractCharacter<?>> c) -> {
             teams4.add(of(
@@ -135,6 +152,51 @@ public class Tests {
                     myRobin(ForTomorrowsJourney::new),
                     myGallagher()));
         }, () -> myMarch(Swordplay::new), PlayerTeam::getPrebuiltTopaz, FeixiaoTeams::myMoze);
+
+        teams5.add(of(
+                myFeixiaoCD(Swordplay::new),
+                myMarch(CruisingInTheStellarSea::new),
+                myRobin(ForTomorrowsJourney::new),
+                myGallagher(QuidProQuo::new)
+        ));
+
+        teams5.add(of(
+                myFeixiaoCD(CruisingInTheStellarSea::new),
+                myMarch(Swordplay::new),
+                myRobin(ForTomorrowsJourney::new),
+                myGallagher(QuidProQuo::new)
+        ));
+
+        teams5.add(of(
+                myFeixiao(CruisingInTheStellarSea::new),
+                myMarch(Swordplay::new),
+                myRobin(ForTomorrowsJourney::new),
+                myGallagher(QuidProQuo::new)
+        ));
+
+        teams5.add(of(
+                myFeixiao(IVentureForthToHunt::new),
+                myMarch(CruisingInTheStellarSea::new),
+                myRobin(ForTomorrowsJourney::new),
+                myGallagher(QuidProQuo::new)
+        ));
+
+        teams5.add(of(
+                myFeixiaoCD(IVentureForthToHunt::new),
+                myMarch(CruisingInTheStellarSea::new),
+                myRobin(ForTomorrowsJourney::new),
+                myGallagher(QuidProQuo::new)
+        ));
+
+
+        repeater((c) -> {
+            teams6.add(of(
+                    PlayerTeam.getPrebuiltFeixiao(),
+                    PlayerTeam.getPrebuiltTopaz(),
+                    PlayerTeam.getPrebuiltRobin(),
+                    c
+            ));
+        }, PlayerTeam.getPrebuiltHuohuo(), PlayerTeam.getPrebuiltFuXuan(), PlayerTeam.getPrebuiltGallagher());
     }
 
     public static void runTests() {
@@ -144,7 +206,9 @@ public class Tests {
         //System.out.println("\n\n\n");
         //runTests(baseTeam3, teams3, 150);
         //System.out.println("\n\n\n");
-        runTests(baseTeam4, teams4, 550);
+        //runTests(baseTeam4, teams4, 550);
+        //runTests(baseTeam5, teams5, 550);
+        runTests(baseTeam6, teams6);
     }
 
     private static void runTests(List<AbstractCharacter<?>> baseTeam, List<List<AbstractCharacter<?>>> teams) {
@@ -167,7 +231,9 @@ public class Tests {
                 .collect(Collectors.joining(" - "));
         PrintStream printStream;
         try {
-            printStream = new PrintStream(new FileOutputStream("export_tests/" + key + ".log"));
+            String path = "export_tests/" + startTime;
+            new File(path).mkdirs();
+            printStream = new PrintStream(new FileOutputStream(path + "/" + key + ".log"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

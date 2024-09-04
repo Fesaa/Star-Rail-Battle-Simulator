@@ -211,10 +211,10 @@ public class FeixiaoTeams {
                 .addMainStat(RelicStats.Stats.SPEED)
                 .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
                 .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 7)
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11)
-                .addSubStat(RelicStats.Stats.ATK_PER, 6)
-                .addSubStat(RelicStats.Stats.SPEED, 2);
+                .addSubStat(RelicStats.Stats.CRIT_RATE, 12) // 3 + 3 + 3 + +3
+                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11) // 2 + 4 + 3 + 2
+                .addSubStat(RelicStats.Stats.ATK_PER, 3) // 1 + 2
+                .addSubStat(RelicStats.Stats.SPEED, 5); // 2 + 2 + 1
 
         stats.equipTo(march);
         return march;
@@ -247,6 +247,40 @@ public class FeixiaoTeams {
 
     static AbstractCharacter<?> myFeixiao() {
         return myFeixiao(IVentureForthToHunt::new);
+    }
+
+    static AbstractCharacter<?> myFeixiaoCD(LightConeSupplier lightConeSupplier) {
+        return myFeixiaoCD(lightConeSupplier, false);
+    }
+
+    static AbstractCharacter<?> myFeixiaoCD(LightConeSupplier lightConeSupplier, boolean aggressive) {
+        Feixiao feixiao = new Feixiao();
+        feixiao.EquipLightcone(lightConeSupplier.get(feixiao));
+        feixiao.EquipRelicSet(new TheWindSoaringValorous(feixiao));
+        feixiao.EquipRelicSet(new DuranDynastyOfRunningWolves(feixiao));
+
+        RelicStats stats = new RelicStats();
+        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
+                .addMainStat(RelicStats.Stats.SPEED)
+                .addMainStat(RelicStats.Stats.ATK_PER)
+                .addMainStat(RelicStats.Stats.ATK_PER)
+                .addSubStat(RelicStats.Stats.CRIT_RATE, 14)
+                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 12)
+                .addSubStat(RelicStats.Stats.ATK_PER, 2)
+                .addSubStat(RelicStats.Stats.SPEED, 4);
+
+        stats.equipTo(feixiao);
+
+        if (aggressive) {
+            feixiao.clearTurnGoals();
+            //feixiao.registerGoal(0, new FeixiaoBronyaTurnGoal(feixiao));
+            feixiao.registerGoal(10, new AlwaysSkillGoal<>(feixiao, 1));
+            feixiao.nameSuffix = " Aggressive ";
+        }
+
+        feixiao.nameSuffix += " CD";
+
+        return feixiao;
     }
 
     static AbstractCharacter<?> myFeixiao(LightConeSupplier lightConeSupplier) {
