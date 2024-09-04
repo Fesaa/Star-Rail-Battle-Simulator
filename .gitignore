@@ -3,3 +3,4 @@ csv/
 .idea
 export/
 export_2/
+*.log
