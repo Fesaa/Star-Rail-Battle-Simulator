@@ -1,10 +1,12 @@
 package amelia;
 
 import characters.AbstractCharacter;
+import characters.adventurine.Aventurine;
 import characters.bronya.Bronya;
 import characters.feixiao.Feixiao;
 import characters.feixiao.FeixiaoBronyaTurnGoal;
 import characters.gallagher.Gallagher;
+import characters.goal.shared.AlwaysBasicGoal;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.ForceAdvanceGoal;
 import characters.huohuo.Huohuo;
@@ -20,6 +22,8 @@ import lightcones.harmony.FlowingNightglow;
 import lightcones.hunt.CruisingInTheStellarSea;
 import lightcones.hunt.IVentureForthToHunt;
 import lightcones.hunt.Swordplay;
+import lightcones.preservation.ConcertForTwo;
+import relics.AbstractRelicSetBonus;
 import relics.RelicStats;
 import relics.ornament.BrokenKeel;
 import relics.ornament.DuranDynastyOfRunningWolves;
@@ -29,6 +33,7 @@ import relics.ornament.LushakaTheSunkenSeas;
 import relics.ornament.PenaconyLandOfTheDreams;
 import relics.ornament.RutilentArena;
 import relics.ornament.SpringhtlyVonwacq;
+import relics.relics.KnightOfPurityPalace;
 import relics.relics.LongevousDisciple;
 import relics.relics.MessengerTraversingHackerspace;
 import relics.relics.PasserbyOfWanderingCloud;
@@ -135,28 +140,43 @@ public class FeixiaoTeams {
     }
 
     static AbstractCharacter<?> myRobin(boolean e1) {
-        return myRobin(FlowingNightglow::new, e1);
+        return myRobin((AbstractCharacter<?> c) -> new SpringhtlyVonwacq(c), e1);
     }
 
-    static AbstractCharacter<?> myRobin() {
-        return myRobin(FlowingNightglow::new, false);
-    }
-
-    static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier) {
-        return myRobin(lightconeSupplier, false);
+    static AbstractCharacter<?> myRobin(RelicSupplier relicSupplier, boolean e1) {
+        return myRobin(FlowingNightglow::new, relicSupplier, e1);
     }
 
     static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier, boolean e1) {
+        return myRobin(lightconeSupplier, SpringhtlyVonwacq::new, e1);
+    }
+
+    static AbstractCharacter<?> myRobin() {
+        return myRobin(FlowingNightglow::new);
+    }
+
+    static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier) {
+        return myRobin(lightconeSupplier, SpringhtlyVonwacq::new);
+    }
+
+    static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier, RelicSupplier relicSupplier) {
+        return myRobin(lightconeSupplier, relicSupplier, false);
+    }
+
+    static AbstractCharacter<?> myRobin(LightConeSupplier lightconeSupplier, RelicSupplier relicSupplier, boolean e1) {
         AbstractCharacter<?> robin = new Robin(e1);
 
         if (e1) {
             robin.nameSuffix = " E1 ";
         }
 
+        AbstractRelicSetBonus relic = relicSupplier.get(robin);
+        robin.nameSuffix += " " + relic.getClass().getSimpleName();
+
         robin.EquipLightcone(lightconeSupplier.get(robin));
         robin.EquipRelicSet(new PrisonerInDeepConfinement(robin, false));
         robin.EquipRelicSet(new TheWindSoaringValorous(robin, false));
-        robin.EquipRelicSet(new SpringhtlyVonwacq(robin));
+        robin.EquipRelicSet(relic);
 
         RelicStats stats = new RelicStats();
         stats.addMainStat(RelicStats.Stats.ATK_PER)
@@ -203,7 +223,7 @@ public class FeixiaoTeams {
         AbstractCharacter<?> march = new SwordMarch();
         march.EquipLightcone(lightConeSupplier.get(march));
         march.EquipRelicSet(new PrisonerInDeepConfinement(march, false));
-        march.EquipRelicSet(new MessengerTraversingHackerspace(march, false));
+        march.EquipRelicSet(new WatchMakerMasterOfDreamMachinations(march, false));
         march.EquipRelicSet(new RutilentArena(march));
 
         RelicStats stats = new RelicStats();
@@ -215,6 +235,31 @@ public class FeixiaoTeams {
                 .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11) // 2 + 4 + 3 + 2
                 .addSubStat(RelicStats.Stats.ATK_PER, 3) // 1 + 2
                 .addSubStat(RelicStats.Stats.SPEED, 5); // 2 + 2 + 1
+
+        stats.equipTo(march);
+        return march;
+    }
+
+    static AbstractCharacter<?> myOtherMarch() {
+        return myOtherMarch(CruisingInTheStellarSea::new);
+    }
+
+    static AbstractCharacter<?> myOtherMarch(LightConeSupplier lightConeSupplier) {
+        AbstractCharacter<?> march = new SwordMarch();
+        march.nameSuffix = " CD";
+        march.EquipLightcone(lightConeSupplier.get(march));
+        march.EquipRelicSet(new MessengerTraversingHackerspace(march, false));
+        march.EquipRelicSet(new RutilentArena(march));
+
+        RelicStats stats = new RelicStats();
+        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
+                .addMainStat(RelicStats.Stats.SPEED)
+                .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
+                .addMainStat(RelicStats.Stats.ATK_PER)
+                .addSubStat(RelicStats.Stats.CRIT_RATE, 15) // 3 + 1 + 2 + 3 + 3 + 3
+                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 3) // 1 + 2
+                .addSubStat(RelicStats.Stats.ATK_PER, 4) // 2 + 2 +
+                .addSubStat(RelicStats.Stats.SPEED, 6); // 2 + 3 + 1
 
         stats.equipTo(march);
         return march;
@@ -335,10 +380,45 @@ public class FeixiaoTeams {
         stats.equipTo(huohuo);
         return huohuo;
     }
+
+    static AbstractCharacter<?> myAventurine(RelicStats.Stats bodyStat) {
+        return myAventurine(ConcertForTwo::new, bodyStat);
+    }
+
+    static AbstractCharacter<?> myAventurine(LightConeSupplier lightConeSupplier, RelicStats.Stats bodyStat) {
+        Aventurine aventurine = new Aventurine();
+        aventurine.EquipLightcone(lightConeSupplier.get(aventurine));
+        aventurine.EquipRelicSet(new KnightOfPurityPalace(aventurine, true));
+        aventurine.EquipRelicSet(new BrokenKeel(aventurine));
+
+        RelicStats stats = new RelicStats();
+        stats.addMainStat(bodyStat)
+                .addMainStat(RelicStats.Stats.SPEED)
+                .addMainStat(RelicStats.Stats.DEF_PER)
+                .addMainStat(RelicStats.Stats.DEF_PER)
+                .addSubStat(RelicStats.Stats.DEF_PER, 7)
+                .addSubStat(RelicStats.Stats.SPEED, 2)
+                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 13)
+                .addSubStat(RelicStats.Stats.DEF_FLAT, 6);
+
+        stats.equipTo(aventurine);
+
+        aventurine.nameSuffix = " " + bodyStat;
+
+        aventurine.clearTurnGoals();
+        aventurine.registerGoal(0, new AlwaysBasicGoal<>(aventurine));
+
+        return aventurine;
+    }
     
     @FunctionalInterface
     public interface LightConeSupplier {
         AbstractLightcone get(AbstractCharacter<?> character);
+    }
+
+    @FunctionalInterface
+    public interface RelicSupplier {
+        AbstractRelicSetBonus get(AbstractCharacter<?> character);
     }
 
 }

@@ -3,34 +3,32 @@ package amelia;
 import battleLogic.Battle;
 import battleLogic.IBattle;
 import battleLogic.log.MetricLogger;
-import battleLogic.log.VoidLogger;
 import battleLogic.log.lines.character.TotalDamage;
 import battleLogic.log.lines.metrics.BattleMetrics;
 import battleLogic.log.lines.metrics.FinalDmgMetrics;
 import battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
-import battleLogic.log.lines.metrics.StatType;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
-import enemies.FireWindImgLightningWeakEnemy;
-import enemies.PhysFireWeakEnemy;
-import lightcones.AbstractLightcone;
 import lightcones.abundance.QuidProQuo;
-import lightcones.harmony.ButTheBattleIsntOver;
 import lightcones.harmony.FlowingNightglow;
 import lightcones.harmony.ForTomorrowsJourney;
-import lightcones.harmony.MemoriesOfThePast;
 import lightcones.harmony.PoisedToBloom;
 import lightcones.hunt.CruisingInTheStellarSea;
 import lightcones.hunt.IVentureForthToHunt;
 import lightcones.hunt.OnlySilenceRemains;
+import lightcones.hunt.ReturnToDarkness;
 import lightcones.hunt.Swordplay;
+import lightcones.preservation.ConcertForTwo;
+import relics.RelicStats;
+import relics.ornament.BrokenKeel;
+import relics.ornament.LushakaTheSunkenSeas;
+import relics.ornament.SpringhtlyVonwacq;
 import teams.PlayerTeam;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -44,8 +42,6 @@ import static amelia.FeixiaoTeams.*;
 
 public class Tests {
 
-    static long startTime = System.currentTimeMillis();
-
     // ANSI escape codes for colors
     public static final String RESET = "\033[0m";  // Reset to default color
     public static final String RED = "\033[0;31m";
@@ -54,10 +50,6 @@ public class Tests {
     public static final String BLUE = "\033[0;34m";
     public static final String PURPLE = "\033[0;35m";
     public static final String CYAN = "\033[0;36m";
-
-    private static final Pattern ANSI_ESCAPE = Pattern.compile("\033\\[[;\\d]*m");
-
-
     static final List<AbstractCharacter<?>> baseTeam = FeixiaoMarch(
             () -> myRobin(ForTomorrowsJourney::new),
             FeixiaoTeams::myGallagher
@@ -66,40 +58,45 @@ public class Tests {
             () -> myRobin(ForTomorrowsJourney::new),
             () -> myGallagher(QuidProQuo::new)
     );
-
-    static final List<AbstractCharacter<?>> baseTeam3 = FeixiaoMarch(
-            () -> myRobin(ForTomorrowsJourney::new),
-            () -> myGallagher(QuidProQuo::new)
+    static final List<AbstractCharacter<?>> baseTeam3 = of(
+            myFeixiao(CruisingInTheStellarSea::new),
+            myMarch(Swordplay::new),
+            myRobin(ForTomorrowsJourney::new),
+            myGallagher(QuidProQuo::new)
     );
-
     static final List<AbstractCharacter<?>> baseTeam4 = of(
             myFeixiao(CruisingInTheStellarSea::new),
             myMarch(Swordplay::new),
             myRobin(ForTomorrowsJourney::new),
             myGallagher(QuidProQuo::new)
     );
-
     static final List<AbstractCharacter<?>> baseTeam5 = of(
-            myFeixiao(Swordplay::new),
-            myMarch(CruisingInTheStellarSea::new),
+            myFeixiao(CruisingInTheStellarSea::new),
+            myMarch(Swordplay::new),
             myRobin(ForTomorrowsJourney::new),
             myGallagher(QuidProQuo::new)
     );
-
     static final List<AbstractCharacter<?>> baseTeam6 = of(
             PlayerTeam.getPrebuiltFeixiao(),
             PlayerTeam.getPrebuiltTopaz(),
             PlayerTeam.getPrebuiltRobin(),
             PlayerTeam.getPrebuiltAventurine()
     );
-
-    static final List<List<AbstractCharacter<?>>> teams  = new ArrayList<>();
-    static final List<List<AbstractCharacter<?>>> teams2  = new ArrayList<>();
-    static final List<List<AbstractCharacter<?>>> teams3  = new ArrayList<>();
-    static final List<List<AbstractCharacter<?>>> teams4  = new ArrayList<>();
-    static final List<List<AbstractCharacter<?>>> teams5  = new ArrayList<>();
-    static final List<List<AbstractCharacter<?>>> teams6  = new ArrayList<>();
-
+    static final List<AbstractCharacter<?>> baseTeam7 = of(
+            myFeixiao(Swordplay::new),
+            myOtherMarch(CruisingInTheStellarSea::new),
+            myRobin(ForTomorrowsJourney::new),
+            myAventurine(RelicStats.Stats.DEF_PER)
+    );
+    static final List<List<AbstractCharacter<?>>> teams = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams2 = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams3 = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams4 = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams5 = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams6 = new ArrayList<>();
+    static final List<List<AbstractCharacter<?>>> teams7 = new ArrayList<>();
+    private static final Pattern ANSI_ESCAPE = Pattern.compile("\033\\[[;\\d]*m");
+    static long startTime = System.currentTimeMillis();
 
     static {
 
@@ -107,12 +104,12 @@ public class Tests {
             repeater((LightConeSupplier feixiaoLightcone) -> {
                 repeater((LightConeSupplier marchLightcone) -> {
                     teams.add(
-                      of(
-                              myFeixiao(feixiaoLightcone),
-                              myMarch(marchLightcone),
-                              myRobin(robinLightcone),
-                              myGallagher()
-                      )
+                            of(
+                                    myFeixiao(feixiaoLightcone),
+                                    myMarch(marchLightcone),
+                                    myRobin(robinLightcone),
+                                    myGallagher()
+                            )
                     );
                 }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
@@ -121,17 +118,26 @@ public class Tests {
         repeater((LightConeSupplier robinLightcone) -> {
             repeater((LightConeSupplier feixiaoLightcone) -> {
                 repeater((LightConeSupplier marchLightcone) -> {
-                        teams2.add(
-                                of(
-                                        myFeixiao(feixiaoLightcone),
-                                        myMarch(marchLightcone),
-                                        myRobin(robinLightcone),
-                                        myGallagher(QuidProQuo::new)
-                                )
-                        );
+                    teams2.add(
+                            of(
+                                    myFeixiao(feixiaoLightcone),
+                                    myMarch(marchLightcone),
+                                    myRobin(robinLightcone),
+                                    myGallagher(QuidProQuo::new)
+                            )
+                    );
                 }, CruisingInTheStellarSea::new, Swordplay::new, OnlySilenceRemains::new);
             }, IVentureForthToHunt::new, CruisingInTheStellarSea::new);
         }, ForTomorrowsJourney::new);
+
+        repeater((LightConeSupplier l) -> {
+            teams3.add(of(
+                    myFeixiao(l),
+                    myMarch(Swordplay::new),
+                    myRobin(ForTomorrowsJourney::new),
+                    myGallagher(QuidProQuo::new)
+            ));
+        }, IVentureForthToHunt::new, OnlySilenceRemains::new, Swordplay::new, ReturnToDarkness::new);
 
         repeater((Supplier<AbstractCharacter<?>> c) -> {
             teams4.add(of(
@@ -154,35 +160,7 @@ public class Tests {
         }, () -> myMarch(Swordplay::new), PlayerTeam::getPrebuiltTopaz, FeixiaoTeams::myMoze);
 
         teams5.add(of(
-                myFeixiaoCD(Swordplay::new),
-                myMarch(CruisingInTheStellarSea::new),
-                myRobin(ForTomorrowsJourney::new),
-                myGallagher(QuidProQuo::new)
-        ));
-
-        teams5.add(of(
-                myFeixiaoCD(CruisingInTheStellarSea::new),
-                myMarch(Swordplay::new),
-                myRobin(ForTomorrowsJourney::new),
-                myGallagher(QuidProQuo::new)
-        ));
-
-        teams5.add(of(
-                myFeixiao(CruisingInTheStellarSea::new),
-                myMarch(Swordplay::new),
-                myRobin(ForTomorrowsJourney::new),
-                myGallagher(QuidProQuo::new)
-        ));
-
-        teams5.add(of(
-                myFeixiao(IVentureForthToHunt::new),
-                myMarch(CruisingInTheStellarSea::new),
-                myRobin(ForTomorrowsJourney::new),
-                myGallagher(QuidProQuo::new)
-        ));
-
-        teams5.add(of(
-                myFeixiaoCD(IVentureForthToHunt::new),
+                myFeixiao(Swordplay::new),
                 myMarch(CruisingInTheStellarSea::new),
                 myRobin(ForTomorrowsJourney::new),
                 myGallagher(QuidProQuo::new)
@@ -197,6 +175,37 @@ public class Tests {
                     c
             ));
         }, PlayerTeam.getPrebuiltHuohuo(), PlayerTeam.getPrebuiltFuXuan(), PlayerTeam.getPrebuiltGallagher());
+
+        repeater((Supplier<AbstractCharacter<?>> secondDps) -> {
+                    repeater((RelicSupplier r) -> {
+                                repeater((stat) -> {
+                                            repeater((LightConeSupplier c) -> {
+                                                        teams7.add(of(
+                                                                myFeixiao(Swordplay::new),
+                                                                secondDps.get(),
+                                                                myRobin(ForTomorrowsJourney::new, r),
+                                                                myAventurine(c, stat)
+                                                        ));
+                                                    },
+                                                    //  InherentlyUnjustDestiny::new,
+                                                    ConcertForTwo::new
+                                            );
+                                        },
+                                        //RelicStats.Stats.CRIT_DAMAGE,
+                                        // RelicStats.Stats.CRIT_RATE,
+                                        RelicStats.Stats.DEF_PER
+                                );
+                            },
+                            SpringhtlyVonwacq::new,
+                            LushakaTheSunkenSeas::new,
+                            BrokenKeel::new
+                    );
+                },
+                () -> PlayerTeam.getPrebuiltMoze(CruisingInTheStellarSea::new),
+                PlayerTeam::getPrebuiltMoze,
+                FeixiaoTeams::myOtherMarch,
+                () -> myOtherMarch(Swordplay::new)
+        );
     }
 
     public static void runTests() {
@@ -204,11 +213,12 @@ public class Tests {
         //System.out.println("\n\n\n");
         //runTests(baseTeam2, teams2);
         //System.out.println("\n\n\n");
-        //runTests(baseTeam3, teams3, 150);
+        //runTests(baseTeam3, teams3, 550);
         //System.out.println("\n\n\n");
         //runTests(baseTeam4, teams4, 550);
         //runTests(baseTeam5, teams5, 550);
-        runTests(baseTeam6, teams6);
+        //runTests(baseTeam6, teams6);
+        runTests(baseTeam7, teams7, 550);
     }
 
     private static void runTests(List<AbstractCharacter<?>> baseTeam, List<List<AbstractCharacter<?>>> teams) {
@@ -227,7 +237,7 @@ public class Tests {
     private static IBattle setupBattle(List<AbstractCharacter<?>> team, List<BattleResult> results) {
         String key = team
                 .stream()
-                .map(c -> c.getClass().getSimpleName() + "(" + c.lightcone.getClass().getSimpleName() + ")"+c.nameSuffix)
+                .map(c -> c.getClass().getSimpleName() + "(" + c.lightcone.getClass().getSimpleName() + ")" + c.nameSuffix)
                 .collect(Collectors.joining(" - "));
         PrintStream printStream;
         try {
@@ -325,7 +335,7 @@ public class Tests {
         return formatResult(result, -1, -1);
     }
 
-    private static List<String> formatResult(BattleResult result,float baseFinalDPAV, float lastFinalDPAV) {
+    private static List<String> formatResult(BattleResult result, float baseFinalDPAV, float lastFinalDPAV) {
         int totalPlayerDmg = result.finalDmgMetrics.totalPlayerDmg;
         float finalDPAV = result.battleMetrics.finalDPAV;
 
@@ -411,7 +421,7 @@ public class Tests {
 
     private static String padRight(String s, int n) {
         int diff = s.length() - getStrippedLength(s);
-        return String.format("%-" + (n+diff) + "s", s);
+        return String.format("%-" + (n + diff) + "s", s);
     }
 
     @SafeVarargs
@@ -420,7 +430,7 @@ public class Tests {
     }
 
     @SafeVarargs
-    private static <T> void repeater(Consumer<T> c, T ...s) {
+    private static <T> void repeater(Consumer<T> c, T... s) {
         for (T t : s) {
             c.accept(t);
         }

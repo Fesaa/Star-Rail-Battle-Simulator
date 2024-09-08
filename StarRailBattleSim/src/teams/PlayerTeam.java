@@ -1,5 +1,6 @@
 package teams;
 
+import amelia.FeixiaoTeams;
 import characters.AbstractCharacter;
 import characters.adventurine.Aventurine;
 import characters.asta.Asta;
@@ -693,9 +694,9 @@ public class PlayerTeam {
         return character;
     }
 
-    public static AbstractCharacter<?> getPrebuiltMoze() {
+    public static AbstractCharacter<?> getPrebuiltMoze(FeixiaoTeams.LightConeSupplier lightConeSupplier) {
         AbstractCharacter<?> character = new Moze();
-        character.EquipLightcone(new Swordplay(character));
+        character.EquipLightcone(lightConeSupplier.get(character));
         character.EquipRelicSet(new TheAshblazingGrandDuke(character));
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
@@ -704,6 +705,10 @@ public class PlayerTeam {
         relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 17).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 7);
         relicStats.equipTo(character);
         return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltMoze() {
+        return getPrebuiltMoze(Swordplay::new);
     }
 
     public static AbstractCharacter<?> getPrebuiltBronyaFei() {
