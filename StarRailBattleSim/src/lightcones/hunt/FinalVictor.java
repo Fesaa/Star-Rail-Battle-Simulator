@@ -4,7 +4,6 @@ import characters.AbstractCharacter;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
 import powers.PowerStat;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class FinalVictor extends AbstractLightcone {
 
@@ -17,6 +16,5 @@ public class FinalVictor extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 20, "Final Victor Attack Boost"));
 
         // I'm really not sure how to do this one
-        throw new NotImplementedException();
     }
 }

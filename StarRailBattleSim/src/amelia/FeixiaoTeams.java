@@ -222,19 +222,21 @@ public class FeixiaoTeams {
     static AbstractCharacter<?> myMarch(LightConeSupplier lightConeSupplier) {
         AbstractCharacter<?> march = new SwordMarch();
         march.EquipLightcone(lightConeSupplier.get(march));
-        march.EquipRelicSet(new PrisonerInDeepConfinement(march, false));
-        march.EquipRelicSet(new WatchMakerMasterOfDreamMachinations(march, false));
+       // march.EquipRelicSet(new PrisonerInDeepConfinement(march, false));
+        //march.EquipRelicSet(new WatchMakerMasterOfDreamMachinations(march, false));
         march.EquipRelicSet(new RutilentArena(march));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_RATE)
+        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
                 .addMainStat(RelicStats.Stats.SPEED)
                 .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
                 .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 12) // 3 + 3 + 3 + +3
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11) // 2 + 4 + 3 + 2
+                .addSubStat(RelicStats.Stats.CRIT_RATE, 17) // 3 + 2 + 3 + 3 + 3 + 3
+                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 2) // 1 + 2 + 2
                 .addSubStat(RelicStats.Stats.ATK_PER, 3) // 1 + 2
-                .addSubStat(RelicStats.Stats.SPEED, 5); // 2 + 2 + 1
+                .addSubStat(RelicStats.Stats.SPEED, 7); // 1 + 3 + 2
+
+        march.nameSuffix = "Rainbow";
 
         stats.equipTo(march);
         return march;
@@ -246,7 +248,7 @@ public class FeixiaoTeams {
 
     static AbstractCharacter<?> myOtherMarch(LightConeSupplier lightConeSupplier) {
         AbstractCharacter<?> march = new SwordMarch();
-        march.nameSuffix = " CD";
+        march.nameSuffix = " Other";
         march.EquipLightcone(lightConeSupplier.get(march));
         march.EquipRelicSet(new MessengerTraversingHackerspace(march, false));
         march.EquipRelicSet(new RutilentArena(march));

@@ -5,7 +5,6 @@ import battleLogic.BattleEvents;
 import battleLogic.BattleParticipant;
 import battleLogic.IBattle;
 import characters.AbstractCharacter;
-import com.sun.istack.internal.NotNull;
 import enemies.AbstractEnemy;
 
 import java.util.ArrayList;
@@ -138,7 +137,6 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
      * @param stat The stat to get
      * @return The value of the stat, 0 if the stat is not set
      */
-    @NotNull
     public float getStat(PowerStat stat) {
         return this.stats.getOrDefault(stat, 0f);
     }

@@ -201,10 +201,9 @@ public class Tests {
                             BrokenKeel::new
                     );
                 },
-                () -> PlayerTeam.getPrebuiltMoze(CruisingInTheStellarSea::new),
-                PlayerTeam::getPrebuiltMoze,
-                FeixiaoTeams::myOtherMarch,
-                () -> myOtherMarch(Swordplay::new)
+                FeixiaoTeams::myMarch,
+                FeixiaoTeams::myOtherMarch
+                //() -> myOtherMarch(Swordplay::new)
         );
     }
 
