@@ -252,4 +252,12 @@ public abstract class Logger implements BattleParticipant {
         log(enemyDied);
     }
 
+    public void handle(WaveStart waveStart) {
+        log(waveStart);
+    }
+
+    public void handle(WaveEnd waveEnd) {
+        log(waveEnd);
+    }
+
 }

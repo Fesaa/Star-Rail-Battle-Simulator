@@ -25,7 +25,7 @@ import static teams.PlayerTeam.*;
 public class BattleSim {
 
     public static void main(String[] args) {
-        //debugTeam();
+       // debugTeam();
         //generateReportYunli();
         //generateReportFeixiao();
         //generateReportFeixiaoLightconeReport();
@@ -52,7 +52,7 @@ public class BattleSim {
 //        enemyTeam.add(new PhysWeakEnemy(2, 2));
 //        battle.setEnemyTeam(enemyTeam);
 
-        battle.setPlayerTeam(new FeixiaoRobinAventurineTopaz().getTeam());
+        //battle.setPlayerTeam(new FeixiaoRobinAventurineTopaz().getTeam());
         //battle.setPlayerTeam(new FeixiaoRobinAventurineMarch().getTeam());
         //battle.setPlayerTeam(new FeixiaoRobinAventurineMoze().getTeam());
         //battle.setPlayerTeam(new FeixiaoSparkleAventurineTopaz().getTeam());
@@ -84,11 +84,12 @@ public class BattleSim {
         //battle.setPlayerTeam(new PelaFeixiaoGallagherMarch().getTeam());
         //battle.setPlayerTeam(new FeixiaoMozeGallagherMarch().getTeam());
         //battle.setPlayerTeam(new FeixiaoRuanMeiAventurineMarch().getTeam());
-        battle.setPlayerTeam(new TopazTeams.RatioRobinAventurineTopaz().getTeam());
-        battle.setPlayerTeam(new TopazTeams.FeixiaoRobinAventurineTopaz().getTeam());
-        battle.setPlayerTeam(new TopazTeams.MarchRobinAventurineTopaz().getTeam());
-        battle.setPlayerTeam(new TopazTeams.MozeRobinAventurineTopaz().getTeam());
-        battle.setPlayerTeam(new TopazTeams.HuohuoYunliRobinTopaz().getTeam());
+        //battle.setPlayerTeam(new TopazTeams.RatioRobinAventurineTopaz().getTeam());
+        //battle.setPlayerTeam(new TopazTeams.FeixiaoRobinAventurineTopaz().getTeam());
+        //battle.setPlayerTeam(new TopazTeams.MarchRobinAventurineTopaz().getTeam());
+        //battle.setPlayerTeam(new TopazTeams.MozeRobinAventurineTopaz().getTeam());
+        //battle.setPlayerTeam(new TopazTeams.HuohuoYunliRobinTopaz().getTeam());
+        battle.setPlayerTeam(new PelaYunliRobinHuohuoTeam().getTeam());
 
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
         //enemyTeam.add(new WindWeakEnemy(0, 0));

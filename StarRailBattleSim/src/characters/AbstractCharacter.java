@@ -235,6 +235,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     protected abstract void useBasic();
     protected abstract void useUltimate();
 
+    @Override
     public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
         increaseEnergy(energyFromAttacked, ATTACKED_ENERGY_GAIN);
     }

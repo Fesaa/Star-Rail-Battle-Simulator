@@ -28,6 +28,10 @@ public interface IBattle {
     AbstractEnemy getMiddleEnemy();
     AbstractEnemy getRandomEnemy();
     void removeEnemy(AbstractEnemy enemy);
+    void addEnemy(AbstractEnemy enemy, float initialAA);
+    default void addEnemy(AbstractEnemy enemy) {
+        this.addEnemy(enemy, 0);
+    }
 
     AbstractEntity getCurrentUnit();
     void setCurrentUnit(AbstractEntity entity);

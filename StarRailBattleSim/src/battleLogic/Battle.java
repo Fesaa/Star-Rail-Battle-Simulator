@@ -33,8 +33,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Battle implements IBattle {
-    public List<AbstractCharacter<?>> playerTeam;
-    public List<AbstractEnemy> enemyTeam;
+    protected List<AbstractCharacter<?>> playerTeam;
+    protected List<AbstractEnemy> enemyTeam;
 
     private final BattleHelpers battleHelpers;
     private final Logger logger;
@@ -106,7 +106,18 @@ public class Battle implements IBattle {
     public void removeEnemy(AbstractEnemy enemy) {
         this.enemyTeam.removeIf(e -> e == enemy);
         this.actionValueMap.remove(enemy);
-        this.onRemoveRemove();
+        this.onEnemyRemove();
+    }
+
+    @Override
+    public void addEnemy(AbstractEnemy enemy, float initialAA) {
+        this.enemyTeam.add(enemy);
+        enemy.setBattle(this);
+
+        this.actionValueMap.put(enemy, enemy.getBaseAV());
+        if (initialAA > 0) {
+            this.AdvanceEntity(enemy, initialAA);
+        }
     }
 
     /**
@@ -115,7 +126,7 @@ public class Battle implements IBattle {
      * <p>
      * Default behavior, end battle if everyone dead
      */
-    protected void onRemoveRemove() {
+    protected void onEnemyRemove() {
         if (!this.enemyTeam.isEmpty()) {
             return;
         }
