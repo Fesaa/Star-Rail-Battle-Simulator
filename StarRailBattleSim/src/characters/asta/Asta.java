@@ -140,7 +140,7 @@ public class Asta extends AbstractCharacter<Asta> {
             if (character == Asta.this) {
                 int chargeGain = enemiesHit.size();
                 for (AbstractEnemy enemy : enemiesHit) {
-                    if (enemy.weaknessMap.contains(ElementType.FIRE)) {
+                    if (enemy.hasWeakness(ElementType.FIRE)) {
                         chargeGain++;
                     }
                 }

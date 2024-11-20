@@ -24,6 +24,11 @@ public interface BattleEvents {
     default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {}
 
     /**
+     * Called when the enemy has their weakness broken
+     */
+    default void onWeaknessBreak() {}
+
+    /**
      * Called from getBattle().getHelper()#PreAttackLogic
      * @param damageTypes The types of damage that will be dealt
      */

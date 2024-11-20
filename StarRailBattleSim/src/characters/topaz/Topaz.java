@@ -235,7 +235,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (enemy.weaknessMap.contains(ElementType.FIRE)) {
+            if (enemy.hasWeakness(ElementType.FIRE)) {
                 return 15;
             }
             return 0;

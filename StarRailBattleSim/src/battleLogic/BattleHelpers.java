@@ -126,7 +126,7 @@ public class BattleHelpers implements BattleParticipant {
         if (enemyDefPercent < -100) {
             enemyDefPercent = -100;
         }
-        float defMultiplierFloat = (source.level + 20) / ((target.level + 20) * (1 + enemyDefPercent / 100) + (source.level + 20));
+        float defMultiplierFloat = (source.level + 20) / ((target.getLevel() + 20) * (1 + enemyDefPercent / 100) + (source.level + 20));
 
         float resPen = 0;
         for (AbstractPower power : source.powerList) {
@@ -158,7 +158,7 @@ public class BattleHelpers implements BattleParticipant {
         float damageTakenMultiplier = 1 + damageTaken / 100;
 
         float toughnessMultiplier = 0.9f;
-        if (target.weaknessBroken) {
+        if (target.isWeaknessBroken()) {
             toughnessMultiplier = 1.0f;
         }
 
@@ -215,7 +215,7 @@ public class BattleHelpers implements BattleParticipant {
     }
 
     public float calculateBreakDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, AbstractCharacter.ElementType damageElement) {
-        float maxToughnessMultiplier = 0.5f + (target.maxToughness / 40);
+        float maxToughnessMultiplier = 0.5f + (target.maxToughness() / 40);
         float elementMultipler;
         if (damageElement == AbstractCharacter.ElementType.ICE || damageElement == AbstractCharacter.ElementType.LIGHTNING) {
             elementMultipler = 1;
@@ -231,7 +231,7 @@ public class BattleHelpers implements BattleParticipant {
         float breakEffectMultiplierFloat = 1 + breakEffectMultiplier / 100;
 
         float enemyDefPercent = target.getFinalDefense();
-        float defMultiplierFloat = (source.level + 20) / ((target.level + 20) * (1 + enemyDefPercent / 100) + (source.level + 20));
+        float defMultiplierFloat = (source.level + 20) / ((target.getLevel() + 20) * (1 + enemyDefPercent / 100) + (source.level + 20));
 
         float resPen = source.getTotalResPen();
         float resMultiplier = 100 - (target.getRes(damageElement) - resPen);
@@ -247,7 +247,7 @@ public class BattleHelpers implements BattleParticipant {
         float damageTakenMultiplier = 1 + damageTaken / 100;
 
         float toughnessMultiplier = 0.9f;
-        if (target.weaknessBroken) {
+        if (target.isWeaknessBroken()) {
             toughnessMultiplier = 1.0f;
         }
 
@@ -271,11 +271,11 @@ public class BattleHelpers implements BattleParticipant {
         float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, types, damageElement);
 
         toughnessDamage = calculateToughenssDamage(source, toughnessDamage);
-        if (target.weaknessMap.contains(damageElement) && toughnessDamage > 0) {
+        if (target.hasWeakness(damageElement) && toughnessDamage > 0) {
             target.reduceToughness(toughnessDamage);
         } else {
             if (source instanceof SwordMarch) {
-                if (damageElement == source.elementType && ((SwordMarch) source).master != null && target.weaknessMap.contains(((SwordMarch) source).master.elementType)) {
+                if (damageElement == source.elementType && ((SwordMarch) source).master != null && target.hasWeakness(((SwordMarch) source).master.elementType)) {
                     target.reduceToughness(toughnessDamage);
                 }
             }

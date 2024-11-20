@@ -126,7 +126,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         ArrayList<AbstractEnemy> nonBrokenEnemies = new ArrayList<>();
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
             getBattle().getHelper().hitEnemy(this, enemy, 0.75f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            if (!enemy.weaknessBroken) {
+            if (!enemy.isWeaknessBroken()) {
                 nonBrokenEnemies.add(enemy);
             }
         }

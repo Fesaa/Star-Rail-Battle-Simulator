@@ -4,14 +4,15 @@ import battleLogic.log.Loggable;
 import battleLogic.log.Logger;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
+import enemies.EnemyAttackType;
 
 public class EnemyAction implements Loggable {
 
     public final AbstractEnemy enemy;
     public final AbstractCharacter<?> hit;
-    public final AbstractEnemy.EnemyAttackType attackType;
+    public final EnemyAttackType attackType;
 
-    public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, AbstractEnemy.EnemyAttackType attackType) {
+    public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, EnemyAttackType attackType) {
         this.enemy = enemy;
         this.hit = hit;
         this.attackType = attackType;
@@ -19,7 +20,7 @@ public class EnemyAction implements Loggable {
 
     @Override
     public String asString() {
-        if (this.attackType.equals(AbstractEnemy.EnemyAttackType.AOE)) {
+        if (this.attackType.equals(EnemyAttackType.AOE)) {
             return this.enemy.name + " used AOE attack";
         }
 

@@ -279,7 +279,7 @@ public class Battle implements IBattle {
         Yunli yunli = getYunli();
         SwordMarch march = getSwordMarch();
 
-        while (battleLength > 0) {
+        while (battleLength > 0 && this.isInCombat) {
             try {
                 this.battleLoop(yunli, march); // TODO: THIS SHOULD NOT NEED CHARACTERS
             } catch (ForceBattleEnd forceBattleEnd) {

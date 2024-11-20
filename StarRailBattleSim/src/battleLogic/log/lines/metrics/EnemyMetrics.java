@@ -18,7 +18,7 @@ public class EnemyMetrics implements Loggable {
     public EnemyMetrics(AbstractEnemy enemy) {
         this.enemy = enemy;
 
-        this.speed = enemy.baseSpeed;
+        this.speed = enemy.getBaseSpeed();
         this.turnsTaken = enemy.numTurnsMetric;
         this.totalAttacks = enemy.numAttacksMetric;
         this.singleTargetAttacks = enemy.numSingleTargetMetric;

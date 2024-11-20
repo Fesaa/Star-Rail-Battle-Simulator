@@ -35,7 +35,7 @@ public class GeniusOfBrilliantStars extends AbstractRelicSetBonus {
 
         @Override
         public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (enemy.weaknessMap.contains(AbstractCharacter.ElementType.QUANTUM)) {
+            if (enemy.hasWeakness(AbstractCharacter.ElementType.QUANTUM)) {
                 return 10 * 2;
             }
 

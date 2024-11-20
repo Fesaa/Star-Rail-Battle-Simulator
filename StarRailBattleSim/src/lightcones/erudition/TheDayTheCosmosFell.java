@@ -23,7 +23,7 @@ public class TheDayTheCosmosFell extends AbstractLightcone {
     @Override
     public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
         if (enemiesHit.stream()
-                .filter(e -> e.weaknessMap.contains(this.owner.elementType))
+                .filter(e -> e.hasWeakness(this.owner.elementType))
                 .count() < 2) return;
 
         this.owner.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 40, 2, "The Day The Cosmos Fell Crit Damage Boost"));

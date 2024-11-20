@@ -1,15 +1,12 @@
 package enemies;
 
 import battleLogic.AbstractEntity;
-import battleLogic.log.lines.enemy.EnemyAction;
-import battleLogic.log.lines.enemy.EnemyDied;
+import battleLogic.BattleEvents;
 import battleLogic.log.lines.enemy.ForcedAttack;
 import battleLogic.log.lines.enemy.ReduceToughness;
 import battleLogic.log.lines.enemy.RuanMeiDelay;
-import battleLogic.log.lines.enemy.SecondAction;
 import battleLogic.log.lines.enemy.WeaknessBreakRecover;
 import characters.AbstractCharacter;
-import characters.moze.Moze;
 import characters.ruanmei.RuanMei;
 import powers.AbstractPower;
 import powers.PowerStat;
@@ -17,68 +14,76 @@ import powers.TauntPower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractEnemy extends AbstractEntity {
+    public static final int DEFAULT_RES = 20;
 
-    public enum EnemyAttackType {
-        AOE(25), BLAST(20), SINGLE(55);
+    public final EnemyType type;
 
-        public final int weight;
+    protected final int baseHP;
+    protected final int baseATK;
+    protected final int baseDEF;
+    protected final int toughness;
+    protected final int level;
 
-        EnemyAttackType(int weight) {
-            this.weight = weight;
-        }
-    }
-    public int baseHP;
-    public int baseAtk;
-    public int baseDef;
-    public int level;
-    protected HashMap<AbstractCharacter.ElementType, Integer> resMap;
-    public ArrayList<AbstractCharacter.ElementType> weaknessMap;
-    public final int DEFAULT_RES = 20;
-    public float toughness;
-    public float maxToughness;
-    public boolean weaknessBroken = false;
-    public final int doubleActionCooldown;
-    public int doubleActionCounter;
+    private final Map<AbstractCharacter.ElementType, Integer> resMap = new HashMap<>();
+    private final List<AbstractCharacter.ElementType> weaknessMap = new ArrayList<>();
+
+    // Moc increases hp this way
+    protected int HPMultiplier;
+
     public int numAttacksMetric = 0;
     public int numSingleTargetMetric = 0;
     public int numBlastMetric = 0;
     public int numAoEMetric = 0;
     public int timesBrokenMetric = 0;
 
-    private float currentHP = 0;
+    protected float currentHp = 0;
+    protected float currentToughness = 0;
 
-    public AbstractEnemy(String name, int baseHP, int baseAtk, int baseDef, int baseSpeed, int level, int toughness, int doubleActionCooldown) {
-        super();
+
+    public AbstractEnemy(String name, EnemyType type, int baseHP, int baseATK, int baseDEF, int baseSpeed, int toughness, int level) {
         this.name = name;
+        this.type = type;
         this.baseHP = baseHP;
-        this.baseAtk = baseAtk;
-        this.baseDef = baseDef;
+        this.baseATK = baseATK;
+        this.baseDEF = baseDEF;
         this.baseSpeed = baseSpeed;
-        this.level = level;
-        this.maxToughness = toughness;
         this.toughness = toughness;
-        this.doubleActionCooldown = doubleActionCooldown;
-        this.doubleActionCounter = doubleActionCooldown;
-        powerList = new ArrayList<>();
-        weaknessMap = new ArrayList<>();
-        setUpDefaultRes();
+        this.level = level;
+        this.setUpDefaultRes();
     }
 
-    public AbstractEnemy(String name, int baseHP, int baseAtk, int baseDef, int baseSpeed, int level, int toughness) {
-        this(name, baseHP, baseAtk, baseDef, baseSpeed, level, toughness, -1);
+    public int getLevel() {
+        return level;
+    }
+
+    public boolean isWeaknessBroken() {
+        return this.currentToughness == 0;
+    }
+
+    public float maxToughness() {
+        return this.toughness;
+    }
+
+    public int getBaseSpeed() {
+        return baseSpeed;
+    }
+
+    public void setHPMultiplier(int HPMultiplier) {
+        this.HPMultiplier = HPMultiplier;
     }
 
     public float getFinalAttack() {
-        int totalBaseAtk = baseAtk;
-        int totalBonusAtkPercent = 0;
-        int totalBonusFlatAtk = 0;
+        float totalBonusAtkPercent = 0;
+        float totalBonusFlatAtk = 0;
         for (AbstractPower power : powerList) {
             totalBonusAtkPercent += power.getStat(PowerStat.ATK_PERCENT);
             totalBonusFlatAtk += power.getStat(PowerStat.FLAT_ATK);
         }
-        return (int) (totalBaseAtk * (1 + totalBonusAtkPercent / 100) + totalBonusFlatAtk);
+        return (int) ((float) this.baseATK * (1 + totalBonusAtkPercent / 100) + totalBonusFlatAtk);
     }
 
     public float getFinalDefense() {
@@ -90,8 +95,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
         return totalDefenseBonus - totalDefenseReduction;
     }
+
     public void setUpDefaultRes() {
-        resMap = new HashMap<>();
         resMap.put(AbstractCharacter.ElementType.FIRE, DEFAULT_RES);
         resMap.put(AbstractCharacter.ElementType.ICE, DEFAULT_RES);
         resMap.put(AbstractCharacter.ElementType.WIND, DEFAULT_RES);
@@ -109,24 +114,16 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return resMap.get(elementType);
     }
 
-    public void takeTurn() {
-        if (weaknessBroken) {
-            return;
-        }
-        attack();
-        if (doubleActionCounter == 0) {
-            getBattle().addToLog(new SecondAction(this));
-            attack();
-            doubleActionCounter = doubleActionCooldown;
-        } else {
-            doubleActionCounter--;
-        }
-        numTurnsMetric++;
+    public void addWeakness(AbstractCharacter.ElementType elementType) {
+        this.weaknessMap.add(elementType);
     }
 
-    // TODO: Implement this correctly with buffs etc.
-    protected float attackDmg() {
-        return this.getFinalAttack();
+    public void removeWeakness(AbstractCharacter.ElementType elementType) {
+        this.weaknessMap.remove(elementType);
+    }
+
+    public boolean hasWeakness(AbstractCharacter.ElementType elementType) {
+        return this.weaknessMap.contains(elementType);
     }
 
     protected int getRandomTargetPosition() {
@@ -174,111 +171,73 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return getBattle().getPlayers().size() -1;
     }
 
-    public void attack() {
-        numAttacksMetric++;
-        float dmgToDeal = this.attackDmg();
-
-        EnemyAttackType attackType = rollAttackType();
-        if (attackType == EnemyAttackType.AOE) {
-            numAoEMetric++;
-            getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
-            for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-                getBattle().getHelper().attackCharacter(this, character, 10, dmgToDeal);
-            }
-            return;
-        }
-
-        int targetPos = this.getRandomTargetPosition();
-        AbstractCharacter<?> target = getBattle().getPlayers().get(targetPos); // Fine to throw if pos is too large.
-
-        if (attackType == EnemyAttackType.SINGLE) {
-            numSingleTargetMetric++;
-            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
-            getBattle().getHelper().attackCharacter(this, target, 10, dmgToDeal);
-        } else {
-            numBlastMetric++;
-            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
-            getBattle().getHelper().attackCharacter(this, target, 10, dmgToDeal);
-            if (targetPos + 1 < getBattle().getPlayers().size()) {
-                getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(targetPos + 1), 5, dmgToDeal);
-            }
-            if (targetPos - 1 >= 0) {
-                getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(targetPos - 1), 5,dmgToDeal );
-            }
-        }
-    }
-
-    public EnemyAttackType rollAttackType() {
-        double totalWeight= 0.0;
-        for (EnemyAttackType type : EnemyAttackType.values()) {
-            totalWeight += type.weight;
-        }
-        int idx = 0;
-        for (double r = getBattle().getEnemyMoveRng().nextDouble() * totalWeight; idx < EnemyAttackType.values().length - 1; ++idx) {
-            r -= EnemyAttackType.values()[idx].weight;
-            if (r <= 0.0) break;
-        }
-        return EnemyAttackType.values()[idx];
-    }
-
-    // TODO: Check with dark how this would work
-    @Override
-    public void onCombatStart() {
-        this.currentHP = this.baseHP;
-    }
-
-    @Override
-    public void onTurnStart() {
-        if (this.weaknessBroken) {
-            RuanMei.RuanMeiUltDebuff ruanMeiDebuff = (RuanMei.RuanMeiUltDebuff) this.getPower(RuanMei.ULT_DEBUFF_NAME);
-            if (ruanMeiDebuff != null && !ruanMeiDebuff.triggered) {
-                getBattle().addToLog(new RuanMeiDelay());
-                float delay = ruanMeiDebuff.owner.getTotalBreakEffect() * 0.2f + 10;
-                getBattle().DelayEntity(this, delay);
-                ruanMeiDebuff.triggered = true;
-                getBattle().getHelper().breakDamageHitEnemy(ruanMeiDebuff.owner, this, 0.5f);
-            } else {
-                if (this.hasPower(RuanMei.ULT_DEBUFF_NAME)) {
-                    this.removePower(RuanMei.ULT_DEBUFF_NAME);
-                }
-                this.weaknessBroken = false;
-                getBattle().addToLog(new WeaknessBreakRecover(this, this.toughness, this.maxToughness));
-                this.toughness = maxToughness;
-            }
-        }
+    // TODO: Implement this correctly with buffs etc.
+    protected float attackDmg() {
+        return this.getFinalAttack();
     }
 
     public void reduceToughness(float amount) {
-        if (this.weaknessBroken) {
+        if (this.currentToughness == 0) {
             return;
         }
-        float initialToughness = this.toughness;
-        this.toughness -= amount;
-        if (this.toughness <= 0) {
-            this.toughness = 0;
-            this.weaknessBroken = true;
-        }
-        getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.toughness));
-        if (this.weaknessBroken) {
-            timesBrokenMetric++;
+        float initialToughness = this.currentToughness;
+        this.currentToughness = Math.max(initialToughness - amount, 0);
+
+        getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.currentToughness));
+
+        if (this.currentToughness == 0) {
+            this.timesBrokenMetric++;
             getBattle().DelayEntity(this, 25);
-            for (AbstractCharacter character : getBattle().getPlayers()) {
-                character.onWeaknessBreak(this);
-            }
+            getBattle().getPlayers().forEach(p -> {
+                p.onWeaknessBreak(this);
+            });
+            this.emit(BattleEvents::onWeaknessBreak);
         }
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
-        this.currentHP -= totalDmg;
+    public void onCombatStart() {
+        this.currentHp = this.baseHP * this.HPMultiplier;
+        this.currentToughness = this.toughness;
+    }
 
-        if (this.currentHP <= 0) {
-            getBattle().removeEnemy(this);
-            getBattle().addToLog(new EnemyDied(this, character));
+    /**
+     * Weakness bar logic
+     */
+    @Override
+    public void onTurnStart() {
+        if (!this.isWeaknessBroken()) {
+            return;
         }
+
+        RuanMei.RuanMeiUltDebuff ruanMeiDebuff = (RuanMei.RuanMeiUltDebuff) this.getPower(RuanMei.ULT_DEBUFF_NAME);
+        if (ruanMeiDebuff != null && !ruanMeiDebuff.triggered) {
+            getBattle().addToLog(new RuanMeiDelay());
+            float delay = ruanMeiDebuff.owner.getTotalBreakEffect() * 0.2f + 10;
+            getBattle().DelayEntity(this, delay);
+            ruanMeiDebuff.triggered = true;
+            //getBattle().getHelper().breakDamageHitEnemy(ruanMeiDebuff.owner, this, 0.5f);
+            return;
+        }
+
+        this.removePower(RuanMei.ULT_DEBUFF_NAME);
+        getBattle().addToLog(new WeaknessBreakRecover(this, this.currentHp, this.toughness));
+        this.currentToughness = this.toughness;
     }
 
-    public String getMetrics() {
-        return String.format("Metrics for %s with %d speed \nTurns taken: %d \nTotal attacks: %d \nSingle-target attacks: %d \nBlast attacks: %d \nAoE attacks: %d \nWeakness Broken: %d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
+    @Override
+    public void takeTurn() {
+        if (this.isWeaknessBroken()) {
+            return;
+        }
+
+        this.act();
+        numTurnsMetric++;
     }
+
+    /**
+     * The next action returns true, to continue acting (i.e. double action)
+     */
+    abstract protected void act();
+    abstract public String getMetrics();
 }

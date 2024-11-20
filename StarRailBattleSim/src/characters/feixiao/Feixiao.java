@@ -144,7 +144,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
         float totalMult = 0.9f;
         for (int i = 0; i < numHits; i++) {
-            if (enemy.weaknessBroken) {
+            if (enemy.isWeaknessBroken()) {
                 getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.1f, BattleHelpers.MultiplierStat.ATK, types, 0);
                 getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.9f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
             } else {
