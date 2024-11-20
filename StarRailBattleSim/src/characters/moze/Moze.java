@@ -159,6 +159,11 @@ public class Moze extends AbstractCharacter<Moze> {
         increaseEnergy(20, "from E1");
     }
 
+    @Override
+    public boolean canBeAttacked() {
+        return !this.isDeparted;
+    }
+
     public HashMap<String, String> getCharacterSpecificMetricMap() {
         HashMap<String, String> map = super.getCharacterSpecificMetricMap();
         map.put(FUAsMetricName, String.valueOf(FUAs));

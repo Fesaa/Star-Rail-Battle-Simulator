@@ -459,6 +459,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
 
     }
 
+    public boolean canBeAttacked() {
+        return true;
+    }
+
     public String getMetrics() {
         StringBuilder metrics = new StringBuilder(statsString + String.format("\nCombat Metrics \nTurns taken: %d \nBasics: %d \nSkills: %d \nUltimates: %d \nRotation: %s", numTurnsMetric, numBasicsMetric, numSkillsMetric, numUltsMetric, moveHistory));
         HashMap<String, String> metricsMap = getCharacterSpecificMetricMap();

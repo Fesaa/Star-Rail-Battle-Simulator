@@ -141,25 +141,34 @@ public abstract class AbstractEnemy extends AbstractEntity {
             throw new RuntimeException("Taunter not present in battle.");
         }
 
-        ArrayList<AbstractCharacter<?>> validTargets = new ArrayList<>();
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            if (character instanceof Moze) {
-                if (!((Moze) character).isDeparted) {
-                    validTargets.add(character);
-                }
-            } else {
-                validTargets.add(character);
-            }
-        }
-        double totalWeight = validTargets.stream().mapToDouble(AbstractCharacter::getFinalTauntValue).sum();
+
+        // This code included a correcting from the previous code.
+        // It would use the position of the target inside validTargets
+        // This would be the wrong position to use later on.
+        // We use the new AbstractCharacter#canBeAttacked method to make sure a character can be attacked
+        // Currently only Moze.
+
+        double totalWeight = getBattle().getPlayers().stream().mapToDouble(AbstractCharacter::getFinalTauntValue).sum();
         int characterPosition = 0;
         // TODO: Check if it actually checks like this. I'd think that this way the first position gets attacked lot more
         // even with same taunt. As it just gets checked first. Not sure.
-        for (double r = getBattle().getEnemyTargetRng().nextDouble() * totalWeight; characterPosition < validTargets.size() - 1; ++characterPosition) {
-            r -= validTargets.get(characterPosition).getFinalTauntValue();
-            if (r <= 0.0) break;
+
+        double r = getBattle().getEnemyTargetRng().nextDouble() * totalWeight;
+        for (int pos = 0; pos < getBattle().getPlayers().size(); pos++) {
+            AbstractCharacter<?> character = getBattle().getPlayers().get(pos);
+            if (!character.canBeAttacked()) {
+                // Do not update r value if character cannot be attacked. See todo for concerns.
+                continue;
+            }
+
+            r -= getBattle().getPlayers().get(pos).getFinalTauntValue();
+            if (r <= 0) {
+                return pos;
+            }
         }
-        return characterPosition;
+
+        // Attack last character is no character is found
+        return getBattle().getPlayers().size() -1;
     }
 
     public void attack() {
