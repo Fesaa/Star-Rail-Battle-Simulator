@@ -4,9 +4,24 @@ import battleLogic.log.Loggable;
 import battleLogic.log.Logger;
 
 public class BattleEnd implements Loggable {
+
+    private final String reason;
+
+    public BattleEnd(String reason) {
+        this.reason = reason;
+    }
+
+    public BattleEnd() {
+        this("");
+    }
+
     @Override
     public String asString() {
-        return "Battle Ended";
+        if (this.reason.isEmpty()) {
+            return "Battle Ended";
+        }
+
+        return "Battle Ended: " + this.reason;
     }
 
     @Override

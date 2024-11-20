@@ -2,6 +2,7 @@ package enemies;
 
 import battleLogic.AbstractEntity;
 import battleLogic.log.lines.enemy.EnemyAction;
+import battleLogic.log.lines.enemy.EnemyDied;
 import battleLogic.log.lines.enemy.ForcedAttack;
 import battleLogic.log.lines.enemy.ReduceToughness;
 import battleLogic.log.lines.enemy.RuanMeiDelay;
@@ -45,6 +46,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
     public int numBlastMetric = 0;
     public int numAoEMetric = 0;
     public int timesBrokenMetric = 0;
+
+    private float currentHP = 0;
 
     public AbstractEnemy(String name, int baseHP, int baseAtk, int baseDef, int baseSpeed, int level, int toughness, int doubleActionCooldown) {
         super();
@@ -218,6 +221,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return EnemyAttackType.values()[idx];
     }
 
+    // TODO: Check with dark how this would work
+    @Override
+    public void onCombatStart() {
+        this.currentHP = this.baseHP;
+    }
+
     @Override
     public void onTurnStart() {
         if (this.weaknessBroken) {
@@ -256,6 +265,16 @@ public abstract class AbstractEnemy extends AbstractEntity {
             for (AbstractCharacter character : getBattle().getPlayers()) {
                 character.onWeaknessBreak(this);
             }
+        }
+    }
+
+    @Override
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
+        this.currentHP -= totalDmg;
+
+        if (this.currentHP <= 0) {
+            getBattle().removeEnemy(this);
+            getBattle().addToLog(new EnemyDied(this, character));
         }
     }
 

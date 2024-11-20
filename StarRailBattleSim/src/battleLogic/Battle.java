@@ -25,9 +25,7 @@ import characters.march.SwordMarch;
 import characters.yunli.Yunli;
 import enemies.AbstractEnemy;
 import powers.AbstractPower;
-import powers.PowerStat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +100,27 @@ public class Battle implements IBattle {
     @Override
     public AbstractEnemy getRandomEnemy() {
         return this.enemyTeam.get(getRandomEnemyRng.nextInt(this.enemyTeam.size()));
+    }
+
+    @Override
+    public void removeEnemy(AbstractEnemy enemy) {
+        this.enemyTeam.removeIf(e -> e == enemy);
+        this.actionValueMap.remove(enemy);
+        this.onRemoveRemove();
+    }
+
+    /**
+     * Override to implement custom enemy leave actions.
+     * I.E. For waves, pf, etc...
+     * <p>
+     * Default behavior, end battle if everyone dead
+     */
+    protected void onRemoveRemove() {
+        if (!this.enemyTeam.isEmpty()) {
+            return;
+        }
+
+        throw new ForceBattleEnd();
     }
 
     @Override
@@ -224,6 +243,7 @@ public class Battle implements IBattle {
 
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
+            enemy.emit(BattleEvents::onCombatStart);
         }
         for (AbstractCharacter<?> character : playerTeam) {
             character.generateStatsString();
@@ -249,67 +269,81 @@ public class Battle implements IBattle {
         SwordMarch march = getSwordMarch();
 
         while (battleLength > 0) {
-            addToLog(new LeftOverAV(this.battleLength));
-            currentUnit = this.getNextUnit(0);
-            float nextAV = actionValueMap.get(currentUnit);
-            if (nextAV > battleLength) {
-                for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
-                    float newAV = entry.getValue() - battleLength;
-                    entry.setValue(newAV);
+            try {
+                this.battleLoop(yunli, march); // TODO: THIS SHOULD NOT NEED CHARACTERS
+            } catch (ForceBattleEnd forceBattleEnd) {
+                String reason = forceBattleEnd.getMessage();
+                if (reason == null || reason.isEmpty()) {
+                    addToLog(new BattleEnd("Forcefully ended"));
+                } else {
+                    addToLog(new BattleEnd(reason));
                 }
-                addToLog(new BattleEnd());
-                isInCombat = false;
                 break;
             }
-            // TODO: Find a way to remove Yunli logic from here
-            // Ideally the battle loop does not care about the specifics of the characters
-            if (yunli != null && yunli.currentEnergy >= yunli.ultCost) {
-                yunli.tryUltimate();
-                if (march != null && march.chargeCount >= march.chargeThreshold) {
-                    currentUnit = march;
-                    nextAV = actionValueMap.get(currentUnit);
-                }
-            }
-            addToLog(new TurnStart(currentUnit, nextAV, actionValueMap));
-            battleLength -= nextAV;
-            for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
-                float newAV = entry.getValue() - nextAV;
-                entry.setValue(newAV);
-            }
-
-
-            currentUnit.emit(BattleEvents::onTurnStart);
-            // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
-            if (currentUnit instanceof AbstractEnemy || currentUnit instanceof AbstractCharacter) {
-                if (actionValueMap.get(currentUnit) <= 0) {
-                    actionValueMap.put(currentUnit, currentUnit.getBaseAV());
-                }
-            }
-            currentUnit.takeTurn();
-            currentUnit.emit(BattleEvents::onEndTurn);
-
-            if (yunli != null && yunli.isParrying) {
-                yunli.useSlash(getRandomEnemy());
-            }
-
-            getPlayers().stream()
-                    .filter(p -> !(p instanceof Yunli))
-                    .forEach(AbstractCharacter::tryUltimate);
-            getPlayers().stream()
-                    .filter(p -> !(p instanceof Yunli))
-                    .forEach(AbstractCharacter::tryUltimate);
-
-            if (currentUnit instanceof AbstractSummon) {
-                actionValueMap.put(currentUnit, currentUnit.getBaseAV());
-            }
-
-            getPlayers().stream()
-                    .filter(p -> !(p instanceof Yunli))
-                    .forEach(AbstractCharacter::tryUltimate);
         }
 
         calcPercentContribution();
         this.generateMetrics();
+    }
+
+    private void battleLoop(Yunli yunli, SwordMarch march) {
+        addToLog(new LeftOverAV(this.battleLength));
+        currentUnit = this.getNextUnit(0);
+        float nextAV = actionValueMap.get(currentUnit);
+        if (nextAV > battleLength) {
+            for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
+                float newAV = entry.getValue() - battleLength;
+                entry.setValue(newAV);
+            }
+            addToLog(new BattleEnd());
+            isInCombat = false;
+            return;
+        }
+        // TODO: Find a way to remove Yunli logic from here
+        // Ideally the battle loop does not care about the specifics of the characters
+        if (yunli != null && yunli.currentEnergy >= yunli.ultCost) {
+            yunli.tryUltimate();
+            if (march != null && march.chargeCount >= march.chargeThreshold) {
+                currentUnit = march;
+                nextAV = actionValueMap.get(currentUnit);
+            }
+        }
+        addToLog(new TurnStart(currentUnit, nextAV, actionValueMap));
+        battleLength -= nextAV;
+        for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
+            float newAV = entry.getValue() - nextAV;
+            entry.setValue(newAV);
+        }
+
+
+        currentUnit.emit(BattleEvents::onTurnStart);
+        // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
+        if (currentUnit instanceof AbstractEnemy || currentUnit instanceof AbstractCharacter) {
+            if (actionValueMap.get(currentUnit) <= 0) {
+                actionValueMap.put(currentUnit, currentUnit.getBaseAV());
+            }
+        }
+        currentUnit.takeTurn();
+        currentUnit.emit(BattleEvents::onEndTurn);
+
+        if (yunli != null && yunli.isParrying) {
+            yunli.useSlash(getRandomEnemy());
+        }
+
+        getPlayers().stream()
+                .filter(p -> !(p instanceof Yunli))
+                .forEach(AbstractCharacter::tryUltimate);
+        getPlayers().stream()
+                .filter(p -> !(p instanceof Yunli))
+                .forEach(AbstractCharacter::tryUltimate);
+
+        if (currentUnit instanceof AbstractSummon) {
+            actionValueMap.put(currentUnit, currentUnit.getBaseAV());
+        }
+
+        getPlayers().stream()
+                .filter(p -> !(p instanceof Yunli))
+                .forEach(AbstractCharacter::tryUltimate);
     }
 
     private void generateMetrics() {
@@ -576,5 +610,15 @@ public class Battle implements IBattle {
     @Override
     public Random getAetherRng() {
         return aetherRng;
+    }
+
+    public static class ForceBattleEnd extends RuntimeException {
+        public ForceBattleEnd() {
+            super();
+        }
+
+        public ForceBattleEnd(String message) {
+            super(message);
+        }
     }
 }

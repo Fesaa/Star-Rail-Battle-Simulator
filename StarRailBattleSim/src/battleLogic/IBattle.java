@@ -27,6 +27,7 @@ public interface IBattle {
     List<AbstractEnemy> getEnemies();
     AbstractEnemy getMiddleEnemy();
     AbstractEnemy getRandomEnemy();
+    void removeEnemy(AbstractEnemy enemy);
 
     AbstractEntity getCurrentUnit();
     void setCurrentUnit(AbstractEntity entity);

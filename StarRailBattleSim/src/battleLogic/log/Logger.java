@@ -248,4 +248,8 @@ public abstract class Logger implements BattleParticipant {
         log(turnDecision);
     }
 
+    public void handle(EnemyDied enemyDied) {
+        log(enemyDied);
+    }
+
 }
