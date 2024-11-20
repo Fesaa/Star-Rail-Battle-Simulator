@@ -2,6 +2,7 @@ package lightcones.nihility;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 
@@ -14,7 +15,7 @@ public class WeWillMeetAgain extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         for (AbstractEnemy enemy : enemiesHit) {
             getBattle().getHelper().additionalDamageHitEnemy(this.owner, enemy, 96, BattleHelpers.MultiplierStat.ATK);
         }

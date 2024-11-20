@@ -1,6 +1,7 @@
 package lightcones.nihility;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -32,8 +33,8 @@ public class ReforgedRemembrance extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.DOT)) return 0;
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.DOT)) return 0;
 
             return 7.2f * this.stacks;
         }

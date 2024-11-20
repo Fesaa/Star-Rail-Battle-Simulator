@@ -1,6 +1,7 @@
 package lightcones.preservation;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -20,7 +21,7 @@ public class TrendOfTheUniversalMarket extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         double dmg = character.getFinalDefense() * 0.8;
         // TODO: Add dot to enemies
         // for (AbstractEnemy enemy : enemiesHit) {

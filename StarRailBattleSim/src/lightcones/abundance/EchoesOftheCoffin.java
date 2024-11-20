@@ -1,7 +1,7 @@
 package lightcones.abundance;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -29,7 +29,7 @@ public class EchoesOftheCoffin extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         int stacks = Math.min(3, enemiesHit.size());
         this.owner.increaseEnergy(3 * stacks, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);
     }

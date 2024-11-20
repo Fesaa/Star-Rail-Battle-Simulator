@@ -1,6 +1,7 @@
 package lightcones.erudition;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -23,8 +24,8 @@ public class YetHopeIsPriceless extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (!types.contains(AbstractCharacter.DamageType.BASIC)) return;
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (!types.contains(DamageType.BASIC)) return;
 
         this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 20, 2, "Yet Hope Is Priceless Defense Ignore Debuff"));
     }
@@ -36,8 +37,8 @@ public class YetHopeIsPriceless extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP)) return 0;
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
             if (owner != character) return 0;
             if (character.getTotalCritDamage() < 120) return 0;
 

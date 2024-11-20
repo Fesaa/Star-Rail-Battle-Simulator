@@ -6,6 +6,9 @@ import battleLogic.log.lines.character.DoMove;
 import battleLogic.log.lines.character.ExtraHits;
 import battleLogic.log.lines.entity.GainCharge;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
+import characters.MoveType;
 import characters.Path;
 import characters.goal.shared.AlwaysBasicGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -245,12 +248,12 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             SwordMarch.this.gainCharge(1);
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL)) {
                 SwordMarch.this.useFollowUp(enemiesHit);
             }

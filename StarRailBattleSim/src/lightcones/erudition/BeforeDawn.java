@@ -1,6 +1,7 @@
 package lightcones.erudition;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -30,13 +31,13 @@ public class BeforeDawn extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP) && hasSomnusCorpus) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (damageTypes.contains(DamageType.FOLLOW_UP) && hasSomnusCorpus) {
                 this.hasSomnusCorpus = false;
                 return 48;
             }
 
-            if (damageTypes.contains(AbstractCharacter.DamageType.SKILL) || damageTypes.contains(AbstractCharacter.DamageType.ULTIMATE)) {
+            if (damageTypes.contains(DamageType.SKILL) || damageTypes.contains(DamageType.ULTIMATE)) {
                 this.hasSomnusCorpus = true;
                 return 18;
             }

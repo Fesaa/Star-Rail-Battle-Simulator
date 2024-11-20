@@ -1,6 +1,7 @@
 package lightcones.nihility;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -20,7 +21,7 @@ public class BeforeTheTutorialMissionStarts extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         if (enemiesHit.stream()
                 .anyMatch(e -> e.powerList
                         .stream()

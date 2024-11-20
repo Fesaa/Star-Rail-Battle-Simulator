@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.ElementType;
 import powers.PermPower;
 import powers.PowerStat;
 import powers.TempPower;
@@ -17,7 +18,7 @@ public class BandOfSizzlingThunder extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == AbstractCharacter.ElementType.LIGHTNING) {
+        if (this.owner.elementType == ElementType.LIGHTNING) {
             this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Band Of Sizzling Thunder Lightning Bonus"));
         }
     }

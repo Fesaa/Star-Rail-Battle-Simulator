@@ -2,6 +2,8 @@ package characters.tingyun;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysUltGoal;
 import enemies.AbstractEnemy;
@@ -108,7 +110,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
             this.setStat(PowerStat.ATK_PERCENT, 55);
         }
 
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             skillProcs++;
             AbstractEnemy target = enemiesHit.get(getBattle().getGetRandomEnemyRng().nextInt(enemiesHit.size()));
             getBattle().getHelper().tingyunSkillHitEnemy(character, target, 0.64f, BattleHelpers.MultiplierStat.ATK);
@@ -131,8 +133,8 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
                 if (type == DamageType.BASIC) {
                     return 40;
                 }

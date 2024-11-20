@@ -2,6 +2,8 @@ package characters.robin;
 
 import battleLogic.*;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysUltGoal;
 import characters.goal.shared.DontUltNumby;
@@ -189,7 +191,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             Robin.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
             Robin.this.allyAttacksMetric++;
         }
@@ -211,14 +213,14 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             AbstractEnemy target = enemiesHit.get(getBattle().getGetRandomEnemyRng().nextInt(enemiesHit.size()));
             getBattle().getHelper().additionalDamageHitEnemy(Robin.this, target, 1.2f, BattleHelpers.MultiplierStat.ATK);
             concertoProcs++;
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.FOLLOW_UP)) {
                 return 25;
             }
@@ -233,12 +235,12 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes, float currentCrit) {
+        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes, float currentCrit) {
             return 100;
         }
 
         @Override
-        public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes, float currentCritDmg) {
+        public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes, float currentCritDmg) {
             return 150;
         }
     }

@@ -70,6 +70,7 @@ public class Battle implements IBattle {
     public Random milkyWayRng = new Random(seed);
     public Random weaveEffectRng = new Random(seed);
     public Random aetherRng = new Random(seed);
+    public Random enemyEHRRng = new Random(seed);
 
     public Battle() {
         this.battleHelpers = new BattleHelpers(this);
@@ -621,6 +622,11 @@ public class Battle implements IBattle {
     @Override
     public Random getAetherRng() {
         return aetherRng;
+    }
+
+    @Override
+    public Random getEnemyEHRRng() {
+        return enemyEHRRng;
     }
 
     public static class ForceBattleEnd extends RuntimeException {

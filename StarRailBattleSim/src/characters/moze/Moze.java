@@ -4,6 +4,9 @@ import battleLogic.BattleHelpers;
 import battleLogic.log.lines.character.DoMove;
 import battleLogic.log.lines.entity.GainCharge;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
+import characters.MoveType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -196,14 +199,14 @@ public class Moze extends AbstractCharacter<Moze> {
             this.lastsForever = true;
         }
         @Override
-        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return 40;
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 25;
                 }
             }

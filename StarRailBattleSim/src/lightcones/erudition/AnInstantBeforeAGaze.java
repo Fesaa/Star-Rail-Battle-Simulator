@@ -1,6 +1,7 @@
 package lightcones.erudition;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -28,8 +29,8 @@ public class AnInstantBeforeAGaze extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.ULTIMATE)) return 0;
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.ULTIMATE)) return 0;
             if (character != owner) return 0;
 
             return (float) (Math.min(character.maxEnergy, 180) * 0.36);

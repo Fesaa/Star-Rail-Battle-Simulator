@@ -5,6 +5,8 @@ import battleLogic.log.lines.character.UseCounter;
 import battleLogic.log.lines.character.yunli.UseCull;
 import battleLogic.log.lines.character.yunli.UseSlash;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.SkillFirstTurnGoal;
@@ -230,9 +232,9 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 100;
                 }
             }

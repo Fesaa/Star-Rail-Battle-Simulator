@@ -1,6 +1,7 @@
 package lightcones.nihility;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -20,7 +21,7 @@ public class AlongThePassingShore extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         for (AbstractEnemy enemy : enemiesHit) {
             enemy.addPower(new MirageFizzle(this));
         }
@@ -37,10 +38,10 @@ public class AlongThePassingShore extends AbstractLightcone {
         }
 
         @Override
-        public float receiveConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float receiveConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (character != this.lightcone.owner) return 0;
 
-            if (damageTypes.contains(AbstractCharacter.DamageType.ULTIMATE)) {
+            if (damageTypes.contains(DamageType.ULTIMATE)) {
                 return 0.24f * 2;
             }
 

@@ -3,6 +3,7 @@ package enemies;
 import battleLogic.log.lines.enemy.EnemyAction;
 import battleLogic.log.lines.enemy.SecondAction;
 import characters.AbstractCharacter;
+import characters.DamageType;
 
 import java.util.ArrayList;
 
@@ -64,7 +65,7 @@ public class DumbEnemy extends AbstractEnemy {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
         this.currentHp -= totalDmg;
 
         if (this.currentHp <= 0) {
@@ -83,10 +84,5 @@ public class DumbEnemy extends AbstractEnemy {
         } else {
             this.doubleActionCounter--;
         }
-    }
-
-    @Override
-    public String getMetrics() {
-        return String.format("Metrics for %s with %d speed \nTurns taken: %d \nTotal attacks: %d \nSingle-target attacks: %d \nBlast attacks: %d \nAoE attacks: %d \nWeakness Broken: %d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
     }
 }

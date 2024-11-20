@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -24,7 +25,7 @@ public class LongevousDisciple extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
         if (!this.isFullSet) return;
 
         // Assuming stuff like eating your own/allys HP, would be implemented as attacking them
@@ -39,7 +40,7 @@ public class LongevousDisciple extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return this.stacks * 8;
         }
     }

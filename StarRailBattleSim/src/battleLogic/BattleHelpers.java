@@ -5,6 +5,8 @@ import battleLogic.log.lines.character.BreakDamageHitResult;
 import battleLogic.log.lines.character.CritHitResult;
 import battleLogic.log.lines.character.TotalDamage;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.moze.Moze;
 import characters.march.SwordMarch;
 import enemies.AbstractEnemy;
@@ -52,7 +54,7 @@ public class BattleHelpers implements BattleParticipant {
         critDmgMultiConstituents.clear();
     }
     
-    public float calculateDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<AbstractCharacter.DamageType> types, AbstractCharacter.ElementType damageElement) {
+    public float calculateDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, ElementType damageElement) {
         clearConstituents();
         float statToUse;
         if (stat == MultiplierStat.ATK) {
@@ -214,14 +216,14 @@ public class BattleHelpers implements BattleParticipant {
         return calculatedDamage;
     }
 
-    public float calculateBreakDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, AbstractCharacter.ElementType damageElement) {
+    public float calculateBreakDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, ElementType damageElement) {
         float maxToughnessMultiplier = 0.5f + (target.maxToughness() / 40);
         float elementMultipler;
-        if (damageElement == AbstractCharacter.ElementType.ICE || damageElement == AbstractCharacter.ElementType.LIGHTNING) {
+        if (damageElement == ElementType.ICE || damageElement == ElementType.LIGHTNING) {
             elementMultipler = 1;
-        } else if (damageElement == AbstractCharacter.ElementType.PHYSICAL || damageElement == AbstractCharacter.ElementType.FIRE) {
+        } else if (damageElement == ElementType.PHYSICAL || damageElement == ElementType.FIRE) {
             elementMultipler = 2;
-        } else if (damageElement == AbstractCharacter.ElementType.QUANTUM || damageElement == AbstractCharacter.ElementType.IMAGINARY) {
+        } else if (damageElement == ElementType.QUANTUM || damageElement == ElementType.IMAGINARY) {
             elementMultipler = 0.5f;
         } else {
             elementMultipler = 1.5f;
@@ -237,8 +239,8 @@ public class BattleHelpers implements BattleParticipant {
         float resMultiplier = 100 - (target.getRes(damageElement) - resPen);
         float resMultiplierFloat = resMultiplier / 100;
 
-        ArrayList<AbstractCharacter.DamageType> types = new ArrayList<>();
-        types.add(AbstractCharacter.DamageType.BREAK);
+        ArrayList<DamageType> types = new ArrayList<>();
+        types.add(DamageType.BREAK);
         float damageTaken = 0;
         for (AbstractPower power : target.powerList) {
             damageTaken += power.getStat(PowerStat.DAMAGE_TAKEN);
@@ -261,7 +263,7 @@ public class BattleHelpers implements BattleParticipant {
         return toughnssDamage * (1 + weaknessBreakEff / 100);
     }
 
-    public void hitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<AbstractCharacter.DamageType> types, float toughnessDamage, AbstractCharacter.ElementType damageElement) {
+    public void hitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage, ElementType damageElement) {
         source.emit(l -> {
             l.onBeforeHitEnemy(source, target, types);
         });
@@ -288,11 +290,11 @@ public class BattleHelpers implements BattleParticipant {
         }
     }
 
-    public void hitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<AbstractCharacter.DamageType> types, float toughnessDamage) {
+    public void hitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage) {
         hitEnemy(source, target, multiplier, stat, types, toughnessDamage, source.elementType);
     }
 
-    public void PreAttackLogic(AbstractCharacter character, ArrayList<AbstractCharacter.DamageType> types) {
+    public void PreAttackLogic(AbstractCharacter character, ArrayList<DamageType> types) {
         attackDamageTotal = 0;
         enemiesHit.clear();
         character.emit(l -> {
@@ -300,7 +302,7 @@ public class BattleHelpers implements BattleParticipant {
         });
     }
 
-    public void PostAttackLogic(AbstractCharacter character, ArrayList<AbstractCharacter.DamageType> types) {
+    public void PostAttackLogic(AbstractCharacter character, ArrayList<DamageType> types) {
         int damageTotal = (int) attackDamageTotal;
         getBattle().addToLog(new TotalDamage(character, types, damageTotal));
 
@@ -338,7 +340,7 @@ public class BattleHelpers implements BattleParticipant {
     }
 
     public void tingyunSkillHitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
-        float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, new ArrayList<>(),  AbstractCharacter.ElementType.LIGHTNING);
+        float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, new ArrayList<>(),  ElementType.LIGHTNING);
         getBattle().increaseTotalPlayerDmg(calculatedDamage);
         getBattle().updateContribution(source, calculatedDamage);
         attackDamageTotal += calculatedDamage;

@@ -1,6 +1,8 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -20,7 +22,7 @@ public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == AbstractCharacter.ElementType.FIRE) {
+        if (this.owner.elementType == ElementType.FIRE) {
             this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Firesmith of Lave Forging Fire Bonus"));
         }
 
@@ -35,8 +37,8 @@ public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (damageTypes.contains(AbstractCharacter.DamageType.SKILL)) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (damageTypes.contains(DamageType.SKILL)) {
                 return 12;
             }
 
@@ -45,8 +47,8 @@ public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
 
         // TODO: onAfterUseUltimate
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-            if (!types.contains(AbstractCharacter.DamageType.ULTIMATE)) return;
+        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+            if (!types.contains(DamageType.ULTIMATE)) return;
 
             this.owner.addPower(TempPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 12, 1, "Firesmith of Lave Forging Fire Bonus 4PC Ultimate Bonus"));
         }

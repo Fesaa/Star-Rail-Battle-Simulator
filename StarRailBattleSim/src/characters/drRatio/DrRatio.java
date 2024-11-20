@@ -3,6 +3,9 @@ package characters.drRatio;
 import battleLogic.BattleHelpers;
 import battleLogic.log.lines.character.DoMove;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
+import characters.MoveType;
 import characters.Path;
 import characters.goal.shared.*;
 import enemies.AbstractEnemy;
@@ -133,7 +136,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             int debuffs = Math.min(5, (int) enemy.powerList.stream().filter(p -> p.type == PowerType.DEBUFF).count());
             if (debuffs < 3) {
                 return 0;
@@ -149,12 +152,12 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return stacks * 2.5f;
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return stacks * 5;
         }
     }

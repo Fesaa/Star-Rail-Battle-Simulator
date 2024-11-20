@@ -1,7 +1,7 @@
 package lightcones.hunt;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -28,8 +28,8 @@ public class ShadowedByNight extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (!types.contains(AbstractCharacter.DamageType.BREAK)) return;
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (!types.contains(DamageType.BREAK)) return;
 
         getBattle().IncreaseSpeed(this.owner, new ShadowedByNightPower());
     }

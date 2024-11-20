@@ -1,6 +1,7 @@
 package lightcones.erudition;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -41,7 +42,7 @@ public class NightOnTheMilkyWay extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (getBattle().getMilkyWayRng().nextInt(100) < weaknessBoostUptime) {
                 return 50;
             }

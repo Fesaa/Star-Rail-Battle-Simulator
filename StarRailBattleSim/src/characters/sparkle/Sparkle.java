@@ -2,6 +2,8 @@ package characters.sparkle;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;

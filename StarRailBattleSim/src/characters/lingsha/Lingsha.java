@@ -8,6 +8,8 @@ import battleLogic.log.lines.character.lingsha.HitSinceLastHeal;
 import battleLogic.log.lines.character.lingsha.ResetTracker;
 import characters.AbstractCharacter;
 import characters.AbstractSummoner;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.DontUltNumby;
 import characters.goal.shared.UseExcessSkillPointsGoal;

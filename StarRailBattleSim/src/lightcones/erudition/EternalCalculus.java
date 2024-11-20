@@ -1,7 +1,7 @@
 package lightcones.erudition;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -31,7 +31,7 @@ public class EternalCalculus extends AbstractLightcone {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             this.stacks = Math.min(5, enemiesHit.size());
             if (this.stacks > 3) {
                 getBattle().IncreaseSpeed(this.owner, TempPower.create(PowerStat.SPEED_PERCENT, 16, 1, "Eternal Calculus Speed Boost"));

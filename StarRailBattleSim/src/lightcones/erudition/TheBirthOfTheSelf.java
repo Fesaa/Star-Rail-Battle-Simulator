@@ -1,6 +1,7 @@
 package lightcones.erudition;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -24,8 +25,8 @@ public class TheBirthOfTheSelf extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP)) return 0;
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
             // if (enemy.getCurrentHp() < enemy.baseHP / 2) {
             //    return 96;
             // }

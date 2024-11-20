@@ -2,6 +2,8 @@ package characters.bronya;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -86,7 +88,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
             this.lastsForever = true;
         }
 
-        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes, float currentCrit) {
+        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes, float currentCrit) {
             if (damageTypes.contains(DamageType.BASIC)) {
                 return 100;
             }

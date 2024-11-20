@@ -1,7 +1,7 @@
 package lightcones.harmony;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
 import powers.PermPower;
@@ -48,7 +48,7 @@ public class FlowingNightglow extends AbstractLightcone {
             this.name = this.getClass().getSimpleName();
         }
         @Override
-        public void onBeforeUseAttack(ArrayList<AbstractCharacter.DamageType> types) {
+        public void onBeforeUseAttack(ArrayList<DamageType> types) {
             FlowingNightglow.this.owner.addPower(new FlowingNightglowERRPower());
         }
     }

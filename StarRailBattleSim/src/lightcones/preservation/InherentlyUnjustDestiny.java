@@ -1,9 +1,9 @@
 package lightcones.preservation;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
-import powers.AbstractPower;
 import powers.PermPower;
 import powers.PowerStat;
 import powers.TempPower;
@@ -26,8 +26,8 @@ public class InherentlyUnjustDestiny extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (!types.contains(AbstractCharacter.DamageType.FOLLOW_UP)) return;
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (!types.contains(DamageType.FOLLOW_UP)) return;
 
         // TODO: Take EHR into account
         for (AbstractEnemy enemy : enemiesHit) {

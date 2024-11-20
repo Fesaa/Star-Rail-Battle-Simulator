@@ -2,6 +2,8 @@ package characters.ruanmei;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysUltGoal;
 import characters.goal.shared.SkillCounterTurnGoal;
@@ -125,7 +127,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             for (AbstractEnemy enemy : enemiesHit) {
                 if (!enemy.hasPower(ULT_DEBUFF_NAME)) {
                     AbstractPower debuff = new RuanMeiUltDebuff(RuanMei.this);

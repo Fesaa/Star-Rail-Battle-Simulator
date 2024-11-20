@@ -1,6 +1,7 @@
 package lightcones.hunt;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -16,7 +17,7 @@ public class Swordplay extends AbstractLightcone {
         super(953, 476, 331, owner);
     }
 
-    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types) {
         AbstractPower swordPlayDamagePower = new SwordplayDamagePower();
         if (target != enemy) {
             owner.removePower(swordPlayDamagePower.name);
@@ -35,7 +36,7 @@ public class Swordplay extends AbstractLightcone {
             this.maxStacks = 5;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return 16 * stacks;
         }
     }

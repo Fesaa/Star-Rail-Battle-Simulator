@@ -1,6 +1,7 @@
 package battleLogic;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public interface BattleEvents {
      * @param energyFromAttacked The energy gained from being attacked
      * @param totalDmg           The total dmg dealt to the character
      */
-    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {}
+    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {}
 
     /**
      * Called when the enemy has their weakness broken
@@ -32,7 +33,7 @@ public interface BattleEvents {
      * Called from getBattle().getHelper()#PreAttackLogic
      * @param damageTypes The types of damage that will be dealt
      */
-    default void onBeforeUseAttack(ArrayList<AbstractCharacter.DamageType> damageTypes) {}
+    default void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {}
 
     /**
      * Called before enemies have received the onAttacked event
@@ -41,7 +42,7 @@ public interface BattleEvents {
      * @param enemiesHit The enemies that were hit
      * @param types The types of damage dealt
      */
-    default void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {}
+    default void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
 
     /**
      * Called before an enemy is hit by an attack
@@ -49,7 +50,7 @@ public interface BattleEvents {
      * @param enemy The enemy that is being attacked
      * @param damageTypes The types of damage that will be dealt
      */
-    default void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {}
+    default void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {}
 
     /**
      * Called after enemies have received the onAttack event
@@ -57,7 +58,7 @@ public interface BattleEvents {
      * @param enemiesHit The enemies that were hit
      * @param types The types of damage dealt
      */
-    default void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {}
+    default void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
 
     /**
      * Called before AbstractCharacter#takeTurn has been called.

@@ -1,7 +1,6 @@
 package characters;
 
 import battleLogic.AbstractSummon;
-import battleLogic.IBattle;
 
 import java.util.List;
 

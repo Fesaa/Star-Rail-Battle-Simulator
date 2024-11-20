@@ -7,6 +7,7 @@ import battleLogic.log.lines.enemy.ReduceToughness;
 import battleLogic.log.lines.enemy.RuanMeiDelay;
 import battleLogic.log.lines.enemy.WeaknessBreakRecover;
 import characters.AbstractCharacter;
+import characters.ElementType;
 import characters.ruanmei.RuanMei;
 import powers.AbstractPower;
 import powers.PowerStat;
@@ -28,11 +29,11 @@ public abstract class AbstractEnemy extends AbstractEntity {
     protected final int toughness;
     protected final int level;
 
-    private final Map<AbstractCharacter.ElementType, Integer> resMap = new HashMap<>();
-    private final List<AbstractCharacter.ElementType> weaknessMap = new ArrayList<>();
+    private final Map<ElementType, Integer> resMap = new HashMap<>();
+    private final List<ElementType> weaknessMap = new ArrayList<>();
 
     // Moc increases hp this way
-    protected int HPMultiplier;
+    protected int HPMultiplier = 1;
 
     public int numAttacksMetric = 0;
     public int numSingleTargetMetric = 0;
@@ -44,7 +45,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     protected float currentToughness = 0;
 
 
-    public AbstractEnemy(String name, EnemyType type, int baseHP, int baseATK, int baseDEF, int baseSpeed, int toughness, int level) {
+    public AbstractEnemy(String name, EnemyType type, int baseHP, int baseATK, int baseDEF, float baseSpeed, int toughness, int level) {
         this.name = name;
         this.type = type;
         this.baseHP = baseHP;
@@ -68,7 +69,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return this.toughness;
     }
 
-    public int getBaseSpeed() {
+    public float getBaseSpeed() {
         return baseSpeed;
     }
 
@@ -97,32 +98,34 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     public void setUpDefaultRes() {
-        resMap.put(AbstractCharacter.ElementType.FIRE, DEFAULT_RES);
-        resMap.put(AbstractCharacter.ElementType.ICE, DEFAULT_RES);
-        resMap.put(AbstractCharacter.ElementType.WIND, DEFAULT_RES);
-        resMap.put(AbstractCharacter.ElementType.LIGHTNING, DEFAULT_RES);
-        resMap.put(AbstractCharacter.ElementType.PHYSICAL, DEFAULT_RES);
-        resMap.put(AbstractCharacter.ElementType.QUANTUM, DEFAULT_RES);
-        resMap.put(AbstractCharacter.ElementType.IMAGINARY, DEFAULT_RES);
+        resMap.put(ElementType.FIRE, DEFAULT_RES);
+        resMap.put(ElementType.ICE, DEFAULT_RES);
+        resMap.put(ElementType.WIND, DEFAULT_RES);
+        resMap.put(ElementType.LIGHTNING, DEFAULT_RES);
+        resMap.put(ElementType.PHYSICAL, DEFAULT_RES);
+        resMap.put(ElementType.QUANTUM, DEFAULT_RES);
+        resMap.put(ElementType.IMAGINARY, DEFAULT_RES);
     }
 
-    public void setRes(AbstractCharacter.ElementType elementType, int resValue) {
+    public void setRes(ElementType elementType, int resValue) {
         resMap.put(elementType, resValue);
     }
 
-    public int getRes(AbstractCharacter.ElementType elementType) {
+    public int getRes(ElementType elementType) {
         return resMap.get(elementType);
     }
 
-    public void addWeakness(AbstractCharacter.ElementType elementType) {
+    public void addWeakness(ElementType elementType) {
         this.weaknessMap.add(elementType);
+        this.setRes(elementType, 0);
     }
 
-    public void removeWeakness(AbstractCharacter.ElementType elementType) {
+    public void removeWeakness(ElementType elementType) {
         this.weaknessMap.remove(elementType);
+        this.setRes(elementType, DEFAULT_RES);
     }
 
-    public boolean hasWeakness(AbstractCharacter.ElementType elementType) {
+    public boolean hasWeakness(ElementType elementType) {
         return this.weaknessMap.contains(elementType);
     }
 
@@ -149,7 +152,6 @@ public abstract class AbstractEnemy extends AbstractEntity {
         // Currently only Moze.
 
         double totalWeight = getBattle().getPlayers().stream().mapToDouble(AbstractCharacter::getFinalTauntValue).sum();
-        int characterPosition = 0;
         // TODO: Check if it actually checks like this. I'd think that this way the first position gets attacked lot more
         // even with same taunt. As it just gets checked first. Not sure.
 
@@ -169,6 +171,34 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
         // Attack last character is no character is found
         return getBattle().getPlayers().size() -1;
+    }
+
+    protected AbstractCharacter<?> getRandomTarget() {
+        return getBattle().getPlayers().get(getRandomTargetPosition());
+    }
+
+    protected List<AbstractCharacter<?>> getRandomTargets(int amount) {
+        List<AbstractCharacter<?>> targets = new ArrayList<>();
+        while (targets.size() < amount) {
+            AbstractCharacter<?> target = getRandomTarget();
+            if (targets.contains(target)) {
+                continue;
+            }
+            targets.add(target);
+        }
+
+        return targets;
+    }
+
+    protected boolean successfulHit(AbstractCharacter<?> target, double chance) {
+        double extraEHR = this.powerList.stream()
+                .mapToDouble(p -> p.getStat(PowerStat.EFFECT_HIT))
+                .sum();
+
+        double effectRes = target.getTotalEffectRes();
+        double realChance = chance/100 * (1 + extraEHR/100) * (1 - effectRes/100);
+
+        return getBattle().getEnemyEHRRng().nextDouble() < realChance;
     }
 
     // TODO: Implement this correctly with buffs etc.
@@ -235,9 +265,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
         numTurnsMetric++;
     }
 
+    public String getMetrics() {
+        return String.format("Metrics for %s with %d speed \nTurns taken: %d \nTotal attacks: %d \nSingle-target attacks: %d \nBlast attacks: %d \nAoE attacks: %d \nWeakness Broken: %d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
+    }
+
     /**
      * The next action returns true, to continue acting (i.e. double action)
      */
     abstract protected void act();
-    abstract public String getMetrics();
 }

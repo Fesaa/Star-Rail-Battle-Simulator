@@ -1,6 +1,8 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -19,7 +21,7 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == AbstractCharacter.ElementType.PHYSICAL) {
+        if (this.owner.elementType == ElementType.PHYSICAL) {
             this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Champion of Streetwise Boxing Physical Boost"));
         }
     }
@@ -42,12 +44,12 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
             this.stacks = Math.min(this.stacks + 1, 5);
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             this.stacks = Math.min(this.stacks + 1, 5);
         }
     }

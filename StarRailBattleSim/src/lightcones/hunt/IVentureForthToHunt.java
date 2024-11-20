@@ -1,6 +1,7 @@
 package lightcones.hunt;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -37,16 +38,16 @@ public class IVentureForthToHunt extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (damageTypes.contains(AbstractCharacter.DamageType.ULTIMATE) && this.stacks > 0) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (damageTypes.contains(DamageType.ULTIMATE) && this.stacks > 0) {
                 return 27 * this.stacks;
             }
             return 0;
         }
 
         @Override
-        public void onBeforeUseAttack(ArrayList<AbstractCharacter.DamageType> types) {
-            if (types.contains(AbstractCharacter.DamageType.FOLLOW_UP)) {
+        public void onBeforeUseAttack(ArrayList<DamageType> types) {
+            if (types.contains(DamageType.FOLLOW_UP)) {
                 this.stacks = Math.min(2, this.stacks + 1);
             }
         }

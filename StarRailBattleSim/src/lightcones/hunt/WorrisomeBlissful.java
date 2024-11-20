@@ -1,6 +1,7 @@
 package lightcones.hunt;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -20,11 +21,11 @@ public class WorrisomeBlissful extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         if (character != owner) return;
         if (enemiesHit.isEmpty()) return;
 
-        if (types.contains(AbstractCharacter.DamageType.FOLLOW_UP)) {
+        if (types.contains(DamageType.FOLLOW_UP)) {
             for (AbstractEnemy enemy : enemiesHit) {
                 enemy.addPower(new TameState());
             }
@@ -38,8 +39,8 @@ public class WorrisomeBlissful extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP)) return 0;
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
 
             return 30;
         }
@@ -53,7 +54,7 @@ public class WorrisomeBlissful extends AbstractLightcone {
         }
 
         @Override
-        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return 12 * this.stacks;
         }
     }

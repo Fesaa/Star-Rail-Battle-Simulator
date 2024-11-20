@@ -1,7 +1,7 @@
 package relics.ornament;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import relics.AbstractRelicSetBonus;
@@ -30,8 +30,8 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
             this.name = this.getClass().getSimpleName();
         }
         @Override
-        public void onBeforeUseAttack(ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP)) {
+        public void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {
+            if (damageTypes.contains(DamageType.FOLLOW_UP)) {
                 for (AbstractCharacter<?> character : getBattle().getPlayers()) {
                     for (AbstractRelicSetBonus relicSetBonus : character.relicSetBonus) {
                         if (relicSetBonus instanceof DuranDynastyOfRunningWolves) {
@@ -49,9 +49,9 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
             this.maxStacks = 5;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 5 * stacks;
                 }
             }
@@ -59,9 +59,9 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP && stacks == maxStacks) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP && stacks == maxStacks) {
                     return 25;
                 }
             }

@@ -1,6 +1,7 @@
 package lightcones.destruction;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -35,9 +36,9 @@ public class DanceAtSunset extends AbstractLightcone {
             this.maxStacks = 2;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 36 * stacks;
                 }
             }

@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -32,7 +33,7 @@ public class PrisonerInDeepConfinement extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             int mul = (int) Math.min(3, enemy.powerList
                     .stream()
                     .filter(p -> p.type == PowerType.DOT)

@@ -4,6 +4,8 @@ import battleLogic.BattleHelpers;
 import battleLogic.log.lines.character.aventurine.UseBlindBet;
 import battleLogic.log.lines.entity.GainCharge;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysUltGoal;
 import enemies.AbstractEnemy;
@@ -146,7 +148,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             return 15;
         }
     }
@@ -168,7 +170,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (character != Aventurine.this && types.contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;

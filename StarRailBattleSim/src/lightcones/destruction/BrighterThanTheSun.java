@@ -1,6 +1,7 @@
 package lightcones.destruction;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -21,8 +22,8 @@ public class BrighterThanTheSun extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (types.contains(AbstractCharacter.DamageType.BASIC)) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (types.contains(DamageType.BASIC)) {
             this.owner.addPower(new DragonsCall());
         }
     }

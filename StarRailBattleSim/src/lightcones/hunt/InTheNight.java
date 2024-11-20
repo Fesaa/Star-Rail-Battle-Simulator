@@ -1,6 +1,7 @@
 package lightcones.hunt;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -26,8 +27,8 @@ public class InTheNight extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.SKILL) && !damageTypes.contains(AbstractCharacter.DamageType.BASIC)) return 0;
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.SKILL) && !damageTypes.contains(DamageType.BASIC)) return 0;
             if (owner != character) return 0;
             if (character.getFinalSpeed() < 100) return 0;
             int stacks = Math.min(6, (int) ((character.getFinalSpeed() - 100) / 10));
@@ -35,8 +36,8 @@ public class InTheNight extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (!damageTypes.contains(AbstractCharacter.DamageType.ULTIMATE)) return 0;
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (!damageTypes.contains(DamageType.ULTIMATE)) return 0;
             if (owner != character) return 0;
             if (character.getFinalSpeed() < 100) return 0;
             int stacks = Math.min(6, (int) ((character.getFinalSpeed() - 100) / 10));

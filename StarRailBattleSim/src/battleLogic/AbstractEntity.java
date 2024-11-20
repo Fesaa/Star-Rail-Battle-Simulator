@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public String name;
-    public int baseSpeed;
+    public float baseSpeed;
     public ArrayList<AbstractPower> powerList = new ArrayList<>();
     public static final int SPEED_PRIORITY_DEFAULT = 99;
     public int speedPriority = SPEED_PRIORITY_DEFAULT;

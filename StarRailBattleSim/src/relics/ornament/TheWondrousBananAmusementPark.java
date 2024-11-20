@@ -1,15 +1,13 @@
 package relics.ornament;
 
-import battleLogic.AbstractEntity;
 import battleLogic.AbstractSummon;
-import battleLogic.Battle;
 import characters.AbstractCharacter;
 import characters.AbstractSummoner;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
 import relics.AbstractRelicSetBonus;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ public class TheWondrousBananAmusementPark extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (!(character instanceof AbstractSummoner)) {
                 return 0;
             }

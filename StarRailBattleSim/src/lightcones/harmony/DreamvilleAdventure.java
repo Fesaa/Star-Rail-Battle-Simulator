@@ -1,6 +1,7 @@
 package lightcones.harmony;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class DreamvilleAdventure extends AbstractLightcone {
 
-    private AbstractCharacter.DamageType currBenefit;
+    private DamageType currBenefit;
     AbstractPower childishness = new Childishness();
 
     public DreamvilleAdventure(AbstractCharacter<?> owner) {
@@ -19,17 +20,17 @@ public class DreamvilleAdventure extends AbstractLightcone {
 
     @Override
     public void onUseSkill() {
-        currBenefit = AbstractCharacter.DamageType.SKILL;
+        currBenefit = DamageType.SKILL;
     }
 
     @Override
     public void onUseBasic() {
-        currBenefit = AbstractCharacter.DamageType.BASIC;
+        currBenefit = DamageType.BASIC;
     }
 
     @Override
     public void onUseUltimate() {
-        currBenefit = AbstractCharacter.DamageType.ULTIMATE;
+        currBenefit = DamageType.ULTIMATE;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class DreamvilleAdventure extends AbstractLightcone {
             this.name = this.getClass().getSimpleName();
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (currBenefit == null) {
                 return 0;
             }

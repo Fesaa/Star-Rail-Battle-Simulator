@@ -1,6 +1,7 @@
 package relics.ornament;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -34,7 +35,7 @@ public class CelestialDifferentiator extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             this.owner.removePower(this);
         }
     }

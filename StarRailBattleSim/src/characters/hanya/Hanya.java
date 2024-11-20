@@ -3,6 +3,8 @@ package characters.hanya;
 import battleLogic.BattleHelpers;
 import battleLogic.log.lines.character.hanya.BurdenLog;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -89,7 +91,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.BASIC) || damageTypes.contains(DamageType.SKILL) || damageTypes.contains(DamageType.ULTIMATE)) {
                 TempPower talentPower = TempPower.create(PowerStat.DAMAGE_BONUS, 43, 2, "Hanya Talent Power");
                 talentPower.justApplied = true;

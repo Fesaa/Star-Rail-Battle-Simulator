@@ -1,6 +1,8 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -19,7 +21,7 @@ public class GeniusOfBrilliantStars extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == AbstractCharacter.ElementType.QUANTUM) {
+        if (this.owner.elementType == ElementType.QUANTUM) {
             this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Genius of Brilliant Stars Quantum bonus"));
         }
 
@@ -34,8 +36,8 @@ public class GeniusOfBrilliantStars extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (enemy.hasWeakness(AbstractCharacter.ElementType.QUANTUM)) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (enemy.hasWeakness(ElementType.QUANTUM)) {
                 return 10 * 2;
             }
 

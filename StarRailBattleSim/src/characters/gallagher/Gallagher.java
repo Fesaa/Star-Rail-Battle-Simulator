@@ -2,6 +2,8 @@ package characters.gallagher;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysBasicGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -89,7 +91,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.BREAK)) {
                 return 13.2f;
             }

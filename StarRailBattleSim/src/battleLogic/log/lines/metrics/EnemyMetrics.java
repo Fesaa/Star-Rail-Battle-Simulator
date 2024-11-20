@@ -7,7 +7,7 @@ import enemies.AbstractEnemy;
 public class EnemyMetrics implements Loggable {
 
     public final AbstractEnemy enemy;
-    public final int speed;
+    public final float speed;
     public final int turnsTaken;
     public final int totalAttacks;
     public final int singleTargetAttacks;

@@ -1,6 +1,8 @@
 package relics.ornament;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -26,8 +28,8 @@ public class ForgeOfTheKalpagniLatern extends AbstractRelicSetBonus {
 
     // TODO: Rework onBeforeUseAttack to include enemies
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (enemiesHit.stream().anyMatch(e -> e.hasWeakness(AbstractCharacter.ElementType.FIRE))) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (enemiesHit.stream().anyMatch(e -> e.hasWeakness(ElementType.FIRE))) {
             this.owner.addPower(TempPower.create(PowerStat.BREAK_EFFECT, 40, 1, "Forge Of The Kalpagni Latern Break Bonus"));
         }
     }

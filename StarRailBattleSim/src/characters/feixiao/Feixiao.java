@@ -5,6 +5,9 @@ import battleLogic.log.lines.character.DoMove;
 import battleLogic.log.lines.character.GainEnergy;
 import battleLogic.log.lines.entity.GainCharge;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
+import characters.MoveType;
 import characters.Path;
 import characters.goal.shared.*;
 import enemies.AbstractEnemy;
@@ -244,9 +247,9 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 36;
                 }
             }

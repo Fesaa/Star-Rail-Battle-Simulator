@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -32,12 +33,12 @@ public class IronCavalryAgainstTheScourge extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            if (damageTypes.contains(AbstractCharacter.DamageType.SUPER_BREAK)) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            if (damageTypes.contains(DamageType.SUPER_BREAK)) {
                 return 25;
             }
 
-            if (damageTypes.contains(AbstractCharacter.DamageType.BREAK)) {
+            if (damageTypes.contains(DamageType.BREAK)) {
                 return 10;
             }
 

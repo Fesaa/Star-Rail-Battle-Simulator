@@ -1,7 +1,7 @@
 package lightcones.abundance;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 
@@ -13,8 +13,8 @@ public class Multiplication extends AbstractLightcone {
         super(953, 318, 198, owner);
     }
 
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (types.contains(AbstractCharacter.DamageType.BASIC)) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (types.contains(DamageType.BASIC)) {
             getBattle().AdvanceEntity(character, 20);
         }
     }

@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.AbstractPower;
 import relics.AbstractRelicSetBonus;
@@ -21,16 +22,16 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
         owner.addPower(new DukeDamagePower());
     }
     @Override
-    public void onBeforeUseAttack(ArrayList<AbstractCharacter.DamageType> damageTypes) {
-        if (damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
+    public void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {
+        if (damageTypes.contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
             owner.removePower(atkBonus.name);
         }
     }
 
     @Override
-    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
         atkBonus = new DukeAtkBonus();
-        if (damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP) && isFullSet) {
+        if (damageTypes.contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(atkBonus);
         }
     }
@@ -49,9 +50,9 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 20;
                 }
             }

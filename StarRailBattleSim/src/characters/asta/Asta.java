@@ -3,6 +3,8 @@ package characters.asta;
 import battleLogic.BattleHelpers;
 import battleLogic.log.lines.entity.GainCharge;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -136,7 +138,7 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (character == Asta.this) {
                 int chargeGain = enemiesHit.size();
                 for (AbstractEnemy enemy : enemiesHit) {

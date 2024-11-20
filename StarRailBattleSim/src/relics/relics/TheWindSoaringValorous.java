@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.AbstractPower;
 import powers.PermPower;
@@ -28,8 +29,8 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void onBeforeUseAttack(ArrayList<AbstractCharacter.DamageType> damageTypes) {
-        if (damageTypes.contains(AbstractCharacter.DamageType.FOLLOW_UP) && isFullSet) {
+    public void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {
+        if (damageTypes.contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(new ValorousDamagePower());
         }
     }
@@ -48,9 +49,9 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
             this.turnDuration = 1;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.ULTIMATE) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.ULTIMATE) {
                     return 36;
                 }
             }

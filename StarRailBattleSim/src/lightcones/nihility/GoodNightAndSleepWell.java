@@ -1,6 +1,7 @@
 package lightcones.nihility;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -19,7 +20,7 @@ public class GoodNightAndSleepWell extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             int mul = (int) enemy.powerList.stream().filter(p -> p.type.equals(PowerType.DEBUFF)).count();
             return 24 * Math.min(3, mul);
         }

@@ -1,6 +1,7 @@
 package lightcones.nihility;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -24,10 +25,10 @@ public class IncessantRain extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (!types.contains(AbstractCharacter.DamageType.BASIC)
-                && !types.contains(AbstractCharacter.DamageType.SKILL)
-                && !types.contains(AbstractCharacter.DamageType.ULTIMATE)) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (!types.contains(DamageType.BASIC)
+                && !types.contains(DamageType.SKILL)
+                && !types.contains(DamageType.ULTIMATE)) {
             return;
         }
 

@@ -1,9 +1,8 @@
 package relics.ornament;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
-import powers.AbstractPower;
 import powers.PermPower;
 import powers.PowerStat;
 import relics.AbstractRelicSetBonus;
@@ -34,7 +33,7 @@ public class BrokenKeel extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (BrokenKeel.this.owner.getTotalEffectRes() < 30) {
                 return 0;
             }

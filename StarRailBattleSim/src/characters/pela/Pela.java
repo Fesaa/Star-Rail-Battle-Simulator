@@ -2,6 +2,8 @@ package characters.pela;
 
 import battleLogic.BattleHelpers;
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysBasicGoal;
 import characters.goal.shared.AlwaysUltGoal;

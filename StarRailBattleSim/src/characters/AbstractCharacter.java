@@ -22,18 +22,6 @@ import java.util.TreeMap;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends AbstractEntity {
 
-    public enum ElementType {
-        FIRE, ICE, WIND, LIGHTNING, PHYSICAL, QUANTUM, IMAGINARY
-    }
-
-    public enum DamageType {
-        SKILL, BASIC, ULTIMATE, FOLLOW_UP, DOT, BREAK, SUPER_BREAK
-    }
-
-    public enum MoveType {
-        SKILL, BASIC, ENHANCED_BASIC, ULTIMATE, FOLLOW_UP
-    }
-
     protected final Path path;
 
     protected int baseHP;
@@ -280,7 +268,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     }
 
     public float getFinalSpeed() {
-        int totalBaseSpeed = baseSpeed;
+        float totalBaseSpeed = baseSpeed;
         float totalBonusSpeedPercent = 0;
         float totalBonusFlatSpeed = 0;
         for (AbstractPower power : powerList) {

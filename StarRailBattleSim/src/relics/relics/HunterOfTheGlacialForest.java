@@ -1,6 +1,8 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
+import characters.ElementType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -20,15 +22,15 @@ public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == AbstractCharacter.ElementType.ICE) {
+        if (this.owner.elementType == ElementType.ICE) {
             this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Hunter of the Glacial Forest Ice Boost"));
         }
     }
 
     // TODO: onAfterUseUltimate
     @Override
-    public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (!types.contains(AbstractCharacter.DamageType.ULTIMATE)) return;
+    public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (!types.contains(DamageType.ULTIMATE)) return;
 
         TempPower ultPower = TempPower.create(PowerStat.CRIT_DAMAGE, 25, 2, "Hunter of the Glacial Forest Ultimate CD Boost");
         ultPower.justApplied = true;

@@ -1,6 +1,7 @@
 package lightcones.abundance;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PermPower;
@@ -21,8 +22,8 @@ public class ScentAloneStaysTrue extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
-        if (!types.contains(AbstractCharacter.DamageType.ULTIMATE)) return;
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        if (!types.contains(DamageType.ULTIMATE)) return;
 
         enemiesHit.forEach(e -> {
             float dmg = this.owner.getTotalBreakEffect() >= 150 ? 18 : 10;

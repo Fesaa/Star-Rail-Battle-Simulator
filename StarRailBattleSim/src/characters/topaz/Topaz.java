@@ -5,6 +5,8 @@ import battleLogic.BattleHelpers;
 import battleLogic.Numby;
 import characters.AbstractCharacter;
 import characters.AbstractSummoner;
+import characters.DamageType;
+import characters.ElementType;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
@@ -200,9 +202,9 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
-            for (AbstractCharacter.DamageType type : damageTypes) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
                     return 50;
                 }
             }
@@ -211,14 +213,14 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
         @Override
         public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
-            for (AbstractCharacter.DamageType type : types) {
-                if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
+            for (DamageType type : types) {
+                if (type == DamageType.FOLLOW_UP) {
                     Topaz.this.numby.AdvanceForward();
                     break;
                 }
             }
             if (ultCounter > 0) {
-                for (AbstractCharacter.DamageType type : types) {
+                for (DamageType type : types) {
                     if (type == DamageType.BASIC || type == DamageType.SKILL || type == DamageType.ULTIMATE) {
                         Topaz.this.numby.AdvanceForward();
                         break;
@@ -234,7 +236,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             lastsForever = true;
         }
 
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (enemy.hasWeakness(ElementType.FIRE)) {
                 return 15;
             }

@@ -1,6 +1,6 @@
 package characters.aventurine;
 
-import characters.AbstractCharacter;
+import characters.MoveType;
 import characters.goal.TurnGoal;
 
 public class AventurineTurnGoal extends TurnGoal<Aventurine> {
@@ -18,7 +18,7 @@ public class AventurineTurnGoal extends TurnGoal<Aventurine> {
             return TurnGoalResult.BASIC;
         }
 
-        if (this.character.lastMove(AbstractCharacter.MoveType.BASIC) || this.character.firstMove) {
+        if (this.character.lastMove(MoveType.BASIC) || this.character.firstMove) {
             this.character.firstMove = false;
             return TurnGoalResult.SKILL;
         }

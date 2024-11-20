@@ -1,6 +1,7 @@
 package relics.relics;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -30,7 +31,7 @@ public class ThiefOfShootingMeteor extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         // TODO: Generate 3 energy after weakness breaking, don't see a way to check if an enemy was broken this turn
     }
 }

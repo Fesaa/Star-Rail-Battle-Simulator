@@ -3,6 +3,7 @@ package battleLogic.log.lines.metrics;
 import battleLogic.log.Loggable;
 import battleLogic.log.Logger;
 import characters.AbstractCharacter;
+import characters.MoveType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ public class PostCombatPlayerMetrics implements Loggable {
     public final int basics;
     public final int skills;
     public final int ultimates;
-    public final List<AbstractCharacter.MoveType> rotation;
+    public final List<MoveType> rotation;
     public final Map<String, String> characterSpecificMetrics;
     public boolean lessMetrics;
 

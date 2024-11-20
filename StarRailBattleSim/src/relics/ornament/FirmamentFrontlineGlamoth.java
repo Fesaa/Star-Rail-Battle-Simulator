@@ -1,6 +1,7 @@
 package relics.ornament;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import powers.PermPower;
 import powers.PowerStat;
@@ -33,7 +34,7 @@ public class FirmamentFrontlineGlamoth extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (FirmamentFrontlineGlamoth.this.owner.getFinalSpeed() > 160) {
                 return 18;
             }

@@ -78,6 +78,7 @@ public interface IBattle {
     Random getMilkyWayRng();
     Random getWeaveEffectRng();
     Random getAetherRng();
+    Random getEnemyEHRRng();
 
 
 

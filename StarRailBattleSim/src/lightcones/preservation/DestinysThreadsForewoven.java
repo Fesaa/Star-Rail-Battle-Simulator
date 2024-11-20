@@ -1,6 +1,7 @@
 package lightcones.preservation;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.AbstractPower;
@@ -28,7 +29,7 @@ public class DestinysThreadsForewoven extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
             if (character != owner) return 0;
             return Math.min((float) (((int) (character.getFinalDefense() / 100)) * 1.2), 48);
         }

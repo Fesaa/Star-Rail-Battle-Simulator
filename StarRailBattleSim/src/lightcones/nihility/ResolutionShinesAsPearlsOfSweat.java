@@ -1,6 +1,7 @@
 package lightcones.nihility;
 
 import characters.AbstractCharacter;
+import characters.DamageType;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
 import powers.PowerStat;
@@ -15,7 +16,7 @@ public class ResolutionShinesAsPearlsOfSweat extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<AbstractCharacter.DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         for (AbstractEnemy enemy : enemiesHit) {
             if (!enemy.hasPower(Ensnared.NAME)) {
                 enemy.addPower(new Ensnared());
