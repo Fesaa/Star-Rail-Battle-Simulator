@@ -16,11 +16,20 @@ public abstract class WavedBattle extends Battle {
 
     public WavedBattle(Wave ...waves) {
         Collections.addAll(this.waves, waves);
-        this.currentWave = this.waves.remove();
     }
 
     protected void addWave(Wave wave) {
         this.waves.offer(wave);
+    }
+
+    @Override
+    public void onStart() {
+        if (this.waves.isEmpty()) {
+            throw new IllegalStateException("No waves were added to the battle");
+        }
+
+        this.currentWave = this.waves.remove();
+        this.setEnemyTeam(this.currentWave.startEnemies());
     }
 
     @Override
@@ -36,6 +45,9 @@ public abstract class WavedBattle extends Battle {
     protected void goToNextWave() {
         addToLog(new WaveEnd(this.currentWave));
         this.currentWave = this.waves.poll();
+        if (this.currentWave == null) {
+            throw new ForceBattleEnd("No waves left");
+        }
         addToLog(new WaveStart(this.currentWave));
         this.fillField();
         this.onWaveChange();

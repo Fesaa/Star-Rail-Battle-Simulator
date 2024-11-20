@@ -26,6 +26,7 @@ import characters.yunli.Yunli;
 import enemies.AbstractEnemy;
 import powers.AbstractPower;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Battle implements IBattle {
-    protected List<AbstractCharacter<?>> playerTeam;
-    protected List<AbstractEnemy> enemyTeam;
+    protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+    protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
 
     private final BattleHelpers battleHelpers;
-    private final Logger logger;
+    private Logger logger;
 
     public final int INITIAL_SKILL_POINTS = 3;
     public int numSkillPoints = INITIAL_SKILL_POINTS;
@@ -83,6 +84,10 @@ public class Battle implements IBattle {
         this.logger = logger.get(this);
     }
 
+    public void setLogger(LogSupplier logger) {
+        this.logger = logger.get(this);
+    }
+
     @Override
     public void setPlayerTeam(List<AbstractCharacter<?>> playerTeam) {
         this.playerTeam = playerTeam;
@@ -91,7 +96,7 @@ public class Battle implements IBattle {
 
     @Override
     public void setEnemyTeam(List<AbstractEnemy> enemyTeam) {
-        this.enemyTeam = enemyTeam;
+        this.enemyTeam = new ArrayList<>(enemyTeam);
         this.enemyTeam.forEach(enemy -> enemy.setBattle(this));
     }
 
@@ -106,7 +111,7 @@ public class Battle implements IBattle {
 
     @Override
     public void removeEnemy(AbstractEnemy enemy) {
-        this.enemyTeam.removeIf(e -> e == enemy);
+        this.enemyTeam.removeIf(e -> e.equals(enemy));
         this.actionValueMap.remove(enemy);
         this.onEnemyRemove();
     }
@@ -241,8 +246,14 @@ public class Battle implements IBattle {
         return this.numSkillPoints;
     }
 
+    /**
+     * Method to override for extended function if enemies aren't present at their construction
+     */
+    public void onStart() {}
+
     @Override
     public void Start(float initialLength) {
+        this.onStart();
         initialBattleLength = initialLength;
         this.battleLength = initialLength;
         totalPlayerDamage = 0;
@@ -285,6 +296,7 @@ public class Battle implements IBattle {
             try {
                 this.battleLoop(yunli, march); // TODO: THIS SHOULD NOT NEED CHARACTERS
             } catch (ForceBattleEnd forceBattleEnd) {
+                this.isInCombat = false;
                 String reason = forceBattleEnd.getMessage();
                 if (reason == null || reason.isEmpty()) {
                     addToLog(new BattleEnd("Forcefully ended"));
@@ -364,7 +376,8 @@ public class Battle implements IBattle {
         if (!lessMetrics) {
             this.enemyTeam.forEach(e -> addToLog(new EnemyMetrics(e)));
         }
-        finalDPAV = (float)totalPlayerDamage / initialBattleLength;
+        float usedAV = this.initialBattleLength - battleLength;
+        finalDPAV = (float)totalPlayerDamage / usedAV;
         addToLog(new BattleMetrics(this));
         addToLog(new FinalDmgMetrics(this));
     }
@@ -507,7 +520,7 @@ public class Battle implements IBattle {
 
     @Override
     public float getActionValueUsed() {
-        return this.initialBattleLength;
+        return this.initialBattleLength - this.battleLength;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package battleLogic.wave.moc;
 
+import battleLogic.log.LogSupplier;
+
 public class Moc {
 
     private static final int MOC_START_AV = 29 * 100 + 150;
@@ -10,6 +12,11 @@ public class Moc {
     public Moc(MocBattle firstHalf, MocBattle secondHalf) {
         this.firstHalf = firstHalf;
         this.secondHalf = secondHalf;
+    }
+
+    public void setBattleLogger(LogSupplier logger) {
+        this.firstHalf.setLogger(logger);
+        this.secondHalf.setLogger(logger);
     }
 
     public void Start() {

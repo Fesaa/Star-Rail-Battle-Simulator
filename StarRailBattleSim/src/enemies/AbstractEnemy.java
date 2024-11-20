@@ -2,11 +2,13 @@ package enemies;
 
 import battleLogic.AbstractEntity;
 import battleLogic.BattleEvents;
+import battleLogic.log.lines.enemy.EnemyDied;
 import battleLogic.log.lines.enemy.ForcedAttack;
 import battleLogic.log.lines.enemy.ReduceToughness;
 import battleLogic.log.lines.enemy.RuanMeiDelay;
 import battleLogic.log.lines.enemy.WeaknessBreakRecover;
 import characters.AbstractCharacter;
+import characters.DamageType;
 import characters.ElementType;
 import characters.ruanmei.RuanMei;
 import enemies.action.EnemyActionSequence;
@@ -229,6 +231,10 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
     }
 
+    public boolean isDead() {
+        return this.currentHp <= 0;
+    }
+
     @Override
     public void onCombatStart() {
         this.currentHp = this.baseHP * this.HPMultiplier;
@@ -267,6 +273,20 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
         this.act();
         numTurnsMetric++;
+    }
+
+    @Override
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        if (this.currentHp <= 0) {
+            throw new IllegalStateException("Attacking dead enemy");
+        }
+
+        this.currentHp -= totalDmg;
+
+        if (this.currentHp <= 0) {
+            getBattle().addToLog(new EnemyDied(this, character));
+            getBattle().removeEnemy(this);
+        }
     }
 
     public String getMetrics() {

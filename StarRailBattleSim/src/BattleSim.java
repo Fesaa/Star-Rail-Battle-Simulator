@@ -31,7 +31,8 @@ public class BattleSim {
         //generateReportFeixiaoLightconeReport();
         //generateReportFeixiaoRelicReport();
         //generateReportTopaz();
-        ameliasSanityCheck();
+        //ameliasSanityCheck();
+        WaveTester.MocTest();
     }
 
     public static void debugTeam() {
