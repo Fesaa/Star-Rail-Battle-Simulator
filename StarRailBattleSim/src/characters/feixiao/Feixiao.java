@@ -19,8 +19,11 @@ import powers.TracePower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Feixiao extends AbstractCharacter<Feixiao> {
+
+    private Random fuaRng;
 
     PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
     private int numFUAs = 0;
@@ -101,9 +104,12 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
         getBattle().getHelper().PostAttackLogic(this, types);
 
-        ArrayList<AbstractEnemy> enemiesHit = new ArrayList<>();
-        enemiesHit.add(enemy);
-        useFollowUp(enemiesHit);
+        if (enemy.isDead()) {
+            enemy = getBattle().getRandomEnemy();
+        }
+
+        this.useFollowUp(enemy);
+
     }
     public void useBasic() {
         ArrayList<DamageType> types = new ArrayList<>();
@@ -116,9 +122,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         getBattle().getHelper().PostAttackLogic(this, types);
     }
 
-    public void useFollowUp(ArrayList<AbstractEnemy> enemiesHit) {
-        int middleIndex = enemiesHit.size() / 2;
-        AbstractEnemy enemy = enemiesHit.get(middleIndex);
+    public void useFollowUp(AbstractEnemy target) {
         moveHistory.add(MoveType.FOLLOW_UP);
         numFUAs++;
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
@@ -128,9 +132,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         ArrayList<DamageType> types = new ArrayList<>();
         types.add(DamageType.FOLLOW_UP);
         getBattle().getHelper().PreAttackLogic(this, types);
-
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
-
+        getBattle().getHelper().hitEnemy(this, target, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
         getBattle().getHelper().PostAttackLogic(this, types);
     }
 
@@ -171,6 +173,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     }
 
     public void onCombatStart() {
+        this.fuaRng = new Random(getBattle().getSeed());
         gainStackEnergy(3);
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             AbstractPower feiPower = new FeiTalentPower();
@@ -234,7 +237,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
             if (!(character instanceof Feixiao)) {
                 if (FUAReady) {
                     FUAReady = false;
-                    Feixiao.this.useFollowUp(enemiesHit);
+                    Feixiao.this.useFollowUp(enemiesHit.get(Feixiao.this.fuaRng.nextInt(enemiesHit.size())));
                 }
             }
         }

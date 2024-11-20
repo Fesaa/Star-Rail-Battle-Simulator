@@ -22,10 +22,14 @@ import powers.TracePower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static String NAME = "Sword March";
 
+    private Random fuaRng;
     public AbstractCharacter<?> master;
 
     private int numEBA = 0;
@@ -149,10 +153,8 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         getBattle().getHelper().PostAttackLogic(this, types);
     }
 
-    public void useFollowUp(ArrayList<AbstractEnemy> enemiesHit) {
+    public void useFollowUp(AbstractEnemy enemy) {
         if (FUAReady) {
-            int middleIndex = enemiesHit.size() / 2;
-            AbstractEnemy enemy = enemiesHit.get(middleIndex);
             FUAReady = false;
             moveHistory.add(MoveType.FOLLOW_UP);
             numFUAs++;
@@ -192,6 +194,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     }
 
     public void onCombatStart() {
+        this.fuaRng = new Random(getBattle().getSeed());
         getBattle().AdvanceEntity(this, 25);
     }
 
@@ -255,7 +258,15 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         @Override
         public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL)) {
-                SwordMarch.this.useFollowUp(enemiesHit);
+                List<AbstractEnemy> nonDead = enemiesHit.stream().filter(e -> !e.isDead()).collect(Collectors.toList());
+                AbstractEnemy enemy;
+                if (nonDead.isEmpty()) {
+                    enemy = getBattle().getRandomEnemy();
+                } else {
+                    enemy = nonDead.get(SwordMarch.this.fuaRng.nextInt(nonDead.size()));
+                }
+
+                SwordMarch.this.useFollowUp(enemy);
             }
         }
 
