@@ -61,7 +61,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     public boolean isWeaknessBroken() {
-        return this.currentToughness == 0;
+        return this.currentToughness <= 0;
     }
 
     public float maxToughness() {
@@ -177,11 +177,11 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     public void reduceToughness(float amount) {
-        if (this.currentToughness == 0) {
+        if (this.isWeaknessBroken()) {
             return;
         }
         float initialToughness = this.currentToughness;
-        this.currentToughness = Math.max(initialToughness - amount, 0);
+        this.currentToughness = Math.max(this.currentToughness - amount, 0);
 
         getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.currentToughness));
 
@@ -216,12 +216,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
             float delay = ruanMeiDebuff.owner.getTotalBreakEffect() * 0.2f + 10;
             getBattle().DelayEntity(this, delay);
             ruanMeiDebuff.triggered = true;
-            //getBattle().getHelper().breakDamageHitEnemy(ruanMeiDebuff.owner, this, 0.5f);
+            getBattle().getHelper().breakDamageHitEnemy(ruanMeiDebuff.owner, this, 0.5f);
             return;
         }
 
         this.removePower(RuanMei.ULT_DEBUFF_NAME);
-        getBattle().addToLog(new WeaknessBreakRecover(this, this.currentHp, this.toughness));
+        getBattle().addToLog(new WeaknessBreakRecover(this, this.currentToughness, this.toughness));
         this.currentToughness = this.toughness;
     }
 
