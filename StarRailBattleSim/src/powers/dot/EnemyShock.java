@@ -6,14 +6,20 @@ import powers.TempPower;
 
 public class EnemyShock extends TempPower {
 
-    private final AbstractEnemy source;
-    private final float dmg;
+    public static String NAME = "EnemyShock";
+
+    protected final AbstractEnemy source;
+    protected final float dmg;
 
     public EnemyShock(AbstractEnemy source, float dmg, int turns, int maxStack) {
-        super(turns);
+        super(turns, NAME);
         this.maxStacks = maxStack;
         this.dmg = dmg;
         this.source = source;
+    }
+
+    public float getDmg() {
+        return dmg;
     }
 
     @Override

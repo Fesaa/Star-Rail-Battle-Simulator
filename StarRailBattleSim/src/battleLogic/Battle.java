@@ -125,6 +125,8 @@ public class Battle implements IBattle {
         if (initialAA > 0) {
             this.AdvanceEntity(enemy, initialAA);
         }
+
+        enemy.emit(BattleEvents::onCombatStart);
     }
 
     /**

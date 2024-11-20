@@ -8,6 +8,7 @@ import battleLogic.wave.moc.MocWave;
 import characters.AbstractCharacter;
 import enemies.game.AurumatonSpectralEnvoy;
 import enemies.game.GuardianShadow;
+import enemies.game.Kafka;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ScalegorgeTidalflow11 extends Moc {
             super(new ScalegorgeTidalflowTubalance());
             this.setPlayerTeam(players);
             this.addWave(new MocWave(new AurumatonSpectralEnvoy(), new GuardianShadow()));
-            //this.addWave(new MocWave());
+            this.addWave(new MocWave(new GuardianShadow(), new Kafka()));
         }
     }
 

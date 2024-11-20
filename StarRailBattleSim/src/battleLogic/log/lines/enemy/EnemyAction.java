@@ -13,38 +13,57 @@ public class EnemyAction implements Loggable {
     public final EnemyAttackType attackType;
     public final String action;
 
-    public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, EnemyAttackType attackType) {
+    public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, EnemyAttackType attackType, String action) {
         this.enemy = enemy;
         this.hit = hit;
         this.attackType = attackType;
-        this.action = null;
+        this.action = action;
+    }
+
+    public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, EnemyAttackType attackType) {
+        this(enemy, hit, attackType, null);
+    }
+
+    public EnemyAction(AbstractEnemy enemy, EnemyAttackType attackType, String action) {
+       this(enemy, null, attackType, action);
     }
 
     public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, String action) {
-        this.enemy = enemy;
-        this.hit = hit;
-        this.attackType = null;
-        this.action = action;
+        this(enemy, hit, null, action);
     }
 
     public EnemyAction(AbstractEnemy enemy, String action) {
-        this.enemy = enemy;
-        this.hit = null;
-        this.attackType = null;
-        this.action = action;
+        this(enemy, null, null, action);
     }
 
     @Override
     public String asString() {
-        if (this.attackType == null) {
-            return this.enemy.name + ": " + this.action;
+        StringBuilder sb = new StringBuilder();
+
+        if (this.enemy != null) {
+            sb.append(this.enemy.name);
+        } else {
+            sb.append("unknown");
         }
 
-        if (this.attackType.equals(EnemyAttackType.AOE)) {
-            return this.enemy.name + " used AOE attack";
+        sb.append(" uses ");
+
+        if (this.attackType != null) {
+            if (this.attackType.equals(EnemyAttackType.AOE)) {
+                sb.append(" AOE attack ");
+            }
+            sb.append(this.attackType);
         }
 
-        return this.enemy.name + " uses " + this.attackType + " attack against " + this.hit.name;
+        if (this.action != null) {
+            sb.append("(").append(this.action).append(")");
+        }
+
+        if (this.hit != null) {
+            sb.append(" against ").append(this.hit.name);
+        }
+
+        return sb.toString();
     }
 
     @Override

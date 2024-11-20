@@ -49,7 +49,7 @@ public class GuardianShadow extends AbstractEnemy {
     private void LightningRecollection() {
         AbstractCharacter<?> target = this.getRandomTarget();
         getBattle().getHelper().attackCharacter(this, target, 10, 976);
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
+        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Lightning Recollection"));
     }
 
     private void LightningCondemnation() {
@@ -64,7 +64,7 @@ public class GuardianShadow extends AbstractEnemy {
             getBattle().getHelper().attackCharacter(this, c, 5, 488);
         });
 
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
+        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
     }
 
     private void Ban() {
@@ -75,7 +75,7 @@ public class GuardianShadow extends AbstractEnemy {
 
     private void InevitablePunishment(AbstractCharacter<?> target) {
         getBattle().getHelper().attackCharacter(this, target, 10, 1139);
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
+        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Inevitable Punishment"));
     }
 
     private void ThunderstormCondemnation() {

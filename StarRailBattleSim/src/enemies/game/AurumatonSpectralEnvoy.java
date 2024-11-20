@@ -1,9 +1,11 @@
 package enemies.game;
 
+import battleLogic.log.lines.enemy.EnemyAction;
 import characters.AbstractCharacter;
 import characters.DamageType;
 import characters.ElementType;
 import enemies.AbstractEnemy;
+import enemies.EnemyAttackType;
 import enemies.EnemyType;
 import powers.PermPower;
 import powers.PowerStat;
@@ -56,6 +58,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     private void Adjudicate() {
         AbstractCharacter<?> target = this.getRandomTarget();
         getBattle().getHelper().attackCharacter(this, target, 10, 976);
+        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Adjudicate"));
     }
 
     private void Subdue() {
@@ -67,9 +70,11 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         }
 
         target.addPower(new Reverberation());
+        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Subdue"));
     }
 
     private void RevertYinAndYang() {
+        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Revert Yin and Yang"));
         getBattle().getPlayers().forEach(p -> {
             getBattle().getHelper().attackCharacter(this, p, 10, 976);
         });
@@ -92,10 +97,6 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         }
     }
 
-    private void HeavensFall() {
-        this.HeavensFall(this.getRandomTarget());
-    }
-
     private void HeavensFall(AbstractCharacter<?> target) {
         getBattle().getHelper().attackCharacter(this, target, 20, 976);
 
@@ -103,6 +104,8 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
             getBattle().getHelper().attackCharacter(this, target, 0, 976);
             target.removePower(StrongReverberation.NAME);
         }
+
+        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Heavens Fall"));
     }
 
     private void SoulWarrant() {
@@ -114,6 +117,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
             this.lockedOn = inflicted.get(getBattle().getEnemyTargetRng().nextInt(inflicted.size()));
         }
         this.tryToLock = true;
+        getBattle().addToLog(new EnemyAction(this, "Soul Warrant (Success=" + (this.lockedOn != null) + ")"));
     }
 
     public static class Reverberation extends TempPower {

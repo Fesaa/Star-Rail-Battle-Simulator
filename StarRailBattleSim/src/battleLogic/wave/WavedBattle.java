@@ -12,7 +12,7 @@ import java.util.Queue;
 public abstract class WavedBattle extends Battle {
 
     protected final Queue<Wave> waves = new ArrayDeque<>();
-    private Wave currentWave;
+    protected Wave currentWave;
 
     public WavedBattle(Wave ...waves) {
         Collections.addAll(this.waves, waves);
