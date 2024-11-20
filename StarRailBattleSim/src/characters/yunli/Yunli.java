@@ -7,7 +7,6 @@ import battleLogic.log.lines.character.yunli.UseSlash;
 import characters.AbstractCharacter;
 import characters.Path;
 import characters.goal.shared.AlwaysSkillGoal;
-import characters.goal.shared.AlwaysUltGoal;
 import characters.goal.shared.SkillFirstTurnGoal;
 import enemies.AbstractEnemy;
 import lightcones.destruction.DanceAtSunset;
@@ -95,7 +94,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
     }
 
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> t, int energyFromAttacked) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> t, int energyFromAttacked, float totalDmg) {
         addPower(getTrueSunderPower());
         if (isParrying) {
             useCull(enemy);
@@ -123,7 +122,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             getBattle().getHelper().PostAttackLogic(this, types);
         }
         increaseEnergy(15, TALENT_ENERGY_GAIN);
-        super.onAttacked(character, enemy, t, energyFromAttacked);
+        super.onAttacked(character, enemy, t, energyFromAttacked, totalDmg);
     }
 
     public void useCull(AbstractEnemy enemy) {

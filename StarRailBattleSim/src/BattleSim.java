@@ -25,13 +25,13 @@ import static teams.PlayerTeam.*;
 public class BattleSim {
 
     public static void main(String[] args) {
-        debugTeam();
+        //debugTeam();
         //generateReportYunli();
         //generateReportFeixiao();
         //generateReportFeixiaoLightconeReport();
         //generateReportFeixiaoRelicReport();
         //generateReportTopaz();
-        //ameliasSanityCheck();
+        ameliasSanityCheck();
     }
 
     public static void debugTeam() {

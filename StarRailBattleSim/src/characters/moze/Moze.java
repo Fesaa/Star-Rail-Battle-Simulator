@@ -206,7 +206,7 @@ public class Moze extends AbstractCharacter<Moze> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
             boolean trigger = true;
             if (character instanceof Moze) {
                 if (types.contains(DamageType.ULTIMATE)) {

@@ -310,7 +310,7 @@ public class BattleHelpers implements BattleParticipant {
         ArrayList<AbstractEnemy> enemies = new ArrayList<>(enemiesHit); // I really should've implemented an action queue
         for (AbstractEnemy enemy : enemies) {
             enemy.emit(l -> {
-                l.onAttacked(character, enemy, types, 0);
+                l.onAttacked(character, enemy, types, 0, damageTotal);
             });
         }
         character.emit(l -> {
@@ -318,7 +318,7 @@ public class BattleHelpers implements BattleParticipant {
         });
     }
 
-    public void attackCharacter(AbstractEnemy source, AbstractCharacter target, int energyToGain) {
+    public void attackCharacter(AbstractEnemy source, AbstractCharacter target, int energyToGain, float dmg) {
         if (target instanceof Moze) {
             if (((Moze) target).isDeparted) {
                 return;
@@ -326,7 +326,7 @@ public class BattleHelpers implements BattleParticipant {
         }
         getBattle().addToLog(new Attacked(source, target));
         target.emit(l -> {
-            l.onAttacked(target, source, new ArrayList<>(), energyToGain);
+            l.onAttacked(target, source, new ArrayList<>(), energyToGain, dmg);
         });
     }
 

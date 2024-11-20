@@ -14,12 +14,14 @@ public interface BattleEvents {
 
     /**
      * Called when a character is attacked, or when an enemy is attacked.
-     * @param character The character that was attacked/is attacking
-     * @param enemy The enemy that attacked/is being attacked
-     * @param types The types of damage dealt
+     *
+     * @param character          The character that was attacked/is attacking
+     * @param enemy              The enemy that attacked/is being attacked
+     * @param types              The types of damage dealt
      * @param energyFromAttacked The energy gained from being attacked
+     * @param totalDmg           The total dmg dealt to the character
      */
-    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked) {}
+    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {}
 
     /**
      * Called from getBattle().getHelper()#PreAttackLogic

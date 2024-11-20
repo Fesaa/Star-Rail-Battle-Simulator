@@ -1,6 +1,5 @@
 package lightcones.destruction;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
@@ -57,7 +56,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
             eclipse = Math.min(3, eclipse + 1);
         }
     }

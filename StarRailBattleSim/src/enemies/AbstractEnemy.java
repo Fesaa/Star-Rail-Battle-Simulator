@@ -121,67 +121,79 @@ public abstract class AbstractEnemy extends AbstractEntity {
         numTurnsMetric++;
     }
 
+    // TODO: Implement this correctly with buffs etc.
+    protected float attackDmg() {
+        return this.getFinalAttack();
+    }
+
+    protected int getRandomTargetPosition() {
+        AbstractPower taunt = getPower(TauntPower.class.getSimpleName());
+
+        if (taunt instanceof TauntPower) {
+            AbstractCharacter<?> taunter = ((TauntPower) taunt).taunter;
+            getBattle().addToLog(new ForcedAttack(this, taunter));
+            for (int i = 0; i < getBattle().getPlayers().size(); i++) {
+                if (getBattle().getPlayers().get(i) == taunter) {
+                    return i;
+                }
+            }
+
+            throw new RuntimeException("Taunter not present in battle.");
+        }
+
+        ArrayList<AbstractCharacter<?>> validTargets = new ArrayList<>();
+        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
+            if (character instanceof Moze) {
+                if (!((Moze) character).isDeparted) {
+                    validTargets.add(character);
+                }
+            } else {
+                validTargets.add(character);
+            }
+        }
+        double totalWeight = validTargets.stream().mapToDouble(AbstractCharacter::getFinalTauntValue).sum();
+        int characterPosition = 0;
+        // TODO: Check if it actually checks like this. I'd think that this way the first position gets attacked lot more
+        // even with same taunt. As it just gets checked first. Not sure.
+        for (double r = getBattle().getEnemyTargetRng().nextDouble() * totalWeight; characterPosition < validTargets.size() - 1; ++characterPosition) {
+            r -= validTargets.get(characterPosition).getFinalTauntValue();
+            if (r <= 0.0) break;
+        }
+        return characterPosition;
+    }
+
     public void attack() {
+        numAttacksMetric++;
+        float dmgToDeal = this.attackDmg();
+
         EnemyAttackType attackType = rollAttackType();
         if (attackType == EnemyAttackType.AOE) {
             numAoEMetric++;
             getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
-            for (AbstractCharacter character : getBattle().getPlayers()) {
-                getBattle().getHelper().attackCharacter(this, character, 10);
+            for (AbstractCharacter<?> character : getBattle().getPlayers()) {
+                getBattle().getHelper().attackCharacter(this, character, 10, dmgToDeal);
             }
-        } else {
-            AbstractCharacter target;
-            AbstractPower taunt = getPower(TauntPower.class.getSimpleName());
-            int idx = -99;
-            if (taunt instanceof TauntPower) {
-                target = ((TauntPower) taunt).taunter;
-                getBattle().addToLog(new ForcedAttack(this, target));
-                for (int i = 0; i < getBattle().getPlayers().size(); i++) {
-                    if (getBattle().getPlayers().get(i) == target) {
-                        idx = i;
-                        break;
-                    }
-                }
-            } else {
-                double totalWeight= 0.0;
-                ArrayList<AbstractCharacter> validTargets = new ArrayList<>();
-                for (AbstractCharacter character : getBattle().getPlayers()) {
-                    if (character instanceof Moze) {
-                        if (!((Moze) character).isDeparted) {
-                            validTargets.add(character);
-                        }
-                    } else {
-                        validTargets.add(character);
-                    }
-                }
-                for (AbstractCharacter character : validTargets) {
-                    totalWeight += character.getFinalTauntValue();
-                }
-                idx = 0;
-                for (double r = getBattle().getEnemyTargetRng().nextDouble() * totalWeight; idx < validTargets.size() - 1; ++idx) {
-                    r -= validTargets.get(idx).getFinalTauntValue();
-                    if (r <= 0.0) break;
-                }
-                target = validTargets.get(idx);
-            }
+            return;
+        }
 
-            if (attackType == EnemyAttackType.SINGLE) {
-                numSingleTargetMetric++;
-                getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
-                getBattle().getHelper().attackCharacter(this, target, 10);
-            } else {
-                numBlastMetric++;
-                getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
-                getBattle().getHelper().attackCharacter(this, target, 10);
-                if (idx + 1 < getBattle().getPlayers().size()) {
-                    getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(idx + 1), 5);
-                }
-                if (idx - 1 >= 0) {
-                    getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(idx - 1), 5);
-                }
+        int targetPos = this.getRandomTargetPosition();
+        AbstractCharacter<?> target = getBattle().getPlayers().get(targetPos); // Fine to throw if pos is too large.
+
+        if (attackType == EnemyAttackType.SINGLE) {
+            numSingleTargetMetric++;
+            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
+            getBattle().getHelper().attackCharacter(this, target, 10, dmgToDeal);
+        } else {
+            numBlastMetric++;
+            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
+            getBattle().getHelper().attackCharacter(this, target, 10, dmgToDeal);
+            if (targetPos + 1 < getBattle().getPlayers().size()) {
+                getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(targetPos + 1), 5, dmgToDeal);
+            }
+            if (targetPos - 1 >= 0) {
+                getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(targetPos - 1), 5,dmgToDeal );
             }
         }
-        numAttacksMetric++;
     }
 
     public EnemyAttackType rollAttackType() {

@@ -1,6 +1,5 @@
 package lightcones.preservation;
 
-import battleLogic.Battle;
 import characters.AbstractCharacter;
 import enemies.AbstractEnemy;
 import lightcones.AbstractLightcone;
@@ -24,7 +23,7 @@ public class SheAlreadyShutHerEyes extends AbstractLightcone {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked) {
+    public void onAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
         // TODO: Check if owner has shield, and if it has more than the attack
         // if (...) return;
 

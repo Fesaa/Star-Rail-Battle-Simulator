@@ -159,7 +159,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (character == Aventurine.this) {
                 increaseBlindBet(2);
             } else {

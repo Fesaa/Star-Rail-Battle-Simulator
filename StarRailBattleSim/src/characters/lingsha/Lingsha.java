@@ -238,7 +238,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyToGain) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyToGain, float totalDmg) {
             int timesHit = characterTimesDamageTakenMap.get(character);
             timesHit++;
             getBattle().addToLog(new HitSinceLastHeal(character, timesHit));

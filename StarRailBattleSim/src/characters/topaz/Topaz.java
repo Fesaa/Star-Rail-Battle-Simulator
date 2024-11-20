@@ -10,7 +10,6 @@ import characters.goal.shared.AlwaysSkillGoal;
 import characters.goal.shared.AlwaysUltGoal;
 import characters.goal.shared.DontUltMissingPowerGoal;
 import characters.goal.shared.SkillFirstTurnGoal;
-import characters.robin.Robin;
 import enemies.AbstractEnemy;
 import powers.AbstractPower;
 import powers.PermPower;
@@ -211,7 +210,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
             for (AbstractCharacter.DamageType type : types) {
                 if (type == AbstractCharacter.DamageType.FOLLOW_UP) {
                     Topaz.this.numby.AdvanceForward();

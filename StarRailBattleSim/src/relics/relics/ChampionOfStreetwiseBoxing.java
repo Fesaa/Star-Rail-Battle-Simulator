@@ -42,7 +42,7 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<AbstractCharacter.DamageType> types, int energyFromAttacked, float totalDmg) {
             this.stacks = Math.min(this.stacks + 1, 5);
         }
 
