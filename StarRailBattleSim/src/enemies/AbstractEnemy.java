@@ -9,6 +9,7 @@ import battleLogic.log.lines.enemy.WeaknessBreakRecover;
 import characters.AbstractCharacter;
 import characters.ElementType;
 import characters.ruanmei.RuanMei;
+import enemies.action.EnemyActionSequence;
 import powers.AbstractPower;
 import powers.PowerStat;
 import powers.TauntPower;
@@ -44,6 +45,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     protected float currentHp = 0;
     protected float currentToughness = 0;
 
+    protected final EnemyActionSequence sequence;
 
     public AbstractEnemy(String name, EnemyType type, int baseHP, int baseATK, int baseDEF, float baseSpeed, int toughness, int level) {
         this.name = name;
@@ -55,6 +57,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
         this.toughness = toughness;
         this.level = level;
         this.setUpDefaultRes();
+
+        this.sequence = new EnemyActionSequence(this);
     }
 
     public int getLevel() {

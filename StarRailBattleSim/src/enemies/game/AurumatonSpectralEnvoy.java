@@ -21,6 +21,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     private static final double SubdueProc = 70;
 
     private AbstractCharacter<?> lockedOn;
+    private boolean tryToLock = false;
 
     public AurumatonSpectralEnvoy() {
         super("Aurumaton Spectral Envoy", EnemyType.Elite, 448625, 685, 1000, 158.4f, 100, 92);
@@ -30,6 +31,9 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
 
         this.addPower(PermPower.create(PowerStat.EFFECT_HIT, 33.6f, "Base stat EHR"));
         this.addPower(PermPower.create(PowerStat.EFFECT_RES, 30, "Base stat ER"));
+
+        this.sequence.addAction(this::Adjudicate, this::Subdue);
+        this.sequence.addAction(this::Subdue, this::RevertYinAndYang, this::SoulWarrant);
     }
 
     @Override
@@ -39,6 +43,14 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
             this.lockedOn = null;
             return;
         }
+
+        if (this.tryToLock) {
+            this.tryToLock = false;
+            this.Adjudicate();
+            return;
+        }
+
+        this.sequence.runNext();
     }
 
     private void Adjudicate() {
@@ -101,6 +113,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         if (!inflicted.isEmpty()) {
             this.lockedOn = inflicted.get(getBattle().getEnemyTargetRng().nextInt(inflicted.size()));
         }
+        this.tryToLock = true;
     }
 
     public static class Reverberation extends TempPower {

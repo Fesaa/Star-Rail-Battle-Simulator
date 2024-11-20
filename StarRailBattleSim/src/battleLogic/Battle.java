@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Battle implements IBattle {
@@ -436,6 +437,30 @@ public class Battle implements IBattle {
             }
         }
         return null;
+    }
+
+    @Override
+    public AbstractCharacter<?> getCharacter(int index) {
+        if (index < 0 || index >= playerTeam.size()) {
+            return null;
+        }
+        return playerTeam.get(index);
+    }
+
+    @Override
+    public void characterCallback(String name, Consumer<AbstractCharacter<?>> callback) {
+        AbstractCharacter<?> character = this.getCharacter(name);
+        if (character != null  && callback != null) {
+            callback.accept(character);
+        }
+    }
+
+    @Override
+    public void characterCallback(int idx, Consumer<AbstractCharacter<?>> callback) {
+        AbstractCharacter<?> character = this.getCharacter(idx);
+        if (character != null && callback != null) {
+            callback.accept(character);
+        }
     }
 
     @Override

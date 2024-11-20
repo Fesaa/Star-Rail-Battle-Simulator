@@ -8,6 +8,7 @@ import powers.AbstractPower;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public interface IBattle {
 
@@ -23,6 +24,15 @@ public interface IBattle {
     List<AbstractCharacter<?>> getPlayers();
     boolean hasCharacter(String name);
     AbstractCharacter<?> getCharacter(String name);
+    AbstractCharacter<?> getCharacter(int index);
+    void characterCallback(String name, Consumer<AbstractCharacter<?>> callback);
+
+    /**
+     * Consumes the callback if the character at index idx exists
+     * @param idx The index to get the character from
+     * @param callback The callback to consume
+     */
+    void characterCallback(int idx, Consumer<AbstractCharacter<?>> callback);
 
     List<AbstractEnemy> getEnemies();
     AbstractEnemy getMiddleEnemy();

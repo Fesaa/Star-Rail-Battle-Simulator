@@ -37,6 +37,10 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
         return listeners;
     }
 
+    public void addListener(BattleEvents listener) {
+        listeners.add(listener);
+    }
+
     public void emit(Consumer<BattleEvents> event) {
         synchronized (this.listeners) {
             this.listeners.forEach(event);
