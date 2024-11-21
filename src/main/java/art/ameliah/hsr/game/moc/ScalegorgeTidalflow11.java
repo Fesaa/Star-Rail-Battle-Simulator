@@ -12,6 +12,7 @@ import art.ameliah.hsr.enemies.game.FrigidProwler;
 import art.ameliah.hsr.enemies.game.GuardianShadow;
 import art.ameliah.hsr.enemies.game.IceOutOfSpace;
 import art.ameliah.hsr.enemies.game.Kafka;
+
 import java.util.List;
 
 public class ScalegorgeTidalflow11 extends Moc {
@@ -41,6 +42,11 @@ public class ScalegorgeTidalflow11 extends Moc {
 
 
     public static class ScalegorgeTidalflowTubalance extends MocTurbulence {
+
+        public ScalegorgeTidalflowTubalance() {
+            super("Scalegorge Tidalflow Tubalance");
+        }
+
         @Override
         protected void trigger() {
 

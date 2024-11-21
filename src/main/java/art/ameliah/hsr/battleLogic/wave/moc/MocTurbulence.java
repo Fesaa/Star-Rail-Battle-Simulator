@@ -1,35 +1,20 @@
 package art.ameliah.hsr.battleLogic.wave.moc;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.ElementType;
-import art.ameliah.hsr.characters.Path;
-import art.ameliah.hsr.characters.goal.shared.AlwaysBasicGoal;
 
 // Base class to implement Moc Turbulence, etc from
-public abstract class MocTurbulence extends AbstractCharacter<MocTurbulence> {
+public abstract class MocTurbulence extends AbstractEntity {
 
     private boolean firstCycleHasPassed = false;
 
-    public MocTurbulence() {
-        super("MocTurbulence", 0, 0, 0, 0, 0, ElementType.ICE, 0, 0, Path.ABUNDANCE);
-
-        this.registerGoal(0, new AlwaysBasicGoal<>(this));
+    public MocTurbulence(String name) {
+        this.name = name;
     }
 
     @Override
-    protected void useSkill() {
-    }
-
-    @Override
-    protected void useBasic() {
+    public void takeTurn() {
         this.firstCycleHasPassed = true;
-        getBattle().useSkillPoint(this, 1);
         this.trigger();
-    }
-
-    @Override
-    protected void useUltimate() {
     }
 
     @Override
@@ -42,11 +27,6 @@ public abstract class MocTurbulence extends AbstractCharacter<MocTurbulence> {
             return 150 + (this.numTurnsMetric-1) * 100;
         }
         return 0;
-    }
-
-    @Override
-    public boolean canAdvance() {
-        return false;
     }
 
     protected abstract void trigger();

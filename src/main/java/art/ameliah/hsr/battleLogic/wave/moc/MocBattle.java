@@ -15,7 +15,7 @@ public class MocBattle extends WavedBattle {
     @Override
     public void onStart() {
         super.onStart();
-        this.playerTeam.add(this.turbulence);
+        this.actionValueMap.put(this.turbulence, this.turbulence.getBaseAV());
         this.turbulence.setBattle(this);
     }
 

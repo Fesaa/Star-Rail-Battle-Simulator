@@ -254,17 +254,18 @@ public class Battle implements IBattle {
 
     @Override
     public void Start(float initialLength) {
+        damageContributionMap = new HashMap<>();
+        damageContributionMapPercent = new HashMap<>();
+        numSkillPoints = INITIAL_SKILL_POINTS;
+        actionValueMap = new HashMap<>();
+        usedEntryTechnique = false;
+
         this.onStart();
         initialBattleLength = initialLength;
         this.battleLength = initialLength;
         totalPlayerDamage = 0;
         addToLog(new CombatStart());
         this.playerTeam.forEach(c -> addToLog(new PreCombatPlayerMetrics(c)));
-        damageContributionMap = new HashMap<>();
-        damageContributionMapPercent = new HashMap<>();
-        numSkillPoints = INITIAL_SKILL_POINTS;
-        actionValueMap = new HashMap<>();
-        usedEntryTechnique = false;
 
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
@@ -344,7 +345,7 @@ public class Battle implements IBattle {
 
         currentUnit.emit(BattleEvents::onTurnStart);
         // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
-        if (currentUnit instanceof AbstractEnemy || currentUnit instanceof AbstractCharacter) {
+        if (!(currentUnit instanceof AbstractSummon<?>)) {
             if (actionValueMap.get(currentUnit) <= 0) {
                 actionValueMap.put(currentUnit, currentUnit.getBaseAV());
             }
@@ -553,9 +554,6 @@ public class Battle implements IBattle {
 
     @Override
     public void AdvanceEntity(AbstractEntity entity, float advanceAmount) {
-        if (!entity.canAdvance()) {
-            return;
-        }
         for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
             if (entry.getKey() == entity) {
                 float baseAV = entity.getBaseAV();

@@ -12,6 +12,7 @@ import art.ameliah.hsr.characters.moze.Moze;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -39,11 +40,11 @@ public class BattleHelpers implements BattleParticipant {
     
     private float attackDamageTotal = 0;
     public ArrayList<AbstractEnemy> enemiesHit = new ArrayList<>();
-    private HashMap<String, Float> damageBonusMultiConstituents = new HashMap<>();
-    private HashMap<String, Float> defenseMultiConstituents = new HashMap<>();
-    private HashMap<String, Float> resMultiConstituents = new HashMap<>();
-    private HashMap<String, Float> damageVulnMultiConstituents = new HashMap<>();
-    private HashMap<String, Float> critDmgMultiConstituents = new HashMap<>();
+    private final HashMap<String, Float> damageBonusMultiConstituents = new HashMap<>();
+    private final HashMap<String, Float> defenseMultiConstituents = new HashMap<>();
+    private final HashMap<String, Float> resMultiConstituents = new HashMap<>();
+    private final HashMap<String, Float> damageVulnMultiConstituents = new HashMap<>();
+    private final HashMap<String, Float> critDmgMultiConstituents = new HashMap<>();
 
     private void clearConstituents() {
         damageBonusMultiConstituents.clear();
@@ -53,7 +54,7 @@ public class BattleHelpers implements BattleParticipant {
         critDmgMultiConstituents.clear();
     }
     
-    public float calculateDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, ElementType damageElement) {
+    public float calculateDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, ElementType damageElement) {
         clearConstituents();
         float statToUse;
         if (stat == MultiplierStat.ATK) {
@@ -170,12 +171,7 @@ public class BattleHelpers implements BattleParticipant {
         for (AbstractPower power : source.powerList) {
             critChance = power.setFixedCritRate(source, target, types, critChance);
         }
-        double roll = getBattle().getCritChanceRng().nextDouble() * 100 + 1;
 
-        boolean wasCrit = false;
-        if (roll < (double)critChance) {
-            wasCrit = true;
-        }
         float critDamage = source.baseCritDamage;
         for (AbstractPower power : source.powerList) {
             float bonus = power.getStat(PowerStat.CRIT_DAMAGE);
@@ -215,19 +211,9 @@ public class BattleHelpers implements BattleParticipant {
         return calculatedDamage;
     }
 
-    public float calculateBreakDamageAgainstEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, ElementType damageElement) {
+    public float calculateBreakDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, ElementType damageElement) {
         float maxToughnessMultiplier = 0.5f + (target.maxToughness() / 40);
-        float elementMultipler;
-        if (damageElement == ElementType.ICE || damageElement == ElementType.LIGHTNING) {
-            elementMultipler = 1;
-        } else if (damageElement == ElementType.PHYSICAL || damageElement == ElementType.FIRE) {
-            elementMultipler = 2;
-        } else if (damageElement == ElementType.QUANTUM || damageElement == ElementType.IMAGINARY) {
-            elementMultipler = 0.5f;
-        } else {
-            elementMultipler = 1.5f;
-        }
-        float baseDamage = multiplier * elementMultipler * 3767.5533f * maxToughnessMultiplier;
+        float baseDamage = this.getBaseBreakDamage(multiplier, damageElement, maxToughnessMultiplier);
         float breakEffectMultiplier = source.getTotalBreakEffect();
         float breakEffectMultiplierFloat = 1 + breakEffectMultiplier / 100;
 
@@ -257,18 +243,28 @@ public class BattleHelpers implements BattleParticipant {
         return calculatedDamage;
     }
 
-    public float calculateToughenssDamage(AbstractCharacter character, float toughnssDamage) {
+    private float getBaseBreakDamage(float multiplier, ElementType damageElement, float maxToughnessMultiplier) {
+        float elementMultipler;
+        if (damageElement == ElementType.ICE || damageElement == ElementType.LIGHTNING) {
+            elementMultipler = 1;
+        } else if (damageElement == ElementType.PHYSICAL || damageElement == ElementType.FIRE) {
+            elementMultipler = 2;
+        } else if (damageElement == ElementType.QUANTUM || damageElement == ElementType.IMAGINARY) {
+            elementMultipler = 0.5f;
+        } else {
+            elementMultipler = 1.5f;
+        }
+        return multiplier * elementMultipler * 3767.5533f * maxToughnessMultiplier;
+    }
+
+    public float calculateToughenssDamage(AbstractCharacter<?> character, float toughnssDamage) {
         float weaknessBreakEff = character.getTotalWeaknessBreakEff();
         return toughnssDamage * (1 + weaknessBreakEff / 100);
     }
 
-    public void hitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage, ElementType damageElement) {
-        source.emit(l -> {
-            l.onBeforeHitEnemy(source, target, types);
-        });
-        target.emit(l -> {
-            l.onBeforeHitEnemy(source, target, types);
-        });
+    public void hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage, ElementType damageElement) {
+        source.emit(l -> l.onBeforeHitEnemy(source, target, types));
+        target.emit(l -> l.onBeforeHitEnemy(source, target, types));
         float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, types, damageElement);
 
         toughnessDamage = calculateToughenssDamage(source, toughnessDamage);
@@ -289,62 +285,53 @@ public class BattleHelpers implements BattleParticipant {
         }
     }
 
-    public void hitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage) {
+    public void hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage) {
         hitEnemy(source, target, multiplier, stat, types, toughnessDamage, source.elementType);
     }
 
-    public void PreAttackLogic(AbstractCharacter character, ArrayList<DamageType> types) {
+    public void PreAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
         attackDamageTotal = 0;
         enemiesHit.clear();
-        character.emit(l -> {
-            l.onBeforeUseAttack(types);
-        });
+        character.emit(l -> l.onBeforeUseAttack(types));
     }
 
-    public void PostAttackLogic(AbstractCharacter character, ArrayList<DamageType> types) {
+    public void PostAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
         int damageTotal = (int) attackDamageTotal;
         getBattle().addToLog(new TotalDamage(character, types, damageTotal));
+        getBattle().addToLog(new Attacked(character, enemiesHit));
 
-        character.emit(l -> {
-            l.onAttack(character, enemiesHit, types);
-        });
+        character.emit(l -> l.onAttack(character, enemiesHit, types));
         ArrayList<AbstractEnemy> enemies = new ArrayList<>(enemiesHit); // I really should've implemented an action queue
         for (AbstractEnemy enemy : enemies) {
-            enemy.emit(l -> {
-                l.onAttacked(character, enemy, types, 0, damageTotal);
-            });
+            enemy.emit(l -> l.onAttacked(character, enemy, types, 0, damageTotal));
         }
-        character.emit(l -> {
-            l.afterAttackFinish(character, enemiesHit, types);
-        });
+        character.emit(l -> l.afterAttackFinish(character, enemiesHit, types));
     }
 
-    public void attackCharacter(AbstractEnemy source, AbstractCharacter target, int energyToGain, float dmg) {
+    public void attackCharacter(AbstractEnemy source, AbstractCharacter<?> target, int energyToGain, float dmg) {
         if (target instanceof Moze) {
             if (((Moze) target).isDeparted) {
                 return;
             }
         }
         getBattle().addToLog(new Attacked(source, target));
-        target.emit(l -> {
-            l.onAttacked(target, source, new ArrayList<>(), energyToGain, dmg);
-        });
+        target.emit(l -> l.onAttacked(target, source, new ArrayList<>(), energyToGain, dmg));
     }
 
-    public void additionalDamageHitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
+    public void additionalDamageHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
         float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, new ArrayList<>(), source.elementType);
         getBattle().increaseTotalPlayerDmg(calculatedDamage);
         getBattle().updateContribution(source, calculatedDamage);
         attackDamageTotal += calculatedDamage;
     }
 
-    public void tingyunSkillHitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
+    public void tingyunSkillHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
         float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, new ArrayList<>(),  ElementType.LIGHTNING);
         getBattle().increaseTotalPlayerDmg(calculatedDamage);
         getBattle().updateContribution(source, calculatedDamage);
         attackDamageTotal += calculatedDamage;
     }
-    public void breakDamageHitEnemy(AbstractCharacter source, AbstractEnemy target, float multiplier) {
+    public void breakDamageHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier) {
         float calculatedDamage = calculateBreakDamageAgainstEnemy(source, target, multiplier, source.elementType);
         getBattle().increaseTotalPlayerDmg(calculatedDamage);
         getBattle().updateContribution(source, calculatedDamage);
