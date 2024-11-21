@@ -17,7 +17,7 @@ import art.ameliah.hsr.powers.TracePower;
 import java.util.ArrayList;
 
 public class Gallagher extends AbstractCharacter<Gallagher> {
-    public static String NAME = "Gallagher";
+    public static final String NAME = "Gallagher";
 
     private boolean isEnhanced = false;
 

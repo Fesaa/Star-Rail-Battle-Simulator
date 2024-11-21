@@ -15,9 +15,9 @@ import art.ameliah.hsr.powers.PowerStat;
 import java.util.ArrayList;
 
 public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTurnGoal.SkillCounterCharacter {
-    public static String NAME = "Fu Xuan";
+    public static final String NAME = "Fu Xuan";
     
-    AbstractPower skillPower = PermPower.create(PowerStat.CRIT_CHANCE, 12, "Fu Xuan Skill Power");
+    final AbstractPower skillPower = PermPower.create(PowerStat.CRIT_CHANCE, 12, "Fu Xuan Skill Power");
     int skillCounter = 0;
 
     public FuXuan() {

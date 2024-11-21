@@ -60,9 +60,7 @@ public class IceOutOfSpace extends AbstractEnemy {
     }
 
     private void EverwinterRain() {
-        getBattle().getPlayers().forEach(p -> {
-            getBattle().getHelper().attackCharacter(this, p, 15, 651);
-        });
+        getBattle().getPlayers().forEach(p -> getBattle().getHelper().attackCharacter(this, p, 15, 651));
 
         getBattle().getPlayers()
                 .stream()

@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Report {
-    private PlayerTeam baselineTeam;
-    private ArrayList<PlayerTeam> otherTeams;
-    private ArrayList<EnemyTeam> enemyTeams;
-    private int AVLength;
-    private String notes;
+    private final PlayerTeam baselineTeam;
+    private final ArrayList<PlayerTeam> otherTeams;
+    private final ArrayList<EnemyTeam> enemyTeams;
+    private final int AVLength;
+    private final String notes;
 
     public Report(PlayerTeam baselineTeam, ArrayList<PlayerTeam> otherTeams, ArrayList<EnemyTeam> enemyTeams, int AVLength, String notes) {
         this.baselineTeam = baselineTeam;

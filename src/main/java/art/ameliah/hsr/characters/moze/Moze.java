@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Moze extends AbstractCharacter<Moze> {
-    public static String NAME = "Moze";
+    public static final String NAME = "Moze";
     
     public int FUAs = 0;
     public int talentProcs = 0;
-    private String FUAsMetricName = "Number of Follow Up Attacks Used";
-    private String talentProcsMetricName = "Talent Extra Damage Procs";
-    private MozePreyPower preyPower;
+    private final String FUAsMetricName = "Number of Follow Up Attacks Used";
+    private final String talentProcsMetricName = "Talent Extra Damage Procs";
+    private final MozePreyPower preyPower;
     private int chargeCount;
-    private int MAX_CHARGE = 9;
+    private final int MAX_CHARGE = 9;
     private int chargeLost = 0;
-    private int CHARGE_ATTACK_THRESHOLD = 3;
+    private final int CHARGE_ATTACK_THRESHOLD = 3;
     private boolean skillPointRecovered = false;
     public boolean isDeparted = false;
 
@@ -217,9 +217,7 @@ public class Moze extends AbstractCharacter<Moze> {
         public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
             boolean trigger = true;
             if (character instanceof Moze) {
-                if (types.contains(DamageType.ULTIMATE)) {
-                    trigger = true;
-                } else if ((types.contains(DamageType.SKILL) || types.contains(DamageType.FOLLOW_UP))) {
+                if ((types.contains(DamageType.SKILL) || types.contains(DamageType.FOLLOW_UP))) {
                     trigger = false;
                 }
             }

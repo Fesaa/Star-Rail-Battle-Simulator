@@ -5,17 +5,7 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.powers.AbstractPower;
 
-public class RefreshPower implements Loggable {
-
-    public final AbstractEntity entity;
-    public final AbstractPower power;
-    public final int turns;
-
-    public RefreshPower(AbstractEntity entity, AbstractPower power, int turns) {
-        this.entity = entity;
-        this.power = power;
-        this.turns = turns;
-    }
+public record RefreshPower(AbstractEntity entity, AbstractPower power, int turns) implements Loggable {
 
     @Override
     public String asString() {

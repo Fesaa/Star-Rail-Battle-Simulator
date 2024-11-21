@@ -111,18 +111,7 @@ public class TopazTeams {
     }
 
     public static AbstractCharacter<?> getPrebuiltRobinTT() {
-        AbstractCharacter<?> character = new Robin();
-        character.EquipLightcone(new ForTomorrowsJourney(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character, false));
-        character.EquipRelicSet(new TheWindSoaringValorous(character, false));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.ATK_PER).
-                addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.ATK_PER, 7).addSubStat(RelicStats.Stats.SPEED, 8).
-                addSubStat(RelicStats.Stats.ATK_FLAT, 3).addSubStat(RelicStats.Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
+        return PlayerTeam.getPrebuiltRobin();
     }
 
     public static AbstractCharacter<?> getPrebuiltTopazTT() {
@@ -154,16 +143,7 @@ public class TopazTeams {
     }
 
     public static AbstractCharacter<?> getPrebuiltFeixiaoTT() {
-        AbstractCharacter<?> character = new Feixiao();
-        character.EquipLightcone(new IVentureForthToHunt(character));
-        character.EquipRelicSet(new TheWindSoaringValorous(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 6).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 18);
-        relicStats.equipTo(character);
-        return character;
+        return PlayerTeam.getPrebuiltFeixiao();
     }
 
     public static AbstractCharacter<?> getPrebuiltSwordMarchTT() {
@@ -207,16 +187,6 @@ public class TopazTeams {
     }
 
     public static AbstractCharacter<?> getPrebuiltHuohuoTT() {
-        AbstractCharacter<?> character = new Huohuo();
-        character.EquipLightcone(new PostOpConversation(character));
-        character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HEALING).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.HP_PER, 10).addSubStat(RelicStats.Stats.SPEED, 5).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 1).addSubStat(RelicStats.Stats.HP_FLAT, 8);
-        relicStats.equipTo(character);
-        return character;
+        return PlayerTeam.getPrebuiltHuohuo();
     }
 }

@@ -36,7 +36,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
 
     public class IShallBeMyOwnSwordEffect extends PermPower {
 
-        private IShallBeMyOwnSword lightcone;
+        private final IShallBeMyOwnSword lightcone;
 
         public IShallBeMyOwnSwordEffect(IShallBeMyOwnSword lightcone) {
             this.name = this.getClass().getSimpleName();

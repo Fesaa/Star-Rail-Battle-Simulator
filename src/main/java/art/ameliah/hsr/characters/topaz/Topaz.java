@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked {
-    AbstractPower proofOfDebt = new ProofOfDebt();
-    Numby numby;
+    final AbstractPower proofOfDebt = new ProofOfDebt();
+    final Numby numby;
     PermPower stonksPower;
     int ultCounter = 0;
     private boolean techniqueActive = false;
@@ -34,12 +34,12 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
     public int numbyAdvancedTimesMetrics = 0;
     public int actualNumbyAdvanceMetric = 0;
     public int wastedNumbyAdvances = 0;
-    private String numbyAttacksMetricName = "Numby Attacks";
-    private String numbyAdvancedTimesMetricName = "Number of Useful Numby Advances";
-    private String actualNumbyAdvanceMetricName = "Amount of AV Advanced by Numby";
-    private String wastedNumbyAdvancesMetricName = "Number of Wasted Numby Advances";
-    private String leftoverAVNumbyMetricName = "Leftover AV (Numby)";
-    private String leftoverUltChargesMetricName = "Leftover Ult Charges";
+    private final String numbyAttacksMetricName = "Numby Attacks";
+    private final String numbyAdvancedTimesMetricName = "Number of Useful Numby Advances";
+    private final String actualNumbyAdvanceMetricName = "Amount of AV Advanced by Numby";
+    private final String wastedNumbyAdvancesMetricName = "Number of Wasted Numby Advances";
+    private final String leftoverAVNumbyMetricName = "Leftover AV (Numby)";
+    private final String leftoverUltChargesMetricName = "Leftover Ult Charges";
     public static final String NAME = "Topaz";
 
     public Topaz() {

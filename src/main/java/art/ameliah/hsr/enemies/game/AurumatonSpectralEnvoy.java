@@ -75,9 +75,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
 
     private void RevertYinAndYang() {
         getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Revert Yin and Yang"));
-        getBattle().getPlayers().forEach(p -> {
-            getBattle().getHelper().attackCharacter(this, p, 10, 976);
-        });
+        getBattle().getPlayers().forEach(p -> getBattle().getHelper().attackCharacter(this, p, 10, 976));
 
         long notReverberated = getBattle().getPlayers()
                 .stream()
@@ -112,7 +110,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         List<AbstractCharacter<?>> inflicted = getBattle().getPlayers()
                 .stream()
                 .filter(p -> p.hasPower(StrongReverberation.NAME))
-                .collect(Collectors.toList());
+                .toList();
         if (!inflicted.isEmpty()) {
             this.lockedOn = inflicted.get(getBattle().getEnemyTargetRng().nextInt(inflicted.size()));
         }
@@ -121,7 +119,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     public static class Reverberation extends TempPower {
-        public static String NAME = "Reverberation";
+        public static final String NAME = "Reverberation";
         public Reverberation() {
             super(2, NAME);
         }
@@ -135,7 +133,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     public static class StrongReverberation extends TempPower {
-        public static String NAME = "Strong Reverberation";
+        public static final String NAME = "Strong Reverberation";
         public StrongReverberation() {
             super(1, NAME);
         }

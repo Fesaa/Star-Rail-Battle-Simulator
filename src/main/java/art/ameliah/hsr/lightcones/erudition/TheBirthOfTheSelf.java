@@ -14,11 +14,6 @@ public class TheBirthOfTheSelf extends AbstractLightcone {
         super(953, 476, 331, owner);
     }
 
-    @Override
-    public void onEquip() {
-        super.onEquip();
-    }
-
     public static class TheBirthOfTheSelfPower extends PermPower {
         public TheBirthOfTheSelfPower() {
             this.name = this.getClass().getSimpleName();

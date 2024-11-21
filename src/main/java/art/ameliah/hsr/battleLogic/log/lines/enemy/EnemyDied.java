@@ -5,15 +5,7 @@ import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-public class EnemyDied implements Loggable {
-
-    public final AbstractEnemy enemy;
-    public final AbstractCharacter<?> reason;
-
-    public EnemyDied(AbstractEnemy enemy, AbstractCharacter<?> reason) {
-        this.enemy = enemy;
-        this.reason = reason;
-    }
+public record EnemyDied(AbstractEnemy enemy, AbstractCharacter<?> reason) implements Loggable {
 
     @Override
     public String asString() {

@@ -4,13 +4,7 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public class EmergencyHeal implements Loggable {
-
-    public final AbstractCharacter<?> character;
-
-    public EmergencyHeal(AbstractCharacter<?> character) {
-        this.character = character;
-    }
+public record EmergencyHeal(AbstractCharacter<?> character) implements Loggable {
 
     @Override
     public String asString() {

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterTurnGoal.SkillCounterCharacter {
-    PermPower skillPower;
-    AbstractPower ultPower = new RuanMeiUltPower();
+    final PermPower skillPower;
+    final AbstractPower ultPower = new RuanMeiUltPower();
     private int skillCounter = 0;
     private int ultCounter = 0;
     public static final String NAME = "Ruan Mei";
@@ -112,7 +112,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
     public static class RuanMeiUltDebuff extends AbstractPower {
 
         public boolean triggered = false;
-        public AbstractCharacter<?> owner;
+        public final AbstractCharacter<?> owner;
         public RuanMeiUltDebuff(AbstractCharacter<?> owner) {
             this.name = ULT_DEBUFF_NAME;
             this.lastsForever = true;

@@ -18,13 +18,13 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Tingyun extends AbstractCharacter<Tingyun> {
-    public static String NAME = "Tingyun";
+    public static final String NAME = "Tingyun";
 
     AbstractCharacter<?> benefactor;
     public int skillProcs = 0;
     public int talentProcs = 0;
-    private String skillProcsMetricName = "Skill Extra Damage Procs";
-    private String talentProcsMetricName = "Talent Extra Damage Procs";
+    private final String skillProcsMetricName = "Skill Extra Damage Procs";
+    private final String talentProcsMetricName = "Talent Extra Damage Procs";
 
     public Tingyun() {
         super(NAME, 847, 529, 397, 112, 80, ElementType.LIGHTNING, 130, 100, Path.HARMONY);

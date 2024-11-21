@@ -6,7 +6,7 @@ import art.ameliah.hsr.powers.TempPower;
 
 public class EnemyFrozen extends TempPower {
 
-    public static String NAME = "EnemyFrozen";
+    public static final String NAME = "EnemyFrozen";
 
     private final AbstractEnemy source;
     private final int dmg;

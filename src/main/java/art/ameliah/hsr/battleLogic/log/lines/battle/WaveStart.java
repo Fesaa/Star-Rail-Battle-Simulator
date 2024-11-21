@@ -4,13 +4,7 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.battleLogic.wave.Wave;
 
-public class WaveStart implements Loggable {
-
-    public final Wave wave;
-
-    public WaveStart(Wave wave) {
-        this.wave = wave;
-    }
+public record WaveStart(Wave wave) implements Loggable {
 
     @Override
     public String asString() {

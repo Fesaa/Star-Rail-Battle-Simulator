@@ -221,9 +221,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (this.currentToughness == 0) {
             this.timesBrokenMetric++;
             getBattle().DelayEntity(this, 25);
-            getBattle().getPlayers().forEach(p -> {
-                p.onWeaknessBreak(this);
-            });
+            getBattle().getPlayers().forEach(p -> p.onWeaknessBreak(this));
             this.emit(BattleEvents::onWeaknessBreak);
         }
     }
@@ -290,7 +288,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     public void onDeath() {}
 
     public String getMetrics() {
-        return String.format("Metrics for %s with %,d speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
+        return String.format("Metrics for %s with %,f speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
     }
 
     /**

@@ -242,6 +242,7 @@ public class Main {
         report.generateCSV();
     }
 
+    @SuppressWarnings("unchecked")
     public static void ameliasSanityCheck() {
         AtomicInteger length = new AtomicInteger();
 

@@ -29,11 +29,6 @@ public class BattleHelpers implements BattleParticipant {
         return this.battle;
     }
 
-    @Override
-    public boolean inBattle() {
-        return BattleParticipant.super.inBattle();
-    }
-
     public enum MultiplierStat {
         ATK, HP, DEF
     }

@@ -8,11 +8,7 @@ import art.ameliah.hsr.characters.DamageType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TotalDamage implements Loggable {
-
-    public final AbstractCharacter<?> character;
-    public final List<DamageType> types;
-    public final int totalDamage;
+public record TotalDamage(AbstractCharacter<?> character, List<DamageType> types, int totalDamage) implements Loggable {
 
     public TotalDamage(AbstractCharacter<?> character, List<DamageType> types, int totalDamage) {
         this.character = character;

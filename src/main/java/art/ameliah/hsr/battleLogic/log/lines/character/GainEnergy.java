@@ -4,20 +4,8 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public class GainEnergy implements Loggable {
-    public final AbstractCharacter<?> character;
-    public final float initialEnergy;
-    public final float currentEnergy;
-    public final float energyGained;
-    public final String source;
-
-    public GainEnergy(AbstractCharacter<?> character, float initialEnergy, float currentEnergy, float energyGained, String source) {
-        this.character = character;
-        this.initialEnergy = initialEnergy;
-        this.currentEnergy = currentEnergy;
-        this.energyGained = energyGained;
-        this.source = source;
-    }
+public record GainEnergy(AbstractCharacter<?> character, float initialEnergy, float currentEnergy, float energyGained,
+                         String source) implements Loggable {
 
 
     @Override

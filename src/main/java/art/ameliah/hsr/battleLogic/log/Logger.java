@@ -53,6 +53,7 @@ import art.ameliah.hsr.battleLogic.log.lines.metrics.EnemyMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
+import lombok.Getter;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -67,7 +68,8 @@ public abstract class Logger implements BattleParticipant {
 
     protected final IBattle battle;
     protected final PrintStream out;
-    protected List<Loggable> events = new ArrayList<>();
+    @Getter
+    protected final List<Loggable> events = new ArrayList<>();
 
     public Logger(IBattle battle, PrintStream out) {
         this.battle = battle;
@@ -81,10 +83,6 @@ public abstract class Logger implements BattleParticipant {
     @Override
     public IBattle getBattle() {
         return battle;
-    }
-
-    public List<Loggable> getEvents() {
-        return events;
     }
 
     public final void handle(Loggable loggable) {

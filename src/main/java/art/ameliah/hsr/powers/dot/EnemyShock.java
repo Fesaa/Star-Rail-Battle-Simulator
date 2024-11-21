@@ -7,7 +7,7 @@ import lombok.Getter;
 
 public class EnemyShock extends TempPower {
 
-    public static String NAME = "EnemyShock";
+    public static final String NAME = "EnemyShock";
 
     protected final AbstractEnemy source;
     @Getter

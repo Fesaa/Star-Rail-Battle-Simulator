@@ -8,10 +8,10 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 
 public abstract class AbstractLightcone implements BattleEvents,BattleParticipant {
 
-    public int baseHP;
-    public int baseAtk;
-    public int baseDef;
-    public AbstractCharacter<?> owner;
+    public final int baseHP;
+    public final int baseAtk;
+    public final int baseDef;
+    public final AbstractCharacter<?> owner;
 
     public AbstractLightcone(int baseHP, int baseAtk, int baseDef, AbstractCharacter<?> owner) {
         this.baseHP = baseHP;

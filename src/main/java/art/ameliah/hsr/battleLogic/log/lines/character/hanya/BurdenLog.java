@@ -3,15 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.character.hanya;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 
-public class BurdenLog implements Loggable {
-
-    public final int hitCount;
-    public final int hitsToTrigger;
-
-    public BurdenLog(int hitCount, int hitsToTrigger) {
-        this.hitCount = hitCount;
-        this.hitsToTrigger = hitsToTrigger;
-    }
+public record BurdenLog(int hitCount, int hitsToTrigger) implements Loggable {
 
     @Override
     public String asString() {

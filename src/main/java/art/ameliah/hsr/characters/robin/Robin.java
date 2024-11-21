@@ -25,16 +25,16 @@ import java.util.Set;
 
 public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnGoal.SkillCounterCharacter {
 
-    PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
-    RobinUltPower ultPower = new RobinUltPower();
-    RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
-    Concerto concerto = new Concerto(this);
+    final PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
+    final RobinUltPower ultPower = new RobinUltPower();
+    final RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
+    final Concerto concerto = new Concerto(this);
 
     private int skillCounter = 0;
     private int allyAttacksMetric = 0;
     private int concertoProcs = 0;
-    private String allyAttacksMetricName = "Number of Ally Attacks";
-    private String concertoProcsMetricName = "Number of Concerto Hits";
+    private final String allyAttacksMetricName = "Number of Ally Attacks";
+    private final String concertoProcsMetricName = "Number of Concerto Hits";
     public static final String NAME = "Robin";
     public static final String ULT_POWER_NAME = "RobinUltPower";
 
@@ -145,9 +145,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     public void addPower(AbstractPower power) {
         super.addPower(power);
-        if (ultPower != null) {
-            ultPower.updateAtkBuff();
-        }
+        ultPower.updateAtkBuff();
     }
 
     public void onConcertoEnd() {
@@ -236,7 +234,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
     }
 
-    private class RobinFixedCritPower extends AbstractPower {
+    private static class RobinFixedCritPower extends AbstractPower {
         public RobinFixedCritPower() {
             this.name = this.getClass().getSimpleName();
             lastsForever = true;

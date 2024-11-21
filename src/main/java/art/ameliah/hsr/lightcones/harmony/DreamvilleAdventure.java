@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DreamvilleAdventure extends AbstractLightcone {
 
     private DamageType currBenefit;
-    AbstractPower childishness = new Childishness();
+    final AbstractPower childishness = new Childishness();
 
     public DreamvilleAdventure(AbstractCharacter<?> owner) {
         super(953, 423, 397, owner);

@@ -16,8 +16,8 @@ public class RelicStats {
     private final HashMap<Stats, Float> mainStatValues = new HashMap<>();
     private final HashMap<Stats, Float> subStatValues = new HashMap<>();
 
-    private ArrayList<Stats> usedMainStats = new ArrayList<>();
-    private HashMap<Stats, Integer> usedSubStats = new HashMap<>();
+    private final ArrayList<Stats> usedMainStats = new ArrayList<>();
+    private final HashMap<Stats, Integer> usedSubStats = new HashMap<>();
 
     public RelicStats() {
         initializeValues();

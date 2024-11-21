@@ -3,17 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.character.lingsha;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 
-public class FuYuanGain implements Loggable {
-
-    public final int amount;
-    public final int initalStack;
-    public final int fuYuanCurrentHitCount;
-
-    public FuYuanGain(int amount, int initalStack, int fuYuanCurrentHitCount) {
-        this.amount = amount;
-        this.initalStack = initalStack;
-        this.fuYuanCurrentHitCount = fuYuanCurrentHitCount;
-    }
+public record FuYuanGain(int amount, int initalStack, int fuYuanCurrentHitCount) implements Loggable {
 
     @Override
     public String asString() {

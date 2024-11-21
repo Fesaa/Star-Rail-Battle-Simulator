@@ -17,7 +17,7 @@ import java.util.Optional;
 public class FrigidProwler extends AbstractEnemy {
 
     private AbstractCharacter<?> lockedIn = null;
-    private List<AbstractEnemy> otherlings = new ArrayList<>();
+    private final List<AbstractEnemy> otherlings = new ArrayList<>();
 
     public FrigidProwler() {
         super("Frigid Prowler", EnemyType.Elite, 448625, 718, 1000, 132, 100, 92);
@@ -97,7 +97,7 @@ public class FrigidProwler extends AbstractEnemy {
 
     public static class DeepFreeze extends PermPower {
 
-        public static String NAME = "Frigid Prowler";
+        public static final String NAME = "Frigid Prowler";
 
         public DeepFreeze() {
             this.name = NAME;

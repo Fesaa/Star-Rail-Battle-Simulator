@@ -25,7 +25,7 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
 
     public int turnDuration;
     public PowerType type = PowerType.BUFF;
-    public boolean durationBasedOnSelfTurns = true;
+    public final boolean durationBasedOnSelfTurns = true;
     public boolean lastsForever = false;
     public boolean justApplied = false;
     public int maxStacks = 0;

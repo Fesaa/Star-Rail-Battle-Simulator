@@ -11,10 +11,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import lombok.Getter;
 
 import java.io.PrintStream;
 import java.lang.reflect.Type;
 
+@Getter
 public class JsonLogger extends Logger {
 
     private final Gson gson = new GsonBuilder()
@@ -30,10 +32,6 @@ public class JsonLogger extends Logger {
 
     public JsonLogger(IBattle battle) {
         super(battle);
-    }
-
-    public Gson getGson() {
-        return gson;
     }
 
     @Override
@@ -53,9 +51,9 @@ public class JsonLogger extends Logger {
         }
     }
 
-    public static class AbstractCharacterJsonAdapter implements JsonSerializer<AbstractCharacter> {
+    public static class AbstractCharacterJsonAdapter implements JsonSerializer<AbstractCharacter<?>> {
         @Override
-        public JsonElement serialize(AbstractCharacter character, Type type, JsonSerializationContext jsonSerializationContext) {
+        public JsonElement serialize(AbstractCharacter<?> character, Type type, JsonSerializationContext jsonSerializationContext) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("name", character.name);
             jsonObject.addProperty("lightcone", character.lightcone.toString());

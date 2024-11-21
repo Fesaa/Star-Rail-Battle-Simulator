@@ -58,12 +58,8 @@ public class GuardianShadow extends AbstractEnemy {
         AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
 
         getBattle().getHelper().attackCharacter(this, target, 10, 651);
-        getBattle().characterCallback(idx-1, c -> {
-            getBattle().getHelper().attackCharacter(this, c, 5, 488);
-        });
-        getBattle().characterCallback(idx+1, c -> {
-            getBattle().getHelper().attackCharacter(this, c, 5, 488);
-        });
+        getBattle().characterCallback(idx-1, c -> getBattle().getHelper().attackCharacter(this, c, 5, 488));
+        getBattle().characterCallback(idx+1, c -> getBattle().getHelper().attackCharacter(this, c, 5, 488));
 
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
     }
@@ -92,7 +88,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     public static class TranquilBan extends TempPower {
-        public static String NAME = "Guardian Shadow Tranquil Ban";
+        public static final String NAME = "Guardian Shadow Tranquil Ban";
 
         private final GuardianShadow guardian;
 
@@ -112,7 +108,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     public static class DisarmBan extends TempPower {
-        public static String NAME = "Guardian Shadow Disarm Ban";
+        public static final String NAME = "Guardian Shadow Disarm Ban";
         private final GuardianShadow guardian;
         public DisarmBan(GuardianShadow guardian) {
             super(1, NAME);
@@ -127,7 +123,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     public static class SilentBan extends TempPower {
-        public static String NAME = "Guardian Shadow Silent Ban";
+        public static final String NAME = "Guardian Shadow Silent Ban";
         private final GuardianShadow guardian;
         public SilentBan(GuardianShadow guardian) {
             super(1, NAME);

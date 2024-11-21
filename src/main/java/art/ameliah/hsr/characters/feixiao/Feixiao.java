@@ -32,13 +32,13 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
     private Random fuaRng;
 
-    PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
+    final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
     private int numFUAs = 0;
     private int numStacks;
     private int wastedStacks;
-    private String numFUAsMetricName = "Follow up Attacks used";
-    private String numStacksMetricName = "Amount of Talent Stacks gained";
-    private String wastedStacksMetricName = "Amount of overcapped Stacks";
+    private final String numFUAsMetricName = "Follow up Attacks used";
+    private final String numStacksMetricName = "Amount of Talent Stacks gained";
+    private final String wastedStacksMetricName = "Amount of overcapped Stacks";
     public int stackCount = 0;
     public final int stackThreshold = 2;
     private boolean FUAReady = true;
@@ -258,7 +258,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
     }
 
-    private class FeiCritDmgPower extends AbstractPower {
+    private static class FeiCritDmgPower extends AbstractPower {
         public FeiCritDmgPower() {
             this.name = this.getClass().getSimpleName();
             this.lastsForever = true;

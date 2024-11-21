@@ -5,15 +5,7 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.powers.AbstractPower;
 
-public class LosePower implements Loggable {
-
-    public final AbstractEntity entity;
-    public final AbstractPower power;
-
-    public LosePower(AbstractEntity entity, AbstractPower power) {
-        this.entity = entity;
-        this.power = power;
-    }
+public record LosePower(AbstractEntity entity, AbstractPower power) implements Loggable {
 
     @Override
     public String asString() {

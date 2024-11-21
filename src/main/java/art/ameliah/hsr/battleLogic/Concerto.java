@@ -5,7 +5,7 @@ import art.ameliah.hsr.characters.robin.Robin;
 import art.ameliah.hsr.powers.PermPower;
 
 public class Concerto extends AbstractEntity {
-    Robin owner;
+    final Robin owner;
 
     public Concerto(Robin owner) {
         this.baseSpeed = 90;

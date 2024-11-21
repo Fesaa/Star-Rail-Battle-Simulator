@@ -20,7 +20,7 @@ public class PostCombatPlayerMetrics implements Loggable {
     public final int ultimates;
     public final List<MoveType> rotation;
     public final Map<String, String> characterSpecificMetrics;
-    public boolean lessMetrics;
+    public final boolean lessMetrics;
 
     public PostCombatPlayerMetrics(AbstractCharacter<?> player, boolean lessMetrics) {
         this.player = player;
@@ -49,7 +49,7 @@ public class PostCombatPlayerMetrics implements Loggable {
 
     @Override
     public String asString() {
-        String statsString = "";
+        String statsString;
         String gearString = String.format("Metrics for %s \nLightcone: %s \nRelic Set Bonuses: ", player.name, player.lightcone);
         gearString += player.relicSetBonus;
         statsString = gearString;

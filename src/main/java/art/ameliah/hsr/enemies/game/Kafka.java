@@ -46,9 +46,7 @@ public class Kafka extends AbstractEnemy {
     @Override
     public void onCombatStart() {
         super.onCombatStart();
-        getBattle().getPlayers().forEach(p -> {
-            p.addPower(new Cruelty(this));
-        });
+        getBattle().getPlayers().forEach(p -> p.addPower(new Cruelty(this)));
     }
 
     @Override
@@ -106,7 +104,7 @@ public class Kafka extends AbstractEnemy {
 
     // Not actually implemented
     public static class Dominating extends TempPower {
-        public static String NAME = "Dominating";
+        public static final String NAME = "Dominating";
 
         public Dominating() {
             super(3, NAME);
@@ -115,7 +113,7 @@ public class Kafka extends AbstractEnemy {
     }
 
     public class ExtraShockDmg extends PermPower {
-        public String NAME = "ExtraShockDmg";
+        public final String NAME = "ExtraShockDmg";
 
         public ExtraShockDmg() {
             this.name = NAME;
@@ -134,7 +132,7 @@ public class Kafka extends AbstractEnemy {
     }
 
     public static class Cruelty extends PermPower {
-        public static String NAME = "Cruelty";
+        public static final String NAME = "Cruelty";
         private final Kafka kafka;
 
         public Cruelty(Kafka kafka) {

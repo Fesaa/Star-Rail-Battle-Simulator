@@ -83,7 +83,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
     private class BurdenPower extends AbstractPower {
 
         private int triggersLeft = 2;
-        private int hitsToTrigger = 2;
+        private final int hitsToTrigger = 2;
         private int hitCount = 0;
         public BurdenPower() {
             this.name = this.getClass().getSimpleName();

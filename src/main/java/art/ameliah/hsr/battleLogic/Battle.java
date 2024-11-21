@@ -25,6 +25,7 @@ import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.characters.yunli.Yunli;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class Battle implements IBattle {
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
 
     private final BattleHelpers battleHelpers;
+    @Getter
     private Logger logger;
 
     public final int INITIAL_SKILL_POINTS = 3;
@@ -61,18 +63,18 @@ public class Battle implements IBattle {
     public HashMap<AbstractCharacter<?>, Float> damageContributionMapPercent;
     public HashMap<AbstractEntity, Float> actionValueMap;
 
-    protected static long seed = 154172837382L;
-    public Random enemyMoveRng = new Random(seed);
-    public Random enemyTargetRng = new Random(seed);
-    public Random critChanceRng = new Random(seed);
-    public Random getRandomEnemyRng = new Random(seed);
-    public Random procChanceRng = new Random(seed);
-    public Random gambleChanceRng = new Random(seed);
-    public Random qpqRng = new Random(seed);
-    public Random milkyWayRng = new Random(seed);
-    public Random weaveEffectRng = new Random(seed);
-    public Random aetherRng = new Random(seed);
-    public Random enemyEHRRng = new Random(seed);
+    protected static final long seed = 154172837382L;
+    public final Random enemyMoveRng = new Random(seed);
+    public final Random enemyTargetRng = new Random(seed);
+    public final Random critChanceRng = new Random(seed);
+    public final Random getRandomEnemyRng = new Random(seed);
+    public final Random procChanceRng = new Random(seed);
+    public final Random gambleChanceRng = new Random(seed);
+    public final Random qpqRng = new Random(seed);
+    public final Random milkyWayRng = new Random(seed);
+    public final Random weaveEffectRng = new Random(seed);
+    public final Random aetherRng = new Random(seed);
+    public final Random enemyEHRRng = new Random(seed);
 
     public Battle() {
         this.battleHelpers = new BattleHelpers(this);
@@ -98,10 +100,6 @@ public class Battle implements IBattle {
     public void setEnemyTeam(List<AbstractEnemy> enemyTeam) {
         this.enemyTeam = new ArrayList<>(enemyTeam);
         this.enemyTeam.forEach(enemy -> enemy.setBattle(this));
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 
     @Override
@@ -169,7 +167,7 @@ public class Battle implements IBattle {
                     }
                     return Float.compare(e1.getValue(), e2.getValue());
                 })
-                .collect(Collectors.toList())
+                .toList()
                 .get(index)
                 .getKey();
     }
@@ -198,7 +196,7 @@ public class Battle implements IBattle {
 
     @Override
     public void increaseTotalPlayerDmg(float dmg) {
-        totalPlayerDamage += dmg;
+        totalPlayerDamage += (int)dmg;
     }
 
     @Override
@@ -491,7 +489,7 @@ public class Battle implements IBattle {
             int middleIndex = this.enemyTeam.size() / 2;
             enemy = this.enemyTeam.get(middleIndex);
         } else {
-            enemy = this.enemyTeam.get(0);
+            enemy = this.enemyTeam.getFirst();
         }
         return enemy;
     }

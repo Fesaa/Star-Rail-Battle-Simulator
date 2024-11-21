@@ -28,21 +28,21 @@ import java.util.List;
 import java.util.Map;
 
 public class Lingsha extends AbstractSummoner<Lingsha> {
-    public static String NAME = "Lingsha";
+    public static final String NAME = "Lingsha";
 
-    FuYuan fuYuan;
-    AbstractPower damageTrackerPower;
+    final FuYuan fuYuan;
+    final AbstractPower damageTrackerPower;
     static final int fuYuanMaxHitCount = 5;
     static final int skillHitCountGain = 3;
     int fuYuanCurrentHitCount = 0;
     private static final int emergencyHealCooldown = 2;
     private int currentEmergencyHealCD = 0;
-    private HashMap<AbstractCharacter<?>, Integer> characterTimesDamageTakenMap = new HashMap<>();
+    private final HashMap<AbstractCharacter<?>, Integer> characterTimesDamageTakenMap = new HashMap<>();
     private int fuYuanAttacksMetric = 0;
-    private String fuYuanAttacksMetricName = "Number of Fu Yuan Attacks";
+    private final String fuYuanAttacksMetricName = "Number of Fu Yuan Attacks";
     private int numEmergencyHeals = 0;
-    private String numEmergencyHealsMetricName = "Number of Emergency Heal Triggers";
-    private String leftoverAVFuYuanMetricName = "Leftover AV (Fu Yuan)";
+    private final String numEmergencyHealsMetricName = "Number of Emergency Heal Triggers";
+    private final String leftoverAVFuYuanMetricName = "Leftover AV (Fu Yuan)";
 
     public Lingsha() {
         super(NAME, 1358, 679, 437, 98, 80, ElementType.FIRE, 110, 100, Path.ABUNDANCE);

@@ -21,10 +21,6 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         getBattle().getPlayers().forEach(c -> c.addPower(new DuranTrackerPower()));
     }
 
-    public String toString() {
-        return this.getClass().getSimpleName();
-    }
-
     private static class DuranTrackerPower extends PermPower {
         public DuranTrackerPower() {
             this.name = this.getClass().getSimpleName();

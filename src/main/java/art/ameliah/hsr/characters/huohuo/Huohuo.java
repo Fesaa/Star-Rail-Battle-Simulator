@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTurnGoal.SkillCounterCharacter {
-    private static String NAME = "Huohuo";
+    private static final String NAME = "Huohuo";
     
-    HuohuoTalentPower talentPower = new HuohuoTalentPower();
+    final HuohuoTalentPower talentPower = new HuohuoTalentPower();
     int talentCounter = 0;
     private int numTalentProcs = 0;
-    private String numTalentProcsMetricName = "Number of Talent Procs";
+    private final String numTalentProcsMetricName = "Number of Talent Procs";
 
     public Huohuo() {
         super(NAME, 1358, 602, 509, 98, 80, ElementType.WIND, 140, 100, Path.ABUNDANCE);

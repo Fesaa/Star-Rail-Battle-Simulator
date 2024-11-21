@@ -4,19 +4,7 @@ import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 
-public class AdvanceEntity implements Loggable {
-
-    public final AbstractEntity entity;
-    public final float avDelta;
-    public final float from;
-    public final float to;
-
-    public AdvanceEntity(AbstractEntity entity, float avDelta, float from, float to) {
-        this.entity = entity;
-        this.avDelta = avDelta;
-        this.from = from;
-        this.to = to;
-    }
+public record AdvanceEntity(AbstractEntity entity, float avDelta, float from, float to) implements Loggable {
 
     @Override
     public String asString() {

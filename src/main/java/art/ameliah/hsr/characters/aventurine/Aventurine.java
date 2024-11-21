@@ -19,21 +19,21 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Aventurine extends AbstractCharacter<Aventurine> {
-    public static String NAME = "Aventurine";
+    public static final String NAME = "Aventurine";
 
-    AventurineTalentPower talentPower = new AventurineTalentPower();
+    final AventurineTalentPower talentPower = new AventurineTalentPower();
     private int numFollowUps = 0;
     private int numBlindBetGained = 0;
     private int numBlindBetGainedFUA = 0;
     private int blindBetCounter = 0;
     private final int BLIND_BET_THRESHOLD = 7;
-    private final int BLIND_BET_CAP = 10;
-    private int blindBetFollowUpPerTurn = 3;
+    private static final int BLIND_BET_CAP = 10;
+    private final int blindBetFollowUpPerTurn = 3;
     private int blindBetFollowUpCounter = blindBetFollowUpPerTurn;
-    boolean SPNeutral;
-    private String numFollowUpsMetricName = "Follow up Attacks used";
-    private String numBlindBetGainedMetricName = "Blind Bet gained";
-    private String numBlindBetFromFUAMetricName = "Blind Bet gained from Ally FUA";
+    final boolean SPNeutral;
+    private final String numFollowUpsMetricName = "Follow up Attacks used";
+    private final String numBlindBetGainedMetricName = "Blind Bet gained";
+    private final String numBlindBetFromFUAMetricName = "Blind Bet gained from Ally FUA";
 
     public Aventurine(boolean SPNeutral) {
         super(NAME, 1203, 446, 655, 106, 80, ElementType.IMAGINARY, 110, 150, Path.PRESERVATION);

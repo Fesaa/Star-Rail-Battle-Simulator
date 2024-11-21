@@ -67,9 +67,7 @@ public class CritHitResult implements Loggable {
         String result = multConstituents.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .map(entry -> {
-                    return String.format("[%s, %.1f]", entry.getKey(), entry.getValue());
-                })
+                .map(entry -> String.format("[%s, %.1f]", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining("+"));
         return String.format("(%s)=", result);
     }

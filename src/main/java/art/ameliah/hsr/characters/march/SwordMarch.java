@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
-    public static String NAME = "Sword March";
+    public static final String NAME = "Sword March";
 
     private Random fuaRng;
     public AbstractCharacter<?> master;
@@ -37,11 +37,11 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     private int numFUAs = 0;
     private int numUltEnhancedEBA;
     private int totalNumExtraHits;
-    private String numEBAMetricName = "Enhanced Basic Attacks used";
-    private String numFUAsMetricName = "Follow up Attacks used";
-    private String numUltEnhancedEBAUsed = "Ult Boosted Enhanced Basic Attacks used";
-    private String numExtraHitsMetricName = "Number of extra hits with EBA";
-    private String leftoverChargeMetricName = "Leftover Charge";
+    private final String numEBAMetricName = "Enhanced Basic Attacks used";
+    private final String numFUAsMetricName = "Follow up Attacks used";
+    private final String numUltEnhancedEBAUsed = "Ult Boosted Enhanced Basic Attacks used";
+    private final String numExtraHitsMetricName = "Number of extra hits with EBA";
+    private final String leftoverChargeMetricName = "Leftover Charge";
     public int chargeCount = 0;
     public final int chargeThreshold = 7;
     private boolean isEnhanced;
@@ -261,7 +261,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         @Override
         public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL)) {
-                List<AbstractEnemy> nonDead = enemiesHit.stream().filter(e -> !e.isDead()).collect(Collectors.toList());
+                List<AbstractEnemy> nonDead = enemiesHit.stream().filter(e -> !e.isDead()).toList();
                 AbstractEnemy enemy;
                 if (nonDead.isEmpty()) {
                     enemy = getBattle().getRandomEnemy();

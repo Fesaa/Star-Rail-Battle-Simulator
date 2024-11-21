@@ -7,7 +7,7 @@ import art.ameliah.hsr.characters.yunli.Yunli;
 
 public class UseCull implements Loggable {
 
-    public final AbstractCharacter yunli;
+    public final AbstractCharacter<?> yunli;
 
     public UseCull(Yunli yunli) {
         this.yunli = yunli;

@@ -5,15 +5,7 @@ import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-public class ForcedAttack implements Loggable {
-
-    public final AbstractEnemy enemy;
-    public final AbstractCharacter<?> hit;
-
-    public ForcedAttack(AbstractEnemy enemy, AbstractCharacter<?> hit) {
-        this.enemy = enemy;
-        this.hit = hit;
-    }
+public record ForcedAttack(AbstractEnemy enemy, AbstractCharacter<?> hit) implements Loggable {
 
     @Override
     public String asString() {

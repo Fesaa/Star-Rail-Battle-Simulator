@@ -17,7 +17,7 @@ public class QuidProQuo extends AbstractLightcone {
         List<AbstractCharacter<?>> characters = getBattle().getPlayers()
                 .stream()
                 .filter(c -> c.currentEnergy < c.maxEnergy / 2)
-                .collect(Collectors.toList());
+                .toList();
 
         if (characters.isEmpty()) return;
 

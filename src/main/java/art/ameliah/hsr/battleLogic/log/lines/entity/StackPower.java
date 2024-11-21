@@ -5,17 +5,7 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.powers.AbstractPower;
 
-public class StackPower implements Loggable {
-
-    public final AbstractEntity entity;
-    public final AbstractPower power;
-    public final int stack;
-
-    public StackPower(AbstractEntity entity, AbstractPower power, int stack) {
-        this.entity = entity;
-        this.power = power;
-        this.stack = stack;
-    }
+public record StackPower(AbstractEntity entity, AbstractPower power, int stack) implements Loggable {
 
     @Override
     public String asString() {

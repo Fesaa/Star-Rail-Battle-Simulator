@@ -22,7 +22,7 @@ public class Asta extends AbstractCharacter<Asta> {
 
     public static final String NAME = "Asta";
     public static final String TALENT_BUFF_NAME = "Asta Talent Buff";
-    private AstaTalentPower talentPower;
+    private final AstaTalentPower talentPower;
     public static final int MAX_STACKS = 5;
     private boolean justCastUlt = false;
 
@@ -165,7 +165,7 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public float getConditionalERR(AbstractCharacter character) {
+        public float getConditionalERR(AbstractCharacter<?> character) {
             if (talentPower.stacks >= 2) {
                 return 15;
             }

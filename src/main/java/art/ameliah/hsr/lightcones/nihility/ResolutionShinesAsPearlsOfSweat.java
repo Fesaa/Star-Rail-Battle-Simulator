@@ -27,7 +27,7 @@ public class ResolutionShinesAsPearlsOfSweat extends AbstractLightcone {
 
     public static class Ensnared extends TempPower {
 
-        public static String NAME = "Ensnared";
+        public static final String NAME = "Ensnared";
 
 
         public Ensnared() {

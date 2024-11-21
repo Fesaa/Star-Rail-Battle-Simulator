@@ -3,13 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.battle;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 
-public class LeftOverAV implements Loggable {
-
-    public final float AV;
-
-    public LeftOverAV(float AV) {
-        this.AV = AV;
-    }
+public record LeftOverAV(float AV) implements Loggable {
 
     @Override
     public String asString() {

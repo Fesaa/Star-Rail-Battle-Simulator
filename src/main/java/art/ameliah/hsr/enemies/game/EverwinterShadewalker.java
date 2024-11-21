@@ -10,7 +10,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
 public class EverwinterShadewalker extends AbstractEnemy {
-    public static String NAME = "Everwinter Shadewalker";
+    public static final String NAME = "Everwinter Shadewalker";
 
     public EverwinterShadewalker() {
         super(NAME, EnemyType.Minion, 56078, 718, 1000, 132, 20, 92);

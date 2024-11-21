@@ -14,6 +14,7 @@ import art.ameliah.hsr.lightcones.DefaultLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,28 +23,29 @@ import java.util.TreeMap;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends AbstractEntity {
 
+    @Getter
     protected final Path path;
 
-    protected int baseHP;
-    protected int baseAtk;
-    protected int baseDef;
-    public int level;
-    public float baseCritChance = 5.0f;
-    public float baseCritDamage = 50.0f;
+    protected final int baseHP;
+    protected final int baseAtk;
+    protected final int baseDef;
+    public final int level;
+    public final float baseCritChance = 5.0f;
+    public final float baseCritDamage = 50.0f;
 
     public boolean usesEnergy = true;
-    public float maxEnergy;
+    public final float maxEnergy;
     public float currentEnergy;
     public float ultCost;
     protected int basicEnergyGain = 20;
     protected int skillEnergyGain = 30;
-    protected int ultEnergyGain = 5;
+    protected final int ultEnergyGain = 5;
 
-    public int tauntValue;
-    public ElementType elementType;
+    public final int tauntValue;
+    public final ElementType elementType;
     public AbstractLightcone lightcone;
-    public ArrayList<AbstractRelicSetBonus> relicSetBonus;
-    public boolean useTechnique = true;
+    public final ArrayList<AbstractRelicSetBonus> relicSetBonus;
+    public final boolean useTechnique = true;
 
     public boolean isDPS = false;
 
@@ -51,21 +53,21 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     public int numBasicsMetric;
     public int numUltsMetric;
     public String statsString;
-    public String numTurnsMetricName = "Turns taken";
-    public String numSkillsMetricName = "Skills Used";
-    public String numBasicsMetricName = "Basic Attacks Used";
-    public String numUltsMetricName = "Ultimates Used";
-    public String leftoverAVMetricName = "Leftover AV";
-    public String leftoverEnergyMetricName = "Leftover Energy";
+    public final String numTurnsMetricName = "Turns taken";
+    public final String numSkillsMetricName = "Skills Used";
+    public final String numBasicsMetricName = "Basic Attacks Used";
+    public final String numUltsMetricName = "Ultimates Used";
+    public final String leftoverAVMetricName = "Leftover AV";
+    public final String leftoverEnergyMetricName = "Leftover Energy";
     public boolean firstMove = true;
     public boolean hasAttackingUltimate;
-    public ArrayList<MoveType> moveHistory;
-    public HashMap<String, String> statsMap = new HashMap<>();
-    public ArrayList<String> statsOrder = new ArrayList<>();
-    protected float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
-    protected float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
-    protected float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
-    protected float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
+    public final ArrayList<MoveType> moveHistory;
+    public final HashMap<String, String> statsMap = new HashMap<>();
+    public final ArrayList<String> statsOrder = new ArrayList<>();
+    protected final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
+    protected final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
+    protected final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
+    protected final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
 
     public static final String ULT_ENERGY_GAIN = "from using Ultimate";
     public static final String SKILL_ENERGY_GAIN = "from using Skill";
@@ -228,14 +230,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
         increaseEnergy(energyFromAttacked, ATTACKED_ENERGY_GAIN);
     }
 
-    public Path getPath() {
-        return path;
-    }
-
     public float getFinalAttack() {
         int totalBaseAtk = baseAtk + lightcone.baseAtk;
         float totalBonusAtkPercent = 0;
-        int totalBonusFlatAtk = 0;
+        float totalBonusFlatAtk = 0;
         for (AbstractPower power : powerList) {
             totalBonusAtkPercent += power.getStat(PowerStat.ATK_PERCENT);
             totalBonusAtkPercent += power.getConditionalAtkBonus(this);
@@ -247,7 +245,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     public float getFinalDefense() {
         int totalBaseDef = baseDef + lightcone.baseDef;
         float totalBonusDefPercent = 0;
-        int totalBonusFlatDef = 0;
+        float totalBonusFlatDef = 0;
         for (AbstractPower power : powerList) {
             totalBonusDefPercent += power.getStat(PowerStat.DEF_PERCENT);
             totalBonusDefPercent += power.getConditionalDefenseBonus(this);
@@ -259,7 +257,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     public float getFinalHP() {
         int totalBaseHP = baseHP + lightcone.baseHP;
         float totalBonusHPPercent = 0;
-        int totalBonusFlatHP = 0;
+        float totalBonusFlatHP = 0;
         for (AbstractPower power : powerList) {
             totalBonusHPPercent += power.getStat(PowerStat.HP_PERCENT);
             totalBonusFlatHP += power.getStat(PowerStat.FLAT_HP);
@@ -316,7 +314,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     }
 
     public float getTotalResPen() {
-        int totalResPen = 0;
+        float totalResPen = 0;
         for (AbstractPower power : powerList) {
             totalResPen += power.getStat(PowerStat.RES_PEN);
         }

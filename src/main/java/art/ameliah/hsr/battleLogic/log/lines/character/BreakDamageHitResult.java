@@ -5,31 +5,10 @@ import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-public class BreakDamageHitResult implements Loggable {
-
-    public final AbstractCharacter<?> source;
-    public final AbstractEnemy target;
-    public final double calculatedDamage;
-    public final double baseDamage;
-    public final double breakEffectMultiplier;
-    public final double defMultiplier;
-    public final double resMultiplier;
-    public final double damageTakenMultiplier;
-    public final double toughnessMultiplier;
-
-    public BreakDamageHitResult(AbstractCharacter<?> source, AbstractEnemy target, double calculatedDamage, double baseDamage,
-                                double breakEffectMultiplier, double defMultiplier, double resMultiplier,
-                                double damageTakenMultiplier, double toughnessMultiplier) {
-        this.source = source;
-        this.target = target;
-        this.calculatedDamage = calculatedDamage;
-        this.baseDamage = baseDamage;
-        this.breakEffectMultiplier = breakEffectMultiplier;
-        this.defMultiplier = defMultiplier;
-        this.resMultiplier = resMultiplier;
-        this.damageTakenMultiplier = damageTakenMultiplier;
-        this.toughnessMultiplier = toughnessMultiplier;
-    }
+public record BreakDamageHitResult(AbstractCharacter<?> source, AbstractEnemy target, double calculatedDamage,
+                                   double baseDamage, double breakEffectMultiplier, double defMultiplier,
+                                   double resMultiplier, double damageTakenMultiplier,
+                                   double toughnessMultiplier) implements Loggable {
 
     @Override
     public String asString() {

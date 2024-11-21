@@ -26,10 +26,6 @@ public class Swordplay extends AbstractLightcone {
         owner.addPower(swordPlayDamagePower);
     }
 
-    public String toString() {
-        return this.getClass().getSimpleName();
-    }
-
     private static class SwordplayDamagePower extends PermPower {
         public SwordplayDamagePower() {
             this.name = this.getClass().getSimpleName();

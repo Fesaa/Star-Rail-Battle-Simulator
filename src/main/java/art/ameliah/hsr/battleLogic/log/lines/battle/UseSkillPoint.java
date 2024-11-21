@@ -4,19 +4,7 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public class UseSkillPoint implements Loggable {
-
-    public final AbstractCharacter<?> character;
-    public final int amount;
-    public final int from;
-    public final int to;
-
-    public UseSkillPoint(AbstractCharacter<?> character, int amount, int from, int to) {
-        this.character = character;
-        this.amount = amount;
-        this.from = from;
-        this.to = to;
-    }
+public record UseSkillPoint(AbstractCharacter<?> character, int amount, int from, int to) implements Loggable {
 
 
     @Override

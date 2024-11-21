@@ -7,13 +7,7 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TriggerTechnique implements Loggable {
-
-    public final List<AbstractCharacter<?>> characters;
-
-    public TriggerTechnique(List<AbstractCharacter<?>> characters) {
-        this.characters = characters;
-    }
+public record TriggerTechnique(List<AbstractCharacter<?>> characters) implements Loggable {
 
     @Override
     public String asString() {

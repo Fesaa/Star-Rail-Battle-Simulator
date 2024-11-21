@@ -24,21 +24,21 @@ import java.util.HashMap;
 
 public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoal.FirstTurnTracked {
     
-    public static String NAME = "Yunli";
+    public static final String NAME = "Yunli";
 
     public boolean isParrying;
-    AbstractPower cullPower = new CullCritDamageBuff();
-    AbstractPower techniqueDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 80, "Technique Damage Bonus");
-    AbstractPower tauntPower = new TauntPower(this);
+    final AbstractPower cullPower = new CullCritDamageBuff();
+    final AbstractPower techniqueDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 80, "Technique Damage Bonus");
+    final AbstractPower tauntPower = new TauntPower(this);
 
     private int numNormalCounters = 0;
     private int num1StackCulls = 0;
     private int num2StackCulls = 0;
     public int numSlashes = 0;
-    private String numNormalCountersMetricName = "Normal Counters";
-    private String num1StackCullsMetricName = "Number of Culls (1 S1 stack)";
-    private String num2StackCullsMetricName = "Number of Culls (2 S1 stacks)";
-    private String numSlashesMetricName = "Number of Slashes";
+    private final String numNormalCountersMetricName = "Normal Counters";
+    private final String num1StackCullsMetricName = "Number of Culls (1 S1 stack)";
+    private final String num2StackCullsMetricName = "Number of Culls (2 S1 stacks)";
+    private final String numSlashesMetricName = "Number of Slashes";
 
     public Yunli() {
         super(NAME, 1358, 679, 461, 94, 80, ElementType.PHYSICAL, 240, 125, Path.DESTRUCTION);

@@ -33,9 +33,7 @@ public class MocBattle extends WavedBattle {
         // Adding one by one, so BattleEvents::onCombatStart is called
         this.currentWave.startEnemies().forEach(this::addEnemy);
 
-        this.actionValueMap.forEach((k, _) -> {
-            this.actionValueMap.put(k, k.getBaseAV());
-        });
+        this.actionValueMap.forEach((k, _) -> this.actionValueMap.put(k, k.getBaseAV()));
         getPlayers().forEach(AbstractCharacter::tryUltimate);
     }
 
