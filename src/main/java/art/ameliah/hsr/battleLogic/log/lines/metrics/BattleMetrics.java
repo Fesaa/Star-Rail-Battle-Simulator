@@ -37,8 +37,8 @@ public class BattleMetrics implements Loggable {
 
     @Override
     public String asString() {
-        String out = String.format("Total player team damage: %d \nAction Value used: %.1f\n", totalPlayerDmg, actionValueUsed);
-        out += String.format("Final DPAV: %.3f\nSkill Points Used: %d\nSkill Points Generated: %d\n", finalDPAV, totalSkillPointsUsed, totalSkillPointsGenerated);
+        String out = String.format("Total player team damage: %,d \nAction Value used: %.1f\n", totalPlayerDmg, actionValueUsed);
+        out += String.format("Final DPAV: %.3f\nSkill Points Used: %,d\nSkill Points Generated: %,d\n", finalDPAV, totalSkillPointsUsed, totalSkillPointsGenerated);
         out += "Leftover AV: " + finalActionValue
                 .entrySet()
                 .stream()

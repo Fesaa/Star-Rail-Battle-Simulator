@@ -16,7 +16,7 @@ public class HitSinceLastHeal implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s has been hit %d times since last heal", character.name, timesHit);
+        return String.format("%s has been hit %,d times since last heal", character.name, timesHit);
     }
 
     @Override

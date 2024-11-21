@@ -21,6 +21,7 @@ dependencies {
 }
 
 application {
+    applicationDefaultJvmArgs = listOf("-Dfile.encoding=UTF-8")
     mainClass.set("art.ameliah.hsr.Main")
 }
 

@@ -19,6 +19,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static art.ameliah.hsr.teams.EnemyTeam.*;
@@ -27,6 +28,8 @@ import static art.ameliah.hsr.teams.PlayerTeam.*;
 public class Main {
 
     public static void main(String[] args) {
+        Locale.setDefault(Locale.UK);
+
        // debugTeam();
         //generateReportYunli();
         //generateReportFeixiao();

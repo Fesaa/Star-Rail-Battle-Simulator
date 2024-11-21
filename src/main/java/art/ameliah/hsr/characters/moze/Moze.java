@@ -184,7 +184,7 @@ public class Moze extends AbstractCharacter<Moze> {
     public HashMap<String, String> addLeftoverCharacterAVMetric(HashMap<String, String> metricMap) {
         Float leftoverAV = getBattle().getActionValueMap().get(this);
         if (leftoverAV == null) {
-            metricMap.put(leftoverAVMetricName, String.format("%d (Charge Left)", chargeCount));
+            metricMap.put(leftoverAVMetricName, String.format("%,d (Charge Left)", chargeCount));
         } else {
             return super.addLeftoverCharacterAVMetric(metricMap);
         }

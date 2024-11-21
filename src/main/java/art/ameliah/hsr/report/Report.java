@@ -68,7 +68,7 @@ public class Report {
                 updateCharacterCSVs(battle, characterMetricsMap, characterTeamList, characterMetricOrderList, damageContributionMap, characterStatsMap, otherTeam, playerTeam);
             }
             CSV.append(enemyTeam).append("\n\n");
-            CSV.append("Team,DPAV,%DIFF\n");
+            CSV.append("Team,DPAV,%,dIFF\n");
             ArrayList<Float> DPAVList = new ArrayList<>();
             for (Map.Entry<Float,PlayerTeam> entry : DPAVtracker.entrySet()) {
                 DPAVList.add(entry.getKey());

@@ -21,7 +21,7 @@ public class UseSkillPoint implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s used %d Skill Point(s) (%d -> %d)", this.character.name, this.amount, this.from, this.to);
+        return String.format("%s used %,d Skill Point(s) (%,d -> %,d)", this.character.name, this.amount, this.from, this.to);
     }
 
     @Override

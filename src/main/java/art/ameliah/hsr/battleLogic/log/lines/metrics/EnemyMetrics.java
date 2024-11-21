@@ -29,7 +29,7 @@ public class EnemyMetrics implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("Metrics for %s with %f speed \nTurns taken: %d \nTotal attacks: %d \nSingle-target attacks: %d \nBlast attacks: %d \nAoE attacks: %d \nWeakness Broken: %d", enemy.name, speed, turnsTaken, totalAttacks, singleTargetAttacks, blastAttacks, AoEAttacks, weaknessBroken);
+        return String.format("Metrics for %s with %f speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", enemy.name, speed, turnsTaken, totalAttacks, singleTargetAttacks, blastAttacks, AoEAttacks, weaknessBroken);
     }
 
     @Override

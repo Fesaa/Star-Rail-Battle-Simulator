@@ -17,7 +17,7 @@ public class FuYuanGain implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("Fu Yuan gained %d hits (%d -> %d)", amount, initalStack, fuYuanCurrentHitCount);
+        return String.format("Fu Yuan gained %,d hits (%,d -> %,d)", amount, initalStack, fuYuanCurrentHitCount);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class LoseCharge implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s loses %d Charge (%d -> %d)", character.name, amount, initialCharge, chargeCount);
+        return String.format("%s loses %,d Charge (%,d -> %,d)", character.name, amount, initialCharge, chargeCount);
     }
 
     @Override

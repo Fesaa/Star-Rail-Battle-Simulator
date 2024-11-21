@@ -22,7 +22,7 @@ public class TotalDamage implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("Total Damage: %d", this.totalDamage);
+        return String.format("Total Damage: %,d", this.totalDamage);
     }
 
     @Override

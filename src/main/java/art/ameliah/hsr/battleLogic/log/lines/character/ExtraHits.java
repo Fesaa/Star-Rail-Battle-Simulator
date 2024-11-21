@@ -16,7 +16,7 @@ public class ExtraHits implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s rolled %d extra hits", character.name, numExtraHits);
+        return String.format("%s rolled %,d extra hits", character.name, numExtraHits);
     }
 
     @Override
