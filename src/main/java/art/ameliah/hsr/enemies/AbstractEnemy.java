@@ -19,6 +19,8 @@ import java.util.Map;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TauntPower;
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractEnemy extends AbstractEntity {
     public static final int DEFAULT_RES = 20;
@@ -29,12 +31,14 @@ public abstract class AbstractEnemy extends AbstractEntity {
     protected final int baseATK;
     protected final int baseDEF;
     protected final int toughness;
+    @Getter
     protected final int level;
 
     private final Map<ElementType, Integer> resMap = new HashMap<>();
     private final List<ElementType> weaknessMap = new ArrayList<>();
 
     // Moc increases hp this way
+    @Setter
     protected int HPMultiplier = 1;
 
     public int numAttacksMetric = 0;
@@ -62,10 +66,6 @@ public abstract class AbstractEnemy extends AbstractEntity {
         this.sequence = new EnemyActionSequence(this);
     }
 
-    public int getLevel() {
-        return level;
-    }
-
     public boolean isWeaknessBroken() {
         return this.currentToughness <= 0;
     }
@@ -76,10 +76,6 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     public float getBaseSpeed() {
         return baseSpeed;
-    }
-
-    public void setHPMultiplier(int HPMultiplier) {
-        this.HPMultiplier = HPMultiplier;
     }
 
     public float getFinalAttack() {
@@ -285,8 +281,11 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (this.currentHp <= 0) {
             getBattle().addToLog(new EnemyDied(this, character));
             getBattle().removeEnemy(this);
+            this.onDeath();
         }
     }
+
+    public void onDeath() {}
 
     public String getMetrics() {
         return String.format("Metrics for %s with %d speed \nTurns taken: %d \nTotal attacks: %d \nSingle-target attacks: %d \nBlast attacks: %d \nAoE attacks: %d \nWeakness Broken: %d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);

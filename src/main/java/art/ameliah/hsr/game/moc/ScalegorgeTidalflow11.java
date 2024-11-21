@@ -41,7 +41,10 @@ public class ScalegorgeTidalflow11 extends Moc {
 
 
     public static class ScalegorgeTidalflowTubalance extends MocTurbulence {
-        // Too much headache for now
+        @Override
+        protected void trigger() {
+
+        }
     }
 
 

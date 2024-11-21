@@ -131,4 +131,9 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public void resetSpeedPriority() {
         speedPriority = SPEED_PRIORITY_DEFAULT;
     }
+
+    // Temp solution for jack MocTurbulence
+    public boolean canAdvance() {
+        return true;
+    }
 }

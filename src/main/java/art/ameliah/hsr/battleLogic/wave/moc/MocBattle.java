@@ -8,14 +8,15 @@ public class MocBattle extends WavedBattle {
 
     private final MocTurbulence turbulence;
 
-    public MocBattle(MocTurbulence turbulence, MocWave phaseOne, MocWave phaseTwo) {
-        this.turbulence = turbulence;
-        this.addWave(phaseOne);
-        this.addWave(phaseTwo);
-    }
-
     public MocBattle(MocTurbulence turbulence) {
         this.turbulence = turbulence;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.playerTeam.add(this.turbulence);
+        this.turbulence.setBattle(this);
     }
 
     @Override
@@ -32,8 +33,8 @@ public class MocBattle extends WavedBattle {
         // Adding one by one, so BattleEvents::onCombatStart is called
         this.currentWave.startEnemies().forEach(this::addEnemy);
 
-        getPlayers().forEach(p -> {
-            this.actionValueMap.put(p, p.getBaseAV());
+        this.actionValueMap.forEach((k, _) -> {
+            this.actionValueMap.put(k, k.getBaseAV());
         });
         getPlayers().forEach(AbstractCharacter::tryUltimate);
     }

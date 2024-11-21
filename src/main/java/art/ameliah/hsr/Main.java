@@ -281,7 +281,6 @@ public class Main {
         });
     }
 
-    @Getter
     private record Pair<K, V>(K key, V value) {
     }
 

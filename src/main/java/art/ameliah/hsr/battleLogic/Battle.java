@@ -541,6 +541,9 @@ public class Battle implements IBattle {
 
     @Override
     public void AdvanceEntity(AbstractEntity entity, float advanceAmount) {
+        if (!entity.canAdvance()) {
+            return;
+        }
         for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
             if (entry.getKey() == entity) {
                 float baseAV = entity.getBaseAV();
@@ -554,6 +557,7 @@ public class Battle implements IBattle {
                 actionForwardPriorityCounter--;
                 entity.speedPriority = actionForwardPriorityCounter;
                 addToLog(new AdvanceEntity(entity, advanceAmount, originalAV, newAV));
+                break;
             }
         }
     }

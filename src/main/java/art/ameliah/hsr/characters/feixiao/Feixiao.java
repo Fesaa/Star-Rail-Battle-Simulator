@@ -18,6 +18,7 @@ import art.ameliah.hsr.characters.goal.shared.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -241,7 +242,15 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
             if (!(character instanceof Feixiao)) {
                 if (FUAReady) {
                     FUAReady = false;
-                    Feixiao.this.useFollowUp(enemiesHit.get(Feixiao.this.fuaRng.nextInt(enemiesHit.size())));
+
+                    List<AbstractEnemy> alive = enemiesHit.stream().filter(e -> !e.isDead()).toList();
+                    AbstractEnemy enemy;
+                    if (alive.isEmpty()) {
+                        enemy = getBattle().getRandomEnemy();
+                    } else {
+                        enemy = alive.get(Feixiao.this.fuaRng.nextInt(alive.size()));
+                    }
+                    Feixiao.this.useFollowUp(enemy);
                 }
             }
         }

@@ -10,11 +10,14 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class FrigidProwler extends AbstractEnemy {
 
     private AbstractCharacter<?> lockedIn = null;
+    private List<AbstractEnemy> otherlings = new ArrayList<>();
 
     public FrigidProwler() {
         super("Frigid Prowler", EnemyType.Elite, 448625, 718, 1000, 132, 100, 92);
@@ -45,6 +48,11 @@ public class FrigidProwler extends AbstractEnemy {
         this.sequence.runNext();
     }
 
+    @Override
+    public void onDeath() {
+        this.otherlings.forEach(getBattle()::removeEnemy);
+    }
+
     private void IceWheelFist() {
         this.IceWheelFist(this.getRandomTarget());
     }
@@ -56,7 +64,9 @@ public class FrigidProwler extends AbstractEnemy {
 
     private void SummonOtherling() {
         for (int i = 0; i < 2; i++) {
-            getBattle().addEnemy(new EverwinterShadewalker());
+            AbstractEnemy otherling = new EverwinterShadewalker();
+            this.otherlings.add(otherling);
+            getBattle().addEnemy(otherling);
         }
     }
 
