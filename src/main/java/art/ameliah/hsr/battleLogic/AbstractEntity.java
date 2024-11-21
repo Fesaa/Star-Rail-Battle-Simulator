@@ -130,4 +130,8 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public void resetSpeedPriority() {
         speedPriority = SPEED_PRIORITY_DEFAULT;
     }
+
+    public float getCurrentHp() {
+        return 0;
+    }
 }

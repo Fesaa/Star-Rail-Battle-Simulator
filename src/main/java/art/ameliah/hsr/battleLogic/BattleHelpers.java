@@ -298,7 +298,7 @@ public class BattleHelpers implements BattleParticipant {
     public void PostAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
         int damageTotal = (int) attackDamageTotal;
         getBattle().addToLog(new TotalDamage(character, types, damageTotal));
-        getBattle().addToLog(new Attacked(character, enemiesHit));
+        getBattle().addToLog(new Attacked(character, enemiesHit, damageTotal));
 
         character.emit(l -> l.onAttack(character, enemiesHit, types));
         ArrayList<AbstractEnemy> enemies = new ArrayList<>(enemiesHit); // I really should've implemented an action queue
@@ -314,7 +314,7 @@ public class BattleHelpers implements BattleParticipant {
                 return;
             }
         }
-        getBattle().addToLog(new Attacked(source, target));
+        getBattle().addToLog(new Attacked(source, target, dmg));
         target.emit(l -> l.onAttacked(target, source, new ArrayList<>(), energyToGain, dmg));
     }
 

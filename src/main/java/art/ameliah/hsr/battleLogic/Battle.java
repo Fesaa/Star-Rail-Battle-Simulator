@@ -336,12 +336,12 @@ public class Battle implements IBattle {
                 nextAV = actionValueMap.get(currentUnit);
             }
         }
-        addToLog(new TurnStart(currentUnit, nextAV, actionValueMap));
         battleLength -= nextAV;
         for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
             float newAV = entry.getValue() - nextAV;
             entry.setValue(newAV);
         }
+        addToLog(new TurnStart(currentUnit, this.getActionValueUsed() ,actionValueMap));
 
 
         currentUnit.emit(BattleEvents::onTurnStart);
