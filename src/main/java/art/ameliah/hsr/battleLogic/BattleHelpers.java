@@ -15,6 +15,7 @@ import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BattleHelpers implements BattleParticipant {
 
@@ -48,8 +49,8 @@ public class BattleHelpers implements BattleParticipant {
         damageVulnMultiConstituents.clear();
         critDmgMultiConstituents.clear();
     }
-    
-    public float calculateDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, ElementType damageElement) {
+
+    private float calculateDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, ElementType damageElement) {
         clearConstituents();
         float statToUse;
         if (stat == MultiplierStat.ATK) {
@@ -206,7 +207,7 @@ public class BattleHelpers implements BattleParticipant {
         return calculatedDamage;
     }
 
-    public float calculateBreakDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, ElementType damageElement) {
+    private float calculateBreakDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, ElementType damageElement) {
         float maxToughnessMultiplier = 0.5f + (target.maxToughness() / 40);
         float baseDamage = this.getBaseBreakDamage(multiplier, damageElement, maxToughnessMultiplier);
         float breakEffectMultiplier = source.getTotalBreakEffect();
@@ -252,7 +253,7 @@ public class BattleHelpers implements BattleParticipant {
         return multiplier * elementMultipler * 3767.5533f * maxToughnessMultiplier;
     }
 
-    public float calculateToughenssDamage(AbstractCharacter<?> character, float toughnssDamage) {
+    private float calculateToughenssDamage(AbstractCharacter<?> character, float toughnssDamage) {
         float weaknessBreakEff = character.getTotalWeaknessBreakEff();
         return toughnssDamage * (1 + weaknessBreakEff / 100);
     }
@@ -290,16 +291,18 @@ public class BattleHelpers implements BattleParticipant {
     }
 
     public void PostAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
+        Map<AbstractEnemy, Float> copy = new HashMap<>(enemiesHit);
         int damageTotal = (int) attackDamageTotal;
+
         getBattle().addToLog(new TotalDamage(character, types, damageTotal));
 
-        character.emit(l -> l.onAttack(character, enemiesHit.keySet(), types));
-        enemiesHit.forEach((enemy, dmg) -> {
+        character.emit(l -> l.onAttack(character, copy.keySet(), types));
+        copy.forEach((enemy, dmg) -> {
             enemy.emit(l -> l.onAttacked(character, enemy, types, 0, dmg));
             getBattle().addToLog(new Attacked(character, enemy, dmg));
         });
 
-        character.emit(l -> l.afterAttackFinish(character, enemiesHit.keySet(), types));
+        character.emit(l -> l.afterAttackFinish(character, copy.keySet(), types));
     }
 
     public void attackCharacter(AbstractEnemy source, AbstractCharacter<?> target, int energyToGain, float dmg) {
