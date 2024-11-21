@@ -33,7 +33,7 @@ public class FinalDmgMetrics implements Loggable {
                     return String.format("%s: %.3f DPAV (%.3f%%)", entry.getKey().name, entry.getValue() / actionValueUsed, percent);
                 })
                 .collect(Collectors.joining(" | "));
-        return String.format("Damage Contribution %s | Total Damage: %,d", log, totalPlayerDmg);
+        return String.format("Damage Contribution: %s | Total Damage: %,d", log, totalPlayerDmg);
     }
 
     @Override
