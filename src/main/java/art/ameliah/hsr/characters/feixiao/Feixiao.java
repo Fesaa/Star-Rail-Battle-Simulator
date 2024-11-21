@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Feixiao extends AbstractCharacter<Feixiao> {
 
@@ -233,13 +234,13 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (!Feixiao.this.hasPower(ultBreakEffBuff.name)) {
                 Feixiao.this.increaseStack(1);
             }
         }
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (!(character instanceof Feixiao)) {
                 if (FUAReady) {
                     FUAReady = false;

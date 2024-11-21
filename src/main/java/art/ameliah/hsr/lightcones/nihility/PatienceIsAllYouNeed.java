@@ -8,6 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class PatienceIsAllYouNeed extends AbstractLightcone {
 
@@ -22,7 +23,7 @@ public class PatienceIsAllYouNeed extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         if (character == null) return;
         character.addPower(new PatienceIsAllYouNeedSpeedBoost());
     }

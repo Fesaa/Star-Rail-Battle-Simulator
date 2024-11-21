@@ -7,8 +7,10 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
+import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Missing CR boost
@@ -25,7 +27,7 @@ public class IncessantRain extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         if (!types.contains(DamageType.BASIC)
                 && !types.contains(DamageType.SKILL)
                 && !types.contains(DamageType.ULTIMATE)) {
@@ -36,7 +38,7 @@ public class IncessantRain extends AbstractLightcone {
             return;
         }
 
-        AbstractEnemy target = enemiesHit.get(getBattle().getAetherRng().nextInt(enemiesHit.size()));
+        AbstractEnemy target = Randf.rand(enemiesHit, getBattle().getAetherRng());
         target.addPower(new AetherCode());
     }
 

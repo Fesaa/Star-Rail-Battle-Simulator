@@ -39,7 +39,7 @@ public class BattleHelpers implements BattleParticipant {
     }
     
     private float attackDamageTotal = 0;
-    public ArrayList<AbstractEnemy> enemiesHit = new ArrayList<>();
+    private final HashMap<AbstractEnemy, Float> enemiesHit = new HashMap<>();
     private final HashMap<String, Float> damageBonusMultiConstituents = new HashMap<>();
     private final HashMap<String, Float> defenseMultiConstituents = new HashMap<>();
     private final HashMap<String, Float> resMultiConstituents = new HashMap<>();
@@ -280,9 +280,8 @@ public class BattleHelpers implements BattleParticipant {
         getBattle().increaseTotalPlayerDmg(calculatedDamage);
         getBattle().updateContribution(source, calculatedDamage);
         attackDamageTotal += calculatedDamage;
-        if (!enemiesHit.contains(target)) {
-            enemiesHit.add(target);
-        }
+
+        enemiesHit.put(target, enemiesHit.getOrDefault(target, 0.0f) + calculatedDamage);
     }
 
     public void hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage) {
@@ -298,14 +297,14 @@ public class BattleHelpers implements BattleParticipant {
     public void PostAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
         int damageTotal = (int) attackDamageTotal;
         getBattle().addToLog(new TotalDamage(character, types, damageTotal));
-        getBattle().addToLog(new Attacked(character, enemiesHit, damageTotal));
 
-        character.emit(l -> l.onAttack(character, enemiesHit, types));
-        ArrayList<AbstractEnemy> enemies = new ArrayList<>(enemiesHit); // I really should've implemented an action queue
-        for (AbstractEnemy enemy : enemies) {
-            enemy.emit(l -> l.onAttacked(character, enemy, types, 0, damageTotal));
-        }
-        character.emit(l -> l.afterAttackFinish(character, enemiesHit, types));
+        character.emit(l -> l.onAttack(character, enemiesHit.keySet(), types));
+        enemiesHit.forEach((enemy, dmg) -> {
+            enemy.emit(l -> l.onAttacked(character, enemy, types, 0, dmg));
+            getBattle().addToLog(new Attacked(character, enemy, dmg));
+        });
+
+        character.emit(l -> l.afterAttackFinish(character, enemiesHit.keySet(), types));
     }
 
     public void attackCharacter(AbstractEnemy source, AbstractCharacter<?> target, int energyToGain, float dmg) {

@@ -10,6 +10,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
     public HunterOfTheGlacialForest(AbstractCharacter<?> owner) {
@@ -29,7 +30,7 @@ public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
 
     // TODO: onAfterUseUltimate
     @Override
-    public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         if (!types.contains(DamageType.ULTIMATE)) return;
 
         TempPower ultPower = TempPower.create(PowerStat.CRIT_DAMAGE, 25, 2, "Hunter of the Glacial Forest Ultimate CD Boost");

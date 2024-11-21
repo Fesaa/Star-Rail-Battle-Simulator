@@ -16,6 +16,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Asta extends AbstractCharacter<Asta> {
 
@@ -138,7 +139,7 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (character == Asta.this) {
                 int chargeGain = enemiesHit.size();
                 for (AbstractEnemy enemy : enemiesHit) {

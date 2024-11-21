@@ -13,6 +13,7 @@ import art.ameliah.hsr.powers.dot.EnemyShock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Function;
 
 public class GuardianShadow extends AbstractEnemy {
@@ -103,7 +104,7 @@ public class GuardianShadow extends AbstractEnemy {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (enemiesHit.stream().anyMatch(e -> e == this.guardian)) {
                 this.guardian.InevitablePunishment(character);
             }

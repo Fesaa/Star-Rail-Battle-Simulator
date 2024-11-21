@@ -8,6 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class AlongThePassingShore extends AbstractLightcone {
 
@@ -21,7 +22,7 @@ public class AlongThePassingShore extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         for (AbstractEnemy enemy : enemiesHit) {
             enemy.addPower(new MirageFizzle(this));
         }

@@ -9,6 +9,7 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class BrighterThanTheSun extends AbstractLightcone {
 
@@ -22,7 +23,7 @@ public class BrighterThanTheSun extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         if (types.contains(DamageType.BASIC)) {
             this.owner.addPower(new DragonsCall());
         }

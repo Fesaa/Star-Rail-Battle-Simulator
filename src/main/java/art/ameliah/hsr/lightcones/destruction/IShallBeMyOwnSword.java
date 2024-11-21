@@ -8,6 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 
 public class IShallBeMyOwnSword extends AbstractLightcone {
@@ -29,7 +30,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         eclipse = 0;
     }
 

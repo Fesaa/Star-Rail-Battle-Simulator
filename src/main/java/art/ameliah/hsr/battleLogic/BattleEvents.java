@@ -5,6 +5,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public interface BattleEvents {
 
@@ -42,7 +43,7 @@ public interface BattleEvents {
      * @param enemiesHit The enemies that were hit
      * @param types The types of damage dealt
      */
-    default void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
+    default void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
 
     /**
      * Called before an enemy is hit by an attack
@@ -58,7 +59,7 @@ public interface BattleEvents {
      * @param enemiesHit The enemies that were hit
      * @param types The types of damage dealt
      */
-    default void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
+    default void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
 
     /**
      * Called before AbstractCharacter#takeTurn has been called.

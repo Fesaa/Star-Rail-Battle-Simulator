@@ -14,6 +14,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Kafka extends AbstractEnemy {
@@ -121,7 +122,7 @@ public class Kafka extends AbstractEnemy {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
         AbstractPower shock = character.getPower(EnemyShock.NAME);
         if (shock == null) {
             return;

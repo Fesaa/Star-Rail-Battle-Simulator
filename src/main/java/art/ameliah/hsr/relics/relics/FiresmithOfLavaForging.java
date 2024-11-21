@@ -10,6 +10,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
     public FiresmithOfLavaForging(AbstractCharacter<?> owner, boolean fullSet) {
@@ -47,7 +48,7 @@ public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
 
         // TODO: onAfterUseUltimate
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             if (!types.contains(DamageType.ULTIMATE)) return;
 
             this.owner.addPower(TempPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 12, 1, "Firesmith of Lave Forging Fire Bonus 4PC Ultimate Bonus"));

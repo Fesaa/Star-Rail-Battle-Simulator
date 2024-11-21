@@ -9,6 +9,7 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
     public ChampionOfStreetwiseBoxing(AbstractCharacter<?> owner, boolean fullSet) {
@@ -49,7 +50,7 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, ArrayList<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
             this.stacks = Math.min(this.stacks + 1, 5);
         }
     }
