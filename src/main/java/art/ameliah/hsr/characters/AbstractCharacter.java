@@ -9,15 +9,16 @@ import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.characters.goal.TurnGoal;
 import art.ameliah.hsr.characters.goal.UltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.DefaultLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends AbstractEntity {
 

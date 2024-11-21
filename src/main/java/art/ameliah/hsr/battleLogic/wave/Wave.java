@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic.wave;
 
 import art.ameliah.hsr.enemies.AbstractEnemy;
+
 import java.util.List;
 
 public interface Wave {

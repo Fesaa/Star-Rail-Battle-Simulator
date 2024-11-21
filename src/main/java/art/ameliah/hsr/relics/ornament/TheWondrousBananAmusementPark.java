@@ -5,11 +5,12 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.List;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TheWondrousBananAmusementPark extends AbstractRelicSetBonus {
     public TheWondrousBananAmusementPark(AbstractCharacter<?> owner, boolean fullSet) {

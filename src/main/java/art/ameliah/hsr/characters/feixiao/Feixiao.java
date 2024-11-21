@@ -16,15 +16,16 @@ import art.ameliah.hsr.characters.goal.shared.DontUltMissingDebuffGoal;
 import art.ameliah.hsr.characters.goal.shared.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class Feixiao extends AbstractCharacter<Feixiao> {
 

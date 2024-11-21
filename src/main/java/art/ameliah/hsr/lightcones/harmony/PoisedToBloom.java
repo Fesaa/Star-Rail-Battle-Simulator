@@ -2,11 +2,12 @@ package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.Path;
-import java.util.List;
-import java.util.stream.Collectors;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PoisedToBloom extends AbstractLightcone {
 

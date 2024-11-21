@@ -9,12 +9,13 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+
+import java.util.ArrayList;
 
 public class Asta extends AbstractCharacter<Asta> {
 

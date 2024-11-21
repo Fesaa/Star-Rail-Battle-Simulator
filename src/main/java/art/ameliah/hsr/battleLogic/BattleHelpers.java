@@ -10,11 +10,11 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.characters.moze.Moze;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BattleHelpers implements BattleParticipant {
 

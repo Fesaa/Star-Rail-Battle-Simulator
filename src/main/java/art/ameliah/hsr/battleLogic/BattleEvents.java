@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+
 import java.util.ArrayList;
 
 public interface BattleEvents {

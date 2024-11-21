@@ -3,11 +3,12 @@ package art.ameliah.hsr.battleLogic;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.powers.AbstractPower;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
-import art.ameliah.hsr.powers.AbstractPower;
 
 public interface IBattle {
 

@@ -1,10 +1,11 @@
 package art.ameliah.hsr.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RelicStats {
 

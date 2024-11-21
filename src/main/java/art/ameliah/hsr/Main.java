@@ -12,10 +12,6 @@ import art.ameliah.hsr.report.Report;
 import art.ameliah.hsr.teams.EnemyTeam;
 import art.ameliah.hsr.teams.PlayerTeam;
 import art.ameliah.hsr.teams.TopazTeams;
-import lombok.Getter;
-
-import static art.ameliah.hsr.teams.PlayerTeam.*;
-import static art.ameliah.hsr.teams.EnemyTeam.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static art.ameliah.hsr.teams.EnemyTeam.*;
+import static art.ameliah.hsr.teams.PlayerTeam.*;
 
 public class Main {
 

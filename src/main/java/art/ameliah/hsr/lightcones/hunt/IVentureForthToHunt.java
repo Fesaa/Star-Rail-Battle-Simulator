@@ -3,11 +3,12 @@ package art.ameliah.hsr.lightcones.hunt;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
+
+import java.util.ArrayList;
 
 public class IVentureForthToHunt extends AbstractLightcone {
 

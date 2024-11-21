@@ -4,12 +4,13 @@ import art.ameliah.hsr.battleLogic.log.lines.entity.GainPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.LosePower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
+import art.ameliah.hsr.powers.AbstractPower;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
-import art.ameliah.hsr.powers.AbstractPower;
-import lombok.Setter;
 
 public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public String name;

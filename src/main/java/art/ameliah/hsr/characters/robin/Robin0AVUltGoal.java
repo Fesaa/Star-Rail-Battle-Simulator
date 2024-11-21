@@ -3,6 +3,7 @@ package art.ameliah.hsr.characters.robin;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.goal.UltGoal;
+
 import java.util.Map;
 
 public class Robin0AVUltGoal extends UltGoal<Robin> {

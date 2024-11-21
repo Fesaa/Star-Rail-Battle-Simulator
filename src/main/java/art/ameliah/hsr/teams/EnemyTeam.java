@@ -6,6 +6,7 @@ import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
 import art.ameliah.hsr.enemies.PhysFireWeakEnemy;
 import art.ameliah.hsr.enemies.PhysWeakEnemy;
 import art.ameliah.hsr.enemies.WindWeakEnemy;
+
 import java.util.ArrayList;
 
 public class EnemyTeam {

@@ -7,6 +7,7 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

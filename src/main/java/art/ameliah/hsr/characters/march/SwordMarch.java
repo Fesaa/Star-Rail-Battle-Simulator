@@ -14,16 +14,17 @@ import art.ameliah.hsr.characters.goal.shared.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.SkillFirstTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static String NAME = "Sword March";

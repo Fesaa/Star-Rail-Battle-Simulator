@@ -3,11 +3,12 @@ package art.ameliah.hsr.lightcones.hunt;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
+
+import java.util.ArrayList;
 
 /**
  * enemyDebugs are not tracked, so it a constant. It is capped at 3. Passing none assumes 3

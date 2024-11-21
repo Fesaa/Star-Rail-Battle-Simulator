@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+
 import java.util.ArrayList;
 
 public class DumbEnemy extends AbstractEnemy {

@@ -3,10 +3,11 @@ package art.ameliah.hsr.lightcones.hunt;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
+
+import java.util.ArrayList;
 
 public class Swordplay extends AbstractLightcone {
 

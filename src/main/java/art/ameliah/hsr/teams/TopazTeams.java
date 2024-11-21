@@ -10,7 +10,6 @@ import art.ameliah.hsr.characters.moze.Moze;
 import art.ameliah.hsr.characters.robin.Robin;
 import art.ameliah.hsr.characters.topaz.Topaz;
 import art.ameliah.hsr.characters.yunli.Yunli;
-import java.util.ArrayList;
 import art.ameliah.hsr.lightcones.abundance.PostOpConversation;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
 import art.ameliah.hsr.lightcones.harmony.ForTomorrowsJourney;
@@ -28,6 +27,8 @@ import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.PioneerDiverOfDeadWaters;
 import art.ameliah.hsr.relics.relics.TheAshblazingGrandDuke;
 import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
+
+import java.util.ArrayList;
 
 public class TopazTeams {
     public static class RatioRobinAventurineTopaz extends PlayerTeam {

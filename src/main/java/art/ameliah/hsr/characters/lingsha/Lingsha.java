@@ -16,15 +16,16 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.DontUltNumby;
 import art.ameliah.hsr.characters.goal.shared.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.powers.AbstractPower;
+import art.ameliah.hsr.powers.PermPower;
+import art.ameliah.hsr.powers.PowerStat;
+import art.ameliah.hsr.powers.TracePower;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import art.ameliah.hsr.powers.AbstractPower;
-import art.ameliah.hsr.powers.PermPower;
-import art.ameliah.hsr.powers.PowerStat;
-import art.ameliah.hsr.powers.TracePower;
 
 public class Lingsha extends AbstractSummoner<Lingsha> {
     public static String NAME = "Lingsha";

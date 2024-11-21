@@ -13,14 +13,15 @@ import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.SkillFirstTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked {
     AbstractPower proofOfDebt = new ProofOfDebt();

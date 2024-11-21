@@ -3,11 +3,12 @@ package art.ameliah.hsr.relics.relics;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
+
+import java.util.ArrayList;
 
 public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     public TheWindSoaringValorous(AbstractCharacter<?> owner) {

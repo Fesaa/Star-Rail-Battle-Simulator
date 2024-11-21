@@ -3,6 +3,9 @@ package art.ameliah.hsr.report;
 import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.teams.EnemyTeam;
+import art.ameliah.hsr.teams.PlayerTeam;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -10,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import art.ameliah.hsr.teams.EnemyTeam;
-import art.ameliah.hsr.teams.PlayerTeam;
 
 public class Report {
     private PlayerTeam baselineTeam;

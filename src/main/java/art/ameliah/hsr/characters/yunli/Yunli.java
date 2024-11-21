@@ -11,8 +11,6 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.SkillFirstTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.HashMap;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -20,6 +18,9 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TauntPower;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoal.FirstTurnTracked {
     

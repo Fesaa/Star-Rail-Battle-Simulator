@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.characters.topaz.Topaz;
+
 import java.util.ArrayList;
 
 public class Numby extends AbstractSummon<Topaz> {

@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic.log;
 
 import art.ameliah.hsr.battleLogic.IBattle;
+
 import java.io.PrintStream;
 
 public class VoidLogger extends Logger {

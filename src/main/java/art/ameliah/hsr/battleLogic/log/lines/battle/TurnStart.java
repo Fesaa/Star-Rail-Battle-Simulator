@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.battle;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;

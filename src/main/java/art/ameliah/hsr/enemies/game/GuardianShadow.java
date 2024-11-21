@@ -7,12 +7,13 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.powers.TempPower;
+import art.ameliah.hsr.powers.dot.EnemyShock;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
-import art.ameliah.hsr.powers.TempPower;
-import art.ameliah.hsr.powers.dot.EnemyShock;
 
 public class GuardianShadow extends AbstractEnemy {
 

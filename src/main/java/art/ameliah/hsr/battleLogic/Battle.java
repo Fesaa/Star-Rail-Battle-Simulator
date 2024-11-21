@@ -24,6 +24,8 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.characters.yunli.Yunli;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.powers.AbstractPower;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import art.ameliah.hsr.powers.AbstractPower;
 
 public class Battle implements IBattle {
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();

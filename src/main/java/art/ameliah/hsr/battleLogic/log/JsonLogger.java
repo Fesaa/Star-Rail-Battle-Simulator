@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic.log;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.enemies.AbstractEnemy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -10,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import art.ameliah.hsr.enemies.AbstractEnemy;
+
 import java.io.PrintStream;
 import java.lang.reflect.Type;
 

@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Queue;

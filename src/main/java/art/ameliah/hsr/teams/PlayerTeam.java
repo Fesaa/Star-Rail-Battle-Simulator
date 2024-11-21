@@ -19,9 +19,6 @@ import art.ameliah.hsr.characters.sparkle.Sparkle;
 import art.ameliah.hsr.characters.tingyun.Tingyun;
 import art.ameliah.hsr.characters.topaz.Topaz;
 import art.ameliah.hsr.characters.yunli.Yunli;
-import java.util.ArrayList;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.abundance.Multiplication;
 import art.ameliah.hsr.lightcones.abundance.PostOpConversation;
@@ -59,6 +56,10 @@ import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.TheAshblazingGrandDuke;
 import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
 import art.ameliah.hsr.relics.relics.ThiefOfShootingMeteor;
+
+import java.util.ArrayList;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class PlayerTeam {
 

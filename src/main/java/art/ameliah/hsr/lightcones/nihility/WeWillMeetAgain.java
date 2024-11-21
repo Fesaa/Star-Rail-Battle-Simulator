@@ -4,8 +4,9 @@ import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
+
+import java.util.ArrayList;
 
 public class WeWillMeetAgain extends AbstractLightcone {
 

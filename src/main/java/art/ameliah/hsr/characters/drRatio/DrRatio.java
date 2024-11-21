@@ -12,13 +12,14 @@ import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.HashMap;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DrRatio extends AbstractCharacter<DrRatio> {
     private int numFUAs = 0;

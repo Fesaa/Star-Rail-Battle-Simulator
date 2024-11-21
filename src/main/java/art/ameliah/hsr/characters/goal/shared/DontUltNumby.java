@@ -5,6 +5,7 @@ import art.ameliah.hsr.battleLogic.Numby;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.goal.UltGoal;
 import art.ameliah.hsr.characters.topaz.Topaz;
+
 import java.util.Map;
 
 public class DontUltNumby<C extends AbstractCharacter<C>> extends UltGoal<C> {

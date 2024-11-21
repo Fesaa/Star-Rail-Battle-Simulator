@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
+
 import java.util.List;
 
 public abstract class AbstractSummoner<C extends  AbstractSummoner<C>> extends AbstractCharacter<C> {
