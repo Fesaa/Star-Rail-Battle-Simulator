@@ -495,6 +495,18 @@ public class Battle implements IBattle {
     }
 
     @Override
+    public AbstractEnemy getEnemyWithHighestHP() {
+        AbstractEnemy enemy = null;
+        for (AbstractEnemy e : this.getEnemies()) {
+            if (enemy == null || e.getCurrentHp() > enemy.getCurrentHp()) {
+                enemy = e;
+            }
+        }
+
+        return enemy;
+    }
+
+    @Override
     public void addToLog(Loggable addition) {
         this.logger.handle(addition);
     }

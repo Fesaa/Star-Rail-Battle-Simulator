@@ -35,6 +35,7 @@ public interface IBattle {
 
     List<AbstractEnemy> getEnemies();
     AbstractEnemy getMiddleEnemy();
+    AbstractEnemy getEnemyWithHighestHP();
     AbstractEnemy getRandomEnemy();
     void removeEnemy(AbstractEnemy enemy);
     void addEnemy(AbstractEnemy enemy, float initialAA);

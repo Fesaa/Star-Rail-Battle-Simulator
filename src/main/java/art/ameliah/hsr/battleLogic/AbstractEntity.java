@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import art.ameliah.hsr.powers.AbstractPower;
+import lombok.Setter;
 
 public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public String name;
@@ -17,11 +18,8 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public static final int SPEED_PRIORITY_DEFAULT = 99;
     public int speedPriority = SPEED_PRIORITY_DEFAULT;
     public int numTurnsMetric = 0;
+    @Setter
     private IBattle battle;
-
-    public void setBattle(IBattle battle) {
-        this.battle = battle;
-    }
 
     @Override
     public IBattle getBattle() {

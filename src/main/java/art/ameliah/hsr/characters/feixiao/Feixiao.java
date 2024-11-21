@@ -142,7 +142,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     }
 
     public void useUltimate() {
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
         addPower(ultBreakEffBuff);
 

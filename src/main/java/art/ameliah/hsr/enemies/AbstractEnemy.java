@@ -47,6 +47,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     public int numAoEMetric = 0;
     public int timesBrokenMetric = 0;
 
+    @Getter
     protected float currentHp = 0;
     protected float currentToughness = 0;
 
