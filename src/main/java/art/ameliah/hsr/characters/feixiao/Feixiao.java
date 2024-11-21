@@ -100,7 +100,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
         this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 48, 3,"Fei Atk Bonus"));
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
         float totalMult = 2.0f;
         getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.34f, BattleHelpers.MultiplierStat.ATK, types, 0);
@@ -121,7 +121,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         types.add(DamageType.BASIC);
         getBattle().getHelper().PreAttackLogic(this, types);
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
         getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
 
         getBattle().getHelper().PostAttackLogic(this, types);

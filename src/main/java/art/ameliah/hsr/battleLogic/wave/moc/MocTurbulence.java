@@ -24,6 +24,7 @@ public abstract class MocTurbulence extends AbstractCharacter<MocTurbulence> {
     @Override
     protected void useBasic() {
         this.firstCycleHasPassed = true;
+        getBattle().useSkillPoint(this, 1);
         this.trigger();
     }
 

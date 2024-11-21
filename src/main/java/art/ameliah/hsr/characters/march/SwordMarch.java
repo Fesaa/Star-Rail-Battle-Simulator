@@ -76,7 +76,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         types.add(DamageType.BASIC);
         getBattle().getHelper().PreAttackLogic(this, types);
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
         getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
         if (master != null) {
             getBattle().getHelper().hitEnemy(this, enemy, 0.22f, BattleHelpers.MultiplierStat.ATK, new ArrayList<>(), 0, master.elementType);
@@ -108,7 +108,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         types.add(DamageType.BASIC);
         getBattle().getHelper().PreAttackLogic(this, types);
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
         int initialHits = 3;
         int numExtraHits = 0;
         int procChance = 60;
@@ -177,7 +177,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         types.add(DamageType.ULTIMATE);
         getBattle().getHelper().PreAttackLogic(this, types);
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
         getBattle().getHelper().hitEnemy(this, enemy, 2.59f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_THREE_UNITs);
         hasUltEnhancement = true;
 

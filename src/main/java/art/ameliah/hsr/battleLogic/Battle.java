@@ -569,7 +569,6 @@ public class Battle implements IBattle {
                 actionForwardPriorityCounter--;
                 entity.speedPriority = actionForwardPriorityCounter;
                 addToLog(new AdvanceEntity(entity, advanceAmount, originalAV, newAV));
-                break;
             }
         }
     }
