@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MomentOfVictory extends AbstractLightcone {
 
@@ -24,7 +24,7 @@ public class MomentOfVictory extends AbstractLightcone {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         this.owner.addPower(TempPower.create(PowerStat.DEF_PERCENT, 24, 1, "Moment Of Victory Defense Boost"));
     }
 }

@@ -7,7 +7,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DreamvilleAdventure extends AbstractLightcone {
 
@@ -43,7 +43,7 @@ public class DreamvilleAdventure extends AbstractLightcone {
             this.name = this.getClass().getSimpleName();
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (currBenefit == null) {
                 return 0;
             }

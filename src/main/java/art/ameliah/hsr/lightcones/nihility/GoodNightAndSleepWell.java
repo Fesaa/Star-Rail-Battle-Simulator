@@ -6,7 +6,7 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GoodNightAndSleepWell extends AbstractLightcone {
 
@@ -20,7 +20,7 @@ public class GoodNightAndSleepWell extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             int mul = (int) enemy.powerList.stream().filter(p -> p.type.equals(PowerType.DEBUFF)).count();
             return 24 * Math.min(3, mul);
         }

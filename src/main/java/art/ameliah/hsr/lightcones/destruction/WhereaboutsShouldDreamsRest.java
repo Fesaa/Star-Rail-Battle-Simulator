@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.destruction;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -8,8 +9,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 public class WhereaboutsShouldDreamsRest extends AbstractLightcone {
     public WhereaboutsShouldDreamsRest(AbstractCharacter<?> owner) {
@@ -23,8 +23,8 @@ public class WhereaboutsShouldDreamsRest extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        for (AbstractEnemy enemy : enemiesHit) {
+    public void onAttack(Attack attack) {
+        for (AbstractEnemy enemy : attack.getTargets()) {
             enemy.addPower(new Routed(this));
         }
     }
@@ -42,7 +42,7 @@ public class WhereaboutsShouldDreamsRest extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.BREAK)) return 0;
             if (character != this.lightcone.owner) return 0;
             return 24;

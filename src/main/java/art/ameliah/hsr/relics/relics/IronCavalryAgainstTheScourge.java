@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class IronCavalryAgainstTheScourge extends AbstractRelicSetBonus {
     public IronCavalryAgainstTheScourge(AbstractCharacter<?> owner, boolean fullSet) {
@@ -33,7 +33,7 @@ public class IronCavalryAgainstTheScourge extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.SUPER_BREAK)) {
                 return 25;
             }

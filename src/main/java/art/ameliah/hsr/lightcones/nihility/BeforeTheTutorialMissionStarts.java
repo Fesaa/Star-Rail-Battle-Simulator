@@ -1,14 +1,10 @@
 package art.ameliah.hsr.lightcones.nihility;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class BeforeTheTutorialMissionStarts extends AbstractLightcone {
 
@@ -22,8 +18,8 @@ public class BeforeTheTutorialMissionStarts extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (enemiesHit.stream()
+    public void onAttack(Attack attack) {
+        if (attack.getTargets().stream()
                 .anyMatch(e -> e.powerList
                         .stream()
                         .anyMatch(p -> p.getStat(PowerStat.DEFENSE_REDUCTION) != 0))) {

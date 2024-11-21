@@ -30,14 +30,15 @@ public class Main {
     public static void main(String[] args) {
         Locale.setDefault(Locale.UK);
 
-       // debugTeam();
+        //debugTeam();
         //generateReportYunli();
         //generateReportFeixiao();
         //generateReportFeixiaoLightconeReport();
         //generateReportFeixiaoRelicReport();
         //generateReportTopaz();
-        //ameliasSanityCheck();
-        WaveTester.MocTest();
+        ameliasSanityCheck();
+        //WaveTester.MocTest();
+        //WaveTester.MocDivTest();
     }
 
     public static void debugTeam() {
@@ -95,7 +96,8 @@ public class Main {
         //battle.setPlayerTeam(new TopazTeams.MarchRobinAventurineTopaz().getTeam());
         //battle.setPlayerTeam(new TopazTeams.MozeRobinAventurineTopaz().getTeam());
         //battle.setPlayerTeam(new TopazTeams.HuohuoYunliRobinTopaz().getTeam());
-        battle.setPlayerTeam(new PelaYunliRobinHuohuoTeam().getTeam());
+        //battle.setPlayerTeam(new PelaYunliRobinHuohuoTeam().getTeam());
+        battle.setPlayerTeam(new FeixiaoBronyaAventurineMoze().getTeam());
 
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
         //enemyTeam.add(new WindWeakEnemy(0, 0));
@@ -263,7 +265,7 @@ public class Main {
             battle.setEnemyTeam(enemyTeam);
 
             System.out.print(Prefix);
-            battle.Start(550);
+            battle.Start(150);
         }
     }
 

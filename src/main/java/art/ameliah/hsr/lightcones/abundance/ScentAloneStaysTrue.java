@@ -1,15 +1,12 @@
 package art.ameliah.hsr.lightcones.abundance;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class ScentAloneStaysTrue extends AbstractLightcone {
 
@@ -23,10 +20,10 @@ public class ScentAloneStaysTrue extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (!types.contains(DamageType.ULTIMATE)) return;
+    public void onAttack(Attack attack) {
+        if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
-        enemiesHit.forEach(e -> {
+        attack.getTargets().forEach(e -> {
             float dmg = this.owner.getTotalBreakEffect() >= 150 ? 18 : 10;
             e.addPower(TempPower.create(PowerStat.DAMAGE_TAKEN, dmg, 2, "Scent Alone Stays True Damage Taken Debuff"));
         });

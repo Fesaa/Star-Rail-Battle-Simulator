@@ -1,14 +1,10 @@
 package art.ameliah.hsr.lightcones.harmony;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class MemoriesOfThePast extends AbstractLightcone {
 
@@ -29,7 +25,7 @@ public class MemoriesOfThePast extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(Attack attack) {
         if (!this.canRegen) return;
 
         this.owner.increaseEnergy(8, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);

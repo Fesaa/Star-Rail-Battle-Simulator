@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.bronya;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -15,6 +16,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Bronya extends AbstractCharacter<Bronya> {
 
@@ -26,7 +28,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
         super(NAME, 1242, 582, 534, 99, 80, ElementType.WIND, 120, 100, Path.HARMONY);
 
         this.addPower(new TracePower()
-                .setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 22.4f)
+                .setStat(PowerStat.WIND_DMG_BOOST, 22.4f)
                 .setStat(PowerStat.CRIT_DAMAGE, 24)
                 .setStat(PowerStat.EFFECT_RES, 10));
 
@@ -46,15 +48,9 @@ public class Bronya extends AbstractCharacter<Bronya> {
         }
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        getBattle().AdvanceEntity(this, 30);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -88,7 +84,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
             this.lastsForever = true;
         }
 
-        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes, float currentCrit) {
+        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
             if (damageTypes.contains(DamageType.BASIC)) {
                 return 100;
             }

@@ -1,6 +1,9 @@
 package art.ameliah.hsr.characters.tingyun;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -15,7 +18,7 @@ import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 public class Tingyun extends AbstractCharacter<Tingyun> {
     public static final String NAME = "Tingyun";
@@ -32,7 +35,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         this.addPower(new TracePower()
                 .setStat(PowerStat.ATK_PERCENT, 28)
                 .setStat(PowerStat.DEF_PERCENT, 22.5f)
-                .setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 8));
+                .setStat(PowerStat.LIGHTNING_DMG_BOOST, 8));
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new TingyunTurnGoal(this));
@@ -53,18 +56,16 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         getBattle().IncreaseSpeed(this, speedPower);
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
+        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+        attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
         if (benefactor != null) {
             talentProcs++;
-            getBattle().getHelper().tingyunSkillHitEnemy(benefactor, enemy, 0.66f, BattleHelpers.MultiplierStat.ATK);
+            attack.hitEnemy(benefactor, target, 0.66F, MultiplierStat.ATK);
         }
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useUltimate() {
@@ -112,10 +113,10 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
             this.setStat(PowerStat.ATK_PERCENT, 55);
         }
 
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(Attack attack) {
             skillProcs++;
-            AbstractEnemy target = Randf.rand(enemiesHit, getBattle().getGetRandomEnemyRng());
-            getBattle().getHelper().tingyunSkillHitEnemy(character, target, 0.64f, BattleHelpers.MultiplierStat.ATK);
+            AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
+            attack.hitEnemy(new Hit(attack.getSource(), target, 0.64F, MultiplierStat.ATK, List.of(), 0, ElementType.LIGHTNING, false));
         }
 
         public void onUseUltimate() {
@@ -135,7 +136,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.BASIC) {
                     return 40;

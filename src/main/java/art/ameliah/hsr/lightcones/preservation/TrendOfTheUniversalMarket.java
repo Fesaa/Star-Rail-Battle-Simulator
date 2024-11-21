@@ -1,10 +1,7 @@
 package art.ameliah.hsr.lightcones.preservation;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
-import java.util.Set;
 
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -22,8 +19,8 @@ public class TrendOfTheUniversalMarket extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        double dmg = character.getFinalDefense() * 0.8;
+    public void onAttack(Attack attack) {
+        double dmg = attack.getSource().getFinalDefense() * 0.8;
         // TODO: Add dot to enemies
         // for (AbstractEnemy enemy : enemiesHit) {
         //

@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.hanya;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.hanya.BurdenLog;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -15,6 +17,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Hanya extends AbstractCharacter<Hanya> {
 
@@ -34,12 +37,10 @@ public class Hanya extends AbstractCharacter<Hanya> {
     }
 
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
+        attack.hitEnemy(enemy, 2.64f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 2.64f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
         AbstractPower burden = new BurdenPower();
         burden.owner = enemy;
         if (enemy.hasPower(burden.name)) {
@@ -51,17 +52,12 @@ public class Hanya extends AbstractCharacter<Hanya> {
         speedPower.justApplied = true;
         getBattle().IncreaseSpeed(this, speedPower);
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+            .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+            .execute();
     }
 
     public void useUltimate() {
@@ -91,7 +87,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.BASIC) || damageTypes.contains(DamageType.SKILL) || damageTypes.contains(DamageType.ULTIMATE)) {
                 TempPower talentPower = TempPower.create(PowerStat.DAMAGE_BONUS, 43, 2, "Hanya Talent Power");
                 talentPower.justApplied = true;
@@ -100,7 +96,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL) || types.contains(DamageType.ULTIMATE)) {
                 hitCount++;
                 getBattle().addToLog(new BurdenLog(hitCount, hitsToTrigger));

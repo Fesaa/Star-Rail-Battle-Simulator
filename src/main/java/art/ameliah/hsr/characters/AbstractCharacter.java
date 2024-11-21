@@ -2,6 +2,7 @@ package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
@@ -18,6 +19,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -153,6 +155,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
         }
     }
 
+    protected Attack startAttack() {
+        return new Attack(this);
+    }
+
     @Override
     public final void takeTurn() {
         super.takeTurn();
@@ -226,7 +232,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     protected abstract void useUltimate();
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         increaseEnergy(energyFromAttacked, ATTACKED_ENERGY_GAIN);
     }
 
@@ -299,7 +305,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
         float totalSameElementDamageBonus = 0;
         float totalGlobalElementDamageBonus = 0;
         for (AbstractPower power : powerList) {
-            totalSameElementDamageBonus += power.getStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS);
+            //totalSameElementDamageBonus += power.getStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS);
             totalGlobalElementDamageBonus += power.getStat(PowerStat.DAMAGE_BONUS);
         }
         return totalSameElementDamageBonus + totalGlobalElementDamageBonus;

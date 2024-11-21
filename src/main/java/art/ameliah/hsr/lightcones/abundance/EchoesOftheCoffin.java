@@ -1,15 +1,11 @@
 package art.ameliah.hsr.lightcones.abundance;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class EchoesOftheCoffin extends AbstractLightcone {
 
@@ -28,8 +24,8 @@ public class EchoesOftheCoffin extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        int stacks = Math.min(3, enemiesHit.size());
+    public void onAttack(Attack attack) {
+        int stacks = Math.min(3, attack.getTargets().size());
         this.owner.increaseEnergy(3 * stacks, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);
     }
 }

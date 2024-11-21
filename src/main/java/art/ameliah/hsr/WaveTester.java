@@ -13,11 +13,17 @@ import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
+import art.ameliah.hsr.battleLogic.log.lines.entity.GainPower;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
+import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
+import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.wave.moc.Moc;
 import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
+import art.ameliah.hsr.teams.Divteams;
 import art.ameliah.hsr.teams.FeixiaoTeams;
+
+import java.util.List;
 
 import static art.ameliah.hsr.teams.FeixiaoTeams.FeixiaoMarch;
 
@@ -28,6 +34,12 @@ public class WaveTester {
         Moc moc = new ScalegorgeTidalflow11(
                 FeixiaoMarch(FeixiaoTeams::myRobin, FeixiaoTeams::myHuoHuo),
                 FeixiaoMarch(FeixiaoTeams::myRobin, FeixiaoTeams::myHuoHuo));
+        moc.setBattleLogger(WaveTesterLogger::new);
+        moc.Start();
+    }
+
+    public static void MocDivTest() {
+        Moc moc = new ScalegorgeTidalflow11(Divteams.players(), List.of());
         moc.setBattleLogger(WaveTesterLogger::new);
         moc.Start();
     }
@@ -95,6 +107,16 @@ public class WaveTester {
         @Override
         public void handle(Attacked attack) {
             super.log(attack);
+        }
+
+        @Override
+        public void handle(PreCombatPlayerMetrics preCombatPlayerMetrics) {
+            super.log(preCombatPlayerMetrics);
+        }
+
+        @Override
+        public void handle(PostCombatPlayerMetrics postCombatPlayerMetrics) {
+            super.log(postCombatPlayerMetrics);
         }
 
         @Override

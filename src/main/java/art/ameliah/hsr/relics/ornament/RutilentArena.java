@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RutilentArena extends AbstractRelicSetBonus {
     public RutilentArena(AbstractCharacter<?> owner) {
@@ -28,7 +28,7 @@ public class RutilentArena extends AbstractRelicSetBonus {
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.BASIC || type == DamageType.SKILL) {
                     return 20;

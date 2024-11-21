@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FirmamentFrontlineGlamoth extends AbstractRelicSetBonus {
     public FirmamentFrontlineGlamoth(AbstractCharacter<?> owner, boolean fullSet) {
@@ -34,7 +34,7 @@ public class FirmamentFrontlineGlamoth extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (FirmamentFrontlineGlamoth.this.owner.getFinalSpeed() > 160) {
                 return 18;
             }

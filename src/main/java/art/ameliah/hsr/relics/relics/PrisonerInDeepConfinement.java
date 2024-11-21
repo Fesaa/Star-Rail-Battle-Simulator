@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PrisonerInDeepConfinement extends AbstractRelicSetBonus {
     public PrisonerInDeepConfinement(AbstractCharacter<?> owner, boolean fullSet) {
@@ -33,7 +33,7 @@ public class PrisonerInDeepConfinement extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             int mul = (int) Math.min(3, enemy.powerList
                     .stream()
                     .filter(p -> p.type == PowerType.DOT)

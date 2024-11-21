@@ -1,14 +1,10 @@
 package art.ameliah.hsr.lightcones.destruction;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Ignored DMG boost from break
@@ -20,7 +16,7 @@ public class OnTheFallOfAnAeon extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void onAttack(Attack attack) {
         this.owner.addPower(new OnTheFallOfAnAeonATKBoost());
     }
 

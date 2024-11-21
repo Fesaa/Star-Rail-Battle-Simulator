@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.aventurine;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.aventurine.UseBlindBet;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -16,6 +18,7 @@ import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class Aventurine extends AbstractCharacter<Aventurine> {
@@ -41,7 +44,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         this.SPNeutral = SPNeutral;
         this.addPower(new TracePower()
                 .setStat(PowerStat.DEF_PERCENT, 35)
-                .setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 14.4f)
+                .setStat(PowerStat.IMAGINARY_DMG_BOOST, 14.4f)
                 .setStat(PowerStat.EFFECT_RES, 10));
         this.hasAttackingUltimate = true;
 
@@ -59,24 +62,18 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
     }
 
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.DEF, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.DEF, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
+        target.addPower(new AventurineUltDebuff());
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        enemy.addPower(new AventurineUltDebuff());
-        getBattle().getHelper().hitEnemy(this, enemy, 2.7f, BattleHelpers.MultiplierStat.DEF, types, TOUGHNESS_DAMAGE_THREE_UNITs);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(target, 2.7f, MultiplierStat.DEF, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE)
+                .execute();
 
         int blindBetGain = getBattle().getGambleChanceRng().nextInt(7) + 1;
         increaseBlindBet(blindBetGain);
@@ -89,16 +86,11 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         getBattle().addToLog(new UseBlindBet(this, initialBlindBet, this.blindBetCounter));
         increaseEnergy(7, FUA_ENERGY_GAIN);
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        int numBounces = 7;
-        while (numBounces > 0) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getRandomEnemy(), 0.25f, BattleHelpers.MultiplierStat.DEF, types, 3.3333333333333335f);
-            numBounces--;
+        Attack attack = this.startAttack();
+        for (int numBounces = 0; numBounces < 7; numBounces++) {
+            attack.hitEnemy(getBattle().getRandomEnemy(), 0.25f, MultiplierStat.DEF, 3.3333333333333335f, DamageType.FOLLOW_UP);
         }
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void onCombatStart() {
@@ -149,7 +141,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 15;
         }
     }
@@ -162,7 +154,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (character == Aventurine.this) {
                 increaseBlindBet(2);
             } else {
@@ -171,7 +163,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
             if (character != Aventurine.this && types.contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;

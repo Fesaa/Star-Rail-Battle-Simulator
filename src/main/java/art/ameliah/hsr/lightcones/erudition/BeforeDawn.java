@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class BeforeDawn extends AbstractLightcone {
 
@@ -31,7 +31,7 @@ public class BeforeDawn extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.FOLLOW_UP) && hasSomnusCorpus) {
                 this.hasSomnusCorpus = false;
                 return 48;

@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.erudition;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -9,8 +10,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 public class YetHopeIsPriceless extends AbstractLightcone {
 
@@ -25,8 +25,8 @@ public class YetHopeIsPriceless extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (!types.contains(DamageType.BASIC)) return;
+    public void onAttack(Attack attack) {
+        if (!attack.getTypes().contains(DamageType.BASIC)) return;
 
         this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 20, 2, "Yet Hope Is Priceless Defense Ignore Debuff"));
     }
@@ -38,7 +38,7 @@ public class YetHopeIsPriceless extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
             if (owner != character) return 0;
             if (character.getTotalCritDamage() < 120) return 0;

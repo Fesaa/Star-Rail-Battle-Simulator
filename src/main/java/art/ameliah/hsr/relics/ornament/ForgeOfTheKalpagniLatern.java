@@ -1,16 +1,12 @@
 package art.ameliah.hsr.relics.ornament;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class ForgeOfTheKalpagniLatern extends AbstractRelicSetBonus {
     public ForgeOfTheKalpagniLatern(AbstractCharacter<?> owner, boolean fullSet) {
@@ -29,8 +25,8 @@ public class ForgeOfTheKalpagniLatern extends AbstractRelicSetBonus {
 
     // TODO: Rework onBeforeUseAttack to include enemies
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (enemiesHit.stream().anyMatch(e -> e.hasWeakness(ElementType.FIRE))) {
+    public void onAttack(Attack attack) {
+        if (attack.getTargets().stream().anyMatch(e -> e.hasWeakness(ElementType.FIRE))) {
             this.owner.addPower(TempPower.create(PowerStat.BREAK_EFFECT, 40, 1, "Forge Of The Kalpagni Latern Break Bonus"));
         }
     }

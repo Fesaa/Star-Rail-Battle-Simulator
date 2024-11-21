@@ -2,14 +2,13 @@ package art.ameliah.hsr.relics.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
@@ -23,14 +22,12 @@ public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == ElementType.ICE) {
-            this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Hunter of the Glacial Forest Ice Boost"));
-        }
+        this.owner.addPower(PermPower.create(PowerStat.ICE_DMG_BOOST, 10, "Hunter of the Glacial Forest Ice Boost"));
     }
 
     // TODO: onAfterUseUltimate
     @Override
-    public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
         if (!types.contains(DamageType.ULTIMATE)) return;
 
         TempPower ultPower = TempPower.create(PowerStat.CRIT_DAMAGE, 25, 2, "Hunter of the Glacial Forest Ultimate CD Boost");

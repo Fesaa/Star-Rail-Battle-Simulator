@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 // TODO: The wave boost isn't implemented yet, doesn't seem like Battle has a concept of waves
 public class SheAlreadyShutHerEyes extends AbstractLightcone {
@@ -24,7 +24,7 @@ public class SheAlreadyShutHerEyes extends AbstractLightcone {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         // TODO: Check if owner has shield, and if it has more than the attack
         // if (...) return;
 

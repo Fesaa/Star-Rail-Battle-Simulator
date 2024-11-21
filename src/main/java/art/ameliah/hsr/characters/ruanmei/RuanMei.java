@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.ruanmei;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -14,7 +16,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterTurnGoal.SkillCounterCharacter {
     final PermPower skillPower;
@@ -49,13 +50,9 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -96,7 +93,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
     }
 
     public void onWeaknessBreak(AbstractEnemy enemy) {
-        getBattle().getHelper().breakDamageHitEnemy(this, enemy, 1.2f);
+        // TODO: ADD BREAK DMG
+        //getBattle().getHelper().breakDamageHitEnemy(this, enemy, 1.2f);
     }
 
     public void useTechnique() {
@@ -128,8 +126,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-            for (AbstractEnemy enemy : enemiesHit) {
+        public void onAttack(Attack attack) {
+            for (AbstractEnemy enemy : attack.getTargets()) {
                 if (!enemy.hasPower(ULT_DEBUFF_NAME)) {
                     AbstractPower debuff = new RuanMeiUltDebuff(RuanMei.this);
                     enemy.addPower(debuff);

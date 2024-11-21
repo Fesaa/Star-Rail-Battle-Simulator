@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DanceAtSunset extends AbstractLightcone {
 
@@ -36,7 +36,7 @@ public class DanceAtSunset extends AbstractLightcone {
             this.maxStacks = 2;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP) {
                     return 36 * stacks;

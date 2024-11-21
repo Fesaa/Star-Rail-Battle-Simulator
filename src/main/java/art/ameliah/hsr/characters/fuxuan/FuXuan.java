@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.fuxuan;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -53,26 +55,17 @@ public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTur
                 character.removePower(skillPower);
             }
         }
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 0.5f, BattleHelpers.MultiplierStat.HP, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
+        Attack attack = this.startAttack();
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.HP, types, TOUGHNESS_DAMAGE_TWO_UNITS);
+            attack.hitEnemy(enemy, 1, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE);
         }
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useTechnique() {

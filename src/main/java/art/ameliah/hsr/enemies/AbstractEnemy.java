@@ -251,7 +251,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
             float delay = ruanMeiDebuff.owner.getTotalBreakEffect() * 0.2f + 10;
             getBattle().DelayEntity(this, delay);
             ruanMeiDebuff.triggered = true;
-            getBattle().getHelper().breakDamageHitEnemy(ruanMeiDebuff.owner, this, 0.5f);
+            //getBattle().getHelper().breakDamageHitEnemy(ruanMeiDebuff.owner, this, 0.5f);
             return;
         }
 
@@ -271,7 +271,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         if (this.currentHp <= 0) {
             throw new IllegalStateException("Attacking dead enemy");
         }
@@ -281,11 +281,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (this.currentHp <= 0) {
             getBattle().addToLog(new EnemyDied(this, character));
             getBattle().removeEnemy(this);
-            this.onDeath();
+            this.emit(BattleEvents::onDeath);
         }
     }
-
-    public void onDeath() {}
 
     public String getMetrics() {
         return String.format("Metrics for %s with %,f speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);

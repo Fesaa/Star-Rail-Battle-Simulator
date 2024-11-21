@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Assumes the character always inflicts a debuff every turn.
@@ -35,7 +35,7 @@ public class PioneerDiverOfDeadWaters extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (enemy.powerList.stream().anyMatch(p -> p.type == PowerType.DEBUFF)) {
                 return 12;
             }
@@ -51,12 +51,12 @@ public class PioneerDiverOfDeadWaters extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 4;
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             int debuffs = Math.min(3, (int) enemy.powerList.stream().filter(p -> p.type == PowerType.DEBUFF).count());
             if (debuffs < 2) {
                 return 0;

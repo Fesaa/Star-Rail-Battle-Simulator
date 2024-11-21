@@ -1,8 +1,11 @@
 package art.ameliah.hsr.characters.feixiao;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
+import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanLose;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -23,6 +26,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -96,77 +100,64 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     }
 
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
         this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 48, 3,"Fei Atk Bonus"));
 
+        Attack attack = this.startAttack();
         AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
         float totalMult = 2.0f;
-        getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.34f, BattleHelpers.MultiplierStat.ATK, types, 0);
-        getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.33f, BattleHelpers.MultiplierStat.ATK, types, 0);
-        getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.33f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
-
-        if (enemy.isDead()) {
-            enemy = getBattle().getRandomEnemy();
-        }
+        attack.hitEnemy(enemy, totalMult * 0.34f, MultiplierStat.ATK, 0, DamageType.SKILL);
+        attack.hitEnemy(enemy, totalMult * 0.33f, MultiplierStat.ATK, 0, DamageType.SKILL);
+        attack.hitEnemy(enemy, totalMult * 0.33f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
+        attack.execute();
 
         this.useFollowUp(enemy);
-
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useFollowUp(AbstractEnemy target) {
+        if (target.isDead()) {
+            target = getBattle().getRandomEnemy();
+        }
+
         moveHistory.add(MoveType.FOLLOW_UP);
         numFUAs++;
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
 
-        addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 60, 2, "Fei Damage Bonus"));
+        this.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 60, 2, "Fei Damage Bonus"));
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
-        getBattle().getHelper().hitEnemy(this, target, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.FOLLOW_UP)
+                .execute();
     }
 
     public void useUltimate() {
         AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
-        addPower(ultBreakEffBuff);
+        this.addPower(ultBreakEffBuff);
 
         int numHits = 6;
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
 
         float totalMult = 0.9f;
         for (int i = 0; i < numHits; i++) {
             if (enemy.isWeaknessBroken()) {
-                getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.1f, BattleHelpers.MultiplierStat.ATK, types, 0);
-                getBattle().getHelper().hitEnemy(this, enemy, totalMult * 0.9f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
+                attack.hitEnemy(enemy, totalMult * 0.1f, MultiplierStat.ATK, 0, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
+                attack.hitEnemy(enemy, totalMult * 0.9f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
             } else {
-                getBattle().getHelper().hitEnemy(this, enemy, totalMult, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
+                attack.hitEnemy(enemy, totalMult, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
             }
         }
-        getBattle().getHelper().hitEnemy(this, enemy, 1.6f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
 
-        getBattle().getHelper().PostAttackLogic(this, types);
-        removePower(ultBreakEffBuff);
+        attack.hitEnemy(enemy, 1.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
+
+        attack.execute();
+
+        this.removePower(ultBreakEffBuff);
     }
 
     public void onTurnStart() {
@@ -195,15 +186,11 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         } else {
             getBattle().setUsedEntryTechnique(true);
         }
-        ArrayList<DamageType> types = new ArrayList<>();
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 2.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        }
-
-        getBattle().getHelper().PostAttackLogic(this, types);
-        gainStackEnergy(1);
+        // This assumes a fix multiplier on her technique
+        this.startAttack()
+                .hitEnemies(getBattle().getEnemies(), 2, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                .execute();
+        this.gainStackEnergy(1);
     }
 
     public HashMap<String, String> getCharacterSpecificMetricMap() {
@@ -234,13 +221,13 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(Attack attack) {
             if (!Feixiao.this.hasPower(ultBreakEffBuff.name)) {
                 Feixiao.this.increaseStack(1);
             }
         }
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
             if (!(character instanceof Feixiao)) {
                 if (FUAReady) {
                     FUAReady = false;
@@ -265,7 +252,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP) {
                     return 36;

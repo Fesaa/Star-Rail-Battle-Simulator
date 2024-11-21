@@ -23,6 +23,7 @@ import art.ameliah.hsr.lightcones.hunt.Swordplay;
 import art.ameliah.hsr.lightcones.preservation.ConcertForTwo;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import art.ameliah.hsr.relics.RelicStats;
+import art.ameliah.hsr.relics.Stats;
 import art.ameliah.hsr.relics.ornament.BrokenKeel;
 import art.ameliah.hsr.relics.ornament.DuranDynastyOfRunningWolves;
 import art.ameliah.hsr.relics.ornament.FleetOfTheAgeless;
@@ -81,13 +82,13 @@ public class FeixiaoTeams {
         broyna.EquipRelicSet(new BrokenKeel(broyna));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.HP_PER)
-                .addMainStat(RelicStats.Stats.ERR)
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 10)
-                .addSubStat(RelicStats.Stats.SPEED, speed)
-                .addSubStat(RelicStats.Stats.EFFECT_RES, 5);
+        stats.addMainStat(Stats.CRIT_DAMAGE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.CRIT_DAMAGE, 10)
+                .addSubStat(Stats.SPEED, speed)
+                .addSubStat(Stats.EFFECT_RES, 5);
 
         stats.equipTo(broyna);
 
@@ -104,12 +105,12 @@ public class FeixiaoTeams {
         ruanMei.EquipRelicSet(new PenaconyLandOfTheDreams(ruanMei));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.DEF_PER)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.HP_PER)
-                .addMainStat(RelicStats.Stats.ERR)
-                .addSubStat(RelicStats.Stats.BREAK_EFFECT, 13)
-                .addSubStat(RelicStats.Stats.SPEED, 8);
+        stats.addMainStat(Stats.DEF_PER)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.BREAK_EFFECT, 13)
+                .addSubStat(Stats.SPEED, 8);
 
         stats.equipTo(ruanMei);
         return ruanMei;
@@ -123,14 +124,14 @@ public class FeixiaoTeams {
         robin.EquipRelicSet(new SpringhtlyVonwacq(robin));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.ATK_PER)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addMainStat(RelicStats.Stats.ERR)
-                .addSubStat(RelicStats.Stats.ATK_PER, 4)
-                .addSubStat(RelicStats.Stats.SPEED, 12)
-                .addSubStat(RelicStats.Stats.ATK_FLAT, 3)
-                .addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        stats.addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.ATK_PER, 4)
+                .addSubStat(Stats.SPEED, 12)
+                .addSubStat(Stats.ATK_FLAT, 3)
+                .addSubStat(Stats.EFFECT_RES, 6);
 
         stats.equipTo(robin);
         return robin;
@@ -170,14 +171,14 @@ public class FeixiaoTeams {
         robin.EquipRelicSet(relic);
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.ATK_PER)
-                .addMainStat(RelicStats.Stats.ATK_PER).
-                addMainStat(RelicStats.Stats.ATK_PER)
-                .addMainStat(RelicStats.Stats.ERR)
-                .addSubStat(RelicStats.Stats.ATK_PER, 2)
-                .addSubStat(RelicStats.Stats.SPEED, 8)
-                .addSubStat(RelicStats.Stats.ATK_FLAT, 3)
-                .addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        stats.addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.ATK_PER, 2)
+                .addSubStat(Stats.SPEED, 8)
+                .addSubStat(Stats.ATK_FLAT, 3)
+                .addSubStat(Stats.EFFECT_RES, 6);
 
         stats.equipTo(robin);
         return robin;
@@ -195,12 +196,12 @@ public class FeixiaoTeams {
         gallagher.EquipRelicSet(new ForgeOfTheKalpagniLatern(gallagher));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.HEALING)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.HP_PER)
-                .addMainStat(RelicStats.Stats.BREAK_EFFECT)
-                .addSubStat(RelicStats.Stats.BREAK_EFFECT, 6)
-                .addSubStat(RelicStats.Stats.SPEED, 7);
+        stats.addMainStat(Stats.HEALING)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.BREAK_EFFECT)
+                .addSubStat(Stats.BREAK_EFFECT, 6)
+                .addSubStat(Stats.SPEED, 7);
 
         stats.equipTo(gallagher);
         return gallagher;
@@ -218,14 +219,14 @@ public class FeixiaoTeams {
         march.EquipRelicSet(new RutilentArena(march));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 17) // 3 + 2 + 3 + 3 + 3 + 3
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 2) // 1 + 2 + 2
-                .addSubStat(RelicStats.Stats.ATK_PER, 3) // 1 + 2
-                .addSubStat(RelicStats.Stats.SPEED, 7); // 1 + 3 + 2
+        stats.addMainStat(Stats.CRIT_DAMAGE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.ELEMENT_DAMAGE)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 17) // 3 + 2 + 3 + 3 + 3 + 3
+                .addSubStat(Stats.CRIT_DAMAGE, 2) // 1 + 2 + 2
+                .addSubStat(Stats.ATK_PER, 3) // 1 + 2
+                .addSubStat(Stats.SPEED, 7); // 1 + 3 + 2
         stats.equipTo(march);
         return march;
     }
@@ -241,14 +242,14 @@ public class FeixiaoTeams {
         march.EquipRelicSet(new RutilentArena(march));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 15) // 3 + 1 + 2 + 3 + 3 + 3
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 3) // 1 + 2
-                .addSubStat(RelicStats.Stats.ATK_PER, 4) // 2 + 2 +
-                .addSubStat(RelicStats.Stats.SPEED, 6); // 2 + 3 + 1
+        stats.addMainStat(Stats.CRIT_DAMAGE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.ELEMENT_DAMAGE)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 15) // 3 + 1 + 2 + 3 + 3 + 3
+                .addSubStat(Stats.CRIT_DAMAGE, 3) // 1 + 2
+                .addSubStat(Stats.ATK_PER, 4) // 2 + 2 +
+                .addSubStat(Stats.SPEED, 6); // 2 + 3 + 1
 
         stats.equipTo(march);
         return march;
@@ -266,14 +267,14 @@ public class FeixiaoTeams {
         moze.EquipRelicSet(new RutilentArena(moze));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_RATE)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.ELEMENT_DAMAGE)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 7)
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11)
-                .addSubStat(RelicStats.Stats.ATK_PER, 6)
-                .addSubStat(RelicStats.Stats.SPEED, 2);
+        stats.addMainStat(Stats.CRIT_RATE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.ELEMENT_DAMAGE)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 7)
+                .addSubStat(Stats.CRIT_DAMAGE, 11)
+                .addSubStat(Stats.ATK_PER, 6)
+                .addSubStat(Stats.SPEED, 2);
 
         stats.equipTo(moze);
         return moze;
@@ -294,14 +295,14 @@ public class FeixiaoTeams {
         feixiao.EquipRelicSet(new DuranDynastyOfRunningWolves(feixiao));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_DAMAGE)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 14)
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 12)
-                .addSubStat(RelicStats.Stats.ATK_PER, 2)
-                .addSubStat(RelicStats.Stats.SPEED, 4);
+        stats.addMainStat(Stats.CRIT_DAMAGE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 14)
+                .addSubStat(Stats.CRIT_DAMAGE, 12)
+                .addSubStat(Stats.ATK_PER, 2)
+                .addSubStat(Stats.SPEED, 4);
 
         stats.equipTo(feixiao);
 
@@ -325,14 +326,14 @@ public class FeixiaoTeams {
         feixiao.EquipRelicSet(new DuranDynastyOfRunningWolves(feixiao));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.CRIT_RATE)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addMainStat(RelicStats.Stats.ATK_PER)
-                .addSubStat(RelicStats.Stats.CRIT_RATE, 11)
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 16)
-                .addSubStat(RelicStats.Stats.ATK_PER, 2)
-                .addSubStat(RelicStats.Stats.SPEED, 1);
+        stats.addMainStat(Stats.CRIT_RATE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 11)
+                .addSubStat(Stats.CRIT_DAMAGE, 16)
+                .addSubStat(Stats.ATK_PER, 2)
+                .addSubStat(Stats.SPEED, 1);
 
         stats.equipTo(feixiao);
 
@@ -357,20 +358,20 @@ public class FeixiaoTeams {
         huohuo.EquipRelicSet(new FleetOfTheAgeless(huohuo));
 
         RelicStats stats = new RelicStats();
-        stats.addMainStat(RelicStats.Stats.HP_PER)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.HP_PER)
-                .addMainStat(RelicStats.Stats.ERR);
+        stats.addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.ERR);
 
         stats.equipTo(huohuo);
         return huohuo;
     }
 
-    public static AbstractCharacter<?> myAventurine(RelicStats.Stats bodyStat) {
+    public static AbstractCharacter<?> myAventurine(Stats bodyStat) {
         return myAventurine(ConcertForTwo::new, bodyStat);
     }
 
-    public static AbstractCharacter<?> myAventurine(LightConeSupplier lightConeSupplier, RelicStats.Stats bodyStat) {
+    public static AbstractCharacter<?> myAventurine(LightConeSupplier lightConeSupplier, Stats bodyStat) {
         Aventurine aventurine = new Aventurine();
         aventurine.EquipLightcone(lightConeSupplier.get(aventurine));
         aventurine.EquipRelicSet(new KnightOfPurityPalace(aventurine, true));
@@ -378,13 +379,13 @@ public class FeixiaoTeams {
 
         RelicStats stats = new RelicStats();
         stats.addMainStat(bodyStat)
-                .addMainStat(RelicStats.Stats.SPEED)
-                .addMainStat(RelicStats.Stats.DEF_PER)
-                .addMainStat(RelicStats.Stats.DEF_PER)
-                .addSubStat(RelicStats.Stats.DEF_PER, 7)
-                .addSubStat(RelicStats.Stats.SPEED, 2)
-                .addSubStat(RelicStats.Stats.CRIT_DAMAGE, 13)
-                .addSubStat(RelicStats.Stats.DEF_FLAT, 6);
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.DEF_PER)
+                .addMainStat(Stats.DEF_PER)
+                .addSubStat(Stats.DEF_PER, 7)
+                .addSubStat(Stats.SPEED, 2)
+                .addSubStat(Stats.CRIT_DAMAGE, 13)
+                .addSubStat(Stats.DEF_FLAT, 6);
 
         stats.equipTo(aventurine);
         aventurine.clearTurnGoals();

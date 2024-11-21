@@ -3,6 +3,8 @@ package art.ameliah.hsr.characters.lingsha;
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.FuYuan;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanLose;
@@ -20,6 +22,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,73 +82,62 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
     }
 
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getRandomEnemy(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
+        getBattle().getEnemies().forEach(target -> {
+            attack.hitEnemy(target, 0.8f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
+        });
 
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 0.8f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        }
         increaseHitCount(skillHitCountGain);
         getBattle().AdvanceEntity(fuYuan, 20);
         fuYuan.speedPriority = 1;
         resetDamageTracker();
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            AbstractPower besotted = new Befog();
-            enemy.addPower(besotted);
-            getBattle().getHelper().hitEnemy(this, enemy, 1.5f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
-        }
+        Attack attack = this.startAttack();
+        getBattle().getEnemies().forEach(target -> {
+            target.addPower(new Befog());
+            attack.hitEnemy(target, 1.5f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE);
+        });
         getBattle().AdvanceEntity(fuYuan, 100);
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void FuYuanAttack(boolean useHitCount) {
         fuYuanAttacksMetric++;
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        List<AbstractEnemy> nonBrokenEnemies = new ArrayList<>();
 
-        ArrayList<AbstractEnemy> nonBrokenEnemies = new ArrayList<>();
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 0.75f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            if (!enemy.isWeaknessBroken()) {
-                nonBrokenEnemies.add(enemy);
+        Attack attack = this.startAttack();
+        getBattle().getEnemies().forEach(target -> {
+            attack.hitEnemy(target, 0.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+            if (!target.isWeaknessBroken()) {
+                nonBrokenEnemies.add(target);
             }
-        }
+        });
+
         if (nonBrokenEnemies.isEmpty()) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getRandomEnemy(), 0.75f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            attack.hitEnemy(getBattle().getRandomEnemy(), 0.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
         } else {
-            AbstractEnemy randomNonBrokenEnemy = nonBrokenEnemies.get(getBattle().getGetRandomEnemyRng().nextInt(nonBrokenEnemies.size()));
-            getBattle().getHelper().hitEnemy(this, randomNonBrokenEnemy, 0.75f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            AbstractEnemy target = Randf.rand(nonBrokenEnemies, getBattle().getGetRandomEnemyRng());
+            attack.hitEnemy(target, 0.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
         }
+
         if (useHitCount) {
             decreaseHitCount(1);
         }
         resetDamageTracker();
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     private void increaseHitCount(int amount) {
@@ -228,7 +220,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.BREAK)) {
                 return 25f;
             }
@@ -242,7 +234,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyToGain, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyToGain, float totalDmg) {
             int timesHit = characterTimesDamageTakenMap.get(character);
             timesHit++;
             getBattle().addToLog(new HitSinceLastHeal(character, timesHit));

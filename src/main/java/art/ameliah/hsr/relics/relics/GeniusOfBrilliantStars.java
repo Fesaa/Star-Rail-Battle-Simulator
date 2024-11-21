@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GeniusOfBrilliantStars extends AbstractRelicSetBonus {
     public GeniusOfBrilliantStars(AbstractCharacter<?> owner, boolean fullSet) {
@@ -21,9 +21,7 @@ public class GeniusOfBrilliantStars extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == ElementType.QUANTUM) {
-            this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Genius of Brilliant Stars Quantum bonus"));
-        }
+        this.owner.addPower(PermPower.create(PowerStat.QUANTUM_DMG_BOOST, 10, "Genius of Brilliant Stars Quantum bonus"));
 
         if (this.isFullSet) {
             this.owner.addPower(new GeniusOfBrilliantStars4PC());
@@ -36,7 +34,7 @@ public class GeniusOfBrilliantStars extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (enemy.hasWeakness(ElementType.QUANTUM)) {
                 return 10 * 2;
             }

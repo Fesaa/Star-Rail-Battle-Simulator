@@ -5,7 +5,7 @@ import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DumbEnemy extends AbstractEnemy {
 
@@ -65,8 +65,8 @@ public class DumbEnemy extends AbstractEnemy {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
-        this.currentHp -= totalDmg;
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+        //this.currentHp -= totalDmg;
 
         if (this.currentHp <= 0) {
             //getBattle().removeEnemy(this);

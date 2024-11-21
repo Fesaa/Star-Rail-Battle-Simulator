@@ -1,0 +1,26 @@
+package art.ameliah.hsr.relics;
+
+public enum Stats {
+    HP_FLAT,
+    ATK_FLAT,
+    DEF_FLAT,
+    HP_PER,
+    ATK_PER,
+    DEF_PER,
+    CRIT_RATE,
+    CRIT_DAMAGE,
+    EFFECT_HIT,
+    EFFECT_RES,
+    BREAK_EFFECT,
+    SPEED,
+    HEALING,
+    ERR,
+    ELEMENT_DAMAGE,
+    PHYSICAL_DAMAGE,
+    FIRE_DAMAGE,
+    ICE_DAMAGE,
+    LIGHTNING_DAMAGE,
+    WIND_DAMAGE,
+    QUANTUM_DAMAGE,
+    IMAGINARY_DAMAGE,
+}

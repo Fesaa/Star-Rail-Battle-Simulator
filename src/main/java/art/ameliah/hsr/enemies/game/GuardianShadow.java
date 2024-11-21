@@ -1,8 +1,8 @@
 package art.ameliah.hsr.enemies.game;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -13,7 +13,6 @@ import art.ameliah.hsr.powers.dot.EnemyShock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.function.Function;
 
 public class GuardianShadow extends AbstractEnemy {
@@ -100,9 +99,9 @@ public class GuardianShadow extends AbstractEnemy {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-            if (enemiesHit.stream().anyMatch(e -> e == this.guardian)) {
-                this.guardian.InevitablePunishment(character);
+        public void onAttack(Attack attack) {
+            if (attack.getTargets().stream().anyMatch(e -> e == this.guardian)) {
+                this.guardian.InevitablePunishment(attack.getSource());
             }
         }
     }

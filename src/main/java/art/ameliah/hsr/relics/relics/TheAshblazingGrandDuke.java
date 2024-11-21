@@ -1,12 +1,13 @@
 package art.ameliah.hsr.relics.relics;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
     public TheAshblazingGrandDuke(AbstractCharacter<?> owner) {
@@ -22,14 +23,14 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
         owner.addPower(new DukeDamagePower());
     }
     @Override
-    public void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {
-        if (damageTypes.contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
+    public void onAttack(Attack attack) {
+        if (attack.getTypes().contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
             owner.removePower(atkBonus.name);
         }
     }
 
     @Override
-    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         atkBonus = new DukeAtkBonus();
         if (damageTypes.contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(atkBonus);
@@ -50,7 +51,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP) {
                     return 20;

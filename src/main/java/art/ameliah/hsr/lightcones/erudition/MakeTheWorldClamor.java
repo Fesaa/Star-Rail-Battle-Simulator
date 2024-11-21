@@ -6,7 +6,7 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MakeTheWorldClamor extends AbstractLightcone {
 
@@ -31,7 +31,7 @@ public class MakeTheWorldClamor extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.ULTIMATE)) return 0;
 
             return 64;

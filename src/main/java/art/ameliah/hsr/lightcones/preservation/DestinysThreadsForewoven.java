@@ -3,7 +3,9 @@ package art.ameliah.hsr.lightcones.preservation;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import java.util.ArrayList;
+
+import java.util.List;
+
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -28,7 +30,7 @@ public class DestinysThreadsForewoven extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (character != owner) return 0;
             return Math.min((float) (((int) (character.getFinalDefense() / 100)) * 1.2), 48);
         }

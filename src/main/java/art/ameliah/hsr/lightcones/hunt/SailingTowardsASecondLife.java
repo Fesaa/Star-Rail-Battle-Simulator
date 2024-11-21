@@ -7,7 +7,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SailingTowardsASecondLife extends AbstractLightcone {
 
@@ -34,7 +34,7 @@ public class SailingTowardsASecondLife extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.BREAK)) return 0;
 
             return 20;

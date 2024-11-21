@@ -1,15 +1,14 @@
 package art.ameliah.hsr.relics.relics;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
     public ChampionOfStreetwiseBoxing(AbstractCharacter<?> owner, boolean fullSet) {
@@ -22,9 +21,7 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == ElementType.PHYSICAL) {
-            this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Champion of Streetwise Boxing Physical Boost"));
-        }
+        this.owner.addPower(PermPower.create(PowerStat.PHYSICAL_DMG_BOOST, 10, "Champion of Streetwise Boxing Physical Boost"));
     }
 
     @Override
@@ -45,12 +42,12 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             this.stacks = Math.min(this.stacks + 1, 5);
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(Attack attack) {
             this.stacks = Math.min(this.stacks + 1, 5);
         }
     }

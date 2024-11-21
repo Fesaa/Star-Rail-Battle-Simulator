@@ -7,7 +7,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Swordplay extends AbstractLightcone {
 
@@ -17,7 +17,7 @@ public class Swordplay extends AbstractLightcone {
         super(953, 476, 331, owner);
     }
 
-    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types) {
+    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types) {
         AbstractPower swordPlayDamagePower = new SwordplayDamagePower();
         if (target != enemy) {
             owner.removePower(swordPlayDamagePower.name);
@@ -32,7 +32,7 @@ public class Swordplay extends AbstractLightcone {
             this.maxStacks = 5;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 16 * stacks;
         }
     }

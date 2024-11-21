@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.asta;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -16,6 +18,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class Asta extends AbstractCharacter<Asta> {
@@ -30,7 +33,7 @@ public class Asta extends AbstractCharacter<Asta> {
         super(NAME, 1023, 512, 463, 106, 80, ElementType.FIRE, 120, 100, Path.HARMONY);
 
         this.addPower(new TracePower()
-                .setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 22.4f)
+                .setStat(PowerStat.FIRE_DMG_BOOST, 22.4f)
                 .setStat(PowerStat.DEF_PERCENT, 22.5f)
                 .setStat(PowerStat.CRIT_CHANCE, 6.7f));
 
@@ -41,31 +44,23 @@ public class Asta extends AbstractCharacter<Asta> {
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
     }
 
+    @Override
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 0.55f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        int numBounces = 5;
-        while (numBounces > 0) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getRandomEnemy(), 0.55f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            numBounces--;
+        attack.hitEnemy(getBattle().getEnemyWithHighestHP(), 0.55f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
+        for (int numBounces = 0; numBounces < 5; numBounces++) {
+            attack.hitEnemy(getBattle().getRandomEnemy(), 0.55F, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
         }
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
+
+    @Override
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -78,9 +73,7 @@ public class Asta extends AbstractCharacter<Asta> {
     public void onCombatStart() {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             character.addPower(talentPower);
-            if (character.elementType == ElementType.FIRE) {
-                character.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 18, "Asta Fire Damage Bonus"));
-            }
+            character.addPower(PermPower.create(PowerStat.FIRE_DMG_BOOST, 18, "Asta Fire Damage Bonus"));
         }
         addPower(new AstaERRPower());
     }
@@ -102,14 +95,10 @@ public class Asta extends AbstractCharacter<Asta> {
         } else {
             getBattle().setUsedEntryTechnique(true);
         }
-        ArrayList<DamageType> types = new ArrayList<>();
-        getBattle().getHelper().PreAttackLogic(this, types);
 
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 0.5f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        }
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemies(getBattle().getEnemies(), 0.5f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                .execute();
     }
 
     public void increaseStacks(int amount) {
@@ -139,10 +128,10 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
             if (character == Asta.this) {
                 int chargeGain = enemiesHit.size();
-                for (AbstractEnemy enemy : enemiesHit) {
+                for (AbstractEnemy enemy :enemiesHit) {
                     if (enemy.hasWeakness(ElementType.FIRE)) {
                         chargeGain++;
                     }

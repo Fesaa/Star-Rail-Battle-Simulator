@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * enemyDebugs are not tracked, so it a constant. It is capped at 3. Passing none assumes 3
@@ -44,7 +44,7 @@ public class BaptismOfPureThought extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
 
             return 24;

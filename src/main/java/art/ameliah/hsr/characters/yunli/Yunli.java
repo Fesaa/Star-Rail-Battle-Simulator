@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.yunli;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.UseCounter;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseCull;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseSlash;
@@ -21,6 +23,7 @@ import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoal.FirstTurnTracked {
     
@@ -58,32 +61,23 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
     }
 
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        if (getBattle().getEnemies().size() >= 3) {
-            int middleIndex = getBattle().getEnemies().size() / 2;
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(middleIndex), 1.2f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(middleIndex + 1), 0.6f, BattleHelpers.MultiplierStat.ATK,types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(middleIndex - 1), 0.6f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        } else {
-            AbstractEnemy enemy = getBattle().getEnemies().get(0);
-            getBattle().getHelper().hitEnemy(this, enemy, 1.2f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
-            if (getBattle().getEnemies().size() == 2) {
-                getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(1), 0.6f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            }
-        }
-        getBattle().getHelper().PostAttackLogic(this, types);
+        Attack attack = this.startAttack();
+        int idx = getBattle().getRandomEnemyIdx();
+        getBattle().enemyCallback(idx, target -> {
+            attack.hitEnemy(target, 1.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
+        });
+        getBattle().enemyCallback(idx-1, target -> {
+            attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
+        });
+        getBattle().enemyCallback(idx+1, target -> {
+            attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
+        });
+        attack.execute();
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -96,7 +90,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
     }
 
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> t, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> t, int energyFromAttacked, float totalDmg) {
         addPower(getTrueSunderPower());
         if (isParrying) {
             useCull(enemy);
@@ -108,20 +102,18 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         } else {
             numNormalCounters++;
             getBattle().addToLog(new UseCounter(this));
-            ArrayList<DamageType> types = new ArrayList<>();
-            types.add(DamageType.FOLLOW_UP);
             increaseEnergy(5, "from Normal Counter");
-            getBattle().getHelper().PreAttackLogic(this, types);
 
-            int enemyIndex = getBattle().getEnemies().indexOf(enemy);
-            getBattle().getHelper().hitEnemy(this, enemy, 1.2f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            if (enemyIndex + 1 < getBattle().getEnemies().size()) {
-                getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(enemyIndex + 1), 0.6f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            }
-            if (enemyIndex - 1 >= 0) {
-                getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(enemyIndex - 1), 0.6f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            }
-            getBattle().getHelper().PostAttackLogic(this, types);
+            Attack attack = this.startAttack();
+            int idx = getBattle().getEnemies().indexOf(enemy);
+            attack.hitEnemy(enemy, 1.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+            getBattle().enemyCallback(idx-1, target -> {
+                attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+            });
+            getBattle().enemyCallback(idx+1, target -> {
+                attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+            });
+            attack.execute();
         }
         increaseEnergy(15, TALENT_ENERGY_GAIN);
         super.onAttacked(character, enemy, t, energyFromAttacked, totalDmg);
@@ -137,45 +129,38 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             num1StackCulls++;
         }
         getBattle().addToLog(new UseCull(this));
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
 
-        int enemyIndex = getBattle().getEnemies().indexOf(enemy);
-        getBattle().getHelper().hitEnemy(this, enemy, 2.2f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        if (enemyIndex + 1 < getBattle().getEnemies().size()) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(enemyIndex + 1), 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        }
-        if (enemyIndex - 1 >= 0) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(enemyIndex - 1), 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+        Attack attack = this.startAttack();
+        int idx = getBattle().getEnemies().indexOf(enemy);
+        attack.hitEnemy(enemy, 2.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+        getBattle().enemyCallback(idx-1, target -> {
+            attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+        });
+        getBattle().enemyCallback(idx+1, target -> {
+            attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+        });
+
+        for (int numBounces = 0; numBounces < 6; numBounces++) {
+            attack.hitEnemy(getBattle().getRandomEnemy(), 0.72f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT/4, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
         }
 
-        int numBounces = 6;
-        while (numBounces > 0) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getRandomEnemy(), 0.72f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT / 4);
-            numBounces--;
-        }
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useSlash(AbstractEnemy enemy) {
         increaseEnergy(10, "from using Slash");
         numSlashes++;
         getBattle().addToLog(new UseSlash(this));
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
 
-        int enemyIndex = getBattle().getEnemies().indexOf(enemy);
-        getBattle().getHelper().hitEnemy(this, enemy, 2.2f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        if (enemyIndex + 1 < getBattle().getEnemies().size()) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(enemyIndex + 1), 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        }
-        if (enemyIndex - 1 >= 0) {
-            getBattle().getHelper().hitEnemy(this, getBattle().getEnemies().get(enemyIndex - 1), 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        }
+        Attack attack = this.startAttack();
+        int idx = getBattle().getEnemies().indexOf(enemy);
+        attack.hitEnemy(enemy, 2.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+        getBattle().enemyCallback(idx-1, target -> {
+            attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+        });
+        getBattle().enemyCallback(idx+1, target -> {
+            attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+        });
 
         removePower(cullPower);
         isParrying = false;
@@ -183,7 +168,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             e.removePower(tauntPower);
         }
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useTechnique() {
@@ -232,7 +217,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP) {
                     return 100;

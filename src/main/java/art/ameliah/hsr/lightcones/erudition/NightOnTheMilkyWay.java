@@ -6,7 +6,7 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class NightOnTheMilkyWay extends AbstractLightcone {
@@ -42,7 +42,7 @@ public class NightOnTheMilkyWay extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (getBattle().getMilkyWayRng().nextInt(100) < weaknessBoostUptime) {
                 return 50;
             }

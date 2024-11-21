@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TheUnreachableSide extends AbstractLightcone {
     public TheUnreachableSide(AbstractCharacter<?> owner) {
@@ -31,7 +31,7 @@ public class TheUnreachableSide extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (this.active) {
                 this.active = false;
                 return 24;
@@ -41,7 +41,7 @@ public class TheUnreachableSide extends AbstractLightcone {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             this.active = true;
         }
     }

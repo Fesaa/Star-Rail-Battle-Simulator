@@ -1,13 +1,11 @@
 package art.ameliah.hsr.lightcones.nihility;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class WeWillMeetAgain extends AbstractLightcone {
 
@@ -16,9 +14,9 @@ public class WeWillMeetAgain extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        for (AbstractEnemy enemy : enemiesHit) {
-            getBattle().getHelper().additionalDamageHitEnemy(this.owner, enemy, 96, BattleHelpers.MultiplierStat.ATK);
+    public void onAttack(Attack attack) {
+        for (AbstractEnemy enemy : attack.getTargets()) {
+            attack.hitEnemy(this.owner, enemy, 0.96f, MultiplierStat.ATK);
         }
     }
 }

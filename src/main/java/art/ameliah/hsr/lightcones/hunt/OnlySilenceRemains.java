@@ -7,7 +7,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class OnlySilenceRemains extends AbstractLightcone {
 
@@ -27,7 +27,7 @@ public class OnlySilenceRemains extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (getBattle().getEnemies().size() < 3) {
                 return 24;
             }

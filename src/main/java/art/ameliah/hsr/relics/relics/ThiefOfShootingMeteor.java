@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +32,7 @@ public class ThiefOfShootingMeteor extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+    public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
         // TODO: Generate 3 energy after weakness breaking, don't see a way to check if an enemy was broken this turn
     }
 }

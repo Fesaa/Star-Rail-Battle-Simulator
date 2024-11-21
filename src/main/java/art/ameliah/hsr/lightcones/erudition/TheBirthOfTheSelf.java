@@ -6,7 +6,7 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TheBirthOfTheSelf extends AbstractLightcone {
 
@@ -20,7 +20,7 @@ public class TheBirthOfTheSelf extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
             // if (enemy.getCurrentHp() < enemy.baseHP / 2) {
             //    return 96;

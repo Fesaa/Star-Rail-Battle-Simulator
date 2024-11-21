@@ -3,6 +3,8 @@ package art.ameliah.hsr.characters.robin;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.Concerto;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -20,8 +22,8 @@ import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnGoal.SkillCounterCharacter {
 
@@ -65,13 +67,9 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getRandomEnemy(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -193,7 +191,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(Attack attack) {
             Robin.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
             Robin.this.allyAttacksMetric++;
         }
@@ -215,18 +213,18 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-            AbstractEnemy target = Randf.rand(enemiesHit, getBattle().getGetRandomEnemyRng());
+        public void onAttack(Attack attack) {
+            AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
             if (target == null) {
                 return;
             }
 
-            getBattle().getHelper().additionalDamageHitEnemy(Robin.this, target, 1.2f, BattleHelpers.MultiplierStat.ATK);
+            attack.hitEnemy(Robin.this, target, 1.2f, MultiplierStat.ATK);
             concertoProcs++;
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.FOLLOW_UP)) {
                 return 25;
             }
@@ -241,12 +239,12 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes, float currentCrit) {
+        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
             return 100;
         }
 
         @Override
-        public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes, float currentCritDmg) {
+        public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCritDmg) {
             return 150;
         }
     }

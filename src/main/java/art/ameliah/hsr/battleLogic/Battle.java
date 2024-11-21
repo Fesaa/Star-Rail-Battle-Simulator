@@ -1,5 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.LogSupplier;
 import art.ameliah.hsr.battleLogic.log.Loggable;
@@ -29,15 +30,20 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Battle implements IBattle {
+
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
+    protected Queue<Attack> queue = new LinkedList<>();
+    protected boolean activeAttack = false;
 
     private final BattleHelpers battleHelpers;
     @Getter
@@ -91,6 +97,21 @@ public class Battle implements IBattle {
     }
 
     @Override
+    public Queue<Attack> attackQueue() {
+        return this.queue;
+    }
+
+    @Override
+    public boolean isAttacking() {
+        return this.activeAttack;
+    }
+
+    @Override
+    public void setAttacking(boolean attacking) {
+        this.activeAttack = attacking;
+    }
+
+    @Override
     public void setPlayerTeam(List<AbstractCharacter<?>> playerTeam) {
         this.playerTeam = playerTeam;
         this.playerTeam.forEach(character -> character.setBattle(this));
@@ -104,7 +125,23 @@ public class Battle implements IBattle {
 
     @Override
     public AbstractEnemy getRandomEnemy() {
-        return this.enemyTeam.get(getRandomEnemyRng.nextInt(this.enemyTeam.size()));
+        return this.enemyTeam.get(this.getRandomEnemyIdx());
+    }
+
+    @Override
+    public int getRandomEnemyIdx() {
+        return getRandomEnemyRng.nextInt(this.enemyTeam.size());
+    }
+
+    @Override
+    public void enemyCallback(int idx, Consumer<AbstractEnemy> callback) {
+        if (idx < 0 || idx >= enemyTeam.size()) {
+            return;
+        }
+        AbstractEnemy target = this.enemyTeam.get(idx);
+        if (target != null) {
+            callback.accept(target);
+        }
     }
 
     @Override

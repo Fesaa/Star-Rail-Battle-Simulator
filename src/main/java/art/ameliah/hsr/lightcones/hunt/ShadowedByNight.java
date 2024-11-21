@@ -1,15 +1,12 @@
 package art.ameliah.hsr.lightcones.hunt;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class ShadowedByNight extends AbstractLightcone {
 
@@ -29,8 +26,8 @@ public class ShadowedByNight extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (!types.contains(DamageType.BREAK)) return;
+    public void onAttack(Attack attack) {
+        if (!attack.getTypes().contains(DamageType.BREAK)) return;
 
         getBattle().IncreaseSpeed(this.owner, new ShadowedByNightPower());
     }

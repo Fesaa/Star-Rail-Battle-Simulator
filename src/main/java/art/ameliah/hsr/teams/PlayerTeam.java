@@ -39,6 +39,7 @@ import art.ameliah.hsr.lightcones.preservation.ConcertForTwo;
 import art.ameliah.hsr.lightcones.preservation.DayOneOfMyNewLife;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import art.ameliah.hsr.relics.RelicStats;
+import art.ameliah.hsr.relics.Stats;
 import art.ameliah.hsr.relics.ornament.BrokenKeel;
 import art.ameliah.hsr.relics.ornament.DuranDynastyOfRunningWolves;
 import art.ameliah.hsr.relics.ornament.FirmamentFrontlineGlamoth;
@@ -708,10 +709,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new ThiefOfShootingMeteor(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HEALING).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.BREAK_EFFECT, 6).addSubStat(RelicStats.Stats.SPEED, 12).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.BREAK_EFFECT, 6).addSubStat(Stats.SPEED, 12).
+                addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -722,9 +723,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheAshblazingGrandDuke(character));
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.ATK_PER).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 17).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 7);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 17).addSubStat(Stats.CRIT_DAMAGE, 7);
         relicStats.equipTo(character);
         return character;
     }
@@ -735,10 +736,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_DAMAGE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_DAMAGE, 15).addSubStat(RelicStats.Stats.SPEED, 2).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 3);
+        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.CRIT_DAMAGE, 15).addSubStat(Stats.SPEED, 2).
+                addSubStat(Stats.EFFECT_RES, 3);
         relicStats.equipTo(character);
         return character;
     }
@@ -749,10 +750,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new MessengerTraversingHackerspace(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.ATK_PER, 8).addSubStat(RelicStats.Stats.SPEED, 8).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 8).addSubStat(Stats.SPEED, 8).
+                addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -763,10 +764,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new KnightOfPurityPalace(character, false));
         character.EquipRelicSet(new LongevousDisciple(character, false));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.HP_PER);
-        relicStats.addSubStat(RelicStats.Stats.HP_PER, 8).addSubStat(RelicStats.Stats.SPEED, 8).
-                addSubStat(RelicStats.Stats.DEF_PER, 8);
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.HP_PER);
+        relicStats.addSubStat(Stats.HP_PER, 8).addSubStat(Stats.SPEED, 8).
+                addSubStat(Stats.DEF_PER, 8);
         relicStats.equipTo(character);
         return character;
     }
@@ -777,9 +778,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new ThiefOfShootingMeteor(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HEALING).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.BREAK_EFFECT, 6).addSubStat(RelicStats.Stats.SPEED, 14);
+        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.BREAK_EFFECT, 6).addSubStat(Stats.SPEED, 14);
         relicStats.equipTo(character);
         return character;
     }
@@ -790,10 +791,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.ATK_PER, 6).addSubStat(RelicStats.Stats.SPEED, 10).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 6).addSubStat(Stats.SPEED, 10).
+                addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -804,10 +805,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new ThiefOfShootingMeteor(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.BREAK_EFFECT, 10).addSubStat(RelicStats.Stats.SPEED, 7).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.BREAK_EFFECT, 10).addSubStat(Stats.SPEED, 7).
+                addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -818,10 +819,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_DAMAGE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_DAMAGE, 13).addSubStat(RelicStats.Stats.SPEED, 4).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 3);
+        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.CRIT_DAMAGE, 13).addSubStat(Stats.SPEED, 4).
+                addSubStat(Stats.EFFECT_RES, 3);
         relicStats.equipTo(character);
         return character;
     }
@@ -832,9 +833,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheWindSoaringValorous(character));
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 6).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 18);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
         relicStats.equipTo(character);
         return character;
     }
@@ -858,9 +859,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheAshblazingGrandDuke(character));
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 13).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 10).addSubStat(RelicStats.Stats.SPEED, 1);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 10).addSubStat(Stats.SPEED, 1);
         relicStats.equipTo(character);
         return character;
     }
@@ -872,10 +873,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheAshblazingGrandDuke(character, false));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.DEF_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 10).addSubStat(RelicStats.Stats.DEF_PER, 3).
-                addSubStat(RelicStats.Stats.CRIT_DAMAGE, 3).addSubStat(RelicStats.Stats.SPEED, 8);
+        relicStats.addMainStat(Stats.DEF_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.DEF_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.DEF_PER, 3).
+                addSubStat(Stats.CRIT_DAMAGE, 3).addSubStat(Stats.SPEED, 8);
         relicStats.equipTo(character);
         return character;
     }
@@ -887,10 +888,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheAshblazingGrandDuke(character, false));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.DEF_PER).addMainStat(RelicStats.Stats.DEF_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 13).addSubStat(RelicStats.Stats.DEF_PER, 3).
-                addSubStat(RelicStats.Stats.CRIT_DAMAGE, 8);
+        relicStats.addMainStat(Stats.DEF_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.DEF_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.DEF_PER, 3).
+                addSubStat(Stats.CRIT_DAMAGE, 8);
         relicStats.equipTo(character);
         return character;
     }
@@ -901,10 +902,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.EFFECT_HIT).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.EFFECT_HIT, 5).addSubStat(RelicStats.Stats.SPEED, 9).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.EFFECT_HIT).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.EFFECT_HIT, 5).addSubStat(Stats.SPEED, 9).
+                addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -915,10 +916,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_DAMAGE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_DAMAGE, 4).addSubStat(RelicStats.Stats.SPEED, 13).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 3);
+        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.CRIT_DAMAGE, 4).addSubStat(Stats.SPEED, 13).
+                addSubStat(Stats.EFFECT_RES, 3);
         relicStats.equipTo(character);
         return character;
     }
@@ -929,9 +930,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new RutilentArena(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 10).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11).addSubStat(RelicStats.Stats.SPEED, 3);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 11).addSubStat(Stats.SPEED, 3);
         relicStats.equipTo(character);
         return character;
     }
@@ -942,9 +943,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new RutilentArena(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 10).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 14);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 14);
         relicStats.equipTo(character);
         return character;
     }
@@ -954,9 +955,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheAshblazingGrandDuke(character));
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.ATK_PER).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 13).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
         relicStats.equipTo(character);
         return character;
     }
@@ -966,10 +967,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new MusketeerOfWildWheat(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.ATK_PER, 7).addSubStat(RelicStats.Stats.SPEED, 9).
-                addSubStat(RelicStats.Stats.ATK_FLAT, 2).addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 7).addSubStat(Stats.SPEED, 9).
+                addSubStat(Stats.ATK_FLAT, 2).addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -981,10 +982,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheWindSoaringValorous(character, false));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.ATK_PER).
-                addMainStat(RelicStats.Stats.ATK_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.ATK_PER, 7).addSubStat(RelicStats.Stats.SPEED, 8).
-                addSubStat(RelicStats.Stats.ATK_FLAT, 3).addSubStat(RelicStats.Stats.EFFECT_RES, 6);
+        relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 7).addSubStat(Stats.SPEED, 8).
+                addSubStat(Stats.ATK_FLAT, 3).addSubStat(Stats.EFFECT_RES, 6);
         relicStats.equipTo(character);
         return character;
     }
@@ -995,10 +996,10 @@ public class PlayerTeam {
         character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.HEALING).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.HP_PER).addMainStat(RelicStats.Stats.ERR);
-        relicStats.addSubStat(RelicStats.Stats.HP_PER, 10).addSubStat(RelicStats.Stats.SPEED, 5).
-                addSubStat(RelicStats.Stats.EFFECT_RES, 1).addSubStat(RelicStats.Stats.HP_FLAT, 8);
+        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.HP_PER, 10).addSubStat(Stats.SPEED, 5).
+                addSubStat(Stats.EFFECT_RES, 1).addSubStat(Stats.HP_FLAT, 8);
         relicStats.equipTo(character);
         return character;
     }
@@ -1009,9 +1010,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new TheWindSoaringValorous(character));
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.ATK_PER).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 13).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 11);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
         relicStats.equipTo(character);
         return character;
     }
@@ -1120,9 +1121,9 @@ public class PlayerTeam {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
 
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 6).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 18);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
         relicStats.equipTo(character);
         return character;
     }
@@ -1259,9 +1260,9 @@ public class PlayerTeam {
         character.EquipRelicSet(planarSet.apply(character, true));
 
         RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 6).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 18);
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
         relicStats.equipTo(character);
         return character;
     }

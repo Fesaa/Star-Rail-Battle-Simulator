@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.hunt;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -8,7 +9,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class IVentureForthToHunt extends AbstractLightcone {
 
@@ -38,7 +39,7 @@ public class IVentureForthToHunt extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.ULTIMATE) && this.stacks > 0) {
                 return 27 * this.stacks;
             }
@@ -46,8 +47,8 @@ public class IVentureForthToHunt extends AbstractLightcone {
         }
 
         @Override
-        public void onBeforeUseAttack(ArrayList<DamageType> types) {
-            if (types.contains(DamageType.FOLLOW_UP)) {
+        public void onAttack(Attack attack) {
+            if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 this.stacks = Math.min(2, this.stacks + 1);
             }
         }

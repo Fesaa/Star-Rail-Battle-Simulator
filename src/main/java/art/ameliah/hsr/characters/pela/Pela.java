@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.pela;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -16,7 +18,8 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.BitSet;
+import java.util.List;
 
 public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.FirstTurnTracked {
 
@@ -28,7 +31,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
 
         this.addPower(new TracePower()
                 .setStat(PowerStat.ATK_PERCENT, 18)
-                .setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 22.4f)
+                .setStat(PowerStat.ICE_DMG_BOOST, 22.4f)
                 .setStat(PowerStat.EFFECT_HIT, 10));
         this.hasAttackingUltimate = true;
 
@@ -39,60 +42,52 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         this.registerGoal(0, new AlwaysUltGoal<>(this));
     }
 
+    // TODO: Ice res down
+    @Override
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 2.31f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
+        this.startAttack()
+                .hitEnemy(target, 2.31f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL)
+                .execute();
     }
+
+    @Override
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
+    @Override
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemies(getBattle().getEnemies(), 1.08f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
+                .execute();
 
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 1.08f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
             TempPower exposed = TempPower.create(PowerStat.DEFENSE_REDUCTION, 42, 2, ULT_DEBUFF_NAME);
             exposed.type = AbstractPower.PowerType.DEBUFF;
             enemy.addPower(exposed);
         }
-
-        getBattle().getHelper().PostAttackLogic(this, types);
     }
 
+    @Override
     public void useTechnique() {
         if (getBattle().usedEntryTechnique()) {
             return;
         } else {
             getBattle().setUsedEntryTechnique(true);
         }
-        ArrayList<DamageType> types = new ArrayList<>();
-        getBattle().getHelper().PreAttackLogic(this, types);
 
-        getBattle().getHelper().hitEnemy(this, getBattle().getRandomEnemy(), 0.8f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
+        this.startAttack()
+                .hitEnemy(getBattle().getRandomEnemy(), 0.8f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS)
+                .execute();
 
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
             TempPower techniqueExposed = TempPower.create(PowerStat.DEFENSE_REDUCTION, 20, 2, "Pela Technique Def Reduction");
             techniqueExposed.type = AbstractPower.PowerType.DEBUFF;
             enemy.addPower(techniqueExposed);
         }
-
-        getBattle().getHelper().PostAttackLogic(this, types);
     }
 
     public void onCombatStart() {
@@ -117,8 +112,8 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-            for (AbstractEnemy enemy : enemiesHit) {
+        public void onAttack(Attack attack) {
+            for (AbstractEnemy enemy : attack.getTargets()) {
                 for (AbstractPower power : enemy.powerList) {
                     if (power.type == PowerType.DEBUFF) {
                         increaseEnergy(11, TALENT_ENERGY_GAIN);
@@ -135,7 +130,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (AbstractPower power : enemy.powerList) {
                 if (power.type == PowerType.DEBUFF) {
                     return 20;

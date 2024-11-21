@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.hunt;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -7,8 +8,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 public class WorrisomeBlissful extends AbstractLightcone {
 
@@ -22,12 +22,12 @@ public class WorrisomeBlissful extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (character != owner) return;
-        if (enemiesHit.isEmpty()) return;
+    public void onAttack(Attack attack) {
+        if (attack.getSource() != owner) return;
+        if (attack.getTargets().isEmpty()) return;
 
-        if (types.contains(DamageType.FOLLOW_UP)) {
-            for (AbstractEnemy enemy : enemiesHit) {
+        if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
+            for (AbstractEnemy enemy : attack.getTargets()) {
                 enemy.addPower(new TameState());
             }
         }
@@ -40,7 +40,7 @@ public class WorrisomeBlissful extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
 
             return 30;
@@ -55,7 +55,7 @@ public class WorrisomeBlissful extends AbstractLightcone {
         }
 
         @Override
-        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 12 * this.stacks;
         }
     }

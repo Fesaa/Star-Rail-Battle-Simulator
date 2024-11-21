@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class InertSalsotto extends AbstractRelicSetBonus {
     public InertSalsotto(AbstractCharacter<?> owner, boolean fullSet) {
@@ -31,7 +31,7 @@ public class InertSalsotto extends AbstractRelicSetBonus {
             this.lastsForever = true;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP || type == DamageType.ULTIMATE) {
                     return 15;

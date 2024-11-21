@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.sparkle;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -14,6 +15,8 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
 public class Sparkle extends AbstractCharacter<Sparkle> {
 
@@ -46,13 +49,9 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         }
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -131,7 +130,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             AbstractPower ultPower = new SparkleUltPower();
             if (character.hasPower(ultPower.name)) {
                 return stacks * 16;

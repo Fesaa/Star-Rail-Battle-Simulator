@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.nihility;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -7,8 +8,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 public class AlongThePassingShore extends AbstractLightcone {
 
@@ -22,8 +22,8 @@ public class AlongThePassingShore extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        for (AbstractEnemy enemy : enemiesHit) {
+    public void onAttack(Attack attack) {
+        for (AbstractEnemy enemy : attack.getTargets()) {
             enemy.addPower(new MirageFizzle(this));
         }
     }
@@ -39,7 +39,7 @@ public class AlongThePassingShore extends AbstractLightcone {
         }
 
         @Override
-        public float receiveConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float receiveConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (character != this.lightcone.owner) return 0;
 
             if (damageTypes.contains(DamageType.ULTIMATE)) {

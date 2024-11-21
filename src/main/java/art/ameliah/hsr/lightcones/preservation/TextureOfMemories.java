@@ -7,7 +7,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TextureOfMemories extends AbstractLightcone {
 
@@ -21,7 +21,7 @@ public class TextureOfMemories extends AbstractLightcone {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         // TODO: Check shield
         // TODO: Reduce dmg taken power
     }

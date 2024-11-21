@@ -22,6 +22,11 @@ public class Moc {
     public void Start() {
         this.firstHalf.Start(MOC_START_AV);
         int cyclesUsed = this.firstHalf.CyclesUsed();
+
+        if (this.secondHalf.getPlayers().isEmpty()) {
+            throw new IllegalStateException("No players for second half");
+        }
+
         int avSecondHalf = MOC_START_AV - 100 * cyclesUsed;
         this.secondHalf.Start(avSecondHalf);
     }

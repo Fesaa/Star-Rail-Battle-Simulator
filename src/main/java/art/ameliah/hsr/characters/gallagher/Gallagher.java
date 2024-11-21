@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.gallagher;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -15,6 +17,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Gallagher extends AbstractCharacter<Gallagher> {
     public static final String NAME = "Gallagher";
@@ -40,13 +43,11 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
     }
 
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
 
         AbstractEnemy enemy = getBattle().getMiddleEnemy();
         if (isEnhanced) {
-            getBattle().getHelper().hitEnemy(this, enemy, 2.75f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT * 3);
+            attack.hitEnemy(enemy, 2.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT*3, DamageType.BASIC);
             AbstractPower atkDebuff = new TempPower();
             atkDebuff.type = AbstractPower.PowerType.DEBUFF;
             atkDebuff.turnDuration = 2;
@@ -54,25 +55,22 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
             enemy.addPower(atkDebuff);
             isEnhanced = false;
         } else {
-            getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            attack.hitEnemy(enemy, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT*3, DamageType.BASIC);
         }
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemies(getBattle().getEnemies(), 1.65f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
+                .execute();
 
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            getBattle().getHelper().hitEnemy(this, enemy, 1.65f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
             AbstractPower besotted = new Besotted();
             enemy.addPower(besotted);
             isEnhanced = true;
         }
         getBattle().AdvanceEntity(this, 100);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
     }
 
     public void onCombatStart() {
@@ -91,7 +89,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (damageTypes.contains(DamageType.BREAK)) {
                 return 13.2f;
             }

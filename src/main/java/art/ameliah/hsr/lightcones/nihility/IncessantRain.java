@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.nihility;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -8,9 +9,6 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.utils.Randf;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Missing CR boost
@@ -27,18 +25,18 @@ public class IncessantRain extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (!types.contains(DamageType.BASIC)
-                && !types.contains(DamageType.SKILL)
-                && !types.contains(DamageType.ULTIMATE)) {
+    public void onAttack(Attack attack) {
+        if (!attack.getTypes().contains(DamageType.BASIC)
+                && !attack.getTypes().contains(DamageType.SKILL)
+                && !attack.getTypes().contains(DamageType.ULTIMATE)) {
             return;
         }
 
-        if (enemiesHit.isEmpty()) {
+        if (attack.getTargets().isEmpty()) {
             return;
         }
 
-        AbstractEnemy target = Randf.rand(enemiesHit, getBattle().getAetherRng());
+        AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getAetherRng());
         target.addPower(new AetherCode());
     }
 

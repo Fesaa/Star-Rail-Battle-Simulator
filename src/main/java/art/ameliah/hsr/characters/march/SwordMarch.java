@@ -2,6 +2,9 @@ package art.ameliah.hsr.characters.march;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -25,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Sword March";
@@ -62,6 +64,15 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         this.registerGoal(0, new AlwaysUltGoal<>(this));
     }
 
+    // Assuming always dps
+    private void masterEffect(Attack attack, AbstractEnemy target) {
+        if (master != null) {
+            boolean ignore = target.hasWeakness(this.elementType) || target.hasWeakness(master.elementType);
+            attack.hitEnemy(new Hit(this, target, 0.22f, MultiplierStat.ATK, List.of(), 0, this.master.elementType, true));
+        }
+    }
+
+    @Override
     public void useSkill() {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             if (character.isDPS) {
@@ -73,19 +84,18 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             }
         }
     }
-    public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
 
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-        if (master != null) {
-            getBattle().getHelper().hitEnemy(this, enemy, 0.22f, BattleHelpers.MultiplierStat.ATK, new ArrayList<>(), 0, master.elementType);
-        }
+    @Override
+    public void useBasic() {
+        Attack attack = this.startAttack();
+        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
+
+        attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
+        this.masterEffect(attack, target);
+
         gainCharge(1);
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     @Override
@@ -106,9 +116,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_BASIC));
         increaseEnergy(30, EBA_ENERGY_GAIN);
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        Attack attack = this.startAttack();
 
         AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
         int initialHits = 3;
@@ -139,9 +147,11 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         totalNumExtraHits += numExtraHits;
         getBattle().addToLog(new ExtraHits(this, numExtraHits));
         for (int i = 0; i < initialHits + numExtraHits; i++) {
-            getBattle().getHelper().hitEnemy(this, enemy, 0.88f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_HALF_UNIT);
-            getBattle().getHelper().hitEnemy(this, enemy, 0.22f, BattleHelpers.MultiplierStat.ATK, new ArrayList<>(), 0, master.elementType);
+            attack.hitEnemy(enemy, 0.88f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.BASIC);
+            this.masterEffect(attack, enemy);
         }
+        attack.execute();
+
         if (hasUltEnhancement) {
             hasUltEnhancement = false;
             removePower(ultCritDmgBuff);
@@ -150,8 +160,6 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         isEnhanced = false;
 
         master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2,"Enhanced Basic Master Buff"));
-
-        getBattle().getHelper().PostAttackLogic(this, types);
     }
 
     public void useFollowUp(AbstractEnemy enemy) {
@@ -162,28 +170,20 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
             increaseEnergy(5, FUA_ENERGY_GAIN);
 
-            ArrayList<DamageType> types = new ArrayList<>();
-            types.add(DamageType.FOLLOW_UP);
-            getBattle().getHelper().PreAttackLogic(this, types);
-
-            getBattle().getHelper().hitEnemy(this, enemy, 0.6f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            getBattle().getHelper().hitEnemy(this, enemy, 0.22f, BattleHelpers.MultiplierStat.ATK, new ArrayList<>(), 0, master.elementType);
+            Attack attack = this.startAttack();
+            attack.hitEnemy(enemy, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+            this.masterEffect(attack, enemy);
             gainCharge(1);
 
-            getBattle().getHelper().PostAttackLogic(this, types);
+            attack.execute();
         }
     }
 
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        getBattle().getHelper().hitEnemy(this, enemy, 2.59f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_THREE_UNITs);
-        hasUltEnhancement = true;
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.hasUltEnhancement = true;
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 2.59f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE)
+                .execute();
     }
 
     public void onTurnStart() {
@@ -254,12 +254,12 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
 
         @Override
-        public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void onAttack(Attack attack) {
             SwordMarch.this.gainCharge(1);
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
             if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL)) {
                 List<AbstractEnemy> nonDead = enemiesHit.stream().filter(e -> !e.isDead()).toList();
                 AbstractEnemy enemy;

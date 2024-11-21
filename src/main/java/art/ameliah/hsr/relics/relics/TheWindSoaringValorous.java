@@ -1,5 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -8,7 +9,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     public TheWindSoaringValorous(AbstractCharacter<?> owner) {
@@ -29,8 +30,8 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {
-        if (damageTypes.contains(DamageType.FOLLOW_UP) && isFullSet) {
+    public void onAttack(Attack attack) {
+        if (attack.getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(new ValorousDamagePower());
         }
     }
@@ -49,7 +50,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
             this.turnDuration = 1;
         }
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.ULTIMATE) {
                     return 36;

@@ -3,6 +3,8 @@ package art.ameliah.hsr.characters.topaz;
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.Numby;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
@@ -46,7 +48,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         super(NAME, 931, 621, 412, 110, 80, ElementType.FIRE, 130, 75, Path.HUNT);
 
         this.addPower(new TracePower()
-                .setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 22.4f)
+                .setStat(PowerStat.FIRE_DMG_BOOST, 22.4f)
                 .setStat(PowerStat.CRIT_CHANCE, 12.0f)
                 .setStat(PowerStat.HP_PERCENT, 10));
 
@@ -63,28 +65,19 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
     }
 
     public void useSkill() {
-
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-
-        AbstractEnemy target = getBattle().getMiddleEnemy();
-        target.addPower(proofOfDebt);
-
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            if (enemy.hasPower(proofOfDebt.name) && enemy != target) {
+            if (enemy.hasPower(proofOfDebt.name)) {
                 enemy.removePower(proofOfDebt);
                 break;
             }
         }
 
-        numbyAttack(types);
+        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
+        target.addPower(proofOfDebt);
+
+        numbyAttack(DamageType.SKILL);
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
         AbstractEnemy target = null;
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
             if (enemy.hasPower(proofOfDebt.name)) {
@@ -92,9 +85,14 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
                 break;
             }
         }
-        getBattle().getHelper().hitEnemy(this, target, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        if (target == null) {
+            throw new IllegalStateException("No enemy found with proofOfDebt");
+        }
+
+        this.startAttack()
+                .hitEnemy(target, 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC, DamageType.FOLLOW_UP)
+                .execute();
     }
 
     public void useUltimate() {
@@ -109,7 +107,11 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         getBattle().getRandomEnemy().addPower(proofOfDebt);
     }
 
-    public void numbyAttack(ArrayList<DamageType> types) {
+    public void numbyAttack(DamageType ...types) {
+        this.numbyAttack(new ArrayList<>(List.of(types)));
+    }
+
+    public void numbyAttack(List<DamageType> types) {
         float multiplier;
         float toughnessDamage;
         if (ultCounter > 0) {
@@ -120,7 +122,6 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             toughnessDamage = TOUGHNESS_DAMAGE_TWO_UNITS / 7;
         }
         types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
 
         AbstractEnemy target = null;
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
@@ -130,11 +131,17 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             }
         }
 
+        if (target == null) {
+            throw new IllegalStateException("No targets with Proof of Debt");
+        }
+
+        Attack attack = this.startAttack();
+
         for (int i = 0; i < 7; i++) {
-            getBattle().getHelper().hitEnemy(this, target, multiplier / 7, BattleHelpers.MultiplierStat.ATK, types, toughnessDamage);
+            attack.hitEnemy(target, multiplier/7, MultiplierStat.ATK, toughnessDamage, types);
         }
         if (ultCounter > 0) {
-            getBattle().getHelper().hitEnemy(this, target, 0.9f, BattleHelpers.MultiplierStat.ATK, types, toughnessDamage);
+            attack.hitEnemy(target, 0.9f, MultiplierStat.ATK, toughnessDamage, types);
             increaseEnergy(10, "from Enhanced Numby attack");
             ultCounter--;
             if (ultCounter <= 0) {
@@ -150,7 +157,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             increaseEnergy(60, TECHNIQUE_ENERGY_GAIN);
         }
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.execute();
     }
 
     public void useTechnique() {
@@ -202,7 +209,12 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public void onDeath() {
+            getBattle().getRandomEnemy().addPower(this);
+        }
+
+        @Override
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP) {
                     return 50;
@@ -212,7 +224,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             for (DamageType type : types) {
                 if (type == DamageType.FOLLOW_UP) {
                     Topaz.this.numby.AdvanceForward();
@@ -236,7 +248,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             lastsForever = true;
         }
 
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (enemy.hasWeakness(ElementType.FIRE)) {
                 return 15;
             }

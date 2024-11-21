@@ -1,6 +1,7 @@
 package art.ameliah.hsr.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -8,10 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RelicStats {
-
-    public enum Stats {
-        HP_FLAT, ATK_FLAT, DEF_FLAT, HP_PER, ATK_PER, DEF_PER, CRIT_RATE, CRIT_DAMAGE, EFFECT_HIT, EFFECT_RES, BREAK_EFFECT, SPEED, HEALING, ERR, ELEMENT_DAMAGE
-    }
 
     private final HashMap<Stats, Float> mainStatValues = new HashMap<>();
     private final HashMap<Stats, Float> subStatValues = new HashMap<>();
@@ -41,9 +38,51 @@ public class RelicStats {
         relicBonus.setStat(PowerStat.FLAT_SPEED, getTotalBonus(Stats.SPEED));
         relicBonus.setStat(PowerStat.HEALING, getTotalBonus(Stats.HEALING));
         relicBonus.setStat(PowerStat.ENERGY_REGEN, getTotalBonus(Stats.ERR));
-        relicBonus.setStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, getTotalBonus(Stats.ELEMENT_DAMAGE));
+        
+        // Assuming the ELEMENT_DMG is always correct for the char
+        Stats convStat = this.fromElementType(character.elementType);
+        relicBonus.setStat(fromRelicStat(convStat), getTotalBonus(Stats.ELEMENT_DAMAGE));
         relicBonus.name = "RelicStatsBonuses";
         character.addPower(relicBonus);
+    }
+
+    private Stats fromElementType(ElementType type) {
+        return switch (type) {
+            case FIRE -> Stats.FIRE_DAMAGE;
+            case ICE -> Stats.ICE_DAMAGE;
+            case WIND -> Stats.WIND_DAMAGE;
+            case LIGHTNING -> Stats.LIGHTNING_DAMAGE;
+            case PHYSICAL -> Stats.PHYSICAL_DAMAGE;
+            case QUANTUM -> Stats.QUANTUM_DAMAGE;
+            case IMAGINARY -> Stats.IMAGINARY_DAMAGE;
+        };
+    }
+
+    private PowerStat fromRelicStat(Stats stat) {
+        return switch (stat) {
+            case ERR -> PowerStat.ENERGY_REGEN;
+            case BREAK_EFFECT -> PowerStat.BREAK_EFFECT;
+            case SPEED -> PowerStat.FLAT_SPEED;
+            case HEALING -> PowerStat.HEALING;
+            case HP_PER -> PowerStat.HP_PERCENT;
+            case ATK_PER -> PowerStat.ATK_PERCENT;
+            case DEF_PER -> PowerStat.DEF_PERCENT;
+            case HP_FLAT -> PowerStat.FLAT_HP;
+            case ATK_FLAT -> PowerStat.FLAT_ATK;
+            case DEF_FLAT -> PowerStat.FLAT_DEF;
+            case CRIT_RATE -> PowerStat.CRIT_CHANCE;
+            case CRIT_DAMAGE -> PowerStat.CRIT_DAMAGE;
+            case EFFECT_HIT -> PowerStat.EFFECT_HIT;
+            case EFFECT_RES -> PowerStat.EFFECT_RES;
+            case ICE_DAMAGE -> PowerStat.ICE_DMG_BOOST;
+            case ELEMENT_DAMAGE -> throw new IllegalStateException("This shouldn't be happening?");
+            case PHYSICAL_DAMAGE -> PowerStat.PHYSICAL_DMG_BOOST;
+            case FIRE_DAMAGE -> PowerStat.FIRE_DMG_BOOST;
+            case LIGHTNING_DAMAGE -> PowerStat.LIGHTNING_DMG_BOOST;
+            case WIND_DAMAGE -> PowerStat.WIND_DMG_BOOST;
+            case QUANTUM_DAMAGE -> PowerStat.QUANTUM_DMG_BOOST;
+            case IMAGINARY_DAMAGE -> PowerStat.IMAGINARY_DMG_BOOST;
+        };
     }
 
     public RelicStats addMainStat(Stats stat) {

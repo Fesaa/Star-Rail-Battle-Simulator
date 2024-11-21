@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.drRatio;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -20,6 +21,7 @@ import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DrRatio extends AbstractCharacter<DrRatio> {
     private int numFUAs = 0;
@@ -44,61 +46,50 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
     }
 
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
         enemy.addPower(TempPower.createDebuff(PowerStat.EFFECT_RES, -10, 2, "RatioEffectResDebuff"));
         int debuffs = (int)enemy.powerList.stream().filter(p -> p.type == AbstractPower.PowerType.DEBUFF).count();
         for (int i = 0; i < debuffs; i++) {
-            addPower(new Summation());
+            this.addPower(new Summation());
         }
-        getBattle().getHelper().hitEnemy(this, enemy, 1.5f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
 
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(enemy, 1.5f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL)
+                .execute();
 
         // Assume he always gets the FUA from his Skill
         useFollowUp(enemy);
     }
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.0f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useFollowUp(AbstractEnemy enemy) {
+        if (enemy.isDead()) {
+            enemy = getBattle().getEnemyWithHighestHP();
+        }
+
         moveHistory.add(MoveType.FOLLOW_UP);
         numFUAs++;
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
         increaseEnergy(5, FUA_ENERGY_GAIN);
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        getBattle().getHelper().hitEnemy(this, enemy, 2.7f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(enemy, 2.7f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP)
+                .execute();
     }
 
     public void useUltimate() {
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(enemy, 2.4f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE)
+                .execute();
 
-        getBattle().getHelper().hitEnemy(this, enemy, 2.4f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_THREE_UNITs);
         enemy.addPower(new WisemanFolly());
-
-        getBattle().getHelper().PostAttackLogic(this, types);
     }
 
     public void onCombatStart() {
@@ -124,7 +115,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (character != DrRatio.this) {
                 if (numCharges > 0) {
                     numCharges--;
@@ -143,7 +134,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             int debuffs = Math.min(5, (int) enemy.powerList.stream().filter(p -> p.type == PowerType.DEBUFF).count());
             if (debuffs < 3) {
                 return 0;
@@ -159,12 +150,12 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return stacks * 2.5f;
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return stacks * 5;
         }
     }

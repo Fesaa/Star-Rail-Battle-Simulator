@@ -8,7 +8,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 4PC CD bonus is currently not working, need to implement a more complete weakness break for it
@@ -24,9 +24,7 @@ public class WastelandOfBanditryDesert extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == ElementType.IMAGINARY) {
-            this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Genius of Brilliant Stars Quantum bonus"));
-        }
+        this.owner.addPower(PermPower.create(PowerStat.IMAGINARY_DMG_BOOST, 10, "Genius of Brilliant Stars Quantum bonus"));
     }
 
     public static class WastelandOfBanditryDesert4PC extends PermPower {
@@ -35,7 +33,7 @@ public class WastelandOfBanditryDesert extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (enemy.powerList.stream().noneMatch(p -> p.type == PowerType.DEBUFF)) {
                 return 0;
             }
@@ -44,7 +42,7 @@ public class WastelandOfBanditryDesert extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             //if (enemy.powerList.stream().noneMatch(p -> p.name.equals(WeaknessBreak.IMPRISONED))) {
             //    return 0;
             //}

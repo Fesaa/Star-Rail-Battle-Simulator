@@ -1,5 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -7,10 +8,15 @@ import art.ameliah.hsr.powers.AbstractPower;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.function.Consumer;
 
 public interface IBattle {
+
+    Queue<Attack> attackQueue();
+    boolean isAttacking();
+    void setAttacking(boolean attacking);
 
     void setPlayerTeam(List<AbstractCharacter<?>> players);
     void setEnemyTeam(List<AbstractEnemy> enemies);
@@ -38,6 +44,9 @@ public interface IBattle {
     AbstractEnemy getMiddleEnemy();
     AbstractEnemy getEnemyWithHighestHP();
     AbstractEnemy getRandomEnemy();
+    int getRandomEnemyIdx();
+    void enemyCallback(int idx, Consumer<AbstractEnemy> callback);
+
     void removeEnemy(AbstractEnemy enemy);
     void addEnemy(AbstractEnemy enemy, float initialAA);
     default void addEnemy(AbstractEnemy enemy) {

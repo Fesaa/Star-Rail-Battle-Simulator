@@ -15,6 +15,7 @@ import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BattleHelpers implements BattleParticipant {
@@ -30,7 +31,7 @@ public class BattleHelpers implements BattleParticipant {
         return this.battle;
     }
 
-    public enum MultiplierStat {
+    private enum MultiplierStat {
         ATK, HP, DEF
     }
     
@@ -48,163 +49,6 @@ public class BattleHelpers implements BattleParticipant {
         resMultiConstituents.clear();
         damageVulnMultiConstituents.clear();
         critDmgMultiConstituents.clear();
-    }
-
-    private float calculateDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, ElementType damageElement) {
-        clearConstituents();
-        float statToUse;
-        if (stat == MultiplierStat.ATK) {
-            statToUse = source.getFinalAttack();
-        } else if (stat == MultiplierStat.HP) {
-            statToUse = source.getFinalHP();
-        } else {
-            statToUse = source.getFinalDefense();
-        }
-        float baseDamage = multiplier * statToUse;
-
-        float dmgMultiplier = 0;
-        if (damageElement == source.elementType) {
-            for (AbstractPower power : source.powerList) {
-                float sameBonus = power.getStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS);
-                float globalBonus = power.getStat(PowerStat.DAMAGE_BONUS);
-                dmgMultiplier += sameBonus;
-                dmgMultiplier += globalBonus;
-                if (sameBonus != 0) {
-                    damageBonusMultiConstituents.put(power.name, sameBonus);
-                }
-                if (globalBonus != 0) {
-                    damageBonusMultiConstituents.put(power.name, globalBonus);
-                }
-            }
-        } else {
-            for (AbstractPower power : source.powerList) {
-                float bonus = power.getStat(PowerStat.DAMAGE_BONUS);
-                dmgMultiplier += bonus;
-                if (bonus != 0) {
-                    damageBonusMultiConstituents.put(power.name, bonus);
-                }
-            }
-        }
-        for (AbstractPower power : source.powerList) {
-            float bonus = power.getConditionalDamageBonus(source, target, types);
-            dmgMultiplier += bonus;
-            if (bonus != 0) {
-                damageBonusMultiConstituents.put(power.name, bonus);
-            }
-        }
-        for (AbstractPower power : target.powerList) {
-            float bonus = power.receiveConditionalDamageBonus(source, target, types);
-            dmgMultiplier += bonus;
-            if (bonus != 0) {
-                damageBonusMultiConstituents.put(power.name, bonus);
-            }
-        }
-        float dmgMultiplierFloat = 1 + dmgMultiplier / 100;
-
-        float enemyDefPercent = 0;
-        for (AbstractPower power : target.powerList) {
-            float bonus = power.getStat(PowerStat.DEF_PERCENT);
-            float reduction = power.getStat(PowerStat.DEFENSE_REDUCTION);
-            enemyDefPercent += bonus;
-            enemyDefPercent -= reduction;
-            if (bonus != 0) {
-                defenseMultiConstituents.put(power.name, bonus);
-            }
-            if (reduction != 0) {
-                defenseMultiConstituents.put(power.name, -reduction);
-            }
-        }
-        for (AbstractPower power : source.powerList) {
-            float ignore = power.getConditionDefenseIgnore(source, target, types);
-            enemyDefPercent -= ignore;
-            if (ignore != 0) {
-                defenseMultiConstituents.put(power.name, -ignore);
-            }
-        }
-        if (enemyDefPercent < -100) {
-            enemyDefPercent = -100;
-        }
-        float defMultiplierFloat = (source.level + 20) / ((target.getLevel() + 20) * (1 + enemyDefPercent / 100) + (source.level + 20));
-
-        float resPen = 0;
-        for (AbstractPower power : source.powerList) {
-            float bonus = power.getStat(PowerStat.RES_PEN);
-            resPen += bonus;
-            if (bonus != 0) {
-                resMultiConstituents.put(power.name, bonus);
-            }
-        }
-        if (target.getRes(damageElement) != 0) {
-            resMultiConstituents.put("Enemy Res", (float)-target.getRes(damageElement));
-        }
-        float resMultiplier = 100 + (-target.getRes(damageElement) + resPen);
-        float resMultiplierFloat = resMultiplier / 100;
-
-        float damageTaken = 0;
-        for (AbstractPower power : target.powerList) {
-            float constBonus = power.getStat(PowerStat.DAMAGE_TAKEN);
-            float condBonus = power.getConditionalDamageTaken(source, target, types);
-            damageTaken += constBonus;
-            damageTaken += condBonus;
-            if (constBonus != 0) {
-                damageVulnMultiConstituents.put(power.name, constBonus);
-            }
-            if (condBonus != 0) {
-                damageVulnMultiConstituents.put(power.name, condBonus);
-            }
-        }
-        float damageTakenMultiplier = 1 + damageTaken / 100;
-
-        float toughnessMultiplier = 0.9f;
-        if (target.isWeaknessBroken()) {
-            toughnessMultiplier = 1.0f;
-        }
-
-        float critChance = source.getTotalCritChance();
-        for (AbstractPower power : source.powerList) {
-            critChance += power.getConditionalCritRate(source, target, types);
-        }
-        for (AbstractPower power : source.powerList) {
-            critChance = power.setFixedCritRate(source, target, types, critChance);
-        }
-
-        float critDamage = source.baseCritDamage;
-        for (AbstractPower power : source.powerList) {
-            float bonus = power.getStat(PowerStat.CRIT_DAMAGE);
-            critDamage += bonus;
-            if (bonus != 0) {
-                critDmgMultiConstituents.put(power.name, bonus);
-            }
-        }
-        for (AbstractPower power : source.powerList) {
-            float bonus = power.getConditionalCritDamage(source, target, types);
-            critDamage += bonus;
-            if (bonus != 0) {
-                critDmgMultiConstituents.put(power.name, bonus);
-            }
-        }
-        for (AbstractPower power : target.powerList) {
-            float bonus = power.receiveConditionalCritDamage(source, target, types);
-            critDamage += bonus;
-            if (bonus != 0) {
-                critDmgMultiConstituents.put(power.name, bonus);
-            }
-        }
-        for (AbstractPower power : source.powerList) {
-            float fixed = power.setFixedCritDmg(source, target, types, critDamage);
-            if (fixed != critDamage) {
-                critDmgMultiConstituents.clear();
-                critDmgMultiConstituents.put(power.name, fixed);
-            }
-            critDamage = fixed;
-        }
-        float expectedCritMultiplier = (100.0f + critDamage * critChance * 0.01f) / 100;
-        float critMultiplier = (100.0f + critDamage) / 100;
-
-        float calculatedDamage = baseDamage * dmgMultiplierFloat * defMultiplierFloat * resMultiplierFloat * damageTakenMultiplier * toughnessMultiplier * expectedCritMultiplier;
-        getBattle().addToLog(new CritHitResult(source, target, calculatedDamage, baseDamage, dmgMultiplierFloat, defMultiplierFloat, resMultiplierFloat, damageTakenMultiplier, toughnessMultiplier, critMultiplier, expectedCritMultiplier,
-                damageBonusMultiConstituents, defenseMultiConstituents, resMultiConstituents, damageVulnMultiConstituents, critDmgMultiConstituents));
-        return calculatedDamage;
     }
 
     private float calculateBreakDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, ElementType damageElement) {
@@ -253,57 +97,7 @@ public class BattleHelpers implements BattleParticipant {
         return multiplier * elementMultipler * 3767.5533f * maxToughnessMultiplier;
     }
 
-    private float calculateToughenssDamage(AbstractCharacter<?> character, float toughnssDamage) {
-        float weaknessBreakEff = character.getTotalWeaknessBreakEff();
-        return toughnssDamage * (1 + weaknessBreakEff / 100);
-    }
 
-    public void hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage, ElementType damageElement) {
-        source.emit(l -> l.onBeforeHitEnemy(source, target, types));
-        target.emit(l -> l.onBeforeHitEnemy(source, target, types));
-        float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, types, damageElement);
-
-        toughnessDamage = calculateToughenssDamage(source, toughnessDamage);
-        if (target.hasWeakness(damageElement) && toughnessDamage > 0) {
-            target.reduceToughness(toughnessDamage);
-        } else {
-            if (source instanceof SwordMarch) {
-                if (damageElement == source.elementType && ((SwordMarch) source).master != null && target.hasWeakness(((SwordMarch) source).master.elementType)) {
-                    target.reduceToughness(toughnessDamage);
-                }
-            }
-        }
-        getBattle().increaseTotalPlayerDmg(calculatedDamage);
-        getBattle().updateContribution(source, calculatedDamage);
-        attackDamageTotal += calculatedDamage;
-
-        enemiesHit.put(target, enemiesHit.getOrDefault(target, 0.0f) + calculatedDamage);
-    }
-
-    public void hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, ArrayList<DamageType> types, float toughnessDamage) {
-        hitEnemy(source, target, multiplier, stat, types, toughnessDamage, source.elementType);
-    }
-
-    public void PreAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
-        attackDamageTotal = 0;
-        enemiesHit.clear();
-        character.emit(l -> l.onBeforeUseAttack(types));
-    }
-
-    public void PostAttackLogic(AbstractCharacter<?> character, ArrayList<DamageType> types) {
-        Map<AbstractEnemy, Float> copy = new HashMap<>(enemiesHit);
-        int damageTotal = (int) attackDamageTotal;
-
-        getBattle().addToLog(new TotalDamage(character, types, damageTotal));
-
-        character.emit(l -> l.onAttack(character, copy.keySet(), types));
-        copy.forEach((enemy, dmg) -> {
-            enemy.emit(l -> l.onAttacked(character, enemy, types, 0, dmg));
-            getBattle().addToLog(new Attacked(character, enemy, dmg));
-        });
-
-        character.emit(l -> l.afterAttackFinish(character, copy.keySet(), types));
-    }
 
     public void attackCharacter(AbstractEnemy source, AbstractCharacter<?> target, int energyToGain, float dmg) {
         if (target instanceof Moze) {
@@ -311,24 +105,11 @@ public class BattleHelpers implements BattleParticipant {
                 return;
             }
         }
-        getBattle().addToLog(new Attacked(source, target, dmg));
+        getBattle().addToLog(new Attacked(source, target, dmg, List.of()));
         target.emit(l -> l.onAttacked(target, source, new ArrayList<>(), energyToGain, dmg));
     }
 
-    public void additionalDamageHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
-        float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, new ArrayList<>(), source.elementType);
-        getBattle().increaseTotalPlayerDmg(calculatedDamage);
-        getBattle().updateContribution(source, calculatedDamage);
-        attackDamageTotal += calculatedDamage;
-    }
-
-    public void tingyunSkillHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
-        float calculatedDamage = calculateDamageAgainstEnemy(source, target, multiplier, stat, new ArrayList<>(),  ElementType.LIGHTNING);
-        getBattle().increaseTotalPlayerDmg(calculatedDamage);
-        getBattle().updateContribution(source, calculatedDamage);
-        attackDamageTotal += calculatedDamage;
-    }
-    public void breakDamageHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier) {
+    private void breakDamageHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier) {
         float calculatedDamage = calculateBreakDamageAgainstEnemy(source, target, multiplier, source.elementType);
         getBattle().increaseTotalPlayerDmg(calculatedDamage);
         getBattle().updateContribution(source, calculatedDamage);

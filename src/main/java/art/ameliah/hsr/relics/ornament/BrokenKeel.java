@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class BrokenKeel extends AbstractRelicSetBonus {
     public BrokenKeel(AbstractCharacter<?> owner) {
@@ -29,7 +29,7 @@ public class BrokenKeel extends AbstractRelicSetBonus {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (BrokenKeel.this.owner.getTotalEffectRes() < 30) {
                 return 0;
             }

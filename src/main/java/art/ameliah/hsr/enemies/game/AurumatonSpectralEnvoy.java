@@ -11,9 +11,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This is the Aurumaton Spectral Envoy of MOC 11 Scalegorge Tidalflow
@@ -125,7 +123,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             character.removePower(this);
             character.addPower(new StrongReverberation());
             getBattle().DelayEntity(character, 70);

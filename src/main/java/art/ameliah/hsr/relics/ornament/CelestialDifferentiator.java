@@ -7,7 +7,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class CelestialDifferentiator extends AbstractRelicSetBonus {
@@ -36,7 +36,7 @@ public class CelestialDifferentiator extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
+        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
             this.owner.removePower(this);
         }
     }

@@ -1,10 +1,11 @@
 package art.ameliah.hsr.battleLogic;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public interface BattleEvents {
@@ -23,7 +24,7 @@ public interface BattleEvents {
      * @param energyFromAttacked The energy gained from being attacked
      * @param totalDmg           The total dmg dealt to the character
      */
-    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {}
+    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {}
 
     /**
      * Called when the enemy has their weakness broken
@@ -31,19 +32,18 @@ public interface BattleEvents {
     default void onWeaknessBreak() {}
 
     /**
-     * Called from getBattle().getHelper()#PreAttackLogic
-     * @param damageTypes The types of damage that will be dealt
+     * Called before dmg is calculated.
+     * Use this to apply buffs, debuffs, extra hits, etc. that need to happen in this attack
+     * Add an attack to queue if you need to start a new one.
+     * @param attack the attack
      */
-    default void onBeforeUseAttack(ArrayList<DamageType> damageTypes) {}
+    default void onAttack(Attack attack) {}
 
     /**
-     * Called before enemies have received the onAttacked event
-     * This hook is for after a character has attacked and dealt damage to the enemy. Most effects that need this sort of timing should use this hook.
-     * @param character The character that attacked
-     * @param enemiesHit The enemies that were hit
-     * @param types The types of damage dealt
+     * Called before being attacked
+     * @param attack the attack going to happen
      */
-    default void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
+    default void beforeAttacked(Attack attack) {}
 
     /**
      * Called before an enemy is hit by an attack
@@ -51,7 +51,7 @@ public interface BattleEvents {
      * @param enemy The enemy that is being attacked
      * @param damageTypes The types of damage that will be dealt
      */
-    default void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {}
+    default void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {}
 
     /**
      * Called after enemies have received the onAttack event
@@ -59,7 +59,7 @@ public interface BattleEvents {
      * @param enemiesHit The enemies that were hit
      * @param types The types of damage dealt
      */
-    default void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {}
+    default void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {}
 
     /**
      * Called before AbstractCharacter#takeTurn has been called.
@@ -100,4 +100,9 @@ public interface BattleEvents {
      * Called after a character uses an ultimate.
      */
     default void afterUseUltimate() {}
+
+    /**
+     * Called when the owner dies
+     */
+    default void onDeath() {}
 }

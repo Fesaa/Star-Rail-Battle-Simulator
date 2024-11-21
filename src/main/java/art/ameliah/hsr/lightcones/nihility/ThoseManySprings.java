@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.nihility;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -7,9 +8,6 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class ThoseManySprings extends AbstractLightcone {
 
@@ -23,14 +21,14 @@ public class ThoseManySprings extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (!types.contains(DamageType.BASIC)
-                && !types.contains(DamageType.SKILL)
-                && !types.contains(DamageType.ULTIMATE)) {
+    public void onAttack(Attack attack) {
+        if (!attack.getTypes().contains(DamageType.BASIC)
+                && !attack.getTypes().contains(DamageType.SKILL)
+                && !attack.getTypes().contains(DamageType.ULTIMATE)) {
             return;
         }
 
-        for (AbstractEnemy enemy : enemiesHit) {
+        for (AbstractEnemy enemy : attack.getTargets()) {
             if (enemy.hasPower(Unarmored.NAME)) {
                 enemy.removePower(Unarmored.NAME);
                 enemy.addPower(new Cornered());

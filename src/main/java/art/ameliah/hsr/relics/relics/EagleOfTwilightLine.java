@@ -17,9 +17,7 @@ public class EagleOfTwilightLine extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        if (this.owner.elementType == ElementType.WIND) {
-            this.owner.addPower(PermPower.create(PowerStat.SAME_ELEMENT_DAMAGE_BONUS, 10, "Eagle Of Twilight Line Wind bonus"));
-        }
+        this.owner.addPower(PermPower.create(PowerStat.WIND_DMG_BOOST, 10, "Eagle Of Twilight Line Wind bonus"));
     }
 
     @Override

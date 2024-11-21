@@ -1,14 +1,12 @@
 package art.ameliah.hsr.lightcones.harmony;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.ArrayList;
 
 
 public class FlowingNightglow extends AbstractLightcone {
@@ -48,7 +46,7 @@ public class FlowingNightglow extends AbstractLightcone {
             this.name = this.getClass().getSimpleName();
         }
         @Override
-        public void onBeforeUseAttack(ArrayList<DamageType> types) {
+        public void onAttack(Attack attack) {
             FlowingNightglow.this.owner.addPower(new FlowingNightglowERRPower());
         }
     }

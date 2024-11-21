@@ -7,7 +7,7 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class InTheNight extends AbstractLightcone {
 
@@ -27,7 +27,7 @@ public class InTheNight extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.SKILL) && !damageTypes.contains(DamageType.BASIC)) return 0;
             if (owner != character) return 0;
             if (character.getFinalSpeed() < 100) return 0;
@@ -36,7 +36,7 @@ public class InTheNight extends AbstractLightcone {
         }
 
         @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.ULTIMATE)) return 0;
             if (owner != character) return 0;
             if (character.getFinalSpeed() < 100) return 0;

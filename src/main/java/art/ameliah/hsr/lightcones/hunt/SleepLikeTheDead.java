@@ -1,16 +1,13 @@
 package art.ameliah.hsr.lightcones.hunt;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * No info on crit after hit, so always missing crit after cooldown is over
@@ -29,8 +26,8 @@ public class SleepLikeTheDead extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, ArrayList<DamageType> types) {
-        if (this.cooldown <= 0 && (types.contains(DamageType.SKILL) || types.contains(DamageType.BASIC))) {
+    public void onAttack(Attack attack) {
+        if (this.cooldown <= 0 && (attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.BASIC))) {
             AbstractPower critPower = TempPower.create(PowerStat.CRIT_CHANCE, 36, 1, "Sleep Like The Dead Crit Chance Boost");
             critPower.justApplied = true;
             this.owner.addPower(critPower);

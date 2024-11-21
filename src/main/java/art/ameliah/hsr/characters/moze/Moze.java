@@ -1,6 +1,8 @@
 package art.ameliah.hsr.characters.moze;
 
 import art.ameliah.hsr.battleLogic.BattleHelpers;
+import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -20,6 +22,7 @@ import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Moze extends AbstractCharacter<Moze> {
     public static final String NAME = "Moze";
@@ -53,73 +56,53 @@ public class Moze extends AbstractCharacter<Moze> {
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
     }
 
+    @Override
     public void useSkill() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.SKILL);
-        getBattle().getHelper().PreAttackLogic(this, types);
 
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
+        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
         preyPower.owner = enemy;
         enemy.addPower(preyPower);
-        getBattle().getHelper().hitEnemy(this, enemy, 1.65f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_TWO_UNITS);
         increaseCharge(MAX_CHARGE);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
-        getBattle().getActionValueMap().remove(this);
         isDeparted = true;
+
+        this.startAttack()
+                .hitEnemy(enemy, 1.65f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL)
+                .execute();
+        getBattle().getActionValueMap().remove(this);
     }
+
+    @Override
     public void useBasic() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.BASIC);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 1.1f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.ULTIMATE);
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
+        this.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 30, 2, "Moze Damage Bonus"));
+        this.startAttack()
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 2.92f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE, DamageType.FOLLOW_UP)
+                .execute();
 
-        addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 30, 2, "Moze Damage Bonus"));
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        getBattle().getHelper().hitEnemy(this, enemy, 2.92f, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_THREE_UNITs);
-
-        getBattle().getHelper().PostAttackLogic(this, types);
-
-        useFollowUp();
+        useFollowUp(getBattle().getEnemyWithHighestHP());
     }
 
-    public void useFollowUp() {
-        AbstractEnemy enemy = (AbstractEnemy) preyPower.owner;
+    public void useFollowUp(AbstractEnemy enemy) {
         moveHistory.add(MoveType.FOLLOW_UP);
         FUAs++;
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
         increaseEnergy(10, FUA_ENERGY_GAIN);
 
-        ArrayList<DamageType> types = new ArrayList<>();
-        types.add(DamageType.FOLLOW_UP);
-        getBattle().getHelper().PreAttackLogic(this, types);
-
         float totalMult = 2.01f;
         float initialHitsMult = totalMult * 0.08f;
         float finalHitMult = totalMult * 0.6f;
 
+        Attack attack = this.startAttack();
         for (int i = 0; i < 5; i++) {
-            getBattle().getHelper().hitEnemy(this, enemy, initialHitsMult, BattleHelpers.MultiplierStat.ATK, types, 0);
+            attack.hitEnemy(enemy, initialHitsMult, MultiplierStat.ATK, 0, DamageType.FOLLOW_UP);
         }
-        getBattle().getHelper().hitEnemy(this, enemy, finalHitMult, BattleHelpers.MultiplierStat.ATK, types, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-
-        if (chargeCount == 0) {
-            preyPower.owner.removePower(preyPower);
-        }
-
-        getBattle().getHelper().PostAttackLogic(this, types);
+        attack.hitEnemy(enemy, finalHitMult, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+        attack.execute();
 
         if (!skillPointRecovered) {
             getBattle().generateSkillPoint(this, 1);
@@ -152,8 +135,12 @@ public class Moze extends AbstractCharacter<Moze> {
             getBattle().addToLog(new GainCharge(this, amount, initalStack, chargeCount));
             if (chargeLost >= CHARGE_ATTACK_THRESHOLD) {
                 chargeLost -= CHARGE_ATTACK_THRESHOLD;
-                useFollowUp();
+                useFollowUp((AbstractEnemy) preyPower.owner);
             }
+        }
+
+        if (chargeCount == 0) {
+            preyPower.owner.removePower(preyPower);
         }
     }
 
@@ -199,12 +186,12 @@ public class Moze extends AbstractCharacter<Moze> {
             this.lastsForever = true;
         }
         @Override
-        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 40;
         }
 
         @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> damageTypes) {
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
                 if (type == DamageType.FOLLOW_UP) {
                     return 25;
@@ -214,16 +201,19 @@ public class Moze extends AbstractCharacter<Moze> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, ArrayList<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void beforeAttacked(Attack attack) {
+            AbstractEnemy enemy = (AbstractEnemy) this.owner;
+
             boolean trigger = true;
-            if (character instanceof Moze) {
-                if ((types.contains(DamageType.SKILL) || types.contains(DamageType.FOLLOW_UP))) {
+            if (attack.getSource() instanceof Moze) {
+                if ((attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.FOLLOW_UP))) {
                     trigger = false;
                 }
             }
             if (trigger) {
                 talentProcs++;
-                getBattle().getHelper().additionalDamageHitEnemy(Moze.this, enemy, 0.33f, BattleHelpers.MultiplierStat.ATK);
+
+                attack.hitEnemy(Moze.this, enemy, 0.33f, MultiplierStat.ATK);
                 increaseEnergy(2, TALENT_ENERGY_GAIN);
                 decreaseCharge(1);
             }

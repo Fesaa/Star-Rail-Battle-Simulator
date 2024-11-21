@@ -16,7 +16,7 @@ public class Numby extends AbstractSummon<Topaz> {
     public void takeTurn() {
         super.takeTurn();
         this.summoner.numbyAttacksMetrics++;
-        this.summoner.numbyAttack(new ArrayList<>());
+        this.summoner.numbyAttack();
     }
 
     public void AdvanceForward() {
