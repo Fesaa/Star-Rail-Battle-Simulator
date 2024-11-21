@@ -97,6 +97,7 @@ public class GuardianShadow extends AbstractEnemy {
         public TranquilBan(GuardianShadow guardian) {
             super(1, NAME);
 
+            this.type = PowerType.DEBUFF;
             this.guardian = guardian;
         }
 
@@ -113,6 +114,7 @@ public class GuardianShadow extends AbstractEnemy {
         private final GuardianShadow guardian;
         public DisarmBan(GuardianShadow guardian) {
             super(1, NAME);
+            this.type = PowerType.DEBUFF;
             this.guardian = guardian;
         }
 
@@ -127,6 +129,7 @@ public class GuardianShadow extends AbstractEnemy {
         private final GuardianShadow guardian;
         public SilentBan(GuardianShadow guardian) {
             super(1, NAME);
+            this.type = PowerType.DEBUFF;
             this.guardian = guardian;
         }
 

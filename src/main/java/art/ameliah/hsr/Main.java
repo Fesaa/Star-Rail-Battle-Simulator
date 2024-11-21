@@ -12,6 +12,7 @@ import art.ameliah.hsr.report.Report;
 import art.ameliah.hsr.teams.EnemyTeam;
 import art.ameliah.hsr.teams.PlayerTeam;
 import art.ameliah.hsr.teams.TopazTeams;
+import lombok.Getter;
 
 import static art.ameliah.hsr.teams.PlayerTeam.*;
 import static art.ameliah.hsr.teams.EnemyTeam.*;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -246,19 +246,15 @@ public class Main {
         List<Pair<String, ArrayList<AbstractCharacter<?>>>> teams = TestHelper.getStaticClassesExtendingA(PlayerTeam.class, PlayerTeam.class)
                 .stream()
                 .map(c -> new Pair<>(c.getSimpleName(), (ArrayList<AbstractCharacter<?>>) TestHelper.callMethodOnClasses(c, "getTeam")))
-                .sorted(Comparator.comparing(Pair::getKey))
-                .peek(p -> length.set(Math.max(length.get(), p.getKey().length()+3)))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Pair::key))
+                .peek(p -> length.set(Math.max(length.get(), p.key().length()+3)))
+                .toList();
 
         for (Pair<String, ArrayList<AbstractCharacter<?>>> p : teams) {
             IBattle battle = constructBattle(p);
-            StringBuilder Prefix = new StringBuilder();
-            Prefix.append(p.getKey()).append(":");
-            for (int i = p.getKey().length() + 1; i < length.get(); i++) {
-                Prefix.append(' ');
-            }
+            String Prefix = p.key() + ":" + " ".repeat(Math.max(0, length.get() - (p.key().length() + 1)));
 
-            battle.setPlayerTeam(p.getValue());
+            battle.setPlayerTeam(p.value());
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
             enemyTeam.add(new FireWindImgLightningWeakEnemy(0, 0));
             battle.setEnemyTeam(enemyTeam);
@@ -271,7 +267,7 @@ public class Main {
     private static IBattle constructBattle(Pair<String, ArrayList<AbstractCharacter<?>>> p) {
         PrintStream printStream;
         try {
-            printStream = new PrintStream(new FileOutputStream("export/" + p.getKey() + ".log"));
+            printStream = new PrintStream(new FileOutputStream("export/" + p.key() + ".log"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -285,22 +281,8 @@ public class Main {
         });
     }
 
-    private static class Pair<K, V> {
-        private final K key;
-        private final V value;
-
-        public Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
-        }
+    @Getter
+    private record Pair<K, V>(K key, V value) {
     }
 
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
+import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
 
@@ -24,6 +25,10 @@ public class Kafka extends AbstractEnemy {
         this.addWeakness(ElementType.PHYSICAL);
         this.addWeakness(ElementType.WIND);
         this.addWeakness(ElementType.IMAGINARY);
+        this.setRes(ElementType.LIGHTNING, 40);
+
+        this.addPower(PermPower.create(PowerStat.EFFECT_HIT, 33.6f, "Kafka EHR boost"));
+        this.addPower(PermPower.create(PowerStat.EFFECT_RES, 30, "Kafka ER boost"));
 
         this.sequence.addAction(this::MidnightTumult, this::SpiritWhisper);
         this.sequence.addAction(this::CaressingMoonlight, this::SilentAndSharpMockery);
@@ -103,6 +108,7 @@ public class Kafka extends AbstractEnemy {
 
         public Dominating() {
             super(3, NAME);
+            this.type = PowerType.DEBUFF;
         }
     }
 
@@ -132,6 +138,7 @@ public class Kafka extends AbstractEnemy {
         public Cruelty(Kafka kafka) {
             super(NAME);
             this.kafka = kafka;
+            this.type = PowerType.DEBUFF;
         }
 
         @Override

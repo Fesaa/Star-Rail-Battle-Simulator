@@ -7,7 +7,10 @@ import art.ameliah.hsr.battleLogic.wave.moc.MocTurbulence;
 import art.ameliah.hsr.battleLogic.wave.moc.MocWave;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.game.AurumatonSpectralEnvoy;
+import art.ameliah.hsr.enemies.game.EverwinterShadewalker;
+import art.ameliah.hsr.enemies.game.FrigidProwler;
 import art.ameliah.hsr.enemies.game.GuardianShadow;
+import art.ameliah.hsr.enemies.game.IceOutOfSpace;
 import art.ameliah.hsr.enemies.game.Kafka;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class ScalegorgeTidalflow11 extends Moc {
         public SecondHalf(List<AbstractCharacter<?>> players) {
             super(new ScalegorgeTidalflowTubalance());
             this.setPlayerTeam(players);
+            this.addWave(new MocWave(new IceOutOfSpace(), new FrigidProwler(), new EverwinterShadewalker()));
         }
     }
 

@@ -192,11 +192,13 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
     }
 
+    @Override
     public void onCombatStart() {
         this.fuaRng = new Random(getBattle().getSeed());
         getBattle().AdvanceEntity(this, 25);
     }
 
+    @Override
     public void useTechnique() {
         gainCharge(3);
         increaseEnergy(30, TECHNIQUE_ENERGY_GAIN);

@@ -1,5 +1,6 @@
-package art.ameliah.hsr.battleLogic.wave;
+package art.ameliah.hsr.battleLogic.wave.pf;
 
+import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import java.util.ArrayList;
 import java.util.Collections;

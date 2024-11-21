@@ -21,7 +21,13 @@ public class WaveTester {
         players.add(getPrebuiltRobinTT());
         players.add(getPrebuiltHuohuoTT());
 
-        Moc moc = new ScalegorgeTidalflow11(players, new ArrayList<>());
+        List<AbstractCharacter<?>> players2 = new ArrayList<>();
+        players2.add(getPrebuiltFeixiaoTT());
+        players2.add(getPrebuiltSwordMarchTT());
+        players2.add(getPrebuiltRobinTT());
+        players2.add(getPrebuiltHuohuoTT());
+
+        Moc moc = new ScalegorgeTidalflow11(players, players2);
         moc.setBattleLogger(WaveTesterLogger::new);
         moc.Start();
     }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: Allow this to be a LOT more complex, dunno how...
 public class EnemyActionSequence implements BattleParticipant, BattleEvents {
 
     private final AbstractEnemy enemy;
