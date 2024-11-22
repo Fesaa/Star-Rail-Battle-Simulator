@@ -30,7 +30,7 @@ public class EnemyActionSequence implements BattleParticipant, BattleEvents {
         List<Runnable> actions = this.actions.get(idx);
         actions.forEach(Runnable::run);
 
-        this.idx = (idx + 1) % actions.size();
+        this.idx = (idx + 1) % this.actions.size();
     }
 
     @Override
