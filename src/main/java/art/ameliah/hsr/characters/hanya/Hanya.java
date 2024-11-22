@@ -1,7 +1,7 @@
 package art.ameliah.hsr.characters.hanya;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.Hit;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.hanya.BurdenLog;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -16,7 +16,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Hanya extends AbstractCharacter<Hanya> {
@@ -87,11 +86,11 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            if (damageTypes.contains(DamageType.BASIC) || damageTypes.contains(DamageType.SKILL) || damageTypes.contains(DamageType.ULTIMATE)) {
+        public void onBeforeHitEnemy(Hit hit) {
+            if (hit.getTypes().contains(DamageType.BASIC) || hit.getTypes().contains(DamageType.SKILL) || hit.getTypes().contains(DamageType.ULTIMATE)) {
                 TempPower talentPower = TempPower.create(PowerStat.DAMAGE_BONUS, 43, 2, "Hanya Talent Power");
                 talentPower.justApplied = true;
-                character.addPower(talentPower);
+                hit.getSource().addPower(talentPower);
             }
         }
 

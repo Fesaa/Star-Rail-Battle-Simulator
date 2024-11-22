@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -47,11 +48,10 @@ public interface BattleEvents {
 
     /**
      * Called before an enemy is hit by an attack
-     * @param character The character that is attacking
-     * @param enemy The enemy that is being attacked
-     * @param damageTypes The types of damage that will be dealt
+     *
+     * @param hit the hit going to happen
      */
-    default void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {}
+    default void onBeforeHitEnemy(Hit hit) {}
 
     /**
      * Called after enemies have received the onAttack event

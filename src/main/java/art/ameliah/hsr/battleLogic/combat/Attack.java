@@ -52,6 +52,9 @@ public class Attack implements BattleParticipant {
         Map<AbstractEnemy, Float> dmgMap = new HashMap<>();
         for (IHit hitHolder : this.hits) {
             hitHolder.getHits().forEach(hit -> {
+                hit.getSource().emit(l -> l.onBeforeHitEnemy(hit));
+                hit.getTarget().emit(l -> l.onBeforeHitEnemy(hit));
+
                 float dmg = hit.finalDmg();
                 float toughnessReduce = hit.finalToughnessReduction();
 

@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.hunt;
 
+import art.ameliah.hsr.battleLogic.combat.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -17,11 +18,11 @@ public class Swordplay extends AbstractLightcone {
         super(953, 476, 331, owner);
     }
 
-    public void onBeforeHitEnemy(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types) {
+    public void onBeforeHitEnemy(Hit hit) {
         AbstractPower swordPlayDamagePower = new SwordplayDamagePower();
-        if (target != enemy) {
+        if (this.target != hit.getTarget()) {
             owner.removePower(swordPlayDamagePower.name);
-            target = enemy;
+            this.target = hit.getTarget();
         }
         owner.addPower(swordPlayDamagePower);
     }
