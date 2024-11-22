@@ -58,12 +58,15 @@ public class Attack implements BattleParticipant {
                 float dmg = hit.finalDmg();
                 float toughnessReduce = hit.finalToughnessReduction();
 
-                hit.getTarget().reduceToughness(toughnessReduce);
+                getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
+                if (toughnessReduce > 0) {
+                    hit.getTarget().reduceToughness(toughnessReduce);
+                }
+
                 dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
 
                 getBattle().increaseTotalPlayerDmg(dmg);
                 getBattle().updateContribution(hit.getSource(), dmg);
-                getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
             });
         }
 
