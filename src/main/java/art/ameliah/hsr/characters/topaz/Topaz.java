@@ -144,20 +144,20 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             attack.hitEnemy(target, 0.9f, MultiplierStat.ATK, toughnessDamage, types);
             increaseEnergy(10, "from Enhanced Numby attack");
             ultCounter--;
-            if (ultCounter <= 0) {
-                if (types.contains(DamageType.SKILL)) {
-                    numby.AdvanceForward(); //manually advance numby when topaz skills with last charge of ult
-                }
-                removePower(stonksPower);
+        }
+        attack.execute();
+
+        if (ultCounter <= 0) {
+            if (types.contains(DamageType.SKILL)) {
+                numby.AdvanceForward(); //manually advance numby when topaz skills with last charge of ult
             }
+            removePower(stonksPower);
         }
 
         if (techniqueActive) {
             techniqueActive = false;
             increaseEnergy(60, TECHNIQUE_ENERGY_GAIN);
         }
-
-        attack.execute();
     }
 
     public void useTechnique() {
