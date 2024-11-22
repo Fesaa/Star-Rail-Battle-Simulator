@@ -55,7 +55,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
             enemy.addPower(atkDebuff);
             isEnhanced = false;
         } else {
-            attack.hitEnemy(enemy, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT*3, DamageType.BASIC);
+            attack.hitEnemy(enemy, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
         }
         attack.execute();
     }
