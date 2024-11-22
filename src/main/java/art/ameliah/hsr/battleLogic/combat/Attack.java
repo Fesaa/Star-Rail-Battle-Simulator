@@ -1,6 +1,5 @@
 package art.ameliah.hsr.battleLogic.combat;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
@@ -17,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class Attack implements BattleParticipant {
 
@@ -26,7 +26,7 @@ public class Attack implements BattleParticipant {
     private final Set<DamageType> types;
     @Getter
     private final Set<AbstractEnemy> targets;
-    private final List<Hit> hits = new ArrayList<>();
+    private final List<IHit> hits = new ArrayList<>();
 
     private boolean hasExecuted = false;
 
@@ -47,25 +47,26 @@ public class Attack implements BattleParticipant {
         this.source.emit(l -> l.onAttack(this));
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(this)));
 
+        // TODO: Move dmg logic until this loop
+        // In AbstractEnemy, handle dying after an attack?
         Map<AbstractEnemy, Float> dmgMap = new HashMap<>();
-        Map<AbstractEnemy, Float> toughnessMap = new HashMap<>();
-        for (Hit hit : this.hits) {
-            float dmg = hit.finalDmg();
-            float toughnessReduce = hit.finalToughnessReduction();
+        for (IHit hitHolder : this.hits) {
+            hitHolder.getHits().forEach(hit -> {
+                float dmg = hit.finalDmg();
+                float toughnessReduce = hit.finalToughnessReduction();
 
-            dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
-            toughnessMap.put(hit.getTarget(), toughnessMap.getOrDefault(hit.getTarget(), 0.0f) + toughnessReduce);
+                hit.getTarget().reduceToughness(toughnessReduce);
+                dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
 
-            getBattle().increaseTotalPlayerDmg(dmg);
-            getBattle().updateContribution(hit.getSource(), dmg);
-            getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
+                getBattle().increaseTotalPlayerDmg(dmg);
+                getBattle().updateContribution(hit.getSource(), dmg);
+                getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
+            });
         }
 
         for (AbstractEnemy target : this.targets) {
             float dmg = dmgMap.get(target);
-            float toughness = toughnessMap.get(target);
 
-            target.reduceToughness(toughness);
             target.emit(l -> l.onAttacked(this.source, target, this.types.stream().toList(), 0, dmg));
             getBattle().addToLog(new Attacked(this.source, target, dmg, this.types.stream().toList()));
         }
@@ -81,6 +82,19 @@ public class Attack implements BattleParticipant {
             }
             nextAttack.execute();
         }
+    }
+
+    /**
+     * Attacks are not executed when hitting. If the logic of hitting the enemy depends on its state
+     * You'll want to use this function, and use the callback to access the logic
+     * @param target The target
+     * @param logic Lambda function,
+     * @return the attack being constructed
+     */
+    public Attack hitEnemy(AbstractEnemy target, Consumer<DelayedHit> logic) {
+        this.targets.add(target);
+        this.hits.add(new DelayedHit(this.source, target, this.types, logic));
+        return this;
     }
 
     public Attack hitEnemy(AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, List<DamageType> types) {

@@ -145,12 +145,14 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
         float totalMult = 0.9f;
         for (int i = 0; i < numHits; i++) {
-            if (enemy.isWeaknessBroken()) {
-                attack.hitEnemy(enemy, totalMult * 0.1f, MultiplierStat.ATK, 0, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-                attack.hitEnemy(enemy, totalMult * 0.9f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-            } else {
-                attack.hitEnemy(enemy, totalMult, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-            }
+            attack.hitEnemy(enemy, (dh) -> {
+                if (enemy.isWeaknessBroken()) {
+                    dh.hitEnemy(totalMult * 0.1f, MultiplierStat.ATK, 0, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
+                    dh.hitEnemy(totalMult * 0.9f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
+                } else {
+                    dh.hitEnemy(totalMult, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
+                }
+            });
         }
 
         attack.hitEnemy(enemy, 1.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);

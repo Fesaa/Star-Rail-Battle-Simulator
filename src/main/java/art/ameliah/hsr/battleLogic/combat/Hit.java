@@ -1,12 +1,10 @@
 package art.ameliah.hsr.battleLogic.combat;
 
-import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
-import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PowerStat;
 import lombok.Getter;
@@ -15,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class Hit implements BattleParticipant {
+public class Hit implements BattleParticipant,IHit {
 
     @Getter
     private final AbstractCharacter<?> source;
@@ -73,7 +71,7 @@ public class Hit implements BattleParticipant {
         float allTypeVulnerability = 0;
         //float dotVulnerability = 0; // TODO: Add dot
 
-        for (var power : this.source.powerList) {
+        for (var power : this.target.powerList) {
             allTypeVulnerability += power.getStat(PowerStat.DAMAGE_TAKEN);
             allTypeVulnerability += power.getConditionalDamageTaken(this.source, this.target, types);
         }
@@ -175,5 +173,10 @@ public class Hit implements BattleParticipant {
     @Override
     public IBattle getBattle() {
         return this.source.getBattle();
+    }
+
+    @Override
+    public List<Hit> getHits() {
+        return List.of(this);
     }
 }
