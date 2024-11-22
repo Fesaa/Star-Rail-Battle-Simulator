@@ -27,6 +27,7 @@ public class Attack implements BattleParticipant {
     @Getter
     private final Set<AbstractEnemy> targets;
     private final List<IHit> hits = new ArrayList<>();
+    private final Set<Runnable> afterAttacks = new HashSet<>();
 
     private boolean hasExecuted = false;
 
@@ -79,6 +80,8 @@ public class Attack implements BattleParticipant {
 
         this.source.emit(l -> l.afterAttackFinish(this.source, this.targets, this.types.stream().toList()));
         this.hasExecuted = true;
+
+        this.afterAttacks.forEach(Runnable::run);
 
         getBattle().setAttacking(false);
         if (!getBattle().attackQueue().isEmpty()) {
@@ -194,6 +197,13 @@ public class Attack implements BattleParticipant {
             this.hitEnemy(source, target, multiplier, stat);
         }
         return this;
+    }
+
+    public void addAfterAttack(Runnable runnable) {
+        if (this.hasExecuted) {
+            throw new IllegalStateException("Attack has already run");
+        }
+        this.afterAttacks.add(runnable);
     }
 
     @Override

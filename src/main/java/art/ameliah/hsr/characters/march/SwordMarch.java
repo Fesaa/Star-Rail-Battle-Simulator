@@ -150,6 +150,9 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             attack.hitEnemy(enemy, 0.88f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.BASIC);
             this.masterEffect(attack, enemy);
         }
+        attack.addAfterAttack(() -> {
+            master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2,"Enhanced Basic Master Buff"));
+        });
         attack.execute();
 
         if (hasUltEnhancement) {
@@ -158,8 +161,6 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
         removePower(ebaDamageBonus);
         isEnhanced = false;
-
-        master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2,"Enhanced Basic Master Buff"));
     }
 
     public void useFollowUp(AbstractEnemy enemy) {
