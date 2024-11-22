@@ -100,6 +100,7 @@ public class Kafka extends AbstractEnemy {
         }
 
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Spirit Whisper"));
+        getBattle().AdvanceEntity(target, 100);
     }
 
     // Not actually implemented
