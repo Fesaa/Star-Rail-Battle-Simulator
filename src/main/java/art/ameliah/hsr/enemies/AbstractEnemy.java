@@ -3,6 +3,7 @@ package art.ameliah.hsr.enemies;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ForcedAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ReduceToughness;
@@ -288,6 +289,10 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     public String getMetrics() {
         return String.format("Metrics for %s with %,f speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
+    }
+
+    public EnemyAttack startAttack() {
+        return new EnemyAttack(this);
     }
 
     /**

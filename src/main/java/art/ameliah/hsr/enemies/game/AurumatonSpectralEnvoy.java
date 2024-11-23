@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game;
 
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -55,13 +56,13 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
 
     private void Adjudicate() {
         AbstractCharacter<?> target = this.getRandomTarget();
-        getBattle().getHelper().attackCharacter(this, target, 10, 976);
+        this.startAttack().hit(target, 10, 976).execute();
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Adjudicate"));
     }
 
     private void Subdue() {
         AbstractCharacter<?> target = this.getRandomTarget();
-        getBattle().getHelper().attackCharacter(this, target, 10, 1171);
+        this.startAttack().hit(target, 10, 1171).execute();
 
         if (getBattle().getEnemyEHRRng().nextDouble() * 100 > SubdueProc) {
             return;
@@ -72,8 +73,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     private void RevertYinAndYang() {
-        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Revert Yin and Yang"));
-        getBattle().getPlayers().forEach(p -> getBattle().getHelper().attackCharacter(this, p, 10, 976));
+        this.startAttack().hit(getBattle().getPlayers(), 10, 976).execute();
 
         long notReverberated = getBattle().getPlayers()
                 .stream()
@@ -91,15 +91,19 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         if (this.successfulHit(target, 35)) {
             target.addPower(new Reverberation());
         }
+        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Revert Yin and Yang"));
     }
 
     private void HeavensFall(AbstractCharacter<?> target) {
-        getBattle().getHelper().attackCharacter(this, target, 20, 976);
+        EnemyAttack attack = this.startAttack();
+        attack.hit(target, 20, 976);
 
         if (target.hasPower(StrongReverberation.NAME)) {
-            getBattle().getHelper().attackCharacter(this, target, 0, 976);
+            attack.hit(target, 0, 976);
             target.removePower(StrongReverberation.NAME);
         }
+
+        attack.execute();
 
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Heavens Fall"));
     }

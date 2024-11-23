@@ -1,6 +1,7 @@
 package art.ameliah.hsr.enemies.game;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -14,6 +15,7 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
 
+import java.awt.event.KeyAdapter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -56,7 +58,7 @@ public class Kafka extends AbstractEnemy {
 
     private void MidnightTumult() {
         AbstractCharacter<?> target = this.getRandomTarget();
-        getBattle().getHelper().attackCharacter(this, target, 10, 813);
+        this.startAttack().hit(target, 10, 813).execute();
         target.addPower(new EnemyShock(this, 244, 3, 1));
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Midnight Tumult"));
     }
@@ -64,32 +66,33 @@ public class Kafka extends AbstractEnemy {
     private void CaressingMoonlight() {
         int idx = this.getRandomTargetPosition();
 
+        EnemyAttack attack = this.startAttack();
+
         AtomicBoolean inflictShock = new AtomicBoolean(false);
         getBattle().characterCallback(idx, c -> {
-            getBattle().getHelper().attackCharacter(this, c, 10, 976);
+            attack.hit(c, 10, 976);
             inflictShock.set(c.hasPower(EnemyShock.NAME));
         });
         getBattle().characterCallback(idx-1, c -> {
-            getBattle().getHelper().attackCharacter(this, c, 10, 651); // Not sure about energy
+            attack.hit(c, 10, 651); // Not sure about energy
             if (inflictShock.get()) {
                 c.addPower(new EnemyShock(this, 244, 3, 1));
             }
         });
         getBattle().characterCallback(idx+1, c -> {
-            getBattle().getHelper().attackCharacter(this, c, 10, 651); // Not sure about energy
+            attack.hit(c, 10, 651); // Not sure about energy
             if (inflictShock.get()) {
                 c.addPower(new EnemyShock(this, 244, 3, 1));
             }
         });
 
+        attack.execute();
+
         getBattle().addToLog(new EnemyAction(this, getBattle().getCharacter(idx), EnemyAttackType.BLAST, "Caressing Moonlight"));
     }
 
     private void SilentAndSharpMockery() {
-        getBattle().getPlayers().forEach(p -> {
-            getBattle().getHelper().attackCharacter(this, p, 15, 813); // Not sure about energy
-        });
-
+        this.startAttack().hit(getBattle().getPlayers(), 15, 813).execute();
         getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Silent and Sharp Mockery"));
     }
 
@@ -128,7 +131,7 @@ public class Kafka extends AbstractEnemy {
         }
 
         EnemyShock enemyShock = (EnemyShock)shock;
-        getBattle().getHelper().attackCharacter(Kafka.this, attack.getSource(), 0, enemyShock.getDmg());
+        Kafka.this.startAttack().hit(attack.getSource(), 0, enemyShock.getDmg()).execute();
         }
     }
 
@@ -150,7 +153,7 @@ public class Kafka extends AbstractEnemy {
 
 
             this.kafka.cooldown = true;
-            getBattle().getHelper().attackCharacter(this.kafka, character, 10, 325);
+            this.kafka.startAttack().hit(character, 10, 325).execute();
         }
     }
 

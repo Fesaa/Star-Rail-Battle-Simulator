@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Attack implements BattleParticipant {
+public class Attack implements BattleParticipant, IAttack {
 
     @Getter
     private final AbstractCharacter<?> source;
@@ -39,13 +39,8 @@ public class Attack implements BattleParticipant {
         this.targets = new HashSet<>();
     }
 
-    public void execute() {
-        this.execute(false);
-    }
-
     public void execute(boolean forceFirst) {
         if (getBattle().isAttacking()) {
-
             if (forceFirst) {
                 getBattle().attackQueue().offerFirst(this);
             } else {
@@ -101,7 +96,7 @@ public class Attack implements BattleParticipant {
         getBattle().addToLog(new AttackEnd(this));
         getBattle().setAttacking(false);
         if (!getBattle().attackQueue().isEmpty()) {
-            Attack nextAttack = getBattle().attackQueue().poll();
+            IAttack nextAttack = getBattle().attackQueue().poll();
             if (nextAttack == null) {
                 throw new IllegalStateException("A null attack was added to queue");
             }

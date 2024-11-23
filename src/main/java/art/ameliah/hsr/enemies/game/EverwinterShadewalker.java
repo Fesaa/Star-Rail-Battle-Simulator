@@ -27,7 +27,7 @@ public class EverwinterShadewalker extends AbstractEnemy {
     @Override
     protected void act() {
         AbstractCharacter<?> target = this.getRandomTarget();
-        getBattle().getHelper().attackCharacter(this, target, 15, 976);
+        this.startAttack().hit(target, 15, 976).execute();
         getBattle().DelayEntity(target, 50);
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Frost Crush"));
     }

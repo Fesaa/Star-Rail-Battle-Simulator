@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.IAttack;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.LogSupplier;
 import art.ameliah.hsr.battleLogic.log.Loggable;
@@ -34,7 +35,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -43,7 +43,7 @@ public class Battle implements IBattle {
 
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
-    protected Deque<Attack> queue = new LinkedList<>();
+    protected Deque<IAttack> queue = new LinkedList<>();
     protected boolean activeAttack = false;
 
     private final BattleHelpers battleHelpers;
@@ -98,7 +98,7 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public Deque<Attack> attackQueue() {
+    public Deque<IAttack> attackQueue() {
         return this.queue;
     }
 

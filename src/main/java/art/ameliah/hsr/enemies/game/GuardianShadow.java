@@ -1,6 +1,7 @@
 package art.ameliah.hsr.enemies.game;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -48,7 +49,7 @@ public class GuardianShadow extends AbstractEnemy {
 
     private void LightningRecollection() {
         AbstractCharacter<?> target = this.getRandomTarget();
-        getBattle().getHelper().attackCharacter(this, target, 10, 976);
+        this.startAttack().hit(target, 10, 976).execute();
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Lightning Recollection"));
     }
 
@@ -56,9 +57,13 @@ public class GuardianShadow extends AbstractEnemy {
         int idx = this.getRandomTargetPosition();
         AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
 
-        getBattle().getHelper().attackCharacter(this, target, 10, 651);
-        getBattle().characterCallback(idx-1, c -> getBattle().getHelper().attackCharacter(this, c, 5, 488));
-        getBattle().characterCallback(idx+1, c -> getBattle().getHelper().attackCharacter(this, c, 5, 488));
+        EnemyAttack attack = this.startAttack();
+
+        attack.hit(target, 10, 976);
+        getBattle().characterCallback(idx-1, c -> attack.hit(c, 5, 488));
+        getBattle().characterCallback(idx+1, c -> attack.hit(c, 5, 488));
+
+        attack.execute();
 
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
     }
@@ -70,20 +75,24 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void InevitablePunishment(AbstractCharacter<?> target) {
-        getBattle().getHelper().attackCharacter(this, target, 10, 1139);
+        this.startAttack().hit(target, 10, 1139).execute();
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Inevitable Punishment"));
     }
 
     private void ThunderstormCondemnation() {
+        EnemyAttack attack = this.startAttack();
         for (int i = 0; i < 8; i++) {
             AbstractCharacter<?> target = this.getRandomTarget();
-            getBattle().getHelper().attackCharacter(this, target, 5, 325);
-            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
+            attack.hit(target, 10, 325);
+            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE)); // TODO: Decide if this is the correct type
 
             if (this.successfulHit(target, 50)) {
                 target.addPower(new EnemyShock(this, 162, 2, 1));
             }
         }
+
+        attack.execute();
+
     }
 
     public static class TranquilBan extends TempPower {

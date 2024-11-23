@@ -23,6 +23,8 @@ public class EnemyShock extends TempPower {
 
     @Override
     public void onTurnStart() {
-        getBattle().getHelper().attackCharacter(this.source, (AbstractCharacter<?>) this.owner, 0, this.dmg);
+        this.source.startAttack()
+                .hit((AbstractCharacter<?>) this.owner, this.dmg)
+                .execute();
     }
 }

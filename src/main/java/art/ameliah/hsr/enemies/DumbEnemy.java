@@ -2,6 +2,7 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
@@ -28,9 +29,10 @@ public class DumbEnemy extends AbstractEnemy {
         if (attackType == EnemyAttackType.AOE) {
             numAoEMetric++;
             getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
-            for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-                getBattle().getHelper().attackCharacter(this, character, 10, dmgToDeal);
-            }
+
+            this.startAttack()
+                    .hit(getBattle().getPlayers(), 10, dmgToDeal)
+                    .execute();
             return;
         }
 
@@ -40,17 +42,18 @@ public class DumbEnemy extends AbstractEnemy {
         if (attackType == EnemyAttackType.SINGLE) {
             numSingleTargetMetric++;
             getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
-            getBattle().getHelper().attackCharacter(this, target, 10, dmgToDeal);
+            this.startAttack()
+                    .hit(target, 10, dmgToDeal)
+                    .execute();
         } else {
             numBlastMetric++;
             getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
-            getBattle().getHelper().attackCharacter(this, target, 10, dmgToDeal);
-            if (targetPos + 1 < getBattle().getPlayers().size()) {
-                getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(targetPos + 1), 5, dmgToDeal);
-            }
-            if (targetPos - 1 >= 0) {
-                getBattle().getHelper().attackCharacter(this, getBattle().getPlayers().get(targetPos - 1), 5,dmgToDeal );
-            }
+
+            EnemyAttack attack = this.startAttack();
+            attack.hit(target, 10, dmgToDeal);
+            getBattle().characterCallback(targetPos+1, t -> attack.hit(t, 10, dmgToDeal));
+            getBattle().characterCallback(targetPos-1, t -> attack.hit(t, 10, dmgToDeal));
+            attack.execute();
         }
     }
 

@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.IAttack;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public interface IBattle {
 
-    Deque<Attack> attackQueue();
+    Deque<IAttack> attackQueue();
     boolean isAttacking();
     void setAttacking(boolean attacking);
 

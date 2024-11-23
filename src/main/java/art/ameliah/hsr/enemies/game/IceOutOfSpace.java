@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game;
 
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -40,7 +41,8 @@ public class IceOutOfSpace extends AbstractEnemy {
 
     private void ChillingLament() {
         AbstractCharacter<?> target = this.getRandomTarget();
-        getBattle().getHelper().attackCharacter(this, target, 10, 813);
+        EnemyAttack attack = this.startAttack();
+        attack.hit(target, 10, 813);
 
         // Guessing it works like this, but not certain
         if (this.freezingPointState && this.successfulHit(target, 60)) {
@@ -48,9 +50,10 @@ public class IceOutOfSpace extends AbstractEnemy {
         }
 
         if (this.freezingPointState && target.hasPower(EnemyFrozen.NAME)) {
-            getBattle().getHelper().attackCharacter(this, target, 0, 325);
+            attack.hit(target, 0, 325);
         }
 
+        attack.execute();
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Chilling Lament"));
     }
 
@@ -60,7 +63,7 @@ public class IceOutOfSpace extends AbstractEnemy {
     }
 
     private void EverwinterRain() {
-        getBattle().getPlayers().forEach(p -> getBattle().getHelper().attackCharacter(this, p, 15, 651));
+        this.startAttack().hit(getBattle().getPlayers(), 15, 651).execute();
 
         getBattle().getPlayers()
                 .stream()

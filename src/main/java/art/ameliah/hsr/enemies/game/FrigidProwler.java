@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game;
 
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -59,7 +60,7 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     private void IceWheelFist(AbstractCharacter<?> target) {
-        getBattle().getHelper().attackCharacter(this, target, 10, 976);
+        this.startAttack().hit(target, 10, 976).execute();
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Ice Wheel Fist"));
     }
 
@@ -72,12 +73,14 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     private void FrozenStorm() {
+        EnemyAttack attack = this.startAttack();
         getBattle().getPlayers().forEach(p -> {
-            getBattle().getHelper().attackCharacter(this, p, 5, 325);
+            attack.hit(p, 5, 325);
             if (this.successfulHit(p, 100)) {
                 p.addPower(new DeepFreeze());
             }
         });
+        attack.execute();
         getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Frozen Storm"));
     }
 
