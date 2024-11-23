@@ -49,13 +49,6 @@ public class EnemyAttack implements IAttack, BattleParticipant {
 
         this.hasExecuted = true;
         getBattle().setAttacking(false);
-        if (!getBattle().attackQueue().isEmpty()) {
-            IAttack nextAttack = getBattle().attackQueue().poll();
-            if (nextAttack == null) {
-                throw new IllegalStateException("A null attack was added to queue");
-            }
-            nextAttack.execute();
-        }
     }
 
     public EnemyAttack hit(Collection<AbstractCharacter<?>> targets, int energy, float dmg) {

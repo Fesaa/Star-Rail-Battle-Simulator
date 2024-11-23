@@ -396,6 +396,11 @@ public class Battle implements IBattle {
         currentUnit.takeTurn();
         currentUnit.emit(BattleEvents::onEndTurn);
 
+        while (!this.queue.isEmpty()) {
+            IAttack attack = this.queue.poll();
+            attack.execute();
+        }
+
         if (yunli != null && yunli.isParrying) {
             yunli.useSlash(getRandomEnemy());
         }

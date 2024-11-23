@@ -104,13 +104,6 @@ public class Attack implements BattleParticipant, IAttack {
 
         getBattle().addToLog(new AttackEnd(this));
         getBattle().setAttacking(false);
-        if (!getBattle().attackQueue().isEmpty()) {
-            IAttack nextAttack = getBattle().attackQueue().poll();
-            if (nextAttack == null) {
-                throw new IllegalStateException("A null attack was added to queue");
-            }
-            nextAttack.execute();
-        }
     }
 
     /**
