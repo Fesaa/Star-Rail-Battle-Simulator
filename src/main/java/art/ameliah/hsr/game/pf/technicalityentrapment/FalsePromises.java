@@ -13,7 +13,7 @@ import java.util.List;
 public class FalsePromises implements PureFictionBuff {
     @Override
     public void applyGritMechanic(PfBattle battle) {
-        battle.getPlayers().forEach(player -> player.addPower(new PermPower() {
+        battle.getPlayers().forEach(player -> player.addPower(new PermPower("False Promises grit mechanic") {
             @Override
             public void afterAttackFinish(Attack attack) {
                 if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {

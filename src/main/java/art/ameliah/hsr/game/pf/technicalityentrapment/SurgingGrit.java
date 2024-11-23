@@ -25,6 +25,10 @@ public class SurgingGrit implements ISurgingGrit {
     public static class SurgingGritPower extends PermPower {
         public static String NAME = "Surging Grit Power";
 
+        public SurgingGritPower() {
+            super(NAME);
+        }
+
         @Override
         public void beforeAttacked(Attack attack) {
             if(!attack.getTypes().contains(DamageType.SKILL)) {

@@ -42,6 +42,7 @@ public class EnemyAttack implements IAttack, BattleParticipant {
                 }
             }
 
+            // TODO: Deal player dmg
             getBattle().addToLog(new Attacked(source, hit.target, hit.dmg, List.of()));
             hit.target.emit(l -> l.afterAttacked(hit.target, source, new ArrayList<>(), hit.energy, hit.dmg));
         }
@@ -72,7 +73,18 @@ public class EnemyAttack implements IAttack, BattleParticipant {
         return this.hit(target, 0, dmg);
     }
 
+    public EnemyAttack hit(AbstractCharacter<?> target, int energyToGain) {
+        return this.hit(target, energyToGain, this.source.attackDmg());
+    }
+
+    public EnemyAttack hit(AbstractCharacter<?> target) {
+        return this.hit(target, 0, this.source.attackDmg());
+    }
+
     public EnemyAttack hit(AbstractCharacter<?> target, int energyToGain, float dmg) {
+        if (this.hasExecuted) {
+            throw new IllegalStateException("Cannot add hits after executing");
+        }
         this.hits.add(new EnemyHit(target, energyToGain, dmg));
         return this;
     }

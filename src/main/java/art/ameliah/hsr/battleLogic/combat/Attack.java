@@ -78,7 +78,7 @@ public class Attack implements BattleParticipant, IAttack {
                     hit.getTarget().reduceToughness(toughnessReduce);
                 }
                 if (dmg > 0) {
-                    hit.getTarget().dealDmg(dmg);
+                    hit.getTarget().dealDmg(hit);
                 }
 
                 dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);

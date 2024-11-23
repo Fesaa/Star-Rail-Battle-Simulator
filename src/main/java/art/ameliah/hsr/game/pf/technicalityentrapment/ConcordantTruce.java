@@ -6,6 +6,10 @@ import art.ameliah.hsr.characters.DamageType;
 
 public class ConcordantTruce extends ConcordantTrucePower {
 
+    public ConcordantTruce() {
+        super("Concordant Truce");
+    }
+
     @Override
     public void afterAttackFinish(Attack attack) {
         if (!attack.getTypes().contains(DamageType.SKILL)) {

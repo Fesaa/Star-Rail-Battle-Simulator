@@ -2,8 +2,8 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.Hit;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ForcedAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ReduceToughness;
@@ -207,7 +207,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     // TODO: Implement this correctly with buffs etc.
-    protected float attackDmg() {
+    public float attackDmg() {
         return this.getFinalAttack();
     }
 
@@ -228,8 +228,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
     }
 
-    public void dealDmg(float amount) {
-        this.currentHp -= amount;
+    public void dealDmg(Hit hit) {
+        this.currentHp -= hit.finalDmg();
     }
 
     public boolean isDead() {

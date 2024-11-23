@@ -12,7 +12,7 @@ import art.ameliah.hsr.powers.PermPower;
 public class HollowHope implements PureFictionBuff {
     @Override
     public void applyGritMechanic(PfBattle battle) {
-        battle.getPlayers().forEach(player -> player.addPower(new PermPower() {
+        battle.getPlayers().forEach(player -> player.addPower(new PermPower("Hollow Hope Grit Mechanic") {
 
             private int weaknessBroken = 0;
 

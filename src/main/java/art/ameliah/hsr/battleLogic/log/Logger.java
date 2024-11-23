@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.AdvanceEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.BattleEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.CombatStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.DelayEntity;
+import art.ameliah.hsr.battleLogic.log.lines.battle.EntityJoinedBattle;
 import art.ameliah.hsr.battleLogic.log.lines.battle.GenerateSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.battle.LeftOverAV;
 import art.ameliah.hsr.battleLogic.log.lines.battle.SpeedAdvanceEntity;
@@ -15,6 +16,7 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.UseSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
+import art.ameliah.hsr.battleLogic.log.lines.battle.pf.GainGridPoints;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
@@ -309,6 +311,14 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(SurgingGritState surgingGritState) {
         log(surgingGritState);
+    }
+
+    public void handle(EntityJoinedBattle entityJoinedBattle) {
+        log(entityJoinedBattle);
+    }
+
+    public void handle(GainGridPoints gainGridPoints) {
+        log(gainGridPoints);
     }
 
 }

@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic.wave.pf;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
+import art.ameliah.hsr.battleLogic.log.lines.battle.pf.GainGridPoints;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
@@ -18,13 +19,15 @@ public class PfBattle extends WavedBattle<PfWave> {
     private int gridAmount;
     private int gridOverflow;
 
-    private void increaseGridAmount(int amount) {
+    public void increaseGridAmount(int amount) {
+        int current = this.gridAmount;
         if (this.surgingGridActive) {
             this.gridOverflow = Math.min(this.gridAmount + amount, 30);
             return;
         }
 
         this.gridAmount = Math.min(this.gridAmount + amount, 100);
+        this.addToLog(new GainGridPoints(current, this.gridAmount));
 
         if (this.gridAmount == 100) {
             this.activeSurgingGrid();
@@ -94,10 +97,14 @@ public class PfBattle extends WavedBattle<PfWave> {
     protected void onWaveChange() {
     }
 
-    @RequiredArgsConstructor
     public static class SurgingGritEntity extends AbstractEntity {
 
         private final PfBattle pf;
+
+        public SurgingGritEntity(PfBattle pf) {
+            this.name = "Surging grid entity";
+            this.pf = pf;
+        }
 
         @Override
         public void takeTurn() {

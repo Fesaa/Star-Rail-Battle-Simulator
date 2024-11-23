@@ -15,7 +15,7 @@ public class EmptyAir implements PureFictionBuff {
 
     @Override
     public void applyGritMechanic(PfBattle battle) {
-        battle.getPlayers().forEach(player -> player.addPower(new PermPower() {
+        battle.getPlayers().forEach(player -> player.addPower(new PermPower("Empty Air Grit Mechanic") {
             @Override
             public void afterAttackFinish(Attack attack) {
                 if (attack.getTypes().contains(DamageType.ULTIMATE)) {

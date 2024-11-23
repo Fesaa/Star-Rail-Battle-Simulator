@@ -1,0 +1,32 @@
+package art.ameliah.hsr.enemies.game.cosmos;
+
+import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.powers.PermPower;
+import art.ameliah.hsr.powers.PowerStat;
+
+public class LordyTrashcan extends AbstractEnemy {
+
+    private float boostedATK;
+
+    // Different baseATK is used then ""advertised"" to match the logic nicer
+    // TODO: FIX, see lookies
+    public LordyTrashcan() {
+        super("Lordy Trashcan", EnemyType.Minion, 175085, 871, 1050, 172.8f, 120, 85);
+
+        this.addPower(PermPower.create(PowerStat.EFFECT_HIT, 28, "Base stat EHR"));
+        this.addPower(PermPower.create(PowerStat.EFFECT_RES, 20, "Base stat ER"));
+
+        this.boostedATK = this.baseATK;
+    }
+
+    @Override
+    protected void act() {
+        this.startAttack()
+                .hit(getRandomTarget(), this.boostedATK)
+                .execute();
+
+        // CURSED
+        this.boostedATK += (float) (Math.pow(2, this.numTurnsMetric) * this.boostedATK);
+    }
+}

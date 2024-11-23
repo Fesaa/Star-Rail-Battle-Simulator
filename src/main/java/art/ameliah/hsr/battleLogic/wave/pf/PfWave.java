@@ -5,23 +5,36 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public abstract class PfWave implements Wave {
+public class PfWave implements Wave {
 
     private final AbstractEnemy boss;
     private final Map<Class<? extends AbstractEnemy>, Supplier<AbstractEnemy>> minions = new HashMap<>();
     private final Map<Class<? extends AbstractEnemy>, Integer> usages = new HashMap<>();
+    private final List<AbstractEnemy> startEnemies;
 
     public void addMinionType(Class<? extends AbstractEnemy> clazz, int maxAmount, Supplier<AbstractEnemy> supplier) {
         this.minions.put(clazz, supplier);
-        this.usages.put(clazz, maxAmount);
+
+        int presentAtStart = this.startEnemies.stream()
+                .filter(e -> e.getClass().equals(clazz))
+                .mapToInt(_ -> 1)
+                .sum();
+
+        this.usages.put(clazz, maxAmount - presentAtStart);
     }
 
     public boolean isBoss(AbstractEnemy enemy) {
-        return this.boss == null || this.boss == enemy;
+        return this.boss != null && this.boss == enemy;
+    }
+
+    @Override
+    public List<AbstractEnemy> startEnemies() {
+        return this.startEnemies;
     }
 
     @Override
@@ -31,7 +44,7 @@ public abstract class PfWave implements Wave {
         }
 
         for (var e : this.usages.entrySet()) {
-            if (e.getValue() == 0) {
+            if (e.getValue() > 0) {
                 return true;
             }
         }
@@ -43,6 +56,7 @@ public abstract class PfWave implements Wave {
         return this.usages.get(enemy.getClass()) > 0;
     }
 
+    // I don't know if it's actually like this, but I don't have data on how to do it right
     @Override
     public AbstractEnemy nextEnemy(AbstractEnemy enemy) {
         if (this.canSpawn(enemy)) {

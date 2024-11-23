@@ -28,7 +28,7 @@ import java.util.List;
 public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked {
     final AbstractPower proofOfDebt = new ProofOfDebt();
     final Numby numby;
-    PermPower stonksPower;
+    PermPower stonksPower = PermPower.create(PowerStat.CRIT_DAMAGE, 25, "Topaz Ult Power");
     int ultCounter = 0;
     private boolean techniqueActive = false;
 
@@ -53,7 +53,6 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
                 .setStat(PowerStat.HP_PERCENT, 10));
 
         numby = new Numby(this);
-        stonksPower = new PermPower();
 
         this.registerGoal(0, DontUltMissingPowerGoal.robin(this));
         this.registerGoal(10, new TopazUltGoal(this));

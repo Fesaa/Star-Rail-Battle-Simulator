@@ -27,6 +27,8 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
     private final ElementType attackElement;
     private final boolean ignoreWeakness;
 
+    private Float computedDmg = null;
+
     public float finalToughnessReduction() {
         float weaknessBreakEff = this.source.getTotalWeaknessBreakEff();
         float toughnessDmg = this.toughnessDmg * (1 + weaknessBreakEff / 100);
@@ -40,6 +42,10 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
     }
 
     public float finalDmg() {
+        if (this.computedDmg != null) {
+            return this.computedDmg;
+        }
+
         float baseDamage = this.baseDamage();
         float critMultiplier = this.critMultiplier();
         float dmgBoostMultiplier = this.dmgBoostMultiplier();
@@ -59,6 +65,8 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
                 * vulnerabilityMultiplier
                 // * dmgMitigationMultiplier
                 * brokenMultiplier;
+
+        this.computedDmg = calculatedDmg;
         return calculatedDmg;
     }
 

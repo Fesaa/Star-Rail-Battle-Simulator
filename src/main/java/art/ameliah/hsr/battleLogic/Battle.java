@@ -9,6 +9,7 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.AdvanceEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.BattleEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.CombatStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.DelayEntity;
+import art.ameliah.hsr.battleLogic.log.lines.battle.EntityJoinedBattle;
 import art.ameliah.hsr.battleLogic.log.lines.battle.GenerateSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.battle.LeftOverAV;
 import art.ameliah.hsr.battleLogic.log.lines.battle.SpeedAdvanceEntity;
@@ -166,6 +167,7 @@ public class Battle implements IBattle {
             this.AdvanceEntity(enemy, initialAA);
         }
 
+        addToLog(new EntityJoinedBattle(enemy));
         enemy.emit(BattleEvents::onCombatStart);
     }
 
