@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.aventurine;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.aventurine.UseBlindBet;
@@ -19,7 +18,6 @@ import art.ameliah.hsr.powers.TracePower;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Aventurine extends AbstractCharacter<Aventurine> {
     public static final String NAME = "Aventurine";
@@ -163,8 +161,8 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
-            if (character != Aventurine.this && types.contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
+        public void afterAttackFinish(Attack attack) {
+            if (attack.getSource() != Aventurine.this && attack.getTypes().contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;
                 numBlindBetGainedFUA++;

@@ -50,6 +50,7 @@ public class FrigidProwler extends AbstractEnemy {
 
     @Override
     public void onDeath() {
+        super.onDeath();
         this.otherlings.forEach(getBattle()::removeEnemy);
     }
 

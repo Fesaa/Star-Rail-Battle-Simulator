@@ -25,7 +25,7 @@ public class MemoriesOfThePast extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void afterAttackFinish(Attack attack) {
         if (!this.canRegen) return;
 
         this.owner.increaseEnergy(8, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);

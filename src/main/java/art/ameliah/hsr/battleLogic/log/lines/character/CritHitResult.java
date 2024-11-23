@@ -14,7 +14,7 @@ public record CritHitResult(AbstractCharacter<?> source, AbstractEnemy target, d
 
     @Override
     public String asString() {
-        return String.format("%s hit %s for expected crit result of %.3f damage", this.source.name, this.target.name, calculatedDamage);
+        return String.format("%s hit %s(%.1f) for expected crit result of %.3f damage", this.source.name, this.target.name, this.target.getCurrentHp(), calculatedDamage);
     }
 
     @Override

@@ -15,6 +15,8 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.UseSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
+import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
+import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.BreakDamageHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.ConcertoEnd;
@@ -294,6 +296,14 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(WaveEnd waveEnd) {
         log(waveEnd);
+    }
+
+    public void handle(AttackStart attackStart) {
+        log(attackStart);
+    }
+
+    public void handle(AttackEnd attackEnd) {
+        log(attackEnd);
     }
 
 }

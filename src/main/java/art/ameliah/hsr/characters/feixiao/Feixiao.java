@@ -1,11 +1,9 @@
 package art.ameliah.hsr.characters.feixiao;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
-import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanLose;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -26,11 +24,9 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class Feixiao extends AbstractCharacter<Feixiao> {
 
@@ -223,18 +219,16 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void afterAttackFinish(Attack attack) {
             if (!Feixiao.this.hasPower(ultBreakEffBuff.name)) {
                 Feixiao.this.increaseStack(1);
             }
-        }
-        @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
-            if (!(character instanceof Feixiao)) {
+
+            if (!(attack.getSource() instanceof Feixiao)) {
                 if (FUAReady) {
                     FUAReady = false;
 
-                    List<AbstractEnemy> alive = enemiesHit.stream().filter(e -> !e.isDead()).toList();
+                    List<AbstractEnemy> alive = attack.getTargets().stream().filter(e -> !e.isDead()).toList();
                     AbstractEnemy enemy;
                     if (alive.isEmpty()) {
                         enemy = getBattle().getRandomEnemy();

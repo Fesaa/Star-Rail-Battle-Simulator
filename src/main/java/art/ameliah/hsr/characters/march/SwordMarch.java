@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.march;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.Hit;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Sword March";
@@ -260,9 +258,9 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
-            if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL)) {
-                List<AbstractEnemy> nonDead = enemiesHit.stream().filter(e -> !e.isDead()).toList();
+        public void afterAttackFinish(Attack attack) {
+            if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL)) {
+                List<AbstractEnemy> nonDead = attack.getTargets().stream().filter(e -> !e.isDead()).toList();
                 AbstractEnemy enemy;
                 if (nonDead.isEmpty()) {
                     enemy = getBattle().getRandomEnemy();

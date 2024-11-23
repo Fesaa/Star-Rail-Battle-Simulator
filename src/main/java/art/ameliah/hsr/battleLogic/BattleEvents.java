@@ -7,7 +7,6 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.List;
-import java.util.Set;
 
 public interface BattleEvents {
 
@@ -54,12 +53,11 @@ public interface BattleEvents {
     default void onBeforeHitEnemy(Hit hit) {}
 
     /**
-     * Called after enemies have received the onAttack event
-     * @param character The character that attacked
-     * @param enemiesHit The enemies that were hit
-     * @param types The types of damage dealt
+     * Called after the attack has finished
+     *
+     * @param attack the performed attack
      */
-    default void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {}
+    default void afterAttackFinish(Attack attack) {}
 
     /**
      * Called before AbstractCharacter#takeTurn has been called.

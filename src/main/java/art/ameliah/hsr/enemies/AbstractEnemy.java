@@ -2,6 +2,7 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ForcedAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ReduceToughness;
@@ -226,6 +227,10 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
     }
 
+    public void dealDmg(float amount) {
+        this.currentHp -= amount;
+    }
+
     public boolean isDead() {
         return this.currentHp <= 0;
     }
@@ -271,18 +276,14 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-        if (this.currentHp <= 0) {
-            throw new IllegalStateException("Attacking dead enemy");
+    public void afterAttackFinish(Attack attack) {
+        if (this.currentHp > 0) {
+            return;
         }
 
-        this.currentHp -= totalDmg;
-
-        if (this.currentHp <= 0) {
-            getBattle().addToLog(new EnemyDied(this, character));
-            getBattle().removeEnemy(this);
-            this.emit(BattleEvents::onDeath);
-        }
+        getBattle().addToLog(new EnemyDied(this, attack.getSource()));
+        getBattle().removeEnemy(this);
+        this.emit(BattleEvents::onDeath);
     }
 
     public String getMetrics() {

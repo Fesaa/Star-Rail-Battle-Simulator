@@ -2,6 +2,8 @@ package art.ameliah.hsr.battleLogic.combat;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
+import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.CritHitResult;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -44,7 +46,7 @@ public class Attack implements BattleParticipant {
         }
         getBattle().setAttacking(true);
 
-
+        getBattle().addToLog(new AttackStart(this));
         this.source.emit(l -> l.onAttack(this));
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(this)));
 
@@ -63,6 +65,9 @@ public class Attack implements BattleParticipant {
                 if (toughnessReduce > 0) {
                     hit.getTarget().reduceToughness(toughnessReduce);
                 }
+                if (dmg > 0) {
+                    hit.getTarget().dealDmg(dmg);
+                }
 
                 dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
 
@@ -78,11 +83,12 @@ public class Attack implements BattleParticipant {
             getBattle().addToLog(new Attacked(this.source, target, dmg, this.types.stream().toList()));
         }
 
-        this.source.emit(l -> l.afterAttackFinish(this.source, this.targets, this.types.stream().toList()));
+        this.source.emit(l -> l.afterAttackFinish(this));
         this.hasExecuted = true;
 
         this.afterAttacks.forEach(Runnable::run);
 
+        getBattle().addToLog(new AttackEnd(this));
         getBattle().setAttacking(false);
         if (!getBattle().attackQueue().isEmpty()) {
             Attack nextAttack = getBattle().attackQueue().poll();

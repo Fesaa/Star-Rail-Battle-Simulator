@@ -1,6 +1,9 @@
 package art.ameliah.hsr.enemies;
 
+import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -64,14 +67,15 @@ public class DumbEnemy extends AbstractEnemy {
         return EnemyAttackType.values()[idx];
     }
 
+    // Copy of super method, but without removing the enemy from battle.
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-        //this.currentHp -= totalDmg;
-
-        if (this.currentHp <= 0) {
-            //getBattle().removeEnemy(this);
-            //getBattle().addToLog(new EnemyDied(this, character));
+    public void afterAttackFinish(Attack attack) {
+        if (this.currentHp > 0) {
+            return;
         }
+
+        getBattle().addToLog(new EnemyDied(this, attack.getSource()));
+        this.emit(BattleEvents::onDeath);
     }
 
     @Override

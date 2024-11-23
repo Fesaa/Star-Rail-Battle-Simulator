@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.asta;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -16,10 +15,6 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class Asta extends AbstractCharacter<Asta> {
 
@@ -128,10 +123,10 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public void afterAttackFinish(AbstractCharacter<?> character, Set<AbstractEnemy> enemiesHit, List<DamageType> types) {
-            if (character == Asta.this) {
-                int chargeGain = enemiesHit.size();
-                for (AbstractEnemy enemy :enemiesHit) {
+        public void afterAttackFinish(Attack attack) {
+            if (attack.getSource() == Asta.this) {
+                int chargeGain = attack.getTargets().size();
+                for (AbstractEnemy enemy :attack.getTargets()) {
                     if (enemy.hasWeakness(ElementType.FIRE)) {
                         chargeGain++;
                     }
