@@ -4,7 +4,7 @@ import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public class MocBattle extends WavedBattle {
+public class MocBattle extends WavedBattle<MocWave> {
 
     private final MocTurbulence turbulence;
 
@@ -20,7 +20,7 @@ public class MocBattle extends WavedBattle {
     }
 
     @Override
-    public void addWave(Wave wave) {
+    public void addWave(MocWave wave) {
         if (this.waves.size() == 2) {
             throw new IllegalStateException("MocBattle already has two waves");
         }
