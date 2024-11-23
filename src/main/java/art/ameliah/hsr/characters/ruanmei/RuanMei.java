@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.ruanmei;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -14,8 +13,6 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
-
-import java.util.ArrayList;
 
 public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterTurnGoal.SkillCounterCharacter {
     final PermPower skillPower;
@@ -112,7 +109,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         public boolean triggered = false;
         public final AbstractCharacter<?> owner;
         public RuanMeiUltDebuff(AbstractCharacter<?> owner) {
-            this.name = ULT_DEBUFF_NAME;
+            this.setName(ULT_DEBUFF_NAME);
             this.lastsForever = true;
             this.type = PowerType.DEBUFF;
             this.owner = owner;

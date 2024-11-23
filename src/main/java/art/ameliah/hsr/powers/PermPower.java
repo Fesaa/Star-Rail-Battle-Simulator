@@ -21,7 +21,7 @@ public class PermPower extends AbstractPower {
      */
     public static PermPower create(PowerStat stat, float value, String name) {
         PermPower power = new PermPower();
-        power.name = name;
+        power.setName(name);
         power.setStat(stat, value);
         return power;
     }

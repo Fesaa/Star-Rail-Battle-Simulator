@@ -251,7 +251,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
 
     private class MarchMasterPower extends PermPower {
         public MarchMasterPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.SPEED_PERCENT, 10.8f);
         }
 

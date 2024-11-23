@@ -38,7 +38,7 @@ public class BaptismOfPureThought extends AbstractLightcone {
 
     public static class DisputationEffect extends TempPower {
         public DisputationEffect() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.setStat(PowerStat.DAMAGE_BONUS, 36);
         }

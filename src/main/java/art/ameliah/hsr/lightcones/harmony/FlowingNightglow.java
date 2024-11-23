@@ -28,7 +28,7 @@ public class FlowingNightglow extends AbstractLightcone {
     @Override
     public void onEndTurn() {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            if (character.hasPower(cadenzaBuff.name)) {
+            if (character.hasPower(cadenzaBuff.getName())) {
                 character.removePower(cadenzaBuff);
             }
         }
@@ -43,7 +43,7 @@ public class FlowingNightglow extends AbstractLightcone {
 
     public class FlowingNightglowPower extends PermPower {
         public FlowingNightglowPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
         @Override
         public void onAttack(Attack attack) {
@@ -53,7 +53,7 @@ public class FlowingNightglow extends AbstractLightcone {
 
     public static class FlowingNightglowERRPower extends PermPower {
         public FlowingNightglowERRPower() {
-            this.name = ERPowerName;
+            this.setName(ERPowerName);
             this.maxStacks = 5;
         }
         @Override

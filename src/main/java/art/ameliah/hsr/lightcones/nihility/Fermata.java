@@ -22,7 +22,7 @@ public class Fermata extends AbstractLightcone {
 
     public static class FermataBoost extends PermPower {
         public FermataBoost() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.BREAK_EFFECT, 32);
         }
 

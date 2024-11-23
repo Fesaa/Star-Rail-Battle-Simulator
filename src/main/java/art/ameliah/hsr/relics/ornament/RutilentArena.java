@@ -24,7 +24,7 @@ public class RutilentArena extends AbstractRelicSetBonus {
 
     private static class RutilentArenaDamageBonus extends AbstractPower {
         public RutilentArenaDamageBonus() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
         @Override

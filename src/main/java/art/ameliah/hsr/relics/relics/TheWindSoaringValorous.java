@@ -21,7 +21,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
 
     public void onEquip() {
         PermPower statBonus = new PermPower();
-        statBonus.name = "Valorous Stat Bonus";
+        statBonus.setName("Valorous Stat Bonus");
         statBonus.setStat(PowerStat.ATK_PERCENT, 12);
         if (this.isFullSet) {
             statBonus.setStat(PowerStat.CRIT_CHANCE, 6);
@@ -46,7 +46,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
 
     private static class ValorousDamagePower extends AbstractPower {
         public ValorousDamagePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 1;
         }
         @Override

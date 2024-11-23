@@ -31,7 +31,7 @@ public class SolitaryHealing extends AbstractLightcone {
 
     public static class SolitaryHealingBoost extends TempPower {
         public SolitaryHealingBoost() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
         }
 

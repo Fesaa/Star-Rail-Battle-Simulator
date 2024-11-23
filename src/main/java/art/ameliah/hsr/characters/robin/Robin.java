@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.robin;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.Concerto;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
@@ -186,7 +185,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     private class RobinTalentPower extends PermPower {
         public RobinTalentPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.CRIT_DAMAGE, 20);
         }
 
@@ -199,7 +198,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     private class RobinUltPower extends AbstractPower {
         public RobinUltPower() {
-            this.name = ULT_POWER_NAME;
+            this.setName(ULT_POWER_NAME);
             lastsForever = true;
         }
 
@@ -234,7 +233,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     private static class RobinFixedCritPower extends AbstractPower {
         public RobinFixedCritPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             lastsForever = true;
         }
 

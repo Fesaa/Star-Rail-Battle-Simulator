@@ -121,7 +121,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
     public void useCull(AbstractEnemy enemy) {
         increaseEnergy(10, "from using Cull");
         AbstractPower power = new DanceAtSunset.DanceAtSunsetDamagePower();
-        AbstractPower sunsetPower = getPower(power.name);
+        AbstractPower sunsetPower = getPower(power.getName());
         if (sunsetPower != null && sunsetPower.stacks == 2) {
             num2StackCulls++;
         } else {
@@ -211,7 +211,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
 
     private static class CullCritDamageBuff extends AbstractPower {
         public CullCritDamageBuff() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

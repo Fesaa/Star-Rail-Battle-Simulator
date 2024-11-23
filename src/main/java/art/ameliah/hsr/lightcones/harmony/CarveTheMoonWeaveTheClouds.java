@@ -17,7 +17,7 @@ public class CarveTheMoonWeaveTheClouds extends AbstractLightcone {
         int type = getBattle().getWeaveEffectRng().nextInt(3) + 1;
         CarveTheMoonWeaveTheCloudsEffect effect = new CarveTheMoonWeaveTheCloudsEffect(type);
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.removePower(effect.name);
+            character.removePower(effect.getName());
             character.addPower(effect);
         }
     }

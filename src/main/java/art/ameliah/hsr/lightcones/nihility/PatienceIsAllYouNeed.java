@@ -26,7 +26,7 @@ public class PatienceIsAllYouNeed extends AbstractLightcone {
 
     public static class PatienceIsAllYouNeedSpeedBoost extends PermPower {
         public PatienceIsAllYouNeedSpeedBoost() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.maxStacks = 3;
             this.setStat(PowerStat.SPEED_PERCENT, 4.8f);
         }

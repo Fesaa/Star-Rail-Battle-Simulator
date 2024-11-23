@@ -7,6 +7,8 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,8 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
         BUFF, DEBUFF,DOT
     }
 
-    public String name;
+    @Setter
+    protected String name;
 
     private final Map<PowerStat, Float> stats = new HashMap<>();
 
@@ -36,7 +39,14 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
     }
 
     public AbstractPower(String name) {
-        this.name = name;
+        this.setName(name);
+    }
+
+    public String getName() {
+        if (this.name == null) {
+            return this.getClass().getSimpleName();
+        }
+        return this.name;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class YetHopeIsPriceless extends AbstractLightcone {
 
     public static class YetHopeIsPricelessPower extends AbstractPower {
         public YetHopeIsPricelessPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

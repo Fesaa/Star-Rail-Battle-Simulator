@@ -31,7 +31,7 @@ public class PioneerDiverOfDeadWaters extends AbstractRelicSetBonus {
 
     public static class PioneerDiverOfDeadWaters2PC extends PermPower {
         public PioneerDiverOfDeadWaters2PC() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override
@@ -46,7 +46,7 @@ public class PioneerDiverOfDeadWaters extends AbstractRelicSetBonus {
     public static class PioneerDiverOfDeadWaters4PC extends PermPower {
 
         public PioneerDiverOfDeadWaters4PC() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.CRIT_CHANCE, 4);
         }
 

@@ -27,7 +27,7 @@ public class TheUnreachableSide extends AbstractLightcone {
         private boolean active = true;
 
         public TheUnreachableSideDMGBoost() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

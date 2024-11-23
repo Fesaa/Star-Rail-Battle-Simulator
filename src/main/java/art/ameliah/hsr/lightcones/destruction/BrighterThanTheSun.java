@@ -28,7 +28,7 @@ public class BrighterThanTheSun extends AbstractLightcone {
 
     public static class DragonsCall extends TempPower {
         public DragonsCall() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.maxStacks = 2;
         }

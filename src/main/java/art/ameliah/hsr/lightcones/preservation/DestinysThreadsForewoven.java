@@ -25,7 +25,7 @@ public class DestinysThreadsForewoven extends AbstractLightcone {
 
     public static class DestinysThreadsForewovenPower extends AbstractPower {
         public DestinysThreadsForewovenPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

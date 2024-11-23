@@ -32,7 +32,7 @@ public class NightOnTheMilkyWay extends AbstractLightcone {
 
     public class NightOnTheMilkyWayPower extends AbstractPower {
         public NightOnTheMilkyWayPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

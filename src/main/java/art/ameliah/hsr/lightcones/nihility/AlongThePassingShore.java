@@ -33,7 +33,7 @@ public class AlongThePassingShore extends AbstractLightcone {
         private final AlongThePassingShore lightcone;
 
         public MirageFizzle(AlongThePassingShore lightcone) {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lightcone = lightcone;
             this.type = PowerType.DEBUFF;
         }

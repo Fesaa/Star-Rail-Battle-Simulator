@@ -38,7 +38,7 @@ public class InherentlyUnjustDestiny extends AbstractLightcone {
     public static class FollowDmgBonus extends TempPower {
         public FollowDmgBonus() {
             super(2);
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.type = PowerType.DEBUFF;
             this.setStat(PowerStat.DAMAGE_TAKEN, 10);
         }

@@ -28,7 +28,7 @@ public class ReforgedRemembrance extends AbstractLightcone {
 
     public static class Prophet extends PermPower {
         public Prophet() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.ATK_PERCENT, 5);
         }
 

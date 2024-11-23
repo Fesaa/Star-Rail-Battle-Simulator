@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.pela;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -17,8 +16,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.FirstTurnTracked {
@@ -107,7 +104,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
 
     private class PelaTalentPower extends AbstractPower {
         public PelaTalentPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 
@@ -126,7 +123,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
 
     private static class PelaBonusDamageAgainstDebuffPower extends AbstractPower {
         public PelaBonusDamageAgainstDebuffPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
         @Override

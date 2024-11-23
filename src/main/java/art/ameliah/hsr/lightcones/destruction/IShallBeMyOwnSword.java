@@ -39,7 +39,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
         private final IShallBeMyOwnSword lightcone;
 
         public IShallBeMyOwnSwordEffect(IShallBeMyOwnSword lightcone) {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lightcone = lightcone;
         }
 

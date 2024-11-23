@@ -21,7 +21,7 @@ public class Swordplay extends AbstractLightcone {
     public void onBeforeHitEnemy(Hit hit) {
         AbstractPower swordPlayDamagePower = new SwordplayDamagePower();
         if (this.target != hit.getTarget()) {
-            owner.removePower(swordPlayDamagePower.name);
+            owner.removePower(swordPlayDamagePower.getName());
             this.target = hit.getTarget();
         }
         owner.addPower(swordPlayDamagePower);
@@ -29,7 +29,7 @@ public class Swordplay extends AbstractLightcone {
 
     private static class SwordplayDamagePower extends PermPower {
         public SwordplayDamagePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.maxStacks = 5;
         }
         @Override

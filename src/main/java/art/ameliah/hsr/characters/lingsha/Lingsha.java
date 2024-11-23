@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.lingsha;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.FuYuan;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
@@ -214,7 +213,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
 
     private static class Befog extends AbstractPower {
         public Befog() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.type = PowerType.DEBUFF;
         }
@@ -230,7 +229,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
 
     private class LingshaEmergencyHealTracker extends PermPower {
         public LingshaEmergencyHealTracker() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

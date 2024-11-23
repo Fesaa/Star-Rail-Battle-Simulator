@@ -23,7 +23,7 @@ public class InTheNight extends AbstractLightcone {
 
     public static class InTheNightPower extends PermPower {
         public InTheNightPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

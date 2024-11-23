@@ -71,7 +71,7 @@ public class GuardianShadow extends AbstractEnemy {
     private void Ban() {
         Function<GuardianShadow, TempPower> powerFunction = this.bans.get(this.banTypeRng.nextInt(this.bans.size()));
         getBattle().getPlayers().forEach(p -> p.addPower(powerFunction.apply(this)));
-        getBattle().addToLog(new EnemyAction(this, "bans: " + powerFunction.apply(this).name));
+        getBattle().addToLog(new EnemyAction(this, "bans: " + powerFunction.apply(this).getName()));
     }
 
     private void InevitablePunishment(AbstractCharacter<?> target) {

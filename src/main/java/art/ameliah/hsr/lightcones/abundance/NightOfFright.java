@@ -39,7 +39,7 @@ public class NightOfFright extends AbstractLightcone {
 
     public class NightOfFrightPower extends PermPower {
         public NightOfFrightPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

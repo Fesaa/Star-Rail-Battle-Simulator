@@ -117,7 +117,7 @@ public class Asta extends AbstractCharacter<Asta> {
     private class AstaTalentPower extends AbstractPower {
 
         public AstaTalentPower() {
-            this.name = TALENT_BUFF_NAME;
+            this.setName(TALENT_BUFF_NAME);
             this.lastsForever = true;
             this.stacks = 0;
         }
@@ -144,7 +144,7 @@ public class Asta extends AbstractCharacter<Asta> {
     private class AstaERRPower extends AbstractPower {
 
         public AstaERRPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

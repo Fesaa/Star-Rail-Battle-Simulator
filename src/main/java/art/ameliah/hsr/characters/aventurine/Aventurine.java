@@ -133,7 +133,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
 
     private static class AventurineUltDebuff extends AbstractPower {
         public AventurineUltDebuff() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;
             this.type = PowerType.DEBUFF;
         }
@@ -146,7 +146,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
 
     private class AventurineTalentPower extends AbstractPower {
         public AventurineTalentPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
             this.setStat(PowerStat.EFFECT_RES, 50); //assume 100% shield uptime
         }

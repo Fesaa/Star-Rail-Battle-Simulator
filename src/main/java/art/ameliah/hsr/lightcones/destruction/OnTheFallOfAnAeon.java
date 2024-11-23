@@ -22,7 +22,7 @@ public class OnTheFallOfAnAeon extends AbstractLightcone {
 
     public static class OnTheFallOfAnAeonATKBoost extends PermPower {
         public OnTheFallOfAnAeonATKBoost() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.maxStacks = 4;
             this.setStat(PowerStat.ATK_PERCENT, 16);
         }

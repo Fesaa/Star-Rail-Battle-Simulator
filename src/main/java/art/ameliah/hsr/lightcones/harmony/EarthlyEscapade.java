@@ -35,7 +35,7 @@ public class EarthlyEscapade extends AbstractLightcone {
 
     public static class Mask extends AbstractPower {
         public Mask(boolean perm) {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.CRIT_DAMAGE, 28);
             this.setStat(PowerStat.CRIT_CHANCE, 10);
             if (perm) {

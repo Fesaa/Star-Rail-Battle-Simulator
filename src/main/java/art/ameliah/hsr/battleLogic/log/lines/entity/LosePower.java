@@ -9,7 +9,7 @@ public record LosePower(AbstractEntity entity, AbstractPower power) implements L
 
     @Override
     public String asString() {
-        return this.entity.name + " lost " + this.power.name;
+        return this.entity.name + " lost " + this.power.getName();
     }
 
     @Override

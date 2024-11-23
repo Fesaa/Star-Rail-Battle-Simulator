@@ -15,7 +15,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
 
-import java.awt.event.KeyAdapter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -120,7 +119,7 @@ public class Kafka extends AbstractEnemy {
         public final String NAME = "ExtraShockDmg";
 
         public ExtraShockDmg() {
-            this.name = NAME;
+            this.setName(NAME);
         }
 
         @Override

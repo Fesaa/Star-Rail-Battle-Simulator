@@ -56,7 +56,7 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
 
     public void addPower(AbstractPower power) {
         for (AbstractPower ownedPowers : powerList) {
-            if (ownedPowers.name.equals(power.name)) {
+            if (ownedPowers.getName().equals(power.getName())) {
                 if (ownedPowers.maxStacks > 0 && ownedPowers.stacks < ownedPowers.maxStacks) {
                     ownedPowers.stacks++;
                     ownedPowers.turnDuration = power.turnDuration;
@@ -98,7 +98,7 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
 
     public void removePower(String name) {
         for (AbstractPower power : powerList) {
-            if (power.name.equals(name)) {
+            if (power.getName().equals(name)) {
                 removePower(power);
                 return;
             }
@@ -107,7 +107,7 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
 
     public boolean hasPower(String powerName) {
         for (AbstractPower power : powerList) {
-            if (power.name.equals(powerName)) {
+            if (power.getName().equals(powerName)) {
                 return true;
             }
         }
@@ -116,7 +116,7 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
 
     public AbstractPower getPower(String powerName) {
         for (AbstractPower power : powerList) {
-            if (power.name.equals(powerName)) {
+            if (power.getName().equals(powerName)) {
                 return power;
             }
         }

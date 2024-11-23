@@ -24,7 +24,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
 
     private static class DuranTrackerPower extends PermPower {
         public DuranTrackerPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
         @Override
         public void onAttack(Attack attack) {
@@ -42,7 +42,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
 
     private static class DuranStackPower extends PermPower {
         public DuranStackPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.maxStacks = 5;
         }
         @Override

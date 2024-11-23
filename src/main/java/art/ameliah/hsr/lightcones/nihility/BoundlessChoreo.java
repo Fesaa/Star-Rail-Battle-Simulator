@@ -22,7 +22,7 @@ public class BoundlessChoreo extends AbstractLightcone {
 
     public static class BoundlessChoreoCDBoost extends PermPower {
         public BoundlessChoreoCDBoost() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.CRIT_CHANCE, 16);
         }
 

@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.topaz;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.Numby;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
@@ -65,7 +64,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
     public void useSkill() {
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            if (enemy.hasPower(proofOfDebt.name)) {
+            if (enemy.hasPower(proofOfDebt.getName())) {
                 enemy.removePower(proofOfDebt);
                 break;
             }
@@ -79,7 +78,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
     public void useBasic() {
         AbstractEnemy target = null;
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            if (enemy.hasPower(proofOfDebt.name)) {
+            if (enemy.hasPower(proofOfDebt.getName())) {
                 target = enemy;
                 break;
             }
@@ -124,7 +123,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
         AbstractEnemy target = null;
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            if (enemy.hasPower(proofOfDebt.name)) {
+            if (enemy.hasPower(proofOfDebt.getName())) {
                 target = enemy;
                 break;
             }
@@ -202,7 +201,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
     private class ProofOfDebt extends AbstractPower {
         public ProofOfDebt() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             lastsForever = true;
             this.type = PowerType.DEBUFF;
         }
@@ -243,7 +242,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
     private static class FireWeaknessBonusDamage extends AbstractPower {
         public FireWeaknessBonusDamage() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             lastsForever = true;
         }
 

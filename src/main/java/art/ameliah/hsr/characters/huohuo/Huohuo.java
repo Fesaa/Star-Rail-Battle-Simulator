@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.huohuo;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -8,7 +7,6 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.SkillCounterTurnGoal;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -95,7 +93,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
     private class HuohuoTalentPower extends AbstractPower {
         public HuohuoTalentPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             lastsForever = true;
         }
 

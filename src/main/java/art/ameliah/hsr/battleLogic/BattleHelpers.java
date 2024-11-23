@@ -34,22 +34,6 @@ public class BattleHelpers implements BattleParticipant {
     private enum MultiplierStat {
         ATK, HP, DEF
     }
-    
-    private float attackDamageTotal = 0;
-    private final HashMap<AbstractEnemy, Float> enemiesHit = new HashMap<>();
-    private final HashMap<String, Float> damageBonusMultiConstituents = new HashMap<>();
-    private final HashMap<String, Float> defenseMultiConstituents = new HashMap<>();
-    private final HashMap<String, Float> resMultiConstituents = new HashMap<>();
-    private final HashMap<String, Float> damageVulnMultiConstituents = new HashMap<>();
-    private final HashMap<String, Float> critDmgMultiConstituents = new HashMap<>();
-
-    private void clearConstituents() {
-        damageBonusMultiConstituents.clear();
-        defenseMultiConstituents.clear();
-        resMultiConstituents.clear();
-        damageVulnMultiConstituents.clear();
-        critDmgMultiConstituents.clear();
-    }
 
     private float calculateBreakDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, ElementType damageElement) {
         float maxToughnessMultiplier = 0.5f + (target.maxToughness() / 40);
@@ -97,22 +81,4 @@ public class BattleHelpers implements BattleParticipant {
         return multiplier * elementMultipler * 3767.5533f * maxToughnessMultiplier;
     }
 
-
-
-    public void attackCharacter(AbstractEnemy source, AbstractCharacter<?> target, int energyToGain, float dmg) {
-        if (target instanceof Moze) {
-            if (((Moze) target).isDeparted) {
-                return;
-            }
-        }
-        getBattle().addToLog(new Attacked(source, target, dmg, List.of()));
-        target.emit(l -> l.onAttacked(target, source, new ArrayList<>(), energyToGain, dmg));
-    }
-
-    private void breakDamageHitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier) {
-        float calculatedDamage = calculateBreakDamageAgainstEnemy(source, target, multiplier, source.elementType);
-        getBattle().increaseTotalPlayerDmg(calculatedDamage);
-        getBattle().updateContribution(source, calculatedDamage);
-        attackDamageTotal += calculatedDamage;
-    }
 }

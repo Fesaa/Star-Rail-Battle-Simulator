@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.fuxuan;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -14,8 +13,6 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
-import java.util.ArrayList;
-
 public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTurnGoal.SkillCounterCharacter {
     public static final String NAME = "Fu Xuan";
     
@@ -26,7 +23,7 @@ public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTur
         super(NAME, 1475, 466, 606, 100, 80, ElementType.QUANTUM, 135, 150, Path.PRESERVATION);
 
         PermPower tracesPower = new PermPower();
-        tracesPower.name = "Traces Stat Bonus";
+        tracesPower.setName("Traces Stat Bonus");
         tracesPower.setStat(PowerStat.HP_PERCENT, 18);
         tracesPower.setStat(PowerStat.CRIT_CHANCE, 18.7f);
         tracesPower.setStat(PowerStat.EFFECT_RES, 10);
@@ -43,7 +40,7 @@ public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTur
         }
         skillCounter = 3;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            if (!character.hasPower(skillPower.name)) {
+            if (!character.hasPower(skillPower.getName())) {
                 character.addPower(skillPower);
             }
         }

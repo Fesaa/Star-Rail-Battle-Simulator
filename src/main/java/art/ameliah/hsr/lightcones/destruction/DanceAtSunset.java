@@ -19,7 +19,7 @@ public class DanceAtSunset extends AbstractLightcone {
     @Override
     public void onEquip() {
         PermPower statBonus = new PermPower();
-        statBonus.name = "Dance At Sunset Stat Bonus";
+        statBonus.setName("Dance At Sunset Stat Bonus");
         statBonus.setStat(PowerStat.CRIT_DAMAGE, 36);
         statBonus.setStat(PowerStat.TAUNT_VALUE, 500);
         owner.addPower(statBonus);
@@ -31,7 +31,7 @@ public class DanceAtSunset extends AbstractLightcone {
 
     public static class DanceAtSunsetDamagePower extends AbstractPower {
         public DanceAtSunsetDamagePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.maxStacks = 2;
         }

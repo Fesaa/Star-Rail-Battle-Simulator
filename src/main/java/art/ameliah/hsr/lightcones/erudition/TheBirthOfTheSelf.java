@@ -16,7 +16,7 @@ public class TheBirthOfTheSelf extends AbstractLightcone {
 
     public static class TheBirthOfTheSelfPower extends PermPower {
         public TheBirthOfTheSelfPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

@@ -215,13 +215,13 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
     private class FeiTalentPower extends AbstractPower {
         public FeiTalentPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 
         @Override
         public void afterAttackFinish(Attack attack) {
-            if (!Feixiao.this.hasPower(ultBreakEffBuff.name)) {
+            if (!Feixiao.this.hasPower(ultBreakEffBuff.getName())) {
                 Feixiao.this.increaseStack(1);
             }
 
@@ -244,7 +244,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
     private static class FeiCritDmgPower extends AbstractPower {
         public FeiCritDmgPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

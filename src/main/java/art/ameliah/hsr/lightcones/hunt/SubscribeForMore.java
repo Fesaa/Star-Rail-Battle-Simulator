@@ -16,7 +16,7 @@ public class SubscribeForMore extends AbstractLightcone {
 
     public static class SubscribeForMorePower extends PermPower {
         public SubscribeForMorePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

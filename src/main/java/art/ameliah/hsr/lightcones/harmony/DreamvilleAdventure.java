@@ -40,7 +40,7 @@ public class DreamvilleAdventure extends AbstractLightcone {
 
     public class Childishness extends PermPower {
         public Childishness() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {

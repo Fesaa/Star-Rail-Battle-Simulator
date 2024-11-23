@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.drRatio;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -111,7 +110,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
     private class WisemanFolly extends PermPower {
         private int numCharges = 2;
         public WisemanFolly() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override
@@ -130,7 +129,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
 
     private static class Deduction extends PermPower {
         public Deduction() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override
@@ -145,7 +144,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
 
     private static class Summation extends PermPower {
         public Summation() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.maxStacks = 6;
         }
 

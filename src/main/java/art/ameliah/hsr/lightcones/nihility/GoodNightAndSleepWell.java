@@ -16,7 +16,7 @@ public class GoodNightAndSleepWell extends AbstractLightcone {
 
     public static class GoodNightAndSleepWellPower extends PermPower {
         public GoodNightAndSleepWellPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

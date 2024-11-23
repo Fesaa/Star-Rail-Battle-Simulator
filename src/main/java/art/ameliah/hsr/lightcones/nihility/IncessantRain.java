@@ -42,7 +42,7 @@ public class IncessantRain extends AbstractLightcone {
 
     public static class AetherCode extends TempPower {
         public AetherCode() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 1;
             this.setStat(PowerStat.DAMAGE_TAKEN, 12);
         }

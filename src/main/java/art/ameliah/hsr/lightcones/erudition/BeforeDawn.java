@@ -26,7 +26,7 @@ public class BeforeDawn extends AbstractLightcone {
         private boolean hasSomnusCorpus = false;
 
         public BeforeDawnPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

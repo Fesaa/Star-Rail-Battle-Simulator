@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.moze;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
@@ -181,7 +180,7 @@ public class Moze extends AbstractCharacter<Moze> {
 
     private class MozePreyPower extends AbstractPower {
         public MozePreyPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.type = PowerType.DEBUFF;
             this.lastsForever = true;
         }

@@ -30,7 +30,7 @@ public class SailingTowardsASecondLife extends AbstractLightcone {
 
     public static class SailingTowardsASecondLifePower extends PermPower {
         public SailingTowardsASecondLifePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

@@ -42,7 +42,7 @@ public class RelicStats {
         // Assuming the ELEMENT_DMG is always correct for the char
         Stats convStat = this.fromElementType(character.elementType);
         relicBonus.setStat(fromRelicStat(convStat), getTotalBonus(Stats.ELEMENT_DAMAGE));
-        relicBonus.name = "RelicStatsBonuses";
+        relicBonus.setName("RelicStatsBonuses");
         character.addPower(relicBonus);
     }
 

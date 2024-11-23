@@ -9,7 +9,7 @@ public record StackPower(AbstractEntity entity, AbstractPower power, int stack) 
 
     @Override
     public String asString() {
-        return this.entity.name + " stacked " + this.power.name + " to " + this.stack;
+        return this.entity.name + " stacked " + this.power.getName() + " to " + this.stack;
     }
 
     @Override

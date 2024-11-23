@@ -20,7 +20,7 @@ public class MusketeerOfWildWheat extends AbstractRelicSetBonus {
 
     public void onEquip() {
         PermPower statBonus = new PermPower();
-        statBonus.name = "Musketeer Stat Bonus";
+        statBonus.setName("Musketeer Stat Bonus");
         statBonus.setStat(PowerStat.ATK_PERCENT, 12);
         if (this.isFullSet) {
             statBonus.setStat(PowerStat.SPEED_PERCENT, 6);
@@ -44,7 +44,7 @@ public class MusketeerOfWildWheat extends AbstractRelicSetBonus {
 
     private static class MusketeerDamagePower extends AbstractPower {
         public MusketeerDamagePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
         @Override

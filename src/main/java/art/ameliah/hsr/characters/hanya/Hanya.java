@@ -42,8 +42,8 @@ public class Hanya extends AbstractCharacter<Hanya> {
 
         AbstractPower burden = new BurdenPower();
         burden.owner = enemy;
-        if (enemy.hasPower(burden.name)) {
-            enemy.removePower(burden.name);
+        if (enemy.hasPower(burden.getName())) {
+            enemy.removePower(burden.getName());
         }
         enemy.addPower(burden);
 
@@ -81,7 +81,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         private final int hitsToTrigger = 2;
         private int hitCount = 0;
         public BurdenPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

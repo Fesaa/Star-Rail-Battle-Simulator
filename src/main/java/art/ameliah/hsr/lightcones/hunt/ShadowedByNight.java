@@ -34,7 +34,7 @@ public class ShadowedByNight extends AbstractLightcone {
 
     public static class ShadowedByNightPower extends TempPower {
         public ShadowedByNightPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.setStat(PowerStat.SPEED_PERCENT, 12);
         }

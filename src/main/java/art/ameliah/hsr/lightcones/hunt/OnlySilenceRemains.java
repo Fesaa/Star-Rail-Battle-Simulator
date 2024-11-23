@@ -23,7 +23,7 @@ public class OnlySilenceRemains extends AbstractLightcone {
 
     public static class OnlySilenceRemainsPower extends PermPower {
         public OnlySilenceRemainsPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

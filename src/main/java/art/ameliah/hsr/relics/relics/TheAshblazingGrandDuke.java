@@ -26,7 +26,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
     @Override
     public void onAttack(Attack attack) {
         if (attack.getTypes().contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
-            owner.removePower(atkBonus.name);
+            owner.removePower(atkBonus.getName());
         }
     }
 
@@ -48,7 +48,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
 
     private static class DukeDamagePower extends AbstractPower {
         public DukeDamagePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
         @Override
@@ -64,7 +64,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
 
     private static class DukeAtkBonus extends AbstractPower {
         public DukeAtkBonus() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;
             this.maxStacks = 8;
         }

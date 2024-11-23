@@ -27,7 +27,7 @@ public class MakeTheWorldClamor extends AbstractLightcone {
 
     public static class MakeTheWorldClamorPower extends PermPower {
         public MakeTheWorldClamorPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
         }
 
         @Override

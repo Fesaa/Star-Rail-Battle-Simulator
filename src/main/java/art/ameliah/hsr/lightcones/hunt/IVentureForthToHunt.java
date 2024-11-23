@@ -29,7 +29,7 @@ public class IVentureForthToHunt extends AbstractLightcone {
 
     public static class VentureForthPower extends AbstractPower {
         public VentureForthPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

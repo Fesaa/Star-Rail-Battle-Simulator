@@ -28,7 +28,7 @@ public class ResolutionShinesAsPearlsOfSweat extends AbstractLightcone {
 
 
         public Ensnared() {
-            this.name = NAME;
+            this.setName(NAME);
             this.type = PowerType.DEBUFF;
             this.turnDuration = 1;
             this.setStat(PowerStat.DEFENSE_REDUCTION, 16);

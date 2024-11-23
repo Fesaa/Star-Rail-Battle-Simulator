@@ -22,7 +22,7 @@ public class EyesOfThePrey extends AbstractLightcone {
 
     public static class EyesOfThePreyPower extends PermPower {
         public EyesOfThePreyPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.EFFECT_HIT, 40);
         }
 

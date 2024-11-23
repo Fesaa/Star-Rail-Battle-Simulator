@@ -9,7 +9,7 @@ public record RefreshPower(AbstractEntity entity, AbstractPower power, int turns
 
     @Override
     public String asString() {
-        return this.entity + " refreshed " + this.power.name + " (" + this.turns + " turn(s))";
+        return this.entity + " refreshed " + this.power.getName() + " (" + this.turns + " turn(s))";
     }
 
     @Override

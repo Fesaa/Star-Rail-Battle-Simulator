@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.gallagher;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -16,7 +15,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Gallagher extends AbstractCharacter<Gallagher> {
@@ -51,7 +49,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
             AbstractPower atkDebuff = new TempPower();
             atkDebuff.type = AbstractPower.PowerType.DEBUFF;
             atkDebuff.turnDuration = 2;
-            atkDebuff.name = "Gallagher Atk Debuff";
+            atkDebuff.setName("Gallagher Atk Debuff");
             enemy.addPower(atkDebuff);
             isEnhanced = false;
         } else {
@@ -83,7 +81,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
 
     private static class Besotted extends AbstractPower {
         public Besotted() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;
             this.type = PowerType.DEBUFF;
         }

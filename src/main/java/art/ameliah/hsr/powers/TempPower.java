@@ -30,7 +30,7 @@ public class TempPower extends AbstractPower {
      */
     public static TempPower create(PowerStat stat, float value, int turns, String name) {
         TempPower power = new TempPower();
-        power.name = name;
+        power.setName(name);
         power.turnDuration = turns;
         power.setStat(stat, value);
         return power;

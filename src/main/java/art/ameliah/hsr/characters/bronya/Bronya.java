@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.bronya;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -15,7 +14,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Bronya extends AbstractCharacter<Bronya> {
@@ -56,11 +54,11 @@ public class Bronya extends AbstractCharacter<Bronya> {
     public void useUltimate() {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             AbstractPower ultPower = new TempPower();
-            ultPower.name = ULT_POWER_NAME;
+            ultPower.setName(ULT_POWER_NAME);
             ultPower.setStat(PowerStat.ATK_PERCENT, 55);
             ultPower.setStat(PowerStat.CRIT_DAMAGE, 20 + (this.getTotalCritDamage() * 0.16f));
             ultPower.turnDuration = 2;
-            character.removePower(ultPower.name); // remove the old power in case bronya's crit damage changed so we get new snapshot of her buff
+            character.removePower(ultPower.getName()); // remove the old power in case bronya's crit damage changed so we get new snapshot of her buff
             character.addPower(ultPower);
         }
     }
@@ -80,7 +78,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
 
     private static class BronyaBasicCritPower extends AbstractPower {
         public BronyaBasicCritPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

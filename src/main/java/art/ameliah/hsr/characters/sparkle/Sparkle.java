@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.sparkle;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -14,8 +13,6 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 public class Sparkle extends AbstractCharacter<Sparkle> {
@@ -41,7 +38,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         AbstractPower skillPower = new SparkleSkillPower();
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             if (character.isDPS) {
-                character.removePower(skillPower.name); // remove the old power in case sparkle's crit damage changed so we get new snapshot of her buff
+                character.removePower(skillPower.getName()); // remove the old power in case sparkle's crit damage changed so we get new snapshot of her buff
                 character.addPower(skillPower);
                 getBattle().AdvanceEntity(character, 50);
                 lightcone.onSpecificTrigger(character, null);
@@ -124,7 +121,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
 
     public static class SparkleTalentPower extends AbstractPower {
         public SparkleTalentPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.maxStacks = 3;
         }
@@ -132,7 +129,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             AbstractPower ultPower = new SparkleUltPower();
-            if (character.hasPower(ultPower.name)) {
+            if (character.hasPower(ultPower.getName())) {
                 return stacks * 16;
             } else {
                 return stacks * 6;
@@ -142,7 +139,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
 
     private static class SparkleUltPower extends AbstractPower {
         public SparkleUltPower() {
-            this.name = ULT_POWER_NAME;
+            this.setName(ULT_POWER_NAME);
             this.turnDuration = 2;
         }
     }

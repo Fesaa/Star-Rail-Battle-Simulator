@@ -7,7 +7,7 @@ public class TauntPower extends AbstractPower {
 
     public TauntPower(AbstractCharacter<?> taunter) {
         this.taunter = taunter;
-        this.name = this.getClass().getSimpleName();
+        this.setName(this.getClass().getSimpleName());
     }
 
 }

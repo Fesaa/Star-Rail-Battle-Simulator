@@ -24,7 +24,7 @@ public class AnInstantBeforeAGaze extends AbstractLightcone {
 
     public static class AnInstantBeforeAGazePower extends AbstractPower {
         public AnInstantBeforeAGazePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 

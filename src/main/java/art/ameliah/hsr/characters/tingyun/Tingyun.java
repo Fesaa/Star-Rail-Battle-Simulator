@@ -108,7 +108,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         public TingyunSkillPower() {
             super(3);
 
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.ATK_PERCENT, 55);
         }
 
@@ -131,7 +131,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
 
     private static class TingyunBonusBasicDamagePower extends AbstractPower {
         public TingyunBonusBasicDamagePower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
         @Override

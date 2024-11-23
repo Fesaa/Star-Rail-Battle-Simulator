@@ -34,7 +34,7 @@ public class WhereaboutsShouldDreamsRest extends AbstractLightcone {
         private final WhereaboutsShouldDreamsRest lightcone;
 
         public Routed(WhereaboutsShouldDreamsRest lightcone) {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.type = PowerType.DEBUFF;
             this.lightcone = lightcone;

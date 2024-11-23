@@ -23,7 +23,7 @@ public class EternalCalculus extends AbstractLightcone {
     public static class EternalCalculusPower extends AbstractPower {
 
         public EternalCalculusPower() {
-            this.name = this.getClass().getSimpleName();
+            this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 
