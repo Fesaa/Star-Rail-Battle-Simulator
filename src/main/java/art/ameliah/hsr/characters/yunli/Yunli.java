@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.yunli;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.UseCounter;
@@ -90,7 +89,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
     }
 
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> t, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> t, int energyFromAttacked, float totalDmg) {
         addPower(getTrueSunderPower());
         if (isParrying) {
             useCull(enemy);
@@ -116,7 +115,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             attack.execute();
         }
         increaseEnergy(15, TALENT_ENERGY_GAIN);
-        super.onAttacked(character, enemy, t, energyFromAttacked, totalDmg);
+        super.afterAttacked(character, enemy, t, energyFromAttacked, totalDmg);
     }
 
     public void useCull(AbstractEnemy enemy) {

@@ -232,7 +232,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     protected abstract void useUltimate();
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         increaseEnergy(energyFromAttacked, ATTACKED_ENERGY_GAIN);
     }
 

@@ -123,7 +123,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             character.removePower(this);
             character.addPower(new StrongReverberation());
             getBattle().DelayEntity(character, 70);

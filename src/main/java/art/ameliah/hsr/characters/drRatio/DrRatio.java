@@ -115,7 +115,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (character != DrRatio.this) {
                 if (numCharges > 0) {
                     numCharges--;

@@ -24,7 +24,7 @@ public class SheAlreadyShutHerEyes extends AbstractLightcone {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         // TODO: Check if owner has shield, and if it has more than the attack
         // if (...) return;
 

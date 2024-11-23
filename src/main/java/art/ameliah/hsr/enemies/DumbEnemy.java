@@ -67,15 +67,9 @@ public class DumbEnemy extends AbstractEnemy {
         return EnemyAttackType.values()[idx];
     }
 
-    // Copy of super method, but without removing the enemy from battle.
+    // Prevent dumb enemy from dying
     @Override
-    public void afterAttackFinish(Attack attack) {
-        if (this.currentHp > 0) {
-            return;
-        }
-
-        getBattle().addToLog(new EnemyDied(this, attack.getSource()));
-        this.emit(BattleEvents::onDeath);
+    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
     }
 
     @Override

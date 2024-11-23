@@ -143,7 +143,7 @@ public class Kafka extends AbstractEnemy {
         }
 
         @Override
-        public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (this.kafka.cooldown || !character.hasPower(EnemyShock.NAME)) {
              return;
             }

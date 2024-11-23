@@ -25,7 +25,7 @@ public class LongevousDisciple extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         if (!this.isFullSet) return;
 
         // Assuming stuff like eating your own/allys HP, would be implemented as attacking them

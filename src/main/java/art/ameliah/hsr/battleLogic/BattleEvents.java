@@ -24,7 +24,7 @@ public interface BattleEvents {
      * @param energyFromAttacked The energy gained from being attacked
      * @param totalDmg           The total dmg dealt to the character
      */
-    default void onAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {}
+    default void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {}
 
     /**
      * Called when the enemy has their weakness broken

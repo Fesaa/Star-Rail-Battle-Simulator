@@ -276,12 +276,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     @Override
-    public void afterAttackFinish(Attack attack) {
+    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
         if (this.currentHp > 0) {
             return;
         }
 
-        getBattle().addToLog(new EnemyDied(this, attack.getSource()));
+        getBattle().addToLog(new EnemyDied(this, character));
         getBattle().removeEnemy(this);
         this.emit(BattleEvents::onDeath);
     }

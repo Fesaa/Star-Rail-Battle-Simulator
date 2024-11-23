@@ -89,7 +89,7 @@ public class Attack implements BattleParticipant {
         for (AbstractEnemy target : this.targets) {
             float dmg = dmgMap.get(target);
 
-            target.emit(l -> l.onAttacked(this.source, target, this.types.stream().toList(), 0, dmg));
+            target.emit(l -> l.afterAttacked(this.source, target, this.types.stream().toList(), 0, dmg));
             getBattle().addToLog(new Attacked(this.source, target, dmg, this.types.stream().toList()));
         }
 
