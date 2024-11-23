@@ -15,6 +15,7 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.UseSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
+import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
@@ -304,6 +305,10 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(AttackEnd attackEnd) {
         log(attackEnd);
+    }
+
+    public void handle(SurgingGritState surgingGritState) {
+        log(surgingGritState);
     }
 
 }

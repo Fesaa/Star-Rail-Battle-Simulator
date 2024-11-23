@@ -29,7 +29,7 @@ public class MocWave implements Wave {
     }
 
     @Override
-    public AbstractEnemy nextEnemy() {
+    public AbstractEnemy nextEnemy(AbstractEnemy enemy) {
         return null;
     }
 

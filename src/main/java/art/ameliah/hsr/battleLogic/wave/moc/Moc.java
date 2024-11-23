@@ -21,7 +21,7 @@ public class Moc {
 
     public void Start() {
         this.firstHalf.Start(MOC_START_AV);
-        int cyclesUsed = this.firstHalf.CyclesUsed();
+        int cyclesUsed = this.firstHalf.cyclesUsed();
 
         if (this.secondHalf.getPlayers().isEmpty()) {
             throw new IllegalStateException("No players for second half");

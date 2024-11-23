@@ -1,6 +1,5 @@
 package art.ameliah.hsr.battleLogic;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.IAttack;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.LogSupplier;
@@ -146,15 +145,20 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public void removeEnemy(AbstractEnemy enemy) {
-        this.enemyTeam.removeIf(e -> e.equals(enemy));
+    public final void removeEnemy(AbstractEnemy enemy) {
+        int idx = this.enemyTeam.indexOf(enemy);
+        if (idx == -1) {
+            throw new IllegalStateException("Trying to remove enemy that's not in battle");
+        }
+        this.enemyTeam.remove(idx);
         this.actionValueMap.remove(enemy);
-        this.onEnemyRemove();
+
+        this.onEnemyRemove(enemy, idx);
     }
 
     @Override
-    public void addEnemy(AbstractEnemy enemy, float initialAA) {
-        this.enemyTeam.add(enemy);
+    public void addEnemyAt(AbstractEnemy enemy, int idx, float initialAA) {
+        this.enemyTeam.add(idx, enemy);
         enemy.setBattle(this);
 
         this.actionValueMap.put(enemy, enemy.getBaseAV());
@@ -171,7 +175,7 @@ public class Battle implements IBattle {
      * <p>
      * Default behavior, end battle if everyone dead
      */
-    protected void onEnemyRemove() {
+    protected void onEnemyRemove(AbstractEnemy enemy, int idx) {
         if (!this.enemyTeam.isEmpty()) {
             return;
         }

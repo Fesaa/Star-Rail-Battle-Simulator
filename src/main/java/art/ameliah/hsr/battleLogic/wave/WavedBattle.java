@@ -9,16 +9,17 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Queue;
 
-public abstract class WavedBattle extends Battle {
+public abstract class WavedBattle<T extends Wave> extends Battle {
 
-    protected final Queue<Wave> waves = new ArrayDeque<>();
-    protected Wave currentWave;
+    protected final Queue<T> waves = new ArrayDeque<>();
+    protected T currentWave;
 
-    public WavedBattle(Wave ...waves) {
+    @SafeVarargs
+    public WavedBattle(T ...waves) {
         Collections.addAll(this.waves, waves);
     }
 
-    protected void addWave(Wave wave) {
+    protected void addWave(T wave) {
         this.waves.offer(wave);
     }
 
@@ -33,13 +34,18 @@ public abstract class WavedBattle extends Battle {
     }
 
     @Override
-    protected void onEnemyRemove() {
+    protected void onEnemyRemove(AbstractEnemy enemy, int idx) {
         if (!this.currentWave.hasNext() && getEnemies().isEmpty()) {
             this.goToNextWave();
             return;
         }
 
-        this.fillField();
+        if (!this.currentWave.hasNext()) {
+            return;
+        }
+
+        AbstractEnemy newEnemy = this.currentWave.nextEnemy(enemy);
+        this.addEnemyAt(newEnemy, idx);
     }
 
     protected void goToNextWave() {
@@ -49,19 +55,8 @@ public abstract class WavedBattle extends Battle {
             throw new ForceBattleEnd("No waves left");
         }
         addToLog(new WaveStart(this.currentWave));
-        this.fillField();
+        this.currentWave.startEnemies().forEach(this::addEnemy);
         this.onWaveChange();
-    }
-
-    protected void fillField() {
-        while (getEnemies().size() < this.currentWave.maxEnemiesOnField()) {
-            AbstractEnemy nextEnemy = currentWave.nextEnemy();
-            if (nextEnemy == null) {
-                break;
-            }
-
-            this.addEnemy(nextEnemy);
-        }
     }
 
     protected abstract void onWaveChange();

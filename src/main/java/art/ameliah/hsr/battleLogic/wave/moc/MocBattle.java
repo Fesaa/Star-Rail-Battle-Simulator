@@ -30,14 +30,11 @@ public class MocBattle extends WavedBattle {
     @Override
     protected void onWaveChange() {
         this.battleLength = this.initialBattleLength - this.turbulence.avUsed();
-        // Adding one by one, so BattleEvents::onCombatStart is called
-        this.currentWave.startEnemies().forEach(this::addEnemy);
-
         this.actionValueMap.forEach((k, _) -> this.actionValueMap.put(k, k.getBaseAV()));
         getPlayers().forEach(AbstractCharacter::tryUltimate);
     }
 
-    public int CyclesUsed() {
+    public int cyclesUsed() {
         return this.turbulence.numTurnsMetric;
     }
 }

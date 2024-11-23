@@ -49,7 +49,14 @@ public interface IBattle {
     void enemyCallback(int idx, Consumer<AbstractEnemy> callback);
 
     void removeEnemy(AbstractEnemy enemy);
-    void addEnemy(AbstractEnemy enemy, float initialAA);
+
+    void addEnemyAt(AbstractEnemy enemy, int idx, float initialAA);
+    default void addEnemyAt(AbstractEnemy enemy, int idx) {
+        this.addEnemyAt(enemy, idx, 0);
+    }
+    default void addEnemy(AbstractEnemy enemy, float initialAA) {
+        this.addEnemyAt(enemy, getEnemies().size(), initialAA);
+    }
     default void addEnemy(AbstractEnemy enemy) {
         this.addEnemy(enemy, 0);
     }
