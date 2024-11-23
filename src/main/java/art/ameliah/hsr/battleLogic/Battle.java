@@ -29,6 +29,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class Battle implements IBattle {
 
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
-    protected Queue<Attack> queue = new LinkedList<>();
+    protected Deque<Attack> queue = new LinkedList<>();
     protected boolean activeAttack = false;
 
     private final BattleHelpers battleHelpers;
@@ -97,7 +98,7 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public Queue<Attack> attackQueue() {
+    public Deque<Attack> attackQueue() {
         return this.queue;
     }
 

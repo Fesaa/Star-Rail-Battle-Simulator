@@ -6,6 +6,7 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
@@ -14,7 +15,7 @@ import java.util.function.Consumer;
 
 public interface IBattle {
 
-    Queue<Attack> attackQueue();
+    Deque<Attack> attackQueue();
     boolean isAttacking();
     void setAttacking(boolean attacking);
 

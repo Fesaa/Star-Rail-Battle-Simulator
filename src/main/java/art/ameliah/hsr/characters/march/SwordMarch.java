@@ -167,12 +167,15 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             moveHistory.add(MoveType.FOLLOW_UP);
             numFUAs++;
             getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
-            increaseEnergy(5, FUA_ENERGY_GAIN);
 
             Attack attack = this.startAttack();
             attack.hitEnemy(enemy, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
             this.masterEffect(attack, enemy);
-            gainCharge(1);
+
+            attack.addAfterAttack(() -> {
+                increaseEnergy(5, FUA_ENERGY_GAIN);
+                gainCharge(1);
+            });
 
             attack.execute();
         }

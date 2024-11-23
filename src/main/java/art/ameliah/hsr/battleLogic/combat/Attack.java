@@ -40,8 +40,18 @@ public class Attack implements BattleParticipant {
     }
 
     public void execute() {
+        this.execute(false);
+    }
+
+    public void execute(boolean forceFirst) {
         if (getBattle().isAttacking()) {
-            getBattle().attackQueue().offer(this);
+
+            if (forceFirst) {
+                getBattle().attackQueue().offerFirst(this);
+            } else {
+                getBattle().attackQueue().offerLast(this);
+            }
+
             return;
         }
         getBattle().setAttacking(true);

@@ -105,9 +105,10 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         attack.hitEnemy(enemy, totalMult * 0.34f, MultiplierStat.ATK, 0, DamageType.SKILL);
         attack.hitEnemy(enemy, totalMult * 0.33f, MultiplierStat.ATK, 0, DamageType.SKILL);
         attack.hitEnemy(enemy, totalMult * 0.33f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
-        attack.execute();
 
-        this.useFollowUp(enemy);
+        attack.addAfterAttack(() -> this.useFollowUp(enemy));
+
+        attack.execute();
     }
     public void useBasic() {
         this.startAttack()
@@ -128,7 +129,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
         this.startAttack()
                 .hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.FOLLOW_UP)
-                .execute();
+                .execute(true);
     }
 
     public void useUltimate() {
