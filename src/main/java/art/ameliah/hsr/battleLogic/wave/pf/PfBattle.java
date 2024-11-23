@@ -3,7 +3,6 @@ package art.ameliah.hsr.battleLogic.wave.pf;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
-import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PfBattle extends WavedBattle<PfWave> {
 
-    private final ConcordantTruce concordantTruce;
+    private final ConcordantTrucePower concordantTruce;
     private final PureFictionBuff pfBuff;
-    private final SurgingGrit surgingGrit;
+    private final ISurgingGrit surgingGrit;
 
     private boolean surgingGridActive = false;
     private int gridAmount;

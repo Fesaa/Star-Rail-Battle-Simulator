@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
-public class DelayedHit implements BattleParticipant,IHit {
+public class DelayedHit implements BattleParticipant, HitHolder {
 
     private final AbstractCharacter<?> source;
     private final AbstractEnemy target;
@@ -40,7 +40,7 @@ public class DelayedHit implements BattleParticipant,IHit {
     }
 
     private void hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, boolean ignoreWeakness, List<DamageType> types) {
-        Hit hit = new Hit(source, target, multiplier, stat, types, toughnessDamage, source.elementType, ignoreWeakness);
+        AllyHit hit = new AllyHit(source, target, multiplier, stat, types, toughnessDamage, source.elementType, ignoreWeakness);
         this.hits.add(hit);
     }
 

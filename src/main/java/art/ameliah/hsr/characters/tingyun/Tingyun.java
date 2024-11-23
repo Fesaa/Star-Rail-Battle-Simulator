@@ -1,8 +1,7 @@
 package art.ameliah.hsr.characters.tingyun;
 
-import art.ameliah.hsr.battleLogic.BattleHelpers;
 import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.AllyHit;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -116,7 +115,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         public void onAttack(Attack attack) {
             skillProcs++;
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
-            attack.hitEnemy(new Hit(attack.getSource(), target, 0.64F, MultiplierStat.ATK, List.of(), 0, ElementType.LIGHTNING, false));
+            attack.hitEnemy(new AllyHit(attack.getSource(), target, 0.64F, MultiplierStat.ATK, List.of(), 0, ElementType.LIGHTNING, false));
         }
 
         public void onUseUltimate() {

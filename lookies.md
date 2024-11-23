@@ -31,3 +31,7 @@ And when they fail, investigate and make a single commit with changes to test & 
 
 ## Add back break, add it properly
 Add break dmg from Ruan Mei back, add break dmg when toughness is depleted. And add extra delay on imaginary break
+
+## Change source of hits to be BattleParticipant
+A hit should be coming from anyone really. Currently, am I working around this by checking it source is null
+Which is not ideal.

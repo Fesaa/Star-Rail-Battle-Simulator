@@ -2,7 +2,7 @@ package art.ameliah.hsr.battleLogic.wave.pf;
 
 import art.ameliah.hsr.battleLogic.IBattle;
 
-public interface SurgingGrit {
+public interface ISurgingGrit {
 
     /**
      * Called when Surging Grit goes into effect

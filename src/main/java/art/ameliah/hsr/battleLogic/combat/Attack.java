@@ -28,7 +28,7 @@ public class Attack implements BattleParticipant, IAttack {
     private final Set<DamageType> types;
     @Getter
     private final Set<AbstractEnemy> targets;
-    private final List<IHit> hits = new ArrayList<>();
+    private final List<HitHolder> hits = new ArrayList<>();
     private final Set<Runnable> afterAttacks = new HashSet<>();
 
     private boolean hasExecuted = false;
@@ -58,15 +58,22 @@ public class Attack implements BattleParticipant, IAttack {
         // TODO: Move dmg logic until this loop
         // In AbstractEnemy, handle dying after an attack?
         Map<AbstractEnemy, Float> dmgMap = new HashMap<>();
-        for (IHit hitHolder : this.hits) {
+        for (HitHolder hitHolder : this.hits) {
             hitHolder.getHits().forEach(hit -> {
-                hit.getSource().emit(l -> l.onBeforeHitEnemy(hit));
+                AbstractCharacter<?> source = hit.getSource();
+                if (source != null) {
+                    source.emit(l -> l.onBeforeHitEnemy(hit));
+                }
                 hit.getTarget().emit(l -> l.onBeforeHitEnemy(hit));
 
                 float dmg = hit.finalDmg();
                 float toughnessReduce = hit.finalToughnessReduction();
 
-                getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
+                if (source != null) {
+                    getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
+                }
+
+
                 if (toughnessReduce > 0) {
                     hit.getTarget().reduceToughness(toughnessReduce);
                 }
@@ -77,7 +84,9 @@ public class Attack implements BattleParticipant, IAttack {
                 dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
 
                 getBattle().increaseTotalPlayerDmg(dmg);
-                getBattle().updateContribution(hit.getSource(), dmg);
+                if (source != null) {
+                    getBattle().updateContribution(hit.getSource(), dmg);
+                }
             });
         }
 
@@ -102,6 +111,18 @@ public class Attack implements BattleParticipant, IAttack {
             }
             nextAttack.execute();
         }
+    }
+
+    /**
+     * Hit an enemy target for a fixed amount of dmg, without a source
+     * @param target
+     * @param dmg
+     * @return
+     */
+    public Attack hitFixed(AbstractEnemy target, float dmg) {
+        this.targets.add(target);
+        this.hits.add(new FixedHit(target, dmg));
+        return this;
     }
 
     /**
@@ -142,16 +163,16 @@ public class Attack implements BattleParticipant, IAttack {
     }
 
     public Attack hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
-        Hit hit = new Hit(source, target, multiplier, stat, types.stream().toList(), 0, source.elementType, false);
+        AllyHit hit = new AllyHit(source, target, multiplier, stat, types.stream().toList(), 0, source.elementType, false);
         return this.hitEnemy(hit);
     }
 
     public Attack hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, boolean ignoreWeakness, List<DamageType> types) {
-        Hit hit = new Hit(source, target, multiplier, stat, types, toughnessDamage, source.elementType, ignoreWeakness);
+        AllyHit hit = new AllyHit(source, target, multiplier, stat, types, toughnessDamage, source.elementType, ignoreWeakness);
         return this.hitEnemy(hit);
     }
 
-    public Attack hitEnemy(Hit hit) {
+    public Attack hitEnemy(AllyHit hit) {
         if (this.hasExecuted) {
             throw new IllegalStateException("The attack has already finished");
         }

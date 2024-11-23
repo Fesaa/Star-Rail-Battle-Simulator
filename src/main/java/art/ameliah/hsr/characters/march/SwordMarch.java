@@ -2,7 +2,7 @@ package art.ameliah.hsr.characters.march;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.AllyHit;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
@@ -66,7 +66,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     private void masterEffect(Attack attack, AbstractEnemy target) {
         if (master != null) {
             boolean ignore = target.hasWeakness(this.elementType) || target.hasWeakness(master.elementType);
-            attack.hitEnemy(new Hit(this, target, 0.22f, MultiplierStat.ATK, List.of(), 0, this.master.elementType, true));
+            attack.hitEnemy(new AllyHit(this, target, 0.22f, MultiplierStat.ATK, List.of(), 0, this.master.elementType, true));
         }
     }
 
