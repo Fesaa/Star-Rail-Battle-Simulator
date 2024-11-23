@@ -23,3 +23,11 @@ Feixiao started attacking FireWindImgLightningWeakEnemy0 with FOLLOW_UP
 ```
 ValorousDamagePower is refreshed, but Feixiao's turn end after the FOLLOW_UP attack ends, so Powers tick down. Losing the buff, 
 I think she should still have the buff here
+
+### Investigate some more dmg differences / set up some tests
+There are still some battles that have different dmg outcomes, but the more code changes,
+the more these differences are from actual bug fixes. It's the to set a baseline, add tests.
+And when they fail, investigate and make a single commit with changes to test & the bug fix
+
+## Add back break, add it properly
+Add break dmg from Ruan Mei back, add break dmg when toughness is depleted. And add extra delay on imaginary break
