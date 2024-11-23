@@ -67,8 +67,8 @@ public class PfBattle extends WavedBattle<PfWave> {
     protected void onEnemyRemove(AbstractEnemy enemy, int idx) {
         this.increaseGridAmount(5);
 
-        // No bosses left && current boss died => goto next wave
-        if (!this.currentWave.hasNext() && this.currentWave.isCurrentBoss(enemy)) {
+        // If the boss dies, the wave ends
+        if (this.currentWave.isBoss(enemy)) {
             this.enemyTeam.forEach(e -> {
                 this.actionValueMap.remove(e);
                 this.addToLog(new EnemyDied(e, "Pure Fiction boss died, all minions die as well"));
@@ -78,8 +78,7 @@ public class PfBattle extends WavedBattle<PfWave> {
             return;
         }
 
-        AbstractEnemy newEnemy = this.currentWave.nextEnemy(enemy);
-        this.addEnemyAt(newEnemy, idx);
+        super.onEnemyRemove(enemy, idx);
     }
 
     @Override

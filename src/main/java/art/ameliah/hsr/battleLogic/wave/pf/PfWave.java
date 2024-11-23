@@ -2,72 +2,66 @@ package art.ameliah.hsr.battleLogic.wave.pf;
 
 import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
-public class PfWave implements Wave {
+@RequiredArgsConstructor
+public abstract class PfWave implements Wave {
 
-    private final Queue<AbstractEnemy> bosses = new LinkedList<>();
-    private final List<Supplier<AbstractEnemy>> minionCycle = new ArrayList<>();
+    private final AbstractEnemy boss;
+    private final Map<Class<? extends AbstractEnemy>, Supplier<AbstractEnemy>> minions = new HashMap<>();
+    private final Map<Class<? extends AbstractEnemy>, Integer> usages = new HashMap<>();
 
-    private AbstractEnemy currentBoss = null;
-    private int minionIdx = 0;
-
-    public PfWave() {}
-
-    public void addBoss(AbstractEnemy boss) {
-        this.bosses.add(boss);
+    public void addMinionType(Class<? extends AbstractEnemy> clazz, int maxAmount, Supplier<AbstractEnemy> supplier) {
+        this.minions.put(clazz, supplier);
+        this.usages.put(clazz, maxAmount);
     }
 
-    public void addMinionType(Supplier<AbstractEnemy> supplier) {
-        this.minionCycle.add(supplier);
-    }
-
-    private AbstractEnemy getNextMinion() {
-        AbstractEnemy next = this.minionCycle.get(minionIdx).get();
-        minionIdx = (minionIdx + 1) % this.minionCycle.size();
-        return next;
-    }
-
-    private AbstractEnemy getNextBoss() {
-        if (bosses.isEmpty()) {
-            throw new IllegalStateException("Wave has no bosses set up");
-        }
-
-        this.currentBoss = this.bosses.poll();
-        return this.currentBoss;
-    }
-
-    public boolean isCurrentBoss(AbstractEnemy enemy) {
-        return this.currentBoss == enemy;
-    }
-
-    @Override
-    public List<AbstractEnemy> startEnemies() {
-        return List.of(
-                this.getNextMinion(),
-                this.getNextMinion(),
-                this.getNextBoss(),
-                this.getNextMinion(),
-                this.getNextMinion()
-        );
+    public boolean isBoss(AbstractEnemy enemy) {
+        return this.boss == null || this.boss == enemy;
     }
 
     @Override
     public boolean hasNext() {
-        return !this.bosses.isEmpty();
+        if (this.boss != null) {
+            return !this.boss.isDead();
+        }
+
+        for (var e : this.usages.entrySet()) {
+            if (e.getValue() == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean canSpawn(AbstractEnemy enemy) {
+        return this.usages.get(enemy.getClass()) > 0;
     }
 
     @Override
     public AbstractEnemy nextEnemy(AbstractEnemy enemy) {
-        if (!this.isCurrentBoss(enemy)) {
-            return this.getNextMinion();
+        if (this.canSpawn(enemy)) {
+            this.usages.computeIfPresent(enemy.getClass(), (_, v) -> v - 1);
+            return this.minions.get(enemy.getClass()).get();
         }
-        return this.getNextBoss();
+
+        var clazz = this.usages.entrySet()
+                .stream()
+                .filter(e -> e.getValue() > 0)
+                .map(Map.Entry::getKey)
+                .findFirst().orElse(null);
+
+        if (clazz == null) {
+            throw new IllegalStateException("Called next enemy, when no enemies were left");
+        }
+
+        this.usages.computeIfPresent(clazz, (_, v) -> v - 1);
+        return this.minions.get(clazz).get();
     }
 
     @Override
