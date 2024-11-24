@@ -31,7 +31,7 @@ public class AnInstantBeforeAGaze extends AbstractLightcone {
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.ULTIMATE)) return 0;
-            if (character != owner) return 0;
+            if (character != getOwner()) return 0;
 
             return (float) (Math.min(character.maxEnergy, 180) * 0.36);
 

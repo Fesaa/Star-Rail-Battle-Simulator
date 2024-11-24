@@ -126,7 +126,7 @@ public class GuardianShadow extends AbstractEnemy {
 
         @Override
         public void afterUseBasic() {
-            this.guardian.InevitablePunishment((AbstractCharacter<?>) this.owner);
+            this.guardian.InevitablePunishment((AbstractCharacter<?>) this.getOwner());
         }
     }
 
@@ -141,7 +141,7 @@ public class GuardianShadow extends AbstractEnemy {
 
         @Override
         public void afterUseSkill() {
-            this.guardian.InevitablePunishment((AbstractCharacter<?>) this.owner);
+            this.guardian.InevitablePunishment((AbstractCharacter<?>) this.getOwner());
         }
     }
 }

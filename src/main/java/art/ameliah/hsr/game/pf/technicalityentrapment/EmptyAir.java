@@ -44,7 +44,7 @@ public class EmptyAir implements PureFictionBuff {
 
         @Override
         public void afterUseSkill() {
-            getBattle().generateSkillPoint((AbstractCharacter<?>) this.owner, 1);
+            getBattle().generateSkillPoint((AbstractCharacter<?>) this.getOwner(), 1);
         }
 
         @Override

@@ -124,7 +124,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
         public SundaySkillPower() {
             super(2, SKILL_POWER_NAME);
 
-            float dmgBoost = this.owner instanceof AbstractSummoner<?> ? 80 : 30;
+            float dmgBoost = this.getOwner() instanceof AbstractSummoner<?> ? 80 : 30;
 
             this.setStat(PowerStat.DAMAGE_BONUS, dmgBoost);
             this.setStat(PowerStat.CRIT_CHANCE, 20);

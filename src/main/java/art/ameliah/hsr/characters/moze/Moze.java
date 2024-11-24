@@ -59,7 +59,7 @@ public class Moze extends AbstractCharacter<Moze> {
     public void useSkill() {
 
         AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        preyPower.owner = enemy;
+        preyPower.setOwner(enemy);
         enemy.addPower(preyPower);
         increaseCharge(MAX_CHARGE);
         isDeparted = true;
@@ -134,12 +134,12 @@ public class Moze extends AbstractCharacter<Moze> {
             getBattle().addToLog(new GainCharge(this, amount, initalStack, chargeCount));
             if (chargeLost >= CHARGE_ATTACK_THRESHOLD) {
                 chargeLost -= CHARGE_ATTACK_THRESHOLD;
-                useFollowUp((AbstractEnemy) preyPower.owner);
+                useFollowUp((AbstractEnemy) preyPower.getOwner());
             }
         }
 
         if (chargeCount == 0) {
-            preyPower.owner.removePower(preyPower);
+            preyPower.getOwner().removePower(preyPower);
         }
     }
 
@@ -201,7 +201,7 @@ public class Moze extends AbstractCharacter<Moze> {
 
         @Override
         public void beforeAttacked(Attack attack) {
-            AbstractEnemy enemy = (AbstractEnemy) this.owner;
+            AbstractEnemy enemy = (AbstractEnemy) this.getOwner();
 
             boolean trigger = true;
             if (attack.getSource() instanceof Moze) {

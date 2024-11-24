@@ -40,7 +40,7 @@ public class YetHopeIsPriceless extends AbstractLightcone {
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (!damageTypes.contains(DamageType.FOLLOW_UP)) return 0;
-            if (owner != character) return 0;
+            if (getOwner() != character) return 0;
             if (character.getTotalCritDamage() < 120) return 0;
 
             int stacks = Math.min(4, (int) (character.getTotalCritDamage() - 120)/20);

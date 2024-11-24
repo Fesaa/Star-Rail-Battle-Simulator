@@ -9,7 +9,7 @@ public record GainPower(AbstractEntity entity, AbstractPower power) implements L
 
     @Override
     public String asString() {
-        return this.entity.name + " gained " + this.power.getName();
+        return this.entity.name + " gained " + this.power;
     }
 
     @Override

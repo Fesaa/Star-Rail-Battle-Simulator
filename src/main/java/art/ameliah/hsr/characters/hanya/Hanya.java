@@ -41,7 +41,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         attack.hitEnemy(enemy, 2.64f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
 
         AbstractPower burden = new BurdenPower();
-        burden.owner = enemy;
+        burden.setOwner(enemy);
         if (enemy.hasPower(burden.getName())) {
             enemy.removePower(burden.getName());
         }
@@ -113,7 +113,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
 
                     hitCount = 0;
                     if (triggersLeft <= 0) {
-                        owner.removePower(this);
+                        getOwner().removePower(this);
                     }
                 }
             }

@@ -103,7 +103,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
             if (justApplied) {
                 justApplied = false;
             } else {
-                owner.removePower(this);
+                getOwner().removePower(this);
             }
         }
     }

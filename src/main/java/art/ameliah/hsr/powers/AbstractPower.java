@@ -4,6 +4,8 @@ import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
+import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -33,13 +35,22 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
     public boolean justApplied = false;
     public int maxStacks = 0;
     public int stacks = 1;
-    public AbstractEntity owner;
+    @Getter
+    private AbstractEntity owner;
 
     public AbstractPower() {
     }
 
     public AbstractPower(String name) {
         this.setName(name);
+    }
+
+    public void setOwner(AbstractEntity owner) {
+        this.owner = owner;
+        // The owner received the buff in their own turn
+        if (getBattle() != null && getBattle().getCurrentUnit() != null) {
+            this.justApplied = getBattle().getCurrentUnit().equals(this.owner);
+        }
     }
 
     public String getName() {
@@ -49,9 +60,31 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
         return this.name;
     }
 
+    public void merge(AbstractPower other) {
+        if (this.maxStacks > 0) {
+            this.stacks = Math.min(this.stacks+1, this.maxStacks);
+        }
+
+        this.turnDuration = other.turnDuration;
+        if (getBattle() != null && getBattle().getCurrentUnit() != null) {
+            this.justApplied = getBattle().getCurrentUnit().equals(this.owner);
+        }
+
+        if (getBattle().getLessMetrics()) {
+            return;
+        }
+
+        if (this.maxStacks > 0) {
+            getBattle().addToLog(new StackPower(this.owner, this));
+        } else {
+            getBattle().addToLog(new RefreshPower(this.owner, this));
+        }
+
+    }
+
     @Override
     public IBattle getBattle() {
-        return this.owner.getBattle();
+        return this.getOwner().getBattle();
     }
 
     public float getConditionalAtkBonus(AbstractCharacter<?> character) {
@@ -132,9 +165,9 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
 
         if (!lastsForever && turnDuration <= 0) {
             if (getStat(PowerStat.SPEED_PERCENT) > 0 || getStat(PowerStat.FLAT_SPEED) > 0) {
-                getBattle().DecreaseSpeed(this.owner, this);
+                getBattle().DecreaseSpeed(this.getOwner(), this);
             } else {
-                this.owner.removePower(this);
+                this.getOwner().removePower(this);
             }
         }
     }
@@ -170,6 +203,12 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
     public AbstractPower setStat(PowerStat stat, float value) {
         this.stats.put(stat, value);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(turnDuration=%d, stacks=%d, maxStacks=%d, justApplied=%b, type=%s, durationBasedOnSelfTurns=%b, lastsForever=%b)",
+                this.getName(), this.turnDuration, this.stacks, this.maxStacks, this.justApplied, this.type, this.durationBasedOnSelfTurns, this.lastsForever);
     }
 
 }

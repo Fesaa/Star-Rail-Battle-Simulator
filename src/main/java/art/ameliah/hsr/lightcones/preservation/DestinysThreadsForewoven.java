@@ -31,7 +31,7 @@ public class DestinysThreadsForewoven extends AbstractLightcone {
 
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            if (character != owner) return 0;
+            if (character != getOwner()) return 0;
             return Math.min((float) (((int) (character.getFinalDefense() / 100)) * 1.2), 48);
         }
     }

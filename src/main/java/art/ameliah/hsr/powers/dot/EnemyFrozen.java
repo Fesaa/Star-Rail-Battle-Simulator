@@ -22,7 +22,7 @@ public class EnemyFrozen extends TempPower {
     @Override
     public void onTurnStart() {
         this.source.startAttack()
-                .hit((AbstractCharacter<?>) this.owner, this.dmg)
+                .hit((AbstractCharacter<?>) this.getOwner(), this.dmg)
                 .execute();
     }
 }

@@ -27,7 +27,7 @@ public class Concerto extends AbstractEntity {
         @Override
         public void onTurnStart() {
             getBattle().addToLog(new ConcertoEnd());
-            getBattle().getActionValueMap().remove(this.owner);
+            getBattle().getActionValueMap().remove(this.getOwner());
             Concerto.this.owner.onConcertoEnd();
             getBattle().setCurrentUnit(Concerto.this.owner);
             Concerto.this.owner.emit(BattleEvents::onTurnStart);

@@ -57,28 +57,12 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     public void addPower(AbstractPower power) {
         for (AbstractPower existingPower : this.powerList) {
             if (existingPower.getName().equals(power.getName())) {
-                if (existingPower.maxStacks > 0 && existingPower.stacks < existingPower.maxStacks) {
-                    existingPower.stacks++;
-                    existingPower.turnDuration = power.turnDuration;
-                    if (!getBattle().getLessMetrics()) {
-                        getBattle().addToLog(new StackPower(this, existingPower, existingPower.stacks));
-                    }
-                } else {
-                    if (!existingPower.lastsForever) {
-                        existingPower.turnDuration = power.turnDuration;
-                        if (power.justApplied) {
-                            existingPower.justApplied = true;
-                        }
-                        if (!getBattle().getLessMetrics()) {
-                            getBattle().addToLog(new RefreshPower(this, existingPower, existingPower.turnDuration));
-                        }
-                    }
-                }
+                existingPower.merge(power);
                 return;
             }
         }
         powerList.add(power);
-        power.owner = this;
+        power.setOwner(this);
         if (inBattle()) {
             if (!getBattle().getLessMetrics()) {
                 getBattle().addToLog(new GainPower(this, power));

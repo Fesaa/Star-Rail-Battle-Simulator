@@ -3,6 +3,8 @@ package art.ameliah.hsr;
 import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
+import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
+import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -282,6 +284,18 @@ public class Main {
             public void handle(FinalDmgMetrics finalDmgMetrics) {
                 System.out.println(finalDmgMetrics.asString());
                 this.log(finalDmgMetrics);
+            }
+
+            @Override
+            public void handle(TurnStart turnStart) {
+                this.out.println();
+                this.log(turnStart);
+            }
+
+            @Override
+            public void handle(TurnEnd turnEnd) {
+                this.log(turnEnd);
+                this.out.println();
             }
         });
     }

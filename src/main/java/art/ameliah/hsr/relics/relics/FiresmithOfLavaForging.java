@@ -48,7 +48,7 @@ public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
         public void afterAttackFinish(Attack attack) {
             if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
-            this.owner.addPower(TempPower.create(PowerStat.FIRE_DMG_BOOST, 12, 1, "Firesmith of Lave Forging Fire Bonus 4PC Ultimate Bonus"));
+            this.getOwner().addPower(TempPower.create(PowerStat.FIRE_DMG_BOOST, 12, 1, "Firesmith of Lave Forging Fire Bonus 4PC Ultimate Bonus"));
         }
     }
 }
