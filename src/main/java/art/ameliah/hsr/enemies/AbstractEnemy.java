@@ -232,6 +232,10 @@ public abstract class AbstractEnemy extends AbstractEntity {
     protected float decreaseToughness(float amount) {
         float initialToughness = this.currentToughness;
         float toughnessToDeal = Math.min(amount, this.currentToughness);
+        if (toughnessToDeal == 0) {
+            return 0;
+        }
+
         this.currentToughness -= toughnessToDeal;
         getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.currentToughness));
 
