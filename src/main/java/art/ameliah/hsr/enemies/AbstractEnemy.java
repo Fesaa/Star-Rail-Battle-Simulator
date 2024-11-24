@@ -2,15 +2,16 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ForcedAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ReduceToughness;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.RuanMeiDelay;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.WeaknessBreakRecover;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.ruanmei.RuanMei;
 import art.ameliah.hsr.enemies.action.EnemyActionSequence;
@@ -213,13 +214,22 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return this.getFinalAttack();
     }
 
-    public void reduceToughness(Hit hit) {
-        if (this.isWeaknessBroken()) {
-            return;
+    public HitResult hit(Hit hit) {
+        if (this.isDead()) {
+            return new HitResult(hit, 0, 0, false, false);
         }
-        float initialToughness = this.currentToughness;
-        this.currentToughness = Math.max(this.currentToughness - hit.finalToughnessReduction(), 0);
 
+        final float dmgToDeal = Math.min(hit.finalDmg(), this.currentHp);
+
+        this.currentHp -= dmgToDeal;
+
+        if (this.isWeaknessBroken()) {
+            return new HitResult(hit, dmgToDeal, 0, false, this.isDead());
+        }
+
+        float initialToughness = this.currentToughness;
+        float toughnessToDeal = Math.min(hit.finalDmg(), this.currentToughness);
+        this.currentToughness -= toughnessToDeal;
         getBattle().addToLog(new ReduceToughness(this, hit.finalToughnessReduction(), initialToughness, this.currentToughness));
 
         if (this.currentToughness == 0) {
@@ -228,11 +238,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
             getBattle().getPlayers().forEach(p -> p.onWeaknessBreak(this));
             this.emit(BattleEvents::onWeaknessBreak);
         }
-    }
 
-    public boolean dealDmg(Hit hit) {
-        this.currentHp -= hit.finalDmg();
-        return true;
+        return new HitResult(hit, dmgToDeal, toughnessToDeal, this.isWeaknessBroken(), this.isDead());
     }
 
     public boolean isDead() {
@@ -280,12 +287,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     @Override
-    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(Attack attack) {
         if (this.currentHp > 0) {
             return;
         }
 
-        getBattle().addToLog(new EnemyDied(this, character));
+        getBattle().addToLog(new EnemyDied(this, attack.getSource()));
         getBattle().removeEnemy(this);
         this.emit(BattleEvents::onDeath);
     }

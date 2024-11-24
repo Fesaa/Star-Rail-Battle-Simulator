@@ -20,7 +20,7 @@ public class ScentAloneStaysTrue extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
         attack.getTargets().forEach(e -> {

@@ -19,7 +19,7 @@ public class PatienceIsAllYouNeed extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getSource() == null) return;
         attack.getSource().addPower(new PatienceIsAllYouNeedSpeedBoost());
     }

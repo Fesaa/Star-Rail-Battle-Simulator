@@ -25,7 +25,7 @@ public class InherentlyUnjustDestiny extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.FOLLOW_UP)) return;
 
         // TODO: Take EHR into account

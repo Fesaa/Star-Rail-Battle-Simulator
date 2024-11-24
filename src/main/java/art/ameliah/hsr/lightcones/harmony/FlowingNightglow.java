@@ -59,7 +59,7 @@ public class FlowingNightglow extends AbstractLightcone {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             FlowingNightglow.this.owner.addPower(new FlowingNightglowERRPower());
         }
     }

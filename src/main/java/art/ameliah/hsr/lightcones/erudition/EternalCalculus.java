@@ -28,7 +28,7 @@ public class EternalCalculus extends AbstractLightcone {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             this.stacks = Math.min(5, attack.getTargets().size());
             if (this.stacks > 3) {
                 getBattle().IncreaseSpeed(this.getOwner(), TempPower.create(PowerStat.SPEED_PERCENT, 16, 1, "Eternal Calculus Speed Boost"));

@@ -1,6 +1,6 @@
 package art.ameliah.hsr.enemies.game.cosmos;
 
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
@@ -22,7 +22,7 @@ public class LordyTrashcan extends AbstractEnemy {
     }
 
     @Override
-    public void onBeforeHit(Hit hit) {
+    public void beforeReceiveHit(Hit hit) {
         if (this.weaknessMap.size() > 2) {
             return;
         }

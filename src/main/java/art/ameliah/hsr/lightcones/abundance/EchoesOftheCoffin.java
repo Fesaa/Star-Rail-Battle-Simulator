@@ -24,7 +24,7 @@ public class EchoesOftheCoffin extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         int stacks = Math.min(3, attack.getTargets().size());
         this.owner.increaseEnergy(3 * stacks, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);
     }

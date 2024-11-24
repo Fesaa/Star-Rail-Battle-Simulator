@@ -3,6 +3,7 @@ package art.ameliah.hsr.characters.lingsha;
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.FuYuan;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
@@ -232,18 +233,21 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyToGain, float totalDmg) {
-            int timesHit = characterTimesDamageTakenMap.get(character);
-            timesHit++;
-            getBattle().addToLog(new HitSinceLastHeal(character, timesHit));
-            if (timesHit >= 2 && currentEmergencyHealCD <= 0) {
-                getBattle().addToLog(new EmergencyHeal(Lingsha.this));
-                numEmergencyHeals++;
-                currentEmergencyHealCD = emergencyHealCooldown;
-                Lingsha.this.FuYuanAttack(false);
-            } else {
-                characterTimesDamageTakenMap.put(character, timesHit);
+        public void afterAttacked(EnemyAttack attack) {
+            attack.getTargets().forEach(t -> {
+                int timesHit = characterTimesDamageTakenMap.merge(t, 1, Integer::sum);
+                getBattle().addToLog(new HitSinceLastHeal(t, timesHit));
+            });
+
+            boolean trigger = characterTimesDamageTakenMap.values().stream().anyMatch(v -> v >= 2);
+            if (!trigger || currentEmergencyHealCD > 0) {
+                return;
             }
+
+            getBattle().addToLog(new EmergencyHeal(Lingsha.this));
+            numEmergencyHeals++;
+            currentEmergencyHealCD = emergencyHealCooldown;
+            Lingsha.this.FuYuanAttack(false);
         }
     }
 }

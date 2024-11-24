@@ -1,5 +1,6 @@
 package art.ameliah.hsr.characters.drRatio;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -148,13 +149,13 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            if (character != DrRatio.this) {
+        public void afterAttacked(Attack attack) {
+            if (attack.getSource() != DrRatio.this) {
                 if (numCharges > 0) {
                     numCharges--;
-                    DrRatio.this.useFollowUp(enemy);
+                    DrRatio.this.useFollowUp((AbstractEnemy) this.getOwner());
                     if (numCharges <= 0) {
-                        enemy.removePower(this);
+                        this.getOwner().removePower(this);
                     }
                 }
             }

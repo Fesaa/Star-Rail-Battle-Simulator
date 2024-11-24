@@ -24,7 +24,7 @@ public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
 
     // TODO: onAfterUseUltimate
     @Override
-    public void afterAttackFinish(Attack attack) {
+    public void afterAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
         TempPower ultPower = TempPower.create(PowerStat.CRIT_DAMAGE, 25, 2, "Hunter of the Glacial Forest Ultimate CD Boost");

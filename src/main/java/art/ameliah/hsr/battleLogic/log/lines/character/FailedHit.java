@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic.log.lines.character;
 
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 

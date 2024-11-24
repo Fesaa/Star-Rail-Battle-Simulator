@@ -1,7 +1,7 @@
 package art.ameliah.hsr.relics.relics;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -27,14 +27,14 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getTypes().contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
             owner.removePower(atkBonus.getName());
         }
     }
 
     @Override
-    public void onBeforeHitEnemy(Hit hit) {
+    public void beforeDoHit(Hit hit) {
         atkBonus = new DukeAtkBonus();
         if (hit.getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(atkBonus);

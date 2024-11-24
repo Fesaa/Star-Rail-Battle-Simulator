@@ -32,7 +32,7 @@ public class CelestialDifferentiator extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void afterAttackFinish(Attack attack) {
+        public void afterAttack(Attack attack) {
             this.getOwner().removePower(this);
         }
     }

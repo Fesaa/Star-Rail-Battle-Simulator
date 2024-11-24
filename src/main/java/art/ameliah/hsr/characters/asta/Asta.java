@@ -123,7 +123,7 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public void afterAttackFinish(Attack attack) {
+        public void afterAttack(Attack attack) {
             if (attack.getSource() == Asta.this) {
                 int chargeGain = attack.getTargets().size();
                 for (AbstractEnemy enemy : attack.getTargets()) {

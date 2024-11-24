@@ -22,7 +22,7 @@ public class WorrisomeBlissful extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getSource() != owner) return;
         if (attack.getTargets().isEmpty()) return;
 

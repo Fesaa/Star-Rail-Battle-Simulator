@@ -1,14 +1,11 @@
 package art.ameliah.hsr.lightcones.destruction;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.List;
 
 public class SomethingIrreplaceable extends AbstractLightcone {
 
@@ -22,7 +19,7 @@ public class SomethingIrreplaceable extends AbstractLightcone {
     }
 
     @Override
-    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(Attack attack) {
         // TODO: Restore HP
         TempPower power = TempPower.create(PowerStat.DAMAGE_BONUS, 24, 1, "Something Irreplaceable Damage Bonus");
         this.owner.addPower(power);

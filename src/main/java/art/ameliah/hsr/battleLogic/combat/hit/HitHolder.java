@@ -1,4 +1,4 @@
-package art.ameliah.hsr.battleLogic.combat;
+package art.ameliah.hsr.battleLogic.combat.hit;
 
 import java.util.List;
 

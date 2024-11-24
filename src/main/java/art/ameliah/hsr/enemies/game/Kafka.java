@@ -4,7 +4,6 @@ import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -14,8 +13,8 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
+import art.ameliah.hsr.utils.Randf;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Kafka extends AbstractEnemy {
@@ -126,14 +125,15 @@ public class Kafka extends AbstractEnemy {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            if (this.kafka.cooldown || !character.hasPower(EnemyShock.NAME)) {
+        public void afterAttacked(EnemyAttack attack) {
+            AbstractCharacter<?> target = Randf.rand(attack.getTargets(), getBattle().getEnemyTargetRng());
+            if (this.kafka.cooldown || !target.hasPower(EnemyShock.NAME)) {
                 return;
             }
 
 
             this.kafka.cooldown = true;
-            this.kafka.startAttack().hit(character, 10, 325).execute();
+            this.kafka.startAttack().hit(target, 10, 325).execute();
         }
     }
 
@@ -145,7 +145,7 @@ public class Kafka extends AbstractEnemy {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             AbstractPower shock = attack.getSource().getPower(EnemyShock.NAME);
             if (shock == null) {
                 return;

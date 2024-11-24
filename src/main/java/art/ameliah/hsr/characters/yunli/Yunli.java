@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.yunli;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.UseCounter;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseCull;
@@ -88,10 +89,11 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
     }
 
-    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> t, int energyFromAttacked, float totalDmg) {
+    @Override
+    public void afterAttacked(EnemyAttack enemyAttack) {
         addPower(getTrueSunderPower());
         if (isParrying) {
-            useCull(enemy);
+            useCull(enemyAttack.getSource());
             removePower(cullPower);
             isParrying = false;
             for (AbstractEnemy e : getBattle().getEnemies()) {
@@ -103,8 +105,8 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             increaseEnergy(5, "from Normal Counter");
 
             Attack attack = this.startAttack();
-            int idx = getBattle().getEnemies().indexOf(enemy);
-            attack.hitEnemy(enemy, 1.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
+            int idx = getBattle().getEnemies().indexOf(enemyAttack.getSource());
+            attack.hitEnemy(enemyAttack.getSource(), 1.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
             getBattle().enemyCallback(idx - 1, target -> {
                 attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
             });
@@ -114,7 +116,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             attack.execute();
         }
         increaseEnergy(15, TALENT_ENERGY_GAIN);
-        super.afterAttacked(character, enemy, t, energyFromAttacked, totalDmg);
+        super.afterAttacked(enemyAttack);
     }
 
     public void useCull(AbstractEnemy enemy) {

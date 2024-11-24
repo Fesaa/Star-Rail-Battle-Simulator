@@ -47,7 +47,7 @@ public class IVentureForthToHunt extends AbstractLightcone {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 this.stacks = Math.min(2, this.stacks + 1);
             }

@@ -236,15 +236,15 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            for (DamageType type : types) {
+        public void afterAttacked(Attack attack) {
+            for (DamageType type : attack.getTypes()) {
                 if (type == DamageType.FOLLOW_UP) {
                     Topaz.this.numby.AdvanceForward();
                     break;
                 }
             }
             if (ultCounter > 0) {
-                for (DamageType type : types) {
+                for (DamageType type : attack.getTypes()) {
                     if (type == DamageType.BASIC || type == DamageType.SKILL || type == DamageType.ULTIMATE) {
                         Topaz.this.numby.AdvanceForward();
                         break;

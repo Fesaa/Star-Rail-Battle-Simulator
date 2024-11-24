@@ -26,7 +26,7 @@ public class SleepLikeTheDead extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (this.cooldown <= 0 && (attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.BASIC))) {
             AbstractPower critPower = TempPower.create(PowerStat.CRIT_CHANCE, 36, 1, "Sleep Like The Dead Crit Chance Boost");
             critPower.justApplied = true;

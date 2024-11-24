@@ -28,7 +28,7 @@ public class ThiefOfShootingMeteor extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void afterAttackFinish(Attack attack) {
+    public void afterAttack(Attack attack) {
         // TODO: Generate 3 energy after weakness breaking, don't see a way to check if an enemy was broken this turn
     }
 }

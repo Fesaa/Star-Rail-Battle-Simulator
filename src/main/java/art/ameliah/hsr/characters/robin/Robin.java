@@ -208,7 +208,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             Robin.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
             Robin.this.allyAttacksMetric++;
         }
@@ -230,7 +230,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
             if (target == null) {
                 return;

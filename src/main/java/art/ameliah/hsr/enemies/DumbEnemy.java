@@ -1,12 +1,10 @@
 package art.ameliah.hsr.enemies;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-
-import java.util.List;
 
 public class DumbEnemy extends AbstractEnemy {
 
@@ -69,7 +67,7 @@ public class DumbEnemy extends AbstractEnemy {
 
     // Prevent dumb enemy from dying
     @Override
-    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(Attack attack) {
     }
 
     @Override

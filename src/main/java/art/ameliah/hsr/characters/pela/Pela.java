@@ -126,7 +126,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             for (AbstractEnemy enemy : attack.getTargets()) {
                 for (AbstractPower power : enemy.powerList) {
                     if (power.type == PowerType.DEBUFF) {

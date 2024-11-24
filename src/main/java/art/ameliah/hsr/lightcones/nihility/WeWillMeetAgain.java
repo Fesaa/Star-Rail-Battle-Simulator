@@ -13,7 +13,7 @@ public class WeWillMeetAgain extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         for (AbstractEnemy enemy : attack.getTargets()) {
             attack.hitEnemy(this.owner, enemy, 0.96f, MultiplierStat.ATK);
         }

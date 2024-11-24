@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.aventurine;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.aventurine.UseBlindBet;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -91,9 +92,8 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
     }
 
     public void onCombatStart() {
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(talentPower);
-        }
+        getBattle().getPlayers().forEach(p -> p.addPower(talentPower));
+        getBattle().getEnemies().forEach(e -> e.addPower(talentPower));
         addPower(PermPower.create(PowerStat.CRIT_CHANCE, 48, "Aventurine Crit Chance Bonus"));
     }
 
@@ -151,16 +151,19 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            if (character == Aventurine.this) {
-                increaseBlindBet(2);
-            } else {
-                increaseBlindBet(1);
-            }
+        public void afterAttack(EnemyAttack attack) {
+            int count = attack.getTargets().stream().mapToInt(t -> {
+                if (t == Aventurine.this) {
+                    return 2;
+                }
+                return 1;
+            }).sum();
+
+            Aventurine.this.increaseBlindBet(count);
         }
 
         @Override
-        public void afterAttackFinish(Attack attack) {
+        public void afterAttack(Attack attack) {
             if (attack.getSource() != Aventurine.this && attack.getTypes().contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;

@@ -1,6 +1,7 @@
 package art.ameliah.hsr.enemies.game.jarilovi;
 
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -26,13 +27,13 @@ public class AutomatonBeetle extends AbstractEnemy {
     }
 
     @Override
-    public boolean dealDmg(Hit hit) {
+    public HitResult hit(Hit hit) {
         if (this.isInvincible && !hit.getTypes().contains(DamageType.DOT)) {
             this.isInvincible = false;
-            return false;
+            return new HitResult(hit, 0, 0, false, false);
         }
 
-        return super.dealDmg(hit);
+        return super.hit(hit);
     }
 
     @Override

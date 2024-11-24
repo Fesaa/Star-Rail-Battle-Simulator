@@ -18,7 +18,7 @@ public class TrendOfTheUniversalMarket extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         double dmg = attack.getSource().getFinalDefense() * 0.8;
         // TODO: Add dot to enemies
         // for (AbstractEnemy enemy : enemiesHit) {

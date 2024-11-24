@@ -14,7 +14,7 @@ public class ResolutionShinesAsPearlsOfSweat extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         for (AbstractEnemy enemy : attack.getTargets()) {
             if (!enemy.hasPower(Ensnared.NAME)) {
                 enemy.addPower(new Ensnared());

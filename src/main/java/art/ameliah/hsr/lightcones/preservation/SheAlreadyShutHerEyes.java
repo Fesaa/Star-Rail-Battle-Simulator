@@ -1,14 +1,11 @@
 package art.ameliah.hsr.lightcones.preservation;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.List;
 
 // TODO: The wave boost isn't implemented yet, doesn't seem like Battle has a concept of waves
 public class SheAlreadyShutHerEyes extends AbstractLightcone {
@@ -24,7 +21,7 @@ public class SheAlreadyShutHerEyes extends AbstractLightcone {
     }
 
     @Override
-    public void afterAttacked(AbstractCharacter<?> c, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    public void afterAttacked(Attack attack) {
         // TODO: Check if owner has shield, and if it has more than the attack
         // if (...) return;
 

@@ -108,7 +108,7 @@ public class GuardianShadow extends AbstractEnemy {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             if (attack.getTargets().stream().anyMatch(e -> e == this.guardian)) {
                 this.guardian.InevitablePunishment(attack.getSource());
             }

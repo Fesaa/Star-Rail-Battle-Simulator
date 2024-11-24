@@ -11,7 +11,7 @@ public class Multiplication extends AbstractLightcone {
         super(953, 318, 198, owner);
     }
 
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getTypes().contains(DamageType.BASIC)) {
             getBattle().AdvanceEntity(attack.getSource(), 20);
         }

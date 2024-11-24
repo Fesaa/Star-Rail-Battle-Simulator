@@ -16,7 +16,7 @@ public class OnTheFallOfAnAeon extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         this.owner.addPower(new OnTheFallOfAnAeonATKBoost());
     }
 

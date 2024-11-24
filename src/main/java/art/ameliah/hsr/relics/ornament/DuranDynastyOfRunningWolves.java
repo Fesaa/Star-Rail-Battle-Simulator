@@ -29,7 +29,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 for (AbstractCharacter<?> character : getBattle().getPlayers()) {
                     for (AbstractRelicSetBonus relicSetBonus : character.relicSetBonus) {

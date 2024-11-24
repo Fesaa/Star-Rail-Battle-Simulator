@@ -3,6 +3,8 @@ package art.ameliah.hsr.characters;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
+import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
@@ -271,9 +273,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     protected abstract void useUltimate();
 
-    @Override
-    public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-        increaseEnergy(energyFromAttacked, ATTACKED_ENERGY_GAIN);
+    public EnemyHitResult hit(EnemyHit hit) {
+        increaseEnergy(hit.energy(), ATTACKED_ENERGY_GAIN);
+        // TODO: lower HP
+        return new EnemyHitResult(hit.dmg());
     }
 
     public float getFinalAttack() {

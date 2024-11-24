@@ -18,7 +18,7 @@ public class BeforeTheTutorialMissionStarts extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getTargets().stream()
                 .anyMatch(e -> e.powerList
                         .stream()

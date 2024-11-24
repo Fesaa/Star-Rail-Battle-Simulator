@@ -116,7 +116,7 @@ public class Herta extends AbstractCharacter<Herta> {
         }
 
         @Override
-        public void afterAttackFinish(Attack attack) {
+        public void afterAttack(Attack attack) {
             boolean anyAlive = attack.getTargets().stream().noneMatch(AbstractEnemy::isDead);
             List<AbstractEnemy> newFallen = attack.getTargets().stream()
                     .filter(t -> t.getCurrentHp() < t.maxHp() * 0.4f)

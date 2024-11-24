@@ -17,7 +17,7 @@ public class HollowHope implements PureFictionBuff {
             private int weaknessBroken = 0;
 
             @Override
-            public void onAttack(Attack attack) {
+            public void beforeAttack(Attack attack) {
                 this.weaknessBroken = attack.getTargets()
                         .stream()
                         .filter(AbstractEnemy::isWeaknessBroken)
@@ -26,7 +26,7 @@ public class HollowHope implements PureFictionBuff {
             }
 
             @Override
-            public void afterAttackFinish(Attack attack) {
+            public void afterAttack(Attack attack) {
                 int diff = attack.getTargets()
                         .stream()
                         .filter(AbstractEnemy::isWeaknessBroken)

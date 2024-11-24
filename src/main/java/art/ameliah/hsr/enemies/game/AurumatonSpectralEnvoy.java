@@ -1,9 +1,9 @@
 package art.ameliah.hsr.enemies.game;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -128,10 +128,10 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            character.removePower(this);
-            character.addPower(new StrongReverberation());
-            getBattle().DelayEntity(character, 70);
+        public void afterAttacked(EnemyAttack attack) {
+            this.getOwner().removePower(this);
+            this.getOwner().addPower(new StrongReverberation());
+            getBattle().DelayEntity(this.getOwner(), 70);
         }
     }
 

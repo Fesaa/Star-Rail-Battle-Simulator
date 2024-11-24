@@ -22,7 +22,7 @@ public class AlongThePassingShore extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         for (AbstractEnemy enemy : attack.getTargets()) {
             enemy.addPower(new MirageFizzle(this));
         }

@@ -15,8 +15,6 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.List;
-
 public class Hanya extends AbstractCharacter<Hanya> {
 
     public static final String NAME = "Hanya";
@@ -96,21 +94,18 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            if (types.contains(DamageType.BASIC) || types.contains(DamageType.SKILL) || types.contains(DamageType.ULTIMATE)) {
+        public void afterAttacked(Attack attack) {
+            if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.ULTIMATE)) {
                 hitCount++;
                 getBattle().addToLog(new BurdenLog(hitCount, hitsToTrigger));
 
                 if (hitCount >= hitsToTrigger) {
                     triggersLeft--;
-                    getBattle().generateSkillPoint(character, 1);
+                    getBattle().generateSkillPoint(attack.getSource(), 1);
                     Hanya.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
 
                     TempPower tracePower = TempPower.create(PowerStat.ATK_PERCENT, 10, 1, "Hanya Trace Atk Power");
-                    if (getBattle().getCurrentUnit() == character) {
-                        tracePower.justApplied = true;
-                    }
-                    character.addPower(tracePower);
+                    attack.getSource().addPower(tracePower);
 
                     hitCount = 0;
                     if (triggersLeft <= 0) {

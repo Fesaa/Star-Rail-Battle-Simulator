@@ -25,7 +25,7 @@ public class ForgeOfTheKalpagniLatern extends AbstractRelicSetBonus {
 
     // TODO: Rework onBeforeUseAttack to include enemies
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getTargets().stream().anyMatch(e -> e.hasWeakness(ElementType.FIRE))) {
             this.owner.addPower(TempPower.create(PowerStat.BREAK_EFFECT, 40, 1, "Forge Of The Kalpagni Latern Break Bonus"));
         }

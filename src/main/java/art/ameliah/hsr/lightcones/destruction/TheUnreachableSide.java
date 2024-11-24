@@ -1,5 +1,6 @@
 package art.ameliah.hsr.lightcones.destruction;
 
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -41,7 +42,7 @@ public class TheUnreachableSide extends AbstractLightcone {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void afterAttacked(Attack attack) {
             this.active = true;
         }
     }

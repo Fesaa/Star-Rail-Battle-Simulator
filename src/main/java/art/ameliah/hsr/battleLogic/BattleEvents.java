@@ -1,12 +1,10 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.Hit;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-
-import java.util.List;
 
 public interface BattleEvents {
 
@@ -20,19 +18,22 @@ public interface BattleEvents {
      * Called when an enemy join the battle while it has already started
      */
     default void onEnemyJoinCombat(AbstractEnemy enemy) {
-
     }
 
     /**
-     * Called when a character is attacked, or when an enemy is attacked.
+     * Hook for {@link AbstractCharacter<>}, after attack ends
      *
-     * @param character          The character that was attacked/is attacking
-     * @param enemy              The enemy that attacked/is being attacked
-     * @param types              The types of damage dealt
-     * @param energyFromAttacked The energy gained from being attacked
-     * @param totalDmg           The total dmg dealt to the character
+     * @param attack the attack
      */
-    default void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+    default void afterAttacked(EnemyAttack attack) {
+    }
+
+    /**
+     * Hook for {@link AbstractEnemy}, after attack ends
+     *
+     * @param attack the attack
+     */
+    default void afterAttacked(Attack attack) {
     }
 
     /**
@@ -42,45 +43,67 @@ public interface BattleEvents {
     }
 
     /**
-     * Called before dmg is calculated.
-     * Use this to apply buffs, debuffs, extra hits, etc. that need to happen in this attack
-     * Add an attack to queue if you need to start a new one.
+     * Hook for {@link AbstractCharacter<>}, before attack starts
      *
      * @param attack the attack
      */
-    default void onAttack(Attack attack) {
+    default void beforeAttack(Attack attack) {
     }
 
     /**
-     * Called before being attacked
+     * Hook for {@link AbstractEnemy}, before attack starts
      *
-     * @param attack the attack going to happen
+     * @param attack the attack
+     */
+    default void beforeAttack(EnemyAttack attack) {
+    }
+
+    /**
+     * Hook for {@link AbstractEnemy}, before attack starts
+     *
+     * @param attack the attack
      */
     default void beforeAttacked(Attack attack) {
     }
 
     /**
-     * Called before hitting an enemy
+     * Hook for {@link AbstractCharacter<>}, before attack starts
      *
-     * @param hit the hit going to happen
+     * @param attack the attack
      */
-    default void onBeforeHitEnemy(Hit hit) {
+    default void beforeAttacked(EnemyAttack attack) {
     }
 
     /**
-     * Called before getting hit
+     * Hook for {@link AbstractCharacter<>}, before hit happens
      *
      * @param hit the hit going to happen
      */
-    default void onBeforeHit(Hit hit) {
+    default void beforeDoHit(Hit hit) {
     }
 
     /**
-     * Called after the attack has finished
+     * Hook for {@link AbstractEnemy}, before hit happens
+     *
+     * @param hit the hit going to happen
+     */
+    default void beforeReceiveHit(Hit hit) {
+    }
+
+    /**
+     * Hook for {@link AbstractCharacter<>}, called after the attack has finished
      *
      * @param attack the performed attack
      */
-    default void afterAttackFinish(Attack attack) {
+    default void afterAttack(Attack attack) {
+    }
+
+    /**
+     * Hook for {@link AbstractEnemy}, called after the attack has finished
+     *
+     * @param attack the attack
+     */
+    default void afterAttack(EnemyAttack attack) {
     }
 
     /**

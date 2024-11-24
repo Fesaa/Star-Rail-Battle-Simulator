@@ -2,6 +2,10 @@ package art.ameliah.hsr.battleLogic.combat;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
+import art.ameliah.hsr.battleLogic.combat.hit.DelayedHit;
+import art.ameliah.hsr.battleLogic.combat.hit.FixedHit;
+import art.ameliah.hsr.battleLogic.combat.hit.HitHolder;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
@@ -53,7 +57,7 @@ public class Attack implements BattleParticipant, IAttack {
         getBattle().setAttacking(true);
 
         getBattle().addToLog(new AttackStart(this));
-        this.source.emit(l -> l.onAttack(this));
+        this.source.emit(l -> l.beforeAttack(this));
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(this)));
 
         // TODO: Move dmg logic until this loop
@@ -61,26 +65,21 @@ public class Attack implements BattleParticipant, IAttack {
         Map<AbstractEnemy, Float> dmgMap = new HashMap<>();
         for (HitHolder hitHolder : this.hits) {
             hitHolder.getHits().forEach(hit -> {
+
                 BattleParticipant source = hit.getSource();
                 if (source instanceof AbstractCharacter<?> e) {
-                    e.emit(l -> l.onBeforeHitEnemy(hit));
+                    e.emit(l -> l.beforeDoHit(hit));
                 }
-                hit.getTarget().emit(l -> l.onBeforeHit(hit));
+                hit.getTarget().emit(l -> l.beforeReceiveHit(hit));
 
-                float dmg = hit.finalDmg();
-                float toughnessReduce = hit.finalToughnessReduction();
 
-                if (toughnessReduce > 0) {
-                    hit.getTarget().reduceToughness(hit);
-                }
-                if (dmg <= 0) {
-                    return;
-                }
-                if (hit.getTarget().dealDmg(hit)) {
-                    dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
+                var res = hit.getTarget().hit(hit);
+                // TODO: Metrics update, record overflow etc
+                if (res.success()) {
+                    dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + hit.finalDmg());
 
-                    getBattle().increaseTotalPlayerDmg(dmg);
-                    getBattle().updateContribution(hit.getSource(), dmg);
+                    getBattle().increaseTotalPlayerDmg(hit.finalDmg());
+                    getBattle().updateContribution(hit.getSource(), hit.finalDmg());
                     getBattle().addToLog(new HitResult(hit));
                 } else {
                     dmgMap.putIfAbsent(hit.getTarget(), 0.0f);
@@ -92,11 +91,11 @@ public class Attack implements BattleParticipant, IAttack {
         for (AbstractEnemy target : this.targets) {
             float dmg = dmgMap.get(target);
 
-            target.emit(l -> l.afterAttacked(this.source, target, this.types.stream().toList(), 0, dmg));
+            target.emit(l -> l.afterAttacked(this));
             getBattle().addToLog(new Attacked(this.source, target, dmg, this.types.stream().toList()));
         }
 
-        this.source.emit(l -> l.afterAttackFinish(this));
+        this.source.emit(l -> l.afterAttack(this));
         this.hasExecuted = true;
 
         this.afterAttacks.forEach(Runnable::run);

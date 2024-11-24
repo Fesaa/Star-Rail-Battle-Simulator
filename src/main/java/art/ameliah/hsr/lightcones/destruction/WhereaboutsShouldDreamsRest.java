@@ -23,7 +23,7 @@ public class WhereaboutsShouldDreamsRest extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         for (AbstractEnemy enemy : attack.getTargets()) {
             enemy.addPower(new Routed(this));
         }

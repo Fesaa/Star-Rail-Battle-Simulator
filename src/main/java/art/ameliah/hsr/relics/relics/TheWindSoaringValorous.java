@@ -31,7 +31,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(new ValorousDamagePower());
         }

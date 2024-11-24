@@ -16,7 +16,7 @@ public class FalsePromises implements PureFictionBuff {
     public void applyGritMechanic(PfBattle battle) {
         battle.getPlayers().forEach(player -> player.addPower(new PermPower("False Promises grit mechanic") {
             @Override
-            public void afterAttackFinish(Attack attack) {
+            public void afterAttack(Attack attack) {
                 if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                     battle.increaseGridAmount(2 * attack.getTargets().size());
                 }
@@ -51,7 +51,7 @@ public class FalsePromises implements PureFictionBuff {
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             if (!attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 return;
             }

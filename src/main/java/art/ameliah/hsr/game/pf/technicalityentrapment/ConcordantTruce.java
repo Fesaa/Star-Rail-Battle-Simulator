@@ -11,7 +11,7 @@ public class ConcordantTruce extends ConcordantTrucePower {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.SKILL)) {
             return;
         }

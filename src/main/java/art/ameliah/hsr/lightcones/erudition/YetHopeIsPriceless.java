@@ -25,7 +25,7 @@ public class YetHopeIsPriceless extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.BASIC)) return;
 
         this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 20, 2, "Yet Hope Is Priceless Defense Ignore Debuff"));

@@ -19,7 +19,7 @@ public class TheDayTheCosmosFell extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (attack.getTargets().stream()
                 .filter(e -> e.hasWeakness(this.owner.elementType))
                 .count() < 2) return;

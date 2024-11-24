@@ -237,7 +237,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public void afterAttackFinish(Attack attack) {
+        public void afterAttack(Attack attack) {
             if (!Feixiao.this.hasPower(ultBreakEffBuff.getName())) {
                 Feixiao.this.increaseStack(1);
             }

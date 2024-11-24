@@ -30,7 +30,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         eclipse = 0;
     }
 
@@ -58,7 +58,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
         }
 
         @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+        public void afterAttacked(Attack attack) {
             eclipse = Math.min(3, eclipse + 1);
         }
     }

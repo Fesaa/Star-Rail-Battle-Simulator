@@ -2,18 +2,25 @@ package art.ameliah.hsr.battleLogic.combat;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.moze.Moze;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EnemyAttack implements IAttack, BattleParticipant {
 
+    @Getter
     private final AbstractEnemy source;
+    @Getter
+    private final Set<AbstractCharacter<?>> targets = new HashSet<>();
     private final List<EnemyHit> hits = new ArrayList<>();
 
     private boolean hasExecuted = false;
@@ -42,10 +49,14 @@ public class EnemyAttack implements IAttack, BattleParticipant {
                 }
             }
 
-            // TODO: Deal player dmg
-            getBattle().addToLog(new Attacked(source, hit.target, hit.dmg, List.of()));
-            hit.target.emit(l -> l.afterAttacked(hit.target, source, new ArrayList<>(), hit.energy, hit.dmg));
+            var res = hit.target().hit(hit);
+            getBattle().addToLog(new Attacked(source, hit.target(), hit.dmg(), List.of()));
         }
+
+        for (var target : this.targets) {
+            target.emit(l -> l.afterAttacked(this));
+        }
+        this.source.emit(l -> l.afterAttack(this));
 
         this.hasExecuted = true;
         getBattle().setAttacking(false);
@@ -79,6 +90,7 @@ public class EnemyAttack implements IAttack, BattleParticipant {
             throw new IllegalStateException("Cannot add hits after executing");
         }
         this.hits.add(new EnemyHit(target, energyToGain, dmg));
+        this.targets.add(target);
         return this;
     }
 
@@ -87,6 +99,4 @@ public class EnemyAttack implements IAttack, BattleParticipant {
         return this.source.getBattle();
     }
 
-    public record EnemyHit(AbstractCharacter<?> target, int energy, float dmg) {
-    }
 }

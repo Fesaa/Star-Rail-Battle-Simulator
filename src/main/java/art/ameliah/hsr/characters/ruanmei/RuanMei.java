@@ -125,7 +125,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
 
         @Override
-        public void onAttack(Attack attack) {
+        public void beforeAttack(Attack attack) {
             for (AbstractEnemy enemy : attack.getTargets()) {
                 if (!enemy.hasPower(ULT_DEBUFF_NAME)) {
                     AbstractPower debuff = new RuanMeiUltDebuff(RuanMei.this);

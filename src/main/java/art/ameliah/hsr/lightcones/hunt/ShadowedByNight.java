@@ -26,7 +26,7 @@ public class ShadowedByNight extends AbstractLightcone {
     }
 
     @Override
-    public void onAttack(Attack attack) {
+    public void beforeAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.BREAK)) return;
 
         getBattle().IncreaseSpeed(this.owner, new ShadowedByNightPower());
