@@ -7,7 +7,7 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.Path;
-import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;

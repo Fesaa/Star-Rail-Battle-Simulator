@@ -7,8 +7,11 @@ import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
+import art.ameliah.hsr.characters.goal.AllyTargetGoal;
+import art.ameliah.hsr.characters.goal.EnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.TurnGoal;
 import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.DefaultLightcone;
@@ -64,6 +67,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     protected final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
     private final SortedMap<Integer, UltGoal<C>> ultGoals = new TreeMap<>();
     private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
+    private final SortedMap<Integer, EnemyTargetGoal<C>> enemyTargetGoals = new TreeMap<>();
+    private final SortedMap<Integer, AllyTargetGoal<C>> allyTargetGoals = new TreeMap<>();
     public boolean usesEnergy = true;
     public float currentEnergy;
     public float ultCost;
@@ -100,6 +105,24 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.lightcone = new DefaultLightcone(this);
     }
 
+    public void registerGoal(int priority, AllyTargetGoal<C> allyTargetGoal) {
+        if (this.allyTargetGoals.containsKey(priority)) {
+            throw new IllegalArgumentException("Priority already exists, " + priority);
+        }
+        this.allyTargetGoals.put(priority, allyTargetGoal);
+    }
+
+    public void registerGoal(int priority, EnemyTargetGoal<C> enemyTargetGoal) {
+        if (this.enemyTargetGoals.containsKey(priority)) {
+            throw new IllegalArgumentException("Priority already exists, " + priority);
+        }
+        this.enemyTargetGoals.put(priority, enemyTargetGoal);
+    }
+
+    public void clearEnemyTargetGoals() {
+        this.enemyTargetGoals.clear();
+    }
+
     public void registerGoal(int priority, UltGoal<C> ultGoal) {
         if (ultGoals.containsKey(priority)) {
             throw new IllegalArgumentException("Priority already exists, " + priority);
@@ -120,6 +143,28 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     public void clearTurnGoals() {
         turnGoals.clear();
+    }
+
+    protected final AbstractCharacter<?> getAllyTarget() {
+        for (AllyTargetGoal<C> goal : this.allyTargetGoals.values()) {
+            var optionalAlly = goal.getTarget();
+            if (optionalAlly.isPresent()) {
+                return optionalAlly.get();
+            }
+        }
+
+        throw new IllegalStateException("No ally target found");
+    }
+
+    protected final AbstractEnemy getTarget(MoveType type) {
+        for (EnemyTargetGoal<C> goal : this.enemyTargetGoals.values()) {
+            var optionalEnemy = goal.getTarget(type);
+            if (optionalEnemy.isPresent()) {
+                return optionalEnemy.get();
+            }
+        }
+
+        throw new IllegalStateException("No enemy target found");
     }
 
     public final void tryUltimate() {

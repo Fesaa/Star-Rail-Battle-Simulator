@@ -1,4 +1,4 @@
-package art.ameliah.hsr.characters.goal.shared;
+package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.Numby;

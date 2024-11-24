@@ -5,9 +5,12 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
-import art.ameliah.hsr.characters.goal.shared.AlwaysSkillGoal;
-import art.ameliah.hsr.characters.goal.shared.AlwaysUltGoal;
+import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -36,11 +39,14 @@ public class Sunday extends AbstractCharacter<Sunday> {
 
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new SummonerTargetGoal(this));
+        this.registerGoal(10, new DpsAllyTargetGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
     protected void useSkill() {
-        var target = this.getTarget();
+        var target = this.getAllyTarget();
 
         if (firstAbilityUse) {
             this.firstAbilityUse = false;
@@ -66,32 +72,16 @@ public class Sunday extends AbstractCharacter<Sunday> {
         }
     }
 
-    private AbstractCharacter<?> getTarget() {
-        Optional<AbstractCharacter<?>> target = getBattle().getPlayers()
-                .stream()
-                .filter(c -> c instanceof AbstractSummoner<?>)
-                .findFirst();
-        if (target.isPresent()) {
-            return target.get();
-        }
-
-        return getBattle().getPlayers()
-                .stream()
-                .filter(c -> c.isDPS)
-                .findFirst()
-                .orElseThrow();
-    }
-
     @Override
     protected void useBasic() {
         this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .hitEnemy(this.getTarget(MoveType.BASIC), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
                 .execute();
     }
 
     @Override
     protected void useUltimate() {
-        AbstractCharacter<?> target = this.getTarget();
+        AbstractCharacter<?> target = this.getAllyTarget();
         if (firstAbilityUse) {
             this.firstAbilityUse = false;
             target.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 50, 2, TECHNIQUE_POWER_NAME));
