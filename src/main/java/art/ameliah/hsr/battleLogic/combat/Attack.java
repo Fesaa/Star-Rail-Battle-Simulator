@@ -30,7 +30,7 @@ public class Attack implements BattleParticipant, IAttack {
     @Getter
     private final Set<AbstractEnemy> targets;
     private final List<HitHolder> hits = new ArrayList<>();
-    private final Set<Runnable> afterAttacks = new HashSet<>();
+    private final Set<Runnable> afterAttacks = new HashSet<>(); // I think this isn't needed anymore
 
     private boolean hasExecuted = false;
 
@@ -231,11 +231,12 @@ public class Attack implements BattleParticipant, IAttack {
         return this;
     }
 
-    public void addAfterAttack(Runnable runnable) {
+    public Attack addAfterAttack(Runnable runnable) {
         if (this.hasExecuted) {
             throw new IllegalStateException("Attack has already run");
         }
         this.afterAttacks.add(runnable);
+        return this;
     }
 
     @Override

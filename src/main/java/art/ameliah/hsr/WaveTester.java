@@ -12,6 +12,7 @@ import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.game.pf.technicalityentrapment.TechnicalityEntrapment;
 import art.ameliah.hsr.teams.Divteams;
 import art.ameliah.hsr.teams.FeixiaoTeams;
+import art.ameliah.hsr.teams.PlayerTeam;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,7 +39,9 @@ public class WaveTester {
     }
 
     public static void PfTest() {
-        PureFiction pureFiction = new TechnicalityEntrapment(Divteams.players(), Divteams.players());
+        PureFiction pureFiction = new TechnicalityEntrapment(
+                List.of(Divteams.divsFeixiao(), PlayerTeam.getPreBuiltHerta(), Divteams.divsRobin(), Divteams.divsHuoHuo()),
+                List.of(Divteams.divsFeixiao(), Divteams.divsTopaz(), Divteams.divsRobin(), Divteams.divsHuoHuo()));
         pureFiction.setBattleLogger(WaveTesterLogger::new);
         pureFiction.Start();
     }

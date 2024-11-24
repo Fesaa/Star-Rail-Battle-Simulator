@@ -345,7 +345,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float totalSameElementDamageBonus = 0;
         float totalGlobalElementDamageBonus = 0;
         for (AbstractPower power : powerList) {
-            //totalSameElementDamageBonus += power.getStat(PowerStat.SAME_ELEMENT_DAMAGE_BONUS);
+            totalSameElementDamageBonus += power.getStat(this.elementType.getStatBoost());
             totalGlobalElementDamageBonus += power.getStat(PowerStat.DAMAGE_BONUS);
         }
         return totalSameElementDamageBonus + totalGlobalElementDamageBonus;

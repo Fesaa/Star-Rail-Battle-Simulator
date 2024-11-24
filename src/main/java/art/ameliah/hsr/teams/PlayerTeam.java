@@ -8,6 +8,7 @@ import art.ameliah.hsr.characters.feixiao.Feixiao;
 import art.ameliah.hsr.characters.fuxuan.FuXuan;
 import art.ameliah.hsr.characters.gallagher.Gallagher;
 import art.ameliah.hsr.characters.hanya.Hanya;
+import art.ameliah.hsr.characters.herta.Herta;
 import art.ameliah.hsr.characters.huohuo.Huohuo;
 import art.ameliah.hsr.characters.lingsha.Lingsha;
 import art.ameliah.hsr.characters.march.SwordMarch;
@@ -24,6 +25,7 @@ import art.ameliah.hsr.lightcones.abundance.Multiplication;
 import art.ameliah.hsr.lightcones.abundance.PostOpConversation;
 import art.ameliah.hsr.lightcones.abundance.WhatIsReal;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
+import art.ameliah.hsr.lightcones.erudition.GeniusesRepose;
 import art.ameliah.hsr.lightcones.harmony.ForTomorrowsJourney;
 import art.ameliah.hsr.lightcones.harmony.MemoriesOfThePast;
 import art.ameliah.hsr.lightcones.harmony.PastAndFuture;
@@ -46,6 +48,7 @@ import art.ameliah.hsr.relics.ornament.FirmamentFrontlineGlamoth;
 import art.ameliah.hsr.relics.ornament.InertSalsotto;
 import art.ameliah.hsr.relics.ornament.IzumoGenseiAndTakamaDivineRealm;
 import art.ameliah.hsr.relics.ornament.RutilentArena;
+import art.ameliah.hsr.relics.ornament.SigoniaTheUnclaimedDesolation;
 import art.ameliah.hsr.relics.ornament.SpaceSealingStation;
 import art.ameliah.hsr.relics.relics.EagleOfTwilightLine;
 import art.ameliah.hsr.relics.relics.GeniusOfBrilliantStars;
@@ -63,6 +66,22 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PlayerTeam {
+
+    public static AbstractCharacter<?> getPreBuiltHerta() {
+        Herta herta = new Herta();
+        herta.EquipLightcone(new GeniusesRepose(herta));
+        herta.EquipRelicSet(new GeniusOfBrilliantStars(herta));
+        herta.EquipRelicSet(new SigoniaTheUnclaimedDesolation(herta));
+        new RelicStats().addMainStat(Stats.CRIT_RATE)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ICE_DAMAGE)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 11)
+                .addSubStat(Stats.CRIT_DAMAGE, 15)
+                .addSubStat(Stats.SPEED, 3)
+                .equipTo(herta);
+        return herta;
+    }
 
     public static AbstractCharacter<?> getPrebuiltLingshaCritSupport() {
         AbstractCharacter<?> character = new Lingsha();
@@ -85,7 +104,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.LIGHTNING_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 17).addSubStat(Stats.CRIT_DAMAGE, 7);
         relicStats.equipTo(character);
         return character;
@@ -195,7 +214,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.WIND_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
         relicStats.equipTo(character);
         return character;
@@ -208,7 +227,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.FIRE_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 10).addSubStat(Stats.SPEED, 1);
         relicStats.equipTo(character);
         return character;
@@ -279,7 +298,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new RutilentArena(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.IMAGINARY_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 11).addSubStat(Stats.SPEED, 3);
         relicStats.equipTo(character);
         return character;
@@ -292,7 +311,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new RutilentArena(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.IMAGINARY_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 14);
         relicStats.equipTo(character);
         return character;
@@ -305,7 +324,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.FIRE_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
         relicStats.equipTo(character);
         return character;
@@ -361,7 +380,7 @@ public class PlayerTeam {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.PHYSICAL_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
         relicStats.equipTo(character);
         return character;
@@ -385,7 +404,7 @@ public class PlayerTeam {
 
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.WIND_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
         relicStats.equipTo(character);
         return character;
@@ -414,7 +433,7 @@ public class PlayerTeam {
 
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.WIND_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
         relicStats.equipTo(character);
         return character;

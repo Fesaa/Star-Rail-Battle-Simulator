@@ -146,7 +146,7 @@ public class Battle implements IBattle {
     public final void removeEnemy(AbstractEnemy enemy) {
         int idx = this.enemyTeam.indexOf(enemy);
         if (idx == -1) {
-            throw new IllegalStateException("Trying to remove enemy that's not in battle");
+            return;
         }
         this.enemyTeam.remove(idx);
         this.actionValueMap.remove(enemy);
@@ -413,7 +413,7 @@ public class Battle implements IBattle {
 
         // Character keep their buffs until the next card is at 0AV
         currentUnit.emit(BattleEvents::onEndTurn);
-        this.addToLog(new TurnEnd(this.currentUnit));
+        this.addToLog(new TurnEnd(this.currentUnit, getEnemies()));
         this.onEndTurn();
 
         if (yunli != null && yunli.isParrying) {

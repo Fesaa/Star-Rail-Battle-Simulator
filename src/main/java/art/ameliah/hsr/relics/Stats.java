@@ -15,7 +15,6 @@ public enum Stats {
     SPEED,
     HEALING,
     ERR,
-    ELEMENT_DAMAGE,
     PHYSICAL_DAMAGE,
     FIRE_DAMAGE,
     ICE_DAMAGE,

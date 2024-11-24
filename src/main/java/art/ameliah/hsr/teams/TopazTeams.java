@@ -32,7 +32,7 @@ public class TopazTeams {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.IMAGINARY_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 9).addSubStat(Stats.CRIT_DAMAGE, 12).addSubStat(Stats.SPEED, 3);
         relicStats.equipTo(character);
         return character;
@@ -49,7 +49,7 @@ public class TopazTeams {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.FIRE_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 7).addSubStat(Stats.CRIT_DAMAGE, 16).addSubStat(Stats.SPEED, 1);
         relicStats.equipTo(character);
         return character;
@@ -81,7 +81,7 @@ public class TopazTeams {
         character.EquipRelicSet(new RutilentArena(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.IMAGINARY_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 11).addSubStat(Stats.SPEED, 3);
         relicStats.equipTo(character);
         return character;
@@ -94,7 +94,7 @@ public class TopazTeams {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.LIGHTNING_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 14);
         relicStats.equipTo(character);
         return character;
@@ -108,7 +108,7 @@ public class TopazTeams {
         character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+                addMainStat(Stats.PHYSICAL_DAMAGE).addMainStat(Stats.ATK_PER);
         relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
         relicStats.equipTo(character);
         return character;

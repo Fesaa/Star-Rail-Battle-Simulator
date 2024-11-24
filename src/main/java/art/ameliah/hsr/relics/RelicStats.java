@@ -40,13 +40,13 @@ public class RelicStats {
         relicBonus.setStat(PowerStat.ENERGY_REGEN, getTotalBonus(Stats.ERR));
 
         // Assuming the ELEMENT_DMG is always correct for the char
-        Stats convStat = this.fromElementType(character.elementType);
-        relicBonus.setStat(fromRelicStat(convStat), getTotalBonus(Stats.ELEMENT_DAMAGE));
+        Stats convStat = fromElementType(character.elementType);
+        relicBonus.setStat(character.elementType.getStatBoost(), getTotalBonus(convStat));
         relicBonus.setName("RelicStatsBonuses");
         character.addPower(relicBonus);
     }
 
-    private Stats fromElementType(ElementType type) {
+    public static Stats fromElementType(ElementType type) {
         return switch (type) {
             case FIRE -> Stats.FIRE_DAMAGE;
             case ICE -> Stats.ICE_DAMAGE;
@@ -55,33 +55,6 @@ public class RelicStats {
             case PHYSICAL -> Stats.PHYSICAL_DAMAGE;
             case QUANTUM -> Stats.QUANTUM_DAMAGE;
             case IMAGINARY -> Stats.IMAGINARY_DAMAGE;
-        };
-    }
-
-    private PowerStat fromRelicStat(Stats stat) {
-        return switch (stat) {
-            case ERR -> PowerStat.ENERGY_REGEN;
-            case BREAK_EFFECT -> PowerStat.BREAK_EFFECT;
-            case SPEED -> PowerStat.FLAT_SPEED;
-            case HEALING -> PowerStat.HEALING;
-            case HP_PER -> PowerStat.HP_PERCENT;
-            case ATK_PER -> PowerStat.ATK_PERCENT;
-            case DEF_PER -> PowerStat.DEF_PERCENT;
-            case HP_FLAT -> PowerStat.FLAT_HP;
-            case ATK_FLAT -> PowerStat.FLAT_ATK;
-            case DEF_FLAT -> PowerStat.FLAT_DEF;
-            case CRIT_RATE -> PowerStat.CRIT_CHANCE;
-            case CRIT_DAMAGE -> PowerStat.CRIT_DAMAGE;
-            case EFFECT_HIT -> PowerStat.EFFECT_HIT;
-            case EFFECT_RES -> PowerStat.EFFECT_RES;
-            case ICE_DAMAGE -> PowerStat.ICE_DMG_BOOST;
-            case ELEMENT_DAMAGE -> throw new IllegalStateException("This shouldn't be happening?");
-            case PHYSICAL_DAMAGE -> PowerStat.PHYSICAL_DMG_BOOST;
-            case FIRE_DAMAGE -> PowerStat.FIRE_DMG_BOOST;
-            case LIGHTNING_DAMAGE -> PowerStat.LIGHTNING_DMG_BOOST;
-            case WIND_DAMAGE -> PowerStat.WIND_DMG_BOOST;
-            case QUANTUM_DAMAGE -> PowerStat.QUANTUM_DMG_BOOST;
-            case IMAGINARY_DAMAGE -> PowerStat.IMAGINARY_DMG_BOOST;
         };
     }
 
@@ -121,7 +94,13 @@ public class RelicStats {
         mainStatValues.put(Stats.SPEED, 25.0f);
         mainStatValues.put(Stats.HEALING, 34.5f);
         mainStatValues.put(Stats.ERR, 19.4f);
-        mainStatValues.put(Stats.ELEMENT_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.PHYSICAL_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.ICE_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.FIRE_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.IMAGINARY_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.QUANTUM_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.WIND_DAMAGE, 38.8f);
+        mainStatValues.put(Stats.LIGHTNING_DAMAGE, 38.8f);
 
         subStatValues.put(Stats.HP_FLAT, 38.0f);
         subStatValues.put(Stats.ATK_FLAT, 19.0f);

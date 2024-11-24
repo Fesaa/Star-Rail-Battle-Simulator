@@ -221,7 +221,7 @@ public class FeixiaoTeams {
         RelicStats stats = new RelicStats();
         stats.addMainStat(Stats.CRIT_DAMAGE)
                 .addMainStat(Stats.SPEED)
-                .addMainStat(Stats.ELEMENT_DAMAGE)
+                .addMainStat(Stats.IMAGINARY_DAMAGE)
                 .addMainStat(Stats.ATK_PER)
                 .addSubStat(Stats.CRIT_RATE, 17) // 3 + 2 + 3 + 3 + 3 + 3
                 .addSubStat(Stats.CRIT_DAMAGE, 2) // 1 + 2 + 2
@@ -244,7 +244,7 @@ public class FeixiaoTeams {
         RelicStats stats = new RelicStats();
         stats.addMainStat(Stats.CRIT_DAMAGE)
                 .addMainStat(Stats.SPEED)
-                .addMainStat(Stats.ELEMENT_DAMAGE)
+                .addMainStat(Stats.IMAGINARY_DAMAGE)
                 .addMainStat(Stats.ATK_PER)
                 .addSubStat(Stats.CRIT_RATE, 15) // 3 + 1 + 2 + 3 + 3 + 3
                 .addSubStat(Stats.CRIT_DAMAGE, 3) // 1 + 2
@@ -269,7 +269,7 @@ public class FeixiaoTeams {
         RelicStats stats = new RelicStats();
         stats.addMainStat(Stats.CRIT_RATE)
                 .addMainStat(Stats.SPEED)
-                .addMainStat(Stats.ELEMENT_DAMAGE)
+                .addMainStat(Stats.LIGHTNING_DAMAGE)
                 .addMainStat(Stats.ATK_PER)
                 .addSubStat(Stats.CRIT_RATE, 7)
                 .addSubStat(Stats.CRIT_DAMAGE, 11)

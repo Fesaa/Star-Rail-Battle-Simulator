@@ -76,6 +76,10 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return this.toughness;
     }
 
+    public float maxHp() {
+        return this.baseHP;
+    }
+
     public float getBaseSpeed() {
         return baseSpeed;
     }
