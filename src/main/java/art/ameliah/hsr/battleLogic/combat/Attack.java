@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.CritHitResult;
+import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -75,17 +76,21 @@ public class Attack implements BattleParticipant, IAttack {
 
 
                 if (toughnessReduce > 0) {
-                    hit.getTarget().reduceToughness(toughnessReduce);
+                    hit.getTarget().reduceToughness(hit);
                 }
-                if (dmg > 0) {
-                    hit.getTarget().dealDmg(hit);
+                if (dmg <= 0) {
+                    return;
                 }
+                if (hit.getTarget().dealDmg(hit)) {
+                    dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
 
-                dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
-
-                getBattle().increaseTotalPlayerDmg(dmg);
-                if (source != null) {
-                    getBattle().updateContribution(hit.getSource(), dmg);
+                    getBattle().increaseTotalPlayerDmg(dmg);
+                    if (source != null) {
+                        getBattle().updateContribution(hit.getSource(), dmg);
+                    }
+                } else {
+                    dmgMap.putIfAbsent(hit.getTarget(), 0.0f);
+                    getBattle().addToLog(new FailedHit(hit));
                 }
             });
         }

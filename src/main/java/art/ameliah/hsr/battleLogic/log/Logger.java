@@ -28,6 +28,7 @@ import art.ameliah.hsr.battleLogic.log.lines.character.CritHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
+import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.TotalDamage;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
@@ -44,6 +45,7 @@ import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseSlash;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ForcedAttack;
+import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.ReduceToughness;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.RuanMeiDelay;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
@@ -73,7 +75,7 @@ import java.util.List;
 public abstract class Logger implements BattleParticipant {
 
     protected final IBattle battle;
-    protected final PrintStream out;
+    protected PrintStream out;
     @Getter
     protected final List<Loggable> events = new ArrayList<>();
 
@@ -324,6 +326,14 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(TurnEnd turnEnd) {
         log(turnEnd);
+    }
+
+    public void handle(GainedWeakness gainedWeakness) {
+        log(gainedWeakness);
+    }
+
+    public void handle(FailedHit failedHit) {
+        log(failedHit);
     }
 
 }

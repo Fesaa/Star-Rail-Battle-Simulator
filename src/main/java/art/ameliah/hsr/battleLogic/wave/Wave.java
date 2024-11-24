@@ -20,10 +20,9 @@ public interface Wave {
 
     /**
      * Next enemy to spawn on the field
-     * @param enemy The enemy that died causing the respawn.
      * @return the enemy to spawn in
      */
-    AbstractEnemy nextEnemy(AbstractEnemy enemy);
+    AbstractEnemy nextEnemy();
 
     /**
      *

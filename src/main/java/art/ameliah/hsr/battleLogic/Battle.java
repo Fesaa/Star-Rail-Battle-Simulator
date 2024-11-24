@@ -160,7 +160,11 @@ public class Battle implements IBattle {
 
     @Override
     public void addEnemyAt(AbstractEnemy enemy, int idx, float initialAA) {
-        this.enemyTeam.add(idx, enemy);
+        if (idx > this.enemyTeam.size()) {
+            this.enemyTeam.add(enemy);
+        } else {
+            this.enemyTeam.add(idx, enemy);
+        }
         enemy.setBattle(this);
 
         this.actionValueMap.put(enemy, enemy.getBaseAV());
@@ -412,6 +416,7 @@ public class Battle implements IBattle {
         // Character keep their buffs until the next card is at 0AV
         currentUnit.emit(BattleEvents::onEndTurn);
         this.addToLog(new TurnEnd(this.currentUnit));
+        this.onEndTurn();
 
         if (yunli != null && yunli.isParrying) {
             yunli.useSlash(getRandomEnemy());
@@ -432,6 +437,12 @@ public class Battle implements IBattle {
                 .filter(p -> !(p instanceof Yunli))
                 .forEach(AbstractCharacter::tryUltimate);
     }
+
+    /**
+     * Called after an entity's turn ends, before ult checks.
+     * I.e. PF enemy add hook
+     */
+    public void onEndTurn() {}
 
     private void generateMetrics() {
         this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p, lessMetrics)));

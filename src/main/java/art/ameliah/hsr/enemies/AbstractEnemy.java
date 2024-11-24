@@ -22,8 +22,10 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractEnemy extends AbstractEntity {
     public static final int DEFAULT_RES = 20;
@@ -37,8 +39,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
     @Getter
     protected final int level;
 
-    private final Map<ElementType, Integer> resMap = new HashMap<>();
-    private final List<ElementType> weaknessMap = new ArrayList<>();
+    protected final Map<ElementType, Integer> resMap = new HashMap<>();
+    protected final Set<ElementType> weaknessMap = new HashSet<>();
 
     // Moc increases hp this way
     @Setter
@@ -120,9 +122,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return resMap.get(elementType);
     }
 
-    public void addWeakness(ElementType elementType) {
-        this.weaknessMap.add(elementType);
+    public boolean addWeakness(ElementType elementType) {
         this.setRes(elementType, 0);
+        return this.weaknessMap.add(elementType);
     }
 
     public void removeWeakness(ElementType elementType) {
@@ -211,14 +213,14 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return this.getFinalAttack();
     }
 
-    public void reduceToughness(float amount) {
+    public void reduceToughness(Hit hit) {
         if (this.isWeaknessBroken()) {
             return;
         }
         float initialToughness = this.currentToughness;
-        this.currentToughness = Math.max(this.currentToughness - amount, 0);
+        this.currentToughness = Math.max(this.currentToughness - hit.finalToughnessReduction(), 0);
 
-        getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.currentToughness));
+        getBattle().addToLog(new ReduceToughness(this, hit.finalToughnessReduction(), initialToughness, this.currentToughness));
 
         if (this.currentToughness == 0) {
             this.timesBrokenMetric++;
@@ -228,8 +230,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
     }
 
-    public void dealDmg(Hit hit) {
+    public boolean dealDmg(Hit hit) {
         this.currentHp -= hit.finalDmg();
+        return true;
     }
 
     public boolean isDead() {

@@ -38,9 +38,10 @@ public class Main {
         //generateReportFeixiaoLightconeReport();
         //generateReportFeixiaoRelicReport();
         //generateReportTopaz();
-        ameliasSanityCheck();
+        //ameliasSanityCheck();
         //WaveTester.MocTest();
         //WaveTester.MocDivTest();
+        WaveTester.PfTest();
     }
 
     public static void debugTeam() {

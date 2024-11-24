@@ -2,39 +2,71 @@ package art.ameliah.hsr.battleLogic.wave.pf;
 
 import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.registry.EnemyRegistry;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class PfWave implements Wave {
 
-    private final AbstractEnemy boss;
-    private final Map<Class<? extends AbstractEnemy>, Supplier<AbstractEnemy>> minions = new HashMap<>();
-    private final Map<Class<? extends AbstractEnemy>, Integer> usages = new HashMap<>();
-    private final List<AbstractEnemy> startEnemies;
-
-    public void addMinionType(Class<? extends AbstractEnemy> clazz, int maxAmount, Supplier<AbstractEnemy> supplier) {
-        this.minions.put(clazz, supplier);
-
-        int presentAtStart = this.startEnemies.stream()
-                .filter(e -> e.getClass().equals(clazz))
-                .mapToInt(_ -> 1)
-                .sum();
-
-        this.usages.put(clazz, maxAmount - presentAtStart);
-    }
+    private AbstractEnemy boss;
+    private final Queue<AbstractEnemy> enemyQueue = new LinkedList<>();
 
     public boolean isBoss(AbstractEnemy enemy) {
         return this.boss != null && this.boss == enemy;
     }
 
+    public PfWave addEnemies(int ...ids) {
+        for (int id : ids) {
+            this.addEnemy(id);
+        }
+        return this;
+    }
+
+    public PfWave addEnemy(int id) {
+        try {
+            this.addEnemy(EnemyRegistry.getEnemy(id));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return this;
+    }
+
+    public PfWave addEnemy(AbstractEnemy enemy) {
+        return this.addEnemy(enemy, false);
+    }
+
+    public PfWave addEnemy(AbstractEnemy enemy, boolean isBoss) {
+        this.enemyQueue.offer(enemy);
+
+        if (isBoss) {
+            if (this.boss != null) {
+                throw new IllegalStateException("PureFiction wave cannot have more than one boss");
+            }
+            this.boss = enemy;
+        }
+
+        return this;
+    }
+
     @Override
     public List<AbstractEnemy> startEnemies() {
-        return this.startEnemies;
+        List<AbstractEnemy> enemies = new ArrayList<>();
+
+        while (enemies.size() < this.maxEnemiesOnField() && !this.enemyQueue.isEmpty()) {
+            enemies.add(this.enemyQueue.poll());
+        }
+
+        return enemies;
     }
 
     @Override
@@ -43,39 +75,12 @@ public class PfWave implements Wave {
             return !this.boss.isDead();
         }
 
-        for (var e : this.usages.entrySet()) {
-            if (e.getValue() > 0) {
-                return true;
-            }
-        }
-
-        return false;
+        return !this.enemyQueue.isEmpty();
     }
 
-    private boolean canSpawn(AbstractEnemy enemy) {
-        return this.usages.get(enemy.getClass()) > 0;
-    }
-
-    // I don't know if it's actually like this, but I don't have data on how to do it right
     @Override
-    public AbstractEnemy nextEnemy(AbstractEnemy enemy) {
-        if (this.canSpawn(enemy)) {
-            this.usages.computeIfPresent(enemy.getClass(), (_, v) -> v - 1);
-            return this.minions.get(enemy.getClass()).get();
-        }
-
-        var clazz = this.usages.entrySet()
-                .stream()
-                .filter(e -> e.getValue() > 0)
-                .map(Map.Entry::getKey)
-                .findFirst().orElse(null);
-
-        if (clazz == null) {
-            throw new IllegalStateException("Called next enemy, when no enemies were left");
-        }
-
-        this.usages.computeIfPresent(clazz, (_, v) -> v - 1);
-        return this.minions.get(clazz).get();
+    public AbstractEnemy nextEnemy() {
+        return this.enemyQueue.poll();
     }
 
     @Override

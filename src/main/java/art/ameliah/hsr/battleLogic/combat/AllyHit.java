@@ -24,20 +24,28 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
     @Getter
     private final List<DamageType> types;
     private final float toughnessDmg;
-    private final ElementType attackElement;
+    @Getter
+    private final ElementType elementType;
     private final boolean ignoreWeakness;
 
     private Float computedDmg = null;
+    private Float computedToughness = null;
 
     public float finalToughnessReduction() {
+        if (this.computedToughness != null) {
+            return this.computedToughness;
+        }
+
         float weaknessBreakEff = this.source.getTotalWeaknessBreakEff();
         float toughnessDmg = this.toughnessDmg * (1 + weaknessBreakEff / 100);
 
         // March should pass true ignore weakness after checking herself
-        if (this.target.hasWeakness(this.attackElement) || this.ignoreWeakness) {
+        if (this.target.hasWeakness(this.elementType) || this.ignoreWeakness) {
+            this.computedToughness = toughnessDmg;
             return toughnessDmg;
         }
 
+        this.computedToughness = 0f;
         return 0;
     }
 
@@ -94,7 +102,7 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
             resPen += power.getStat(PowerStat.RES_PEN);
         }
 
-        return 1 - (this.target.getRes(this.attackElement)-resPen)/100;
+        return 1 - (this.target.getRes(this.elementType)-resPen)/100;
     }
 
     // Currently doesn't care for enemy def buffs.
@@ -120,7 +128,7 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
         float dmgMultiplier = 0;
 
         for (var power : this.source.powerList) {
-            dmgMultiplier += power.getStat(this.attackElement.getStatBoost());
+            dmgMultiplier += power.getStat(this.elementType.getStatBoost());
             dmgMultiplier += power.getStat(PowerStat.DAMAGE_BONUS);
             dmgMultiplier += power.getConditionalDamageBonus(this.source, this.target, this.types);
         }

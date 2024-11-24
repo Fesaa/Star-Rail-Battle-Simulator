@@ -2,6 +2,7 @@ package art.ameliah.hsr.battleLogic.combat;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,9 @@ public interface Hit {
     AbstractCharacter<?> getSource();
     AbstractEnemy getTarget();
     List<DamageType> getTypes();
+    @Nullable
+    ElementType getElementType();
+
     float finalDmg();
     float finalToughnessReduction();
 

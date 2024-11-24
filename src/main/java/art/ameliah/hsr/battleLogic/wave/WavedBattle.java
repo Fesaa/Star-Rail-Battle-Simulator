@@ -7,10 +7,12 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.List;
 import java.util.Queue;
 
 public abstract class WavedBattle<T extends Wave> extends Battle {
 
+    private final Queue<Integer> talliedPositions = new ArrayDeque<>();
     protected final Queue<T> waves = new ArrayDeque<>();
     protected T currentWave;
 
@@ -40,12 +42,21 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
             return;
         }
 
-        if (!this.currentWave.hasNext()) {
-            return;
-        }
+        this.talliedPositions.offer(idx);
+    }
 
-        AbstractEnemy newEnemy = this.currentWave.nextEnemy(enemy);
-        this.addEnemyAt(newEnemy, idx);
+    @Override
+    public void onEndTurn() {
+        while (this.enemyTeam.size() < this.currentWave.maxEnemiesOnField() && this.currentWave.hasNext()) {
+            AbstractEnemy nextEnemy = this.currentWave.nextEnemy();
+            Integer nextIdx = this.talliedPositions.poll();
+            if (nextIdx == null) {
+                throw new IllegalStateException("Null index saved");
+            }
+
+            this.addEnemyAt(nextEnemy, nextIdx);
+        }
+        this.talliedPositions.clear();
     }
 
     protected void goToNextWave() {
@@ -55,6 +66,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
             throw new ForceBattleEnd("No waves left");
         }
         addToLog(new WaveStart(this.currentWave));
+        this.talliedPositions.clear();
         this.currentWave.startEnemies().forEach(this::addEnemy);
         this.onWaveChange();
     }

@@ -26,13 +26,13 @@ public class AutomatonBeetle extends AbstractEnemy {
     }
 
     @Override
-    public void dealDmg(Hit hit) {
+    public boolean dealDmg(Hit hit) {
         if (this.isInvincible && !hit.getTypes().contains(DamageType.DOT)) {
             this.isInvincible = false;
-            return;
+            return false;
         }
 
-        super.dealDmg(hit);
+        return super.dealDmg(hit);
     }
 
     @Override
