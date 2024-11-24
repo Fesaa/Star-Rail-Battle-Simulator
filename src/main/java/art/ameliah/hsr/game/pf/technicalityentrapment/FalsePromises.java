@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.wave.pf.PureFictionBuff;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 
 import java.util.List;
@@ -25,12 +26,13 @@ public class FalsePromises implements PureFictionBuff {
 
     @Override
     public void applySurgingGritBuff(PfBattle battle) {
-
+        AbstractPower power = new FalsePromisesPower();
+        battle.getPlayers().forEach(player -> player.addPower(power));
     }
 
     @Override
     public void removeSurgingGritBuff(PfBattle battle) {
-
+        battle.getPlayers().forEach(player -> player.removePower(FalsePromisesPower.NAME));
     }
 
     public static class FalsePromisesPower extends PermPower {
@@ -49,7 +51,7 @@ public class FalsePromises implements PureFictionBuff {
         }
 
         @Override
-        public void beforeAttacked(Attack attack) {
+        public void onAttack(Attack attack) {
             if (!attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 return;
             }
@@ -57,10 +59,10 @@ public class FalsePromises implements PureFictionBuff {
             for (var target : attack.getTargets()) {
                 int idx = getBattle().getEnemies().indexOf(target);
 
-                // TODO: Figure out how much dmg
-                //attack.hitFixed(target, 0);
-                //getBattle().enemyCallback(idx-1, t -> attack.hitFixed(t, 0));
-                //getBattle().enemyCallback(idx+1, t -> attack.hitFixed(t, 0));
+                // https://youtu.be/INVTD86xO_Q?si=s8wUOlX6jAEUlSpi&t=497 <- got dmg from
+                attack.hitFixed(this, target, 5930);
+                getBattle().enemyCallback(idx-1, t -> attack.hitFixed(FalsePromisesPower.this, t, 5930));
+                getBattle().enemyCallback(idx+1, t -> attack.hitFixed(FalsePromisesPower.this, t, 5930));
             }
         }
     }

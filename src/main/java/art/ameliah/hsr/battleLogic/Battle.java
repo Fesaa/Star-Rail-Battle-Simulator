@@ -67,7 +67,7 @@ public class Battle implements IBattle {
     public boolean lessMetrics = false;
     public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
 
-    public HashMap<AbstractCharacter<?>, Float> damageContributionMap;
+    public HashMap<BattleParticipant, Float> damageContributionMap;
     public HashMap<AbstractCharacter<?>, Float> damageContributionMapPercent;
     public HashMap<AbstractEntity, Float> actionValueMap;
 
@@ -233,13 +233,13 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public void updateContribution(AbstractCharacter<?> character, float damageContribution) {
-        if (damageContributionMap.containsKey(character)) {
-            float existingTotal = damageContributionMap.get(character);
+    public void updateContribution(BattleParticipant source, float damageContribution) {
+        if (damageContributionMap.containsKey(source)) {
+            float existingTotal = damageContributionMap.get(source);
             float updatedTotal = existingTotal + damageContribution;
-            damageContributionMap.put(character, updatedTotal);
+            damageContributionMap.put(source, updatedTotal);
         } else {
-            damageContributionMap.put(character, damageContribution);
+            damageContributionMap.put(source, damageContribution);
         }
     }
 
@@ -584,7 +584,7 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public HashMap<AbstractCharacter<?>, Float> getDamageContributionMap() {
+    public HashMap<BattleParticipant, Float> getDamageContributionMap() {
         return this.damageContributionMap;
     }
 

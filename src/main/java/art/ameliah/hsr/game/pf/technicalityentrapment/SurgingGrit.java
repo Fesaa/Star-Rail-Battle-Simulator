@@ -38,10 +38,10 @@ public class SurgingGrit implements ISurgingGrit {
             for (var target : attack.getTargets()) {
                 int idx = getBattle().getEnemies().indexOf(target);
 
-                // TODO: Figure out how much dmg
-                //attack.hitFixed(target, 0);
-                //getBattle().enemyCallback(idx-1, t -> attack.hitFixed(t, 0));
-                //getBattle().enemyCallback(idx+1, t -> attack.hitFixed(t, 0));
+                // https://youtu.be/INVTD86xO_Q?si=lQVkPJl4rB5vt0hK&t=502 <- got dmg from
+                attack.hitFixed(this, target, 11013);
+                getBattle().enemyCallback(idx-1, t -> attack.hitFixed(SurgingGritPower.this, t, 11013));
+                getBattle().enemyCallback(idx+1, t -> attack.hitFixed(SurgingGritPower.this, t, 11013));
             }
         }
 

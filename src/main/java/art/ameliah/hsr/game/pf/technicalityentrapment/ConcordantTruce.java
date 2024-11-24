@@ -11,14 +11,14 @@ public class ConcordantTruce extends ConcordantTrucePower {
     }
 
     @Override
-    public void afterAttackFinish(Attack attack) {
+    public void onAttack(Attack attack) {
         if (!attack.getTypes().contains(DamageType.SKILL)) {
             return;
         }
 
         for (var target : attack.getTargets()) {
-            // TODO: Figure out how much, no clue
-            // target.dealDmg();
+            // https://youtu.be/INVTD86xO_Q?si=4FCiWJ6r7tdO_N1d&t=463 <- got dmg from
+            attack.hitFixed(this, target, 11013);
         }
     }
 }

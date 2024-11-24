@@ -1,22 +1,14 @@
 package art.ameliah.hsr.battleLogic;
 
-import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.BreakDamageHitResult;
-import art.ameliah.hsr.battleLogic.log.lines.character.CritHitResult;
-import art.ameliah.hsr.battleLogic.log.lines.character.TotalDamage;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
-import art.ameliah.hsr.characters.march.SwordMarch;
-import art.ameliah.hsr.characters.moze.Moze;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class BattleHelpers implements BattleParticipant {
 

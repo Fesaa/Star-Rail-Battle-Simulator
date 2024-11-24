@@ -23,7 +23,7 @@ public record TurnStart(AbstractEntity next, float atAV,
         return "Next is " + this.next.name + " at " + this.atAV + " action value " +
                 actionValueMap.entrySet()
                         .stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                        .sorted((Map.Entry.comparingByValue()))
                         .map(e -> e.getKey().name + "=" + e.getValue())
                         .collect(Collectors.joining(", ", "{", "}"));
     }

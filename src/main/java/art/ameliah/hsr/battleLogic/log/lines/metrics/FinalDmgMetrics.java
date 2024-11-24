@@ -1,5 +1,6 @@
 package art.ameliah.hsr.battleLogic.log.lines.metrics;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
@@ -14,7 +15,7 @@ public class FinalDmgMetrics implements Loggable {
 
     public final int totalPlayerDmg;
     public final float actionValueUsed;
-    public final Map<AbstractCharacter<?>, Float> totalDamageDealt;
+    public final Map<BattleParticipant, Float> totalDamageDealt;
 
     public FinalDmgMetrics(IBattle battle) {
         this.totalPlayerDmg = battle.getTotalPlayerDmg();
@@ -30,7 +31,7 @@ public class FinalDmgMetrics implements Loggable {
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> {
                     float percent = entry.getValue() / totalPlayerDmg * 100;
-                    return String.format("%s: %.3f DPAV (%.3f%%)", entry.getKey().name, entry.getValue() / actionValueUsed, percent);
+                    return String.format("%s: %.3f DPAV (%.3f%%)", entry.getKey().getName(), entry.getValue() / actionValueUsed, percent);
                 })
                 .collect(Collectors.joining(" | "));
         return String.format("Damage Contribution: %s | Total Damage: %,d", log, totalPlayerDmg);

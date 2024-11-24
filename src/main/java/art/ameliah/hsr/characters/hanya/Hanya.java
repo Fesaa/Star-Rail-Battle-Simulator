@@ -86,11 +86,11 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void onBeforeHitEnemy(Hit hit) {
-            if (hit.getTypes().contains(DamageType.BASIC) || hit.getTypes().contains(DamageType.SKILL) || hit.getTypes().contains(DamageType.ULTIMATE)) {
+        public void beforeAttacked(Attack attack) {
+            if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.ULTIMATE)) {
                 TempPower talentPower = TempPower.create(PowerStat.DAMAGE_BONUS, 43, 2, "Hanya Talent Power");
                 talentPower.justApplied = true;
-                hit.getSource().addPower(talentPower);
+                attack.getSource().addPower(talentPower);
             }
         }
 

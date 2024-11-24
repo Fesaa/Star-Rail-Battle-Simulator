@@ -7,6 +7,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface BattleEvents {
 
@@ -46,11 +47,17 @@ public interface BattleEvents {
     default void beforeAttacked(Attack attack) {}
 
     /**
-     * Called before an enemy is hit by an attack
+     * Called before hitting an enemy
      *
      * @param hit the hit going to happen
      */
     default void onBeforeHitEnemy(Hit hit) {}
+
+    /**
+     * Called before getting hit
+     * @param hit the hit going to happen
+     */
+    default void onBeforeHit(Hit hit) {}
 
     /**
      * Called after the attack has finished

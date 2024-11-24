@@ -27,6 +27,13 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
         return this.battle;
     }
 
+    public String getName() {
+        if (this.name == null) {
+            return this.getClass().getSimpleName();
+        }
+        return this.name;
+    }
+
     private final Collection<BattleEvents> listeners = new ConcurrentLinkedQueue<>();
 
     protected Collection<BattleEvents> getListeners() {

@@ -24,7 +24,7 @@ import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.BreakDamageHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.ConcertoEnd;
-import art.ameliah.hsr.battleLogic.log.lines.character.CritHitResult;
+import art.ameliah.hsr.battleLogic.log.lines.character.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
@@ -192,7 +192,7 @@ public abstract class Logger implements BattleParticipant {
         log(ruanMeiDelay);
     }
 
-    public void handle(CritHitResult hit) {
+    public void handle(HitResult hit) {
         log(hit);
     }
 

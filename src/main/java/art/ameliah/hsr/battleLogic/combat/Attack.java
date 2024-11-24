@@ -5,7 +5,7 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
-import art.ameliah.hsr.battleLogic.log.lines.character.CritHitResult;
+import art.ameliah.hsr.battleLogic.log.lines.character.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -61,19 +61,14 @@ public class Attack implements BattleParticipant, IAttack {
         Map<AbstractEnemy, Float> dmgMap = new HashMap<>();
         for (HitHolder hitHolder : this.hits) {
             hitHolder.getHits().forEach(hit -> {
-                AbstractCharacter<?> source = hit.getSource();
-                if (source != null) {
-                    source.emit(l -> l.onBeforeHitEnemy(hit));
+                BattleParticipant source = hit.getSource();
+                if (source instanceof AbstractCharacter<?> e) {
+                    e.emit(l -> l.onBeforeHitEnemy(hit));
                 }
-                hit.getTarget().emit(l -> l.onBeforeHitEnemy(hit));
+                hit.getTarget().emit(l -> l.onBeforeHit(hit));
 
                 float dmg = hit.finalDmg();
                 float toughnessReduce = hit.finalToughnessReduction();
-
-                if (source != null) {
-                    getBattle().addToLog(new CritHitResult(hit.getSource(), hit.getTarget(), dmg));
-                }
-
 
                 if (toughnessReduce > 0) {
                     hit.getTarget().reduceToughness(hit);
@@ -85,9 +80,8 @@ public class Attack implements BattleParticipant, IAttack {
                     dmgMap.put(hit.getTarget(), dmgMap.getOrDefault(hit.getTarget(), 0.0f) + dmg);
 
                     getBattle().increaseTotalPlayerDmg(dmg);
-                    if (source != null) {
-                        getBattle().updateContribution(hit.getSource(), dmg);
-                    }
+                    getBattle().updateContribution(hit.getSource(), dmg);
+                    getBattle().addToLog(new HitResult(hit));
                 } else {
                     dmgMap.putIfAbsent(hit.getTarget(), 0.0f);
                     getBattle().addToLog(new FailedHit(hit));
@@ -117,9 +111,12 @@ public class Attack implements BattleParticipant, IAttack {
      * @param dmg
      * @return
      */
-    public Attack hitFixed(AbstractEnemy target, float dmg) {
+    public Attack hitFixed(BattleParticipant source, AbstractEnemy target, float dmg) {
+        if (this.hasExecuted) {
+            throw new IllegalStateException("The attack has already finished");
+        }
         this.targets.add(target);
-        this.hits.add(new FixedHit(target, dmg));
+        this.hits.add(new FixedHit(source, target, dmg));
         return this;
     }
 
@@ -131,6 +128,9 @@ public class Attack implements BattleParticipant, IAttack {
      * @return the attack being constructed
      */
     public Attack hitEnemy(AbstractEnemy target, Consumer<DelayedHit> logic) {
+        if (this.hasExecuted) {
+            throw new IllegalStateException("The attack has already finished");
+        }
         this.targets.add(target);
         this.hits.add(new DelayedHit(this.source, target, this.types, logic));
         return this;

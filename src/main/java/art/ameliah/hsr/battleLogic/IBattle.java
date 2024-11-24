@@ -9,7 +9,6 @@ import art.ameliah.hsr.powers.AbstractPower;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -80,7 +79,7 @@ public interface IBattle {
 
     void addToLog(Loggable addition);
 
-    HashMap<AbstractCharacter<?>, Float> getDamageContributionMap();
+    HashMap<BattleParticipant, Float> getDamageContributionMap();
     HashMap<AbstractCharacter<?>, Float> getDamageContributionMapPercent();
     HashMap<AbstractEntity, Float> getActionValueMap();
     int getTotalPlayerDmg();
@@ -88,7 +87,7 @@ public interface IBattle {
     float getFinalDPAV();
     int getTotalSkillPointsUsed();
     int getTotalSkillPointsGenerated();
-    void updateContribution(AbstractCharacter<?> character, float damageContribution);
+    void updateContribution(BattleParticipant source, float damageContribution);
     void increaseTotalPlayerDmg(float dmg);
     float initialLength();
     float battleLength();

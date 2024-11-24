@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic.combat;
 
-import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -10,8 +10,7 @@ import java.util.List;
 
 public interface Hit {
 
-    @Nullable
-    AbstractCharacter<?> getSource();
+    BattleParticipant getSource();
     AbstractEnemy getTarget();
     List<DamageType> getTypes();
     @Nullable
