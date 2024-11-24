@@ -151,7 +151,7 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
             critChance = power.setFixedCritRate(this.source, this.target, this.types, critChance);
         }
 
-        return critChance;
+        return Math.min(critChance, 100);
     }
 
     private float critDamage() {

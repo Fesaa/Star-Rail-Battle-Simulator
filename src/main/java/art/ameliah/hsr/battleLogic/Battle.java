@@ -15,6 +15,7 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.LeftOverAV;
 import art.ameliah.hsr.battleLogic.log.lines.battle.SpeedAdvanceEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.SpeedDelayEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TriggerTechnique;
+import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.UseSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
@@ -339,6 +340,7 @@ public class Battle implements IBattle {
 
         while (battleLength > 0 && this.isInCombat) {
             try {
+                // This represents on icon on the AV bar in game
                 this.battleLoop(yunli, march); // TODO: THIS SHOULD NOT NEED CHARACTERS
             } catch (ForceBattleEnd forceBattleEnd) {
                 this.isInCombat = false;
@@ -358,6 +360,7 @@ public class Battle implements IBattle {
 
     private void battleLoop(Yunli yunli, SwordMarch march) {
         addToLog(new LeftOverAV(this.battleLength));
+
         currentUnit = this.getNextUnit(0);
         float nextAV = actionValueMap.get(currentUnit);
         if (nextAV > battleLength) {
@@ -369,6 +372,8 @@ public class Battle implements IBattle {
             isInCombat = false;
             return;
         }
+
+
         // TODO: Find a way to remove Yunli logic from here
         // Ideally the battle loop does not care about the specifics of the characters
         if (yunli != null && yunli.currentEnergy >= yunli.ultCost) {
@@ -378,28 +383,35 @@ public class Battle implements IBattle {
                 nextAV = actionValueMap.get(currentUnit);
             }
         }
+
         battleLength -= nextAV;
         for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
             float newAV = entry.getValue() - nextAV;
             entry.setValue(newAV);
         }
+
+
         addToLog(new TurnStart(currentUnit, this.getActionValueUsed() ,actionValueMap));
-
-
         currentUnit.emit(BattleEvents::onTurnStart);
+
         // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
         if (!(currentUnit instanceof AbstractSummon<?>)) {
             if (actionValueMap.get(currentUnit) <= 0) {
                 actionValueMap.put(currentUnit, currentUnit.getBaseAV());
             }
         }
-        currentUnit.takeTurn();
-        currentUnit.emit(BattleEvents::onEndTurn);
 
+        currentUnit.takeTurn();
+
+        // These are all the cards that pop up right of the character card
         while (!this.queue.isEmpty()) {
             IAttack attack = this.queue.poll();
             attack.execute();
         }
+
+        // Character keep their buffs until the next card is at 0AV
+        currentUnit.emit(BattleEvents::onEndTurn);
+        this.addToLog(new TurnEnd(this.currentUnit));
 
         if (yunli != null && yunli.isParrying) {
             yunli.useSlash(getRandomEnemy());

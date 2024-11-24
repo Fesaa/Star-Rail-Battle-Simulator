@@ -265,7 +265,7 @@ public class Main {
             battle.setEnemyTeam(enemyTeam);
 
             System.out.print(Prefix);
-            battle.Start(150);
+            battle.Start(550);
         }
     }
 

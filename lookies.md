@@ -48,3 +48,7 @@ Need to check, so we can make them all dynamic. Or something. Not sure.
 
 ### Look into actual game data to construct stages
 dim's data dump wiki
+
+### Buff onCombatStart
+Lots of stuff here might need to be added to everyone always
+If enemies join later on, they won't get this

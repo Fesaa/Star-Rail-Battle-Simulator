@@ -12,6 +12,7 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.LeftOverAV;
 import art.ameliah.hsr.battleLogic.log.lines.battle.SpeedAdvanceEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.SpeedDelayEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TriggerTechnique;
+import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.UseSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
@@ -319,6 +320,10 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(GainGridPoints gainGridPoints) {
         log(gainGridPoints);
+    }
+
+    public void handle(TurnEnd turnEnd) {
+        log(turnEnd);
     }
 
 }
