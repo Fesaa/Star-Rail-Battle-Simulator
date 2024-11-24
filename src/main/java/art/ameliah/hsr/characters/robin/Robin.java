@@ -18,6 +18,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,7 +141,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         increaseEnergy(5, TECHNIQUE_ENERGY_GAIN);
     }
 
-    public void addPower(AbstractPower power) {
+    public void addPower(@NotNull AbstractPower power) {
         super.addPower(power);
         ultPower.updateAtkBuff();
     }

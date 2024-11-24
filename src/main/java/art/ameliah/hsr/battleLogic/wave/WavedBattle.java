@@ -42,10 +42,18 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
         }
 
         this.talliedPositions.offer(idx);
+
+        if (getEnemies().isEmpty()) {
+            this.fillField();
+        }
     }
 
     @Override
     public void onEndTurn() {
+        this.fillField();
+    }
+
+    protected final void fillField() {
         while (this.enemyTeam.size() < this.currentWave.maxEnemiesOnField() && this.currentWave.hasNext()) {
             AbstractEnemy nextEnemy = this.currentWave.nextEnemy();
             Integer nextIdx = this.talliedPositions.poll();

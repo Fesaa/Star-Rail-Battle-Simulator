@@ -7,14 +7,22 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class SurgingGrit implements ISurgingGrit {
+
+    private final SurgingGritPower power = new SurgingGritPower();
+
+    @Override
+    public @Nullable PermPower getEnemyPower() {
+        return this.power;
+    }
+
     @Override
     public void apply(IBattle battle) {
         battle.getPlayers().forEach(p -> battle.AdvanceEntity(p, 100));
-        battle.getEnemies().forEach(e -> e.addPower(new SurgingGritPower()));
     }
 
     @Override

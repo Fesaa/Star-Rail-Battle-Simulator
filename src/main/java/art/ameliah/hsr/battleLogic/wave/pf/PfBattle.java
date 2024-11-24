@@ -6,7 +6,9 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.powers.PermPower;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class PfBattle extends WavedBattle<PfWave> {
@@ -37,12 +39,19 @@ public class PfBattle extends WavedBattle<PfWave> {
     private void activeSurgingGrid() {
         this.gridAmount = 0;
         this.surgingGridActive = true;
+
         this.pfBuff.applySurgingGritBuff(this);
         this.surgingGrit.apply(this);
 
-        SurgingGritEntity entity = new SurgingGritEntity(this);
-        this.actionValueMap.put(entity, entity.getBaseAV());
+
+        var enemyBuff = this.surgingGrit.getEnemyPower();
+        if (enemyBuff != null) {
+            getEnemies().forEach(e -> e.addPower(enemyBuff));
+        }
+
+        SurgingGritEntity entity = new SurgingGritEntity(this, enemyBuff);
         entity.setBattle(this);
+        this.actionValueMap.put(entity, entity.getBaseAV());
         addToLog(new SurgingGritState(SurgingGritState.State.START));
     }
 
@@ -100,10 +109,20 @@ public class PfBattle extends WavedBattle<PfWave> {
     public static class SurgingGritEntity extends AbstractEntity {
 
         private final PfBattle pf;
+        @Nullable
+        private final PermPower enemyBuff;
 
-        public SurgingGritEntity(PfBattle pf) {
+        public SurgingGritEntity(PfBattle pf, @Nullable PermPower enemyBuff) {
             this.name = "Surging grid entity";
             this.pf = pf;
+            this.enemyBuff = enemyBuff;
+        }
+
+        @Override
+        public void onEnemyJoinCombat(AbstractEnemy enemy) {
+            if (this.enemyBuff != null) {
+                enemy.addPower(this.enemyBuff);
+            }
         }
 
         @Override

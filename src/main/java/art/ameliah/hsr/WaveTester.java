@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
+import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.wave.moc.Moc;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFiction;
@@ -62,6 +63,12 @@ public class WaveTester {
         public void handle(FinalDmgMetrics finalDmgMetrics) {
             System.out.println(finalDmgMetrics.asString());
             this.log(finalDmgMetrics);
+        }
+
+        @Override
+        public void handle(BattleMetrics battleMetrics) {
+            System.out.println(battleMetrics.asString());
+            this.log(battleMetrics);
         }
 
         @Override

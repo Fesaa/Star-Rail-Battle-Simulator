@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.log.lines.entity.GainPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.LosePower;
 import art.ameliah.hsr.powers.AbstractPower;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +59,7 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
         resetSpeedPriority(); //reset speed priority if it was changed
     }
 
-    public void addPower(AbstractPower power) {
+    public void addPower(@NotNull AbstractPower power) {
         for (AbstractPower existingPower : this.powerList) {
             if (existingPower.getName().equals(power.getName())) {
                 existingPower.merge(power);

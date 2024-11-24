@@ -170,6 +170,7 @@ public class Battle implements IBattle {
 
         addToLog(new EntityJoinedBattle(enemy));
         enemy.emit(BattleEvents::onCombatStart);
+        this.actionValueMap.keySet().forEach(e -> e.onEnemyJoinCombat(enemy));
     }
 
     /**

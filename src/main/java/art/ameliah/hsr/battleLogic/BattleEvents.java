@@ -17,6 +17,13 @@ public interface BattleEvents {
     }
 
     /**
+     * Called when an enemy join the battle while it has already started
+     */
+    default void onEnemyJoinCombat(AbstractEnemy enemy) {
+
+    }
+
+    /**
      * Called when a character is attacked, or when an enemy is attacked.
      *
      * @param character          The character that was attacked/is attacking
