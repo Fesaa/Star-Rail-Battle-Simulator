@@ -102,6 +102,23 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         this.firstMove = firstTurn;
     }
 
+    private static class PelaBonusDamageAgainstDebuffPower extends AbstractPower {
+        public PelaBonusDamageAgainstDebuffPower() {
+            this.setName(this.getClass().getSimpleName());
+            this.lastsForever = true;
+        }
+
+        @Override
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+            for (AbstractPower power : enemy.powerList) {
+                if (power.type == PowerType.DEBUFF) {
+                    return 20;
+                }
+            }
+            return 0;
+        }
+    }
+
     private class PelaTalentPower extends AbstractPower {
         public PelaTalentPower() {
             this.setName(this.getClass().getSimpleName());
@@ -118,22 +135,6 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
                     }
                 }
             }
-        }
-    }
-
-    private static class PelaBonusDamageAgainstDebuffPower extends AbstractPower {
-        public PelaBonusDamageAgainstDebuffPower() {
-            this.setName(this.getClass().getSimpleName());
-            this.lastsForever = true;
-        }
-        @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            for (AbstractPower power : enemy.powerList) {
-                if (power.type == PowerType.DEBUFF) {
-                    return 20;
-                }
-            }
-            return 0;
         }
     }
 }

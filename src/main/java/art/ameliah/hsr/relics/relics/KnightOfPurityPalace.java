@@ -9,6 +9,7 @@ public class KnightOfPurityPalace extends AbstractRelicSetBonus {
     public KnightOfPurityPalace(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public KnightOfPurityPalace(AbstractCharacter<?> owner, boolean isFullSet) {
         super(owner, isFullSet);
     }

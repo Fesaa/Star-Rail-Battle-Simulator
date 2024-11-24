@@ -41,24 +41,26 @@ public class FlowingNightglow extends AbstractLightcone {
         getBattle().getPlayers().forEach(c -> c.addPower(cadenzaBuff));
     }
 
-    public class FlowingNightglowPower extends PermPower {
-        public FlowingNightglowPower() {
-            this.setName(this.getClass().getSimpleName());
-        }
-        @Override
-        public void onAttack(Attack attack) {
-            FlowingNightglow.this.owner.addPower(new FlowingNightglowERRPower());
-        }
-    }
-
     public static class FlowingNightglowERRPower extends PermPower {
         public FlowingNightglowERRPower() {
             this.setName(ERPowerName);
             this.maxStacks = 5;
         }
+
         @Override
         public float getConditionalERR(AbstractCharacter<?> character) {
             return 3 * stacks;
+        }
+    }
+
+    public class FlowingNightglowPower extends PermPower {
+        public FlowingNightglowPower() {
+            this.setName(this.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onAttack(Attack attack) {
+            FlowingNightglow.this.owner.addPower(new FlowingNightglowERRPower());
         }
     }
 

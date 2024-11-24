@@ -14,6 +14,7 @@ public class MusketeerOfWildWheat extends AbstractRelicSetBonus {
     public MusketeerOfWildWheat(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public MusketeerOfWildWheat(AbstractCharacter<?> owner, boolean isFullSet) {
         super(owner, isFullSet);
     }
@@ -47,6 +48,7 @@ public class MusketeerOfWildWheat extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {

@@ -41,22 +41,18 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     protected final Map<ElementType, Integer> resMap = new HashMap<>();
     protected final Set<ElementType> weaknessMap = new HashSet<>();
-
-    // Moc increases hp this way
-    @Setter
-    protected int HPMultiplier = 1;
-
+    protected final EnemyActionSequence sequence;
     public int numAttacksMetric = 0;
     public int numSingleTargetMetric = 0;
     public int numBlastMetric = 0;
     public int numAoEMetric = 0;
     public int timesBrokenMetric = 0;
-
+    // Moc increases hp this way
+    @Setter
+    protected int HPMultiplier = 1;
     @Getter
     protected float currentHp = 0;
     protected float currentToughness = 0;
-
-    protected final EnemyActionSequence sequence;
 
     public AbstractEnemy(String name, EnemyType type, int baseHP, int baseATK, int baseDEF, float baseSpeed, int toughness, int level) {
         this.name = name;
@@ -177,7 +173,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
 
         // Attack last character is no character is found
-        return getBattle().getPlayers().size() -1;
+        return getBattle().getPlayers().size() - 1;
     }
 
     protected AbstractCharacter<?> getRandomTarget() {
@@ -203,7 +199,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
                 .sum();
 
         double effectRes = target.getTotalEffectRes();
-        double realChance = chance/100 * (1 + extraEHR/100) * (1 - effectRes/100);
+        double realChance = chance / 100 * (1 + extraEHR / 100) * (1 - effectRes / 100);
 
         return getBattle().getEnemyEHRRng().nextDouble() < realChance;
     }

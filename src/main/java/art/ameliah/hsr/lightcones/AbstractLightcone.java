@@ -6,7 +6,7 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-public abstract class AbstractLightcone implements BattleEvents,BattleParticipant {
+public abstract class AbstractLightcone implements BattleEvents, BattleParticipant {
 
     public final int baseHP;
     public final int baseAtk;

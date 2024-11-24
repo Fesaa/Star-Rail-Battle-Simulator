@@ -18,8 +18,8 @@ import java.util.function.Function;
 
 public class GuardianShadow extends AbstractEnemy {
 
-    private Random banTypeRng;
     private final List<Function<GuardianShadow, TempPower>> bans = new ArrayList<>();
+    private Random banTypeRng;
 
     public GuardianShadow() {
         super("Guardian Shadow", EnemyType.Elite, 411239, 718, 1000, 158.40f, 100, 92);
@@ -60,8 +60,8 @@ public class GuardianShadow extends AbstractEnemy {
         EnemyAttack attack = this.startAttack();
 
         attack.hit(target, 10, 976);
-        getBattle().characterCallback(idx-1, c -> attack.hit(c, 5, 488));
-        getBattle().characterCallback(idx+1, c -> attack.hit(c, 5, 488));
+        getBattle().characterCallback(idx - 1, c -> attack.hit(c, 5, 488));
+        getBattle().characterCallback(idx + 1, c -> attack.hit(c, 5, 488));
 
         attack.execute();
 
@@ -118,6 +118,7 @@ public class GuardianShadow extends AbstractEnemy {
     public static class DisarmBan extends TempPower {
         public static final String NAME = "Guardian Shadow Disarm Ban";
         private final GuardianShadow guardian;
+
         public DisarmBan(GuardianShadow guardian) {
             super(1, NAME);
             this.type = PowerType.DEBUFF;
@@ -133,6 +134,7 @@ public class GuardianShadow extends AbstractEnemy {
     public static class SilentBan extends TempPower {
         public static final String NAME = "Guardian Shadow Silent Ban";
         private final GuardianShadow guardian;
+
         public SilentBan(GuardianShadow guardian) {
             super(1, NAME);
             this.type = PowerType.DEBUFF;

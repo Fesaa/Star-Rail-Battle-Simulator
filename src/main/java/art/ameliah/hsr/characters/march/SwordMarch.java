@@ -1,8 +1,8 @@
 package art.ameliah.hsr.characters.march;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AllyHit;
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
@@ -29,21 +29,19 @@ import java.util.Random;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Sword March";
-
-    private Random fuaRng;
-    public AbstractCharacter<?> master;
-
-    private int numEBA = 0;
-    private int numFUAs = 0;
-    private int numUltEnhancedEBA;
-    private int totalNumExtraHits;
+    public final int chargeThreshold = 7;
     private final String numEBAMetricName = "Enhanced Basic Attacks used";
     private final String numFUAsMetricName = "Follow up Attacks used";
     private final String numUltEnhancedEBAUsed = "Ult Boosted Enhanced Basic Attacks used";
     private final String numExtraHitsMetricName = "Number of extra hits with EBA";
     private final String leftoverChargeMetricName = "Leftover Charge";
+    public AbstractCharacter<?> master;
     public int chargeCount = 0;
-    public final int chargeThreshold = 7;
+    private Random fuaRng;
+    private int numEBA = 0;
+    private int numFUAs = 0;
+    private int numUltEnhancedEBA;
+    private int totalNumExtraHits;
     private boolean isEnhanced;
     private boolean hasUltEnhancement;
     private boolean FUAReady = true;
@@ -149,7 +147,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             this.masterEffect(attack, enemy);
         }
         attack.addAfterAttack(() -> {
-            master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2,"Enhanced Basic Master Buff"));
+            master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2, "Enhanced Basic Master Buff"));
         });
         attack.execute();
 

@@ -17,11 +17,11 @@ import java.util.HashMap;
 
 public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTurnGoal.SkillCounterCharacter {
     private static final String NAME = "Huohuo";
-    
+
     final HuohuoTalentPower talentPower = new HuohuoTalentPower();
+    private final String numTalentProcsMetricName = "Number of Talent Procs";
     int talentCounter = 0;
     private int numTalentProcs = 0;
-    private final String numTalentProcsMetricName = "Number of Talent Procs";
 
     public Huohuo() {
         super(NAME, 1358, 602, 509, 98, 80, ElementType.WIND, 140, 100, Path.ABUNDANCE);
@@ -41,6 +41,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
             character.addPower(talentPower);
         }
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 0.5F, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -64,7 +65,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     }
 
     public void onTurnStart() {
-        
+
         talentCounter--;
         if (talentCounter <= 0) {
             for (AbstractCharacter<?> character : getBattle().getPlayers()) {

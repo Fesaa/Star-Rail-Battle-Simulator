@@ -30,19 +30,18 @@ import java.util.Random;
 
 public class Feixiao extends AbstractCharacter<Feixiao> {
 
-    private Random fuaRng;
-
+    public static final String NAME = "Feixiao";
+    public final int stackThreshold = 2;
     final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
-    private int numFUAs = 0;
-    private int numStacks;
-    private int wastedStacks;
     private final String numFUAsMetricName = "Follow up Attacks used";
     private final String numStacksMetricName = "Amount of Talent Stacks gained";
     private final String wastedStacksMetricName = "Amount of overcapped Stacks";
     public int stackCount = 0;
-    public final int stackThreshold = 2;
+    private Random fuaRng;
+    private int numFUAs = 0;
+    private int numStacks;
+    private int wastedStacks;
     private boolean FUAReady = true;
-    public static final String NAME = "Feixiao";
 
     public Feixiao() {
         super(NAME, 1048, 602, 388, 112, 80, ElementType.WIND, 12, 75, Path.HUNT);
@@ -96,7 +95,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     }
 
     public void useSkill() {
-        this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 48, 3,"Fei Atk Bonus"));
+        this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 48, 3, "Fei Atk Bonus"));
 
         Attack attack = this.startAttack();
         AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
@@ -110,6 +109,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
         attack.execute();
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -213,6 +213,23 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         return metricMap;
     }
 
+    private static class FeiCritDmgPower extends AbstractPower {
+        public FeiCritDmgPower() {
+            this.setName(this.getClass().getSimpleName());
+            this.lastsForever = true;
+        }
+
+        @Override
+        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.FOLLOW_UP) {
+                    return 36;
+                }
+            }
+            return 0;
+        }
+    }
+
     private class FeiTalentPower extends AbstractPower {
         public FeiTalentPower() {
             this.setName(this.getClass().getSimpleName());
@@ -239,23 +256,6 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
                     Feixiao.this.useFollowUp(enemy);
                 }
             }
-        }
-    }
-
-    private static class FeiCritDmgPower extends AbstractPower {
-        public FeiCritDmgPower() {
-            this.setName(this.getClass().getSimpleName());
-            this.lastsForever = true;
-        }
-
-        @Override
-        public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            for (DamageType type : damageTypes) {
-                if (type == DamageType.FOLLOW_UP) {
-                    return 36;
-                }
-            }
-            return 0;
         }
     }
 }

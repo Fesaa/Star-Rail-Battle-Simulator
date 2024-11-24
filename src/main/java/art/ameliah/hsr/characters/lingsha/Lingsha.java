@@ -31,20 +31,19 @@ import java.util.Map;
 
 public class Lingsha extends AbstractSummoner<Lingsha> {
     public static final String NAME = "Lingsha";
-
-    final FuYuan fuYuan;
-    final AbstractPower damageTrackerPower;
     static final int fuYuanMaxHitCount = 5;
     static final int skillHitCountGain = 3;
-    int fuYuanCurrentHitCount = 0;
     private static final int emergencyHealCooldown = 2;
-    private int currentEmergencyHealCD = 0;
+    final FuYuan fuYuan;
+    final AbstractPower damageTrackerPower;
     private final HashMap<AbstractCharacter<?>, Integer> characterTimesDamageTakenMap = new HashMap<>();
-    private int fuYuanAttacksMetric = 0;
     private final String fuYuanAttacksMetricName = "Number of Fu Yuan Attacks";
-    private int numEmergencyHeals = 0;
     private final String numEmergencyHealsMetricName = "Number of Emergency Heal Triggers";
     private final String leftoverAVFuYuanMetricName = "Leftover AV (Fu Yuan)";
+    int fuYuanCurrentHitCount = 0;
+    private int currentEmergencyHealCD = 0;
+    private int fuYuanAttacksMetric = 0;
+    private int numEmergencyHeals = 0;
 
     public Lingsha() {
         super(NAME, 1358, 679, 437, 98, 80, ElementType.FIRE, 110, 100, Path.ABUNDANCE);
@@ -76,7 +75,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
             if (atkBonus > 50) {
                 atkBonus = 50;
             }
-            return super.getFinalAttack() + ((baseAtk + lightcone.baseAtk) *  (1 + atkBonus / 100));
+            return super.getFinalAttack() + ((baseAtk + lightcone.baseAtk) * (1 + atkBonus / 100));
         }
     }
 

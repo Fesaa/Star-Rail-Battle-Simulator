@@ -11,18 +11,21 @@ import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import java.util.List;
 
 public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
+    AbstractPower atkBonus;
+
     public TheAshblazingGrandDuke(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public TheAshblazingGrandDuke(AbstractCharacter<?> owner, boolean isFullSet) {
         super(owner, isFullSet);
     }
-    AbstractPower atkBonus;
 
     @Override
     public void onEquip() {
         owner.addPower(new DukeDamagePower());
     }
+
     @Override
     public void onAttack(Attack attack) {
         if (attack.getTypes().contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
@@ -51,6 +54,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {
@@ -68,6 +72,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
             this.turnDuration = 3;
             this.maxStacks = 8;
         }
+
         @Override
         public float getConditionalAtkBonus(AbstractCharacter<?> character) {
             return stacks * 6.0f;

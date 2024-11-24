@@ -38,7 +38,7 @@ public class RelicStats {
         relicBonus.setStat(PowerStat.FLAT_SPEED, getTotalBonus(Stats.SPEED));
         relicBonus.setStat(PowerStat.HEALING, getTotalBonus(Stats.HEALING));
         relicBonus.setStat(PowerStat.ENERGY_REGEN, getTotalBonus(Stats.ERR));
-        
+
         // Assuming the ELEMENT_DMG is always correct for the char
         Stats convStat = this.fromElementType(character.elementType);
         relicBonus.setStat(fromRelicStat(convStat), getTotalBonus(Stats.ELEMENT_DAMAGE));

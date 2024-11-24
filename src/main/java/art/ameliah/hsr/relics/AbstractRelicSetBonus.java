@@ -5,7 +5,7 @@ import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public abstract class AbstractRelicSetBonus implements BattleEvents,BattleParticipant {
+public abstract class AbstractRelicSetBonus implements BattleEvents, BattleParticipant {
     public final AbstractCharacter<?> owner;
     protected final boolean isFullSet;
 
@@ -14,13 +14,13 @@ public abstract class AbstractRelicSetBonus implements BattleEvents,BattlePartic
         this.isFullSet = fullSet;
     }
 
+    public AbstractRelicSetBonus(AbstractCharacter<?> owner) {
+        this(owner, true);
+    }
+
     @Override
     public IBattle getBattle() {
         return this.owner.getBattle();
-    }
-
-    public AbstractRelicSetBonus(AbstractCharacter<?> owner) {
-        this(owner, true);
     }
 
     public void onEquip() {

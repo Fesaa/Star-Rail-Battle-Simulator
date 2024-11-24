@@ -23,10 +23,6 @@ public class BattleHelpers implements BattleParticipant {
         return this.battle;
     }
 
-    private enum MultiplierStat {
-        ATK, HP, DEF
-    }
-
     private float calculateBreakDamageAgainstEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, ElementType damageElement) {
         float maxToughnessMultiplier = 0.5f + (target.maxToughness() / 40);
         float baseDamage = this.getBaseBreakDamage(multiplier, damageElement, maxToughnessMultiplier);
@@ -71,6 +67,10 @@ public class BattleHelpers implements BattleParticipant {
             elementMultipler = 1.5f;
         }
         return multiplier * elementMultipler * 3767.5533f * maxToughnessMultiplier;
+    }
+
+    private enum MultiplierStat {
+        ATK, HP, DEF
     }
 
 }

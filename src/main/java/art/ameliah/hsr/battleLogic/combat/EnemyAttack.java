@@ -87,5 +87,6 @@ public class EnemyAttack implements IAttack, BattleParticipant {
         return this.source.getBattle();
     }
 
-    public record EnemyHit(AbstractCharacter<?> target, int energy, float dmg) {}
+    public record EnemyHit(AbstractCharacter<?> target, int energy, float dmg) {
+    }
 }

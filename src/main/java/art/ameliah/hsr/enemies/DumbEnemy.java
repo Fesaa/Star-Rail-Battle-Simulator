@@ -1,10 +1,7 @@
 package art.ameliah.hsr.enemies;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
-import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -51,14 +48,14 @@ public class DumbEnemy extends AbstractEnemy {
 
             EnemyAttack attack = this.startAttack();
             attack.hit(target, 10, dmgToDeal);
-            getBattle().characterCallback(targetPos+1, t -> attack.hit(t, 10, dmgToDeal));
-            getBattle().characterCallback(targetPos-1, t -> attack.hit(t, 10, dmgToDeal));
+            getBattle().characterCallback(targetPos + 1, t -> attack.hit(t, 10, dmgToDeal));
+            getBattle().characterCallback(targetPos - 1, t -> attack.hit(t, 10, dmgToDeal));
             attack.execute();
         }
     }
 
     public EnemyAttackType rollAttackType() {
-        double totalWeight= 0.0;
+        double totalWeight = 0.0;
         for (EnemyAttackType type : EnemyAttackType.values()) {
             totalWeight += type.weight;
         }

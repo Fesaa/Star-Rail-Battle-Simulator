@@ -25,23 +25,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked {
+    public static final String NAME = "Topaz";
     final AbstractPower proofOfDebt = new ProofOfDebt();
     final Numby numby;
-    PermPower stonksPower = PermPower.create(PowerStat.CRIT_DAMAGE, 25, "Topaz Ult Power");
-    int ultCounter = 0;
-    private boolean techniqueActive = false;
-
-    public int numbyAttacksMetrics = 0;
-    public int numbyAdvancedTimesMetrics = 0;
-    public int actualNumbyAdvanceMetric = 0;
-    public int wastedNumbyAdvances = 0;
     private final String numbyAttacksMetricName = "Numby Attacks";
     private final String numbyAdvancedTimesMetricName = "Number of Useful Numby Advances";
     private final String actualNumbyAdvanceMetricName = "Amount of AV Advanced by Numby";
     private final String wastedNumbyAdvancesMetricName = "Number of Wasted Numby Advances";
     private final String leftoverAVNumbyMetricName = "Leftover AV (Numby)";
     private final String leftoverUltChargesMetricName = "Leftover Ult Charges";
-    public static final String NAME = "Topaz";
+    public int numbyAttacksMetrics = 0;
+    public int numbyAdvancedTimesMetrics = 0;
+    public int actualNumbyAdvanceMetric = 0;
+    public int wastedNumbyAdvances = 0;
+    PermPower stonksPower = PermPower.create(PowerStat.CRIT_DAMAGE, 25, "Topaz Ult Power");
+    int ultCounter = 0;
+    private boolean techniqueActive = false;
 
     public Topaz() {
         super(NAME, 931, 621, 412, 110, 80, ElementType.FIRE, 130, 75, Path.HUNT);
@@ -75,6 +74,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
         numbyAttack(DamageType.SKILL);
     }
+
     public void useBasic() {
         AbstractEnemy target = null;
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
@@ -105,7 +105,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         getBattle().getRandomEnemy().addPower(proofOfDebt);
     }
 
-    public void numbyAttack(DamageType ...types) {
+    public void numbyAttack(DamageType... types) {
         this.numbyAttack(new ArrayList<>(List.of(types)));
     }
 
@@ -136,7 +136,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         Attack attack = this.startAttack();
 
         for (int i = 0; i < 7; i++) {
-            attack.hitEnemy(target, multiplier/7, MultiplierStat.ATK, toughnessDamage, types);
+            attack.hitEnemy(target, multiplier / 7, MultiplierStat.ATK, toughnessDamage, types);
         }
         if (ultCounter > 0) {
             attack.hitEnemy(target, 0.9f, MultiplierStat.ATK, toughnessDamage, types);
@@ -199,6 +199,20 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         firstMove = firstTurn;
     }
 
+    private static class FireWeaknessBonusDamage extends AbstractPower {
+        public FireWeaknessBonusDamage() {
+            this.setName(this.getClass().getSimpleName());
+            lastsForever = true;
+        }
+
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+            if (enemy.hasWeakness(ElementType.FIRE)) {
+                return 15;
+            }
+            return 0;
+        }
+    }
+
     private class ProofOfDebt extends AbstractPower {
         public ProofOfDebt() {
             this.setName(this.getClass().getSimpleName());
@@ -237,20 +251,6 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
                     }
                 }
             }
-        }
-    }
-
-    private static class FireWeaknessBonusDamage extends AbstractPower {
-        public FireWeaknessBonusDamage() {
-            this.setName(this.getClass().getSimpleName());
-            lastsForever = true;
-        }
-
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            if (enemy.hasWeakness(ElementType.FIRE)) {
-                return 15;
-            }
-            return 0;
         }
     }
 }

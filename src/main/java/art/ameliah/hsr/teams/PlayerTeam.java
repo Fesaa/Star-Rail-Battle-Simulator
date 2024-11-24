@@ -64,9 +64,366 @@ import java.util.function.Function;
 
 public class PlayerTeam {
 
+    public static AbstractCharacter<?> getPrebuiltLingshaCritSupport() {
+        AbstractCharacter<?> character = new Lingsha();
+        character.EquipLightcone(new WhatIsReal(character));
+        character.EquipRelicSet(new ThiefOfShootingMeteor(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.BREAK_EFFECT, 6).addSubStat(Stats.SPEED, 12).
+                addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltMoze() {
+        AbstractCharacter<?> character = new Moze();
+        character.EquipLightcone(new Swordplay(character));
+        character.EquipRelicSet(new TheAshblazingGrandDuke(character));
+        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 17).addSubStat(Stats.CRIT_DAMAGE, 7);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltBronyaFei() {
+        AbstractCharacter<?> character = new Bronya();
+        character.EquipLightcone(new PastAndFuture(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.CRIT_DAMAGE, 15).addSubStat(Stats.SPEED, 2).
+                addSubStat(Stats.EFFECT_RES, 3);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltAsta() {
+        AbstractCharacter<?> character = new Asta();
+        character.EquipLightcone(new MemoriesOfThePast(character));
+        character.EquipRelicSet(new MessengerTraversingHackerspace(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 8).addSubStat(Stats.SPEED, 8).
+                addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltFuXuan() {
+        AbstractCharacter<?> character = new FuXuan();
+        character.EquipLightcone(new DayOneOfMyNewLife(character));
+        character.EquipRelicSet(new KnightOfPurityPalace(character, false));
+        character.EquipRelicSet(new LongevousDisciple(character, false));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.HP_PER);
+        relicStats.addSubStat(Stats.HP_PER, 8).addSubStat(Stats.SPEED, 8).
+                addSubStat(Stats.DEF_PER, 8);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltGallagher() {
+        AbstractCharacter<?> character = new Gallagher();
+        character.EquipLightcone(new Multiplication(character));
+        character.EquipRelicSet(new ThiefOfShootingMeteor(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.BREAK_EFFECT, 6).addSubStat(Stats.SPEED, 14);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltHanya() {
+        AbstractCharacter<?> character = new Hanya();
+        character.EquipLightcone(new MemoriesOfThePast(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 6).addSubStat(Stats.SPEED, 10).
+                addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltRuanMeiCritSupport() {
+        AbstractCharacter<?> character = new RuanMei();
+        character.EquipLightcone(new MemoriesOfThePast(character));
+        character.EquipRelicSet(new ThiefOfShootingMeteor(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.BREAK_EFFECT, 10).addSubStat(Stats.SPEED, 7).
+                addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltSparkleFei() {
+        AbstractCharacter<?> character = new Sparkle();
+        character.EquipLightcone(new PastAndFuture(character));
+        character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.CRIT_DAMAGE, 13).addSubStat(Stats.SPEED, 4).
+                addSubStat(Stats.EFFECT_RES, 3);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltFeixiao() {
+        AbstractCharacter<?> character = new Feixiao();
+        character.EquipLightcone(new IVentureForthToHunt(character));
+        character.EquipRelicSet(new TheWindSoaringValorous(character));
+        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltTopazSpeed() {
+        AbstractCharacter<?> character = new Topaz();
+        character.EquipLightcone(new Swordplay(character));
+        character.EquipRelicSet(new TheAshblazingGrandDuke(character));
+        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 10).addSubStat(Stats.SPEED, 1);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltAventurineSpeed() {
+        AbstractCharacter<?> character = new Aventurine(false);
+        character.EquipLightcone(new ConcertForTwo(character));
+        character.EquipRelicSet(new KnightOfPurityPalace(character, false));
+        character.EquipRelicSet(new TheAshblazingGrandDuke(character, false));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.DEF_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.DEF_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.DEF_PER, 3).
+                addSubStat(Stats.CRIT_DAMAGE, 3).addSubStat(Stats.SPEED, 8);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltAventurine() {
+        AbstractCharacter<?> character = new Aventurine();
+        character.EquipLightcone(new ConcertForTwo(character));
+        character.EquipRelicSet(new KnightOfPurityPalace(character, false));
+        character.EquipRelicSet(new TheAshblazingGrandDuke(character, false));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.DEF_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.DEF_PER).addMainStat(Stats.DEF_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.DEF_PER, 3).
+                addSubStat(Stats.CRIT_DAMAGE, 8);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltPela() {
+        AbstractCharacter<?> character = new Pela();
+        character.EquipLightcone(new ResolutionShinesAsPearlsOfSweat(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.EFFECT_HIT).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.EFFECT_HIT, 5).addSubStat(Stats.SPEED, 9).
+                addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltSparkle() {
+        AbstractCharacter<?> character = new Sparkle();
+        character.EquipLightcone(new PastAndFuture(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.CRIT_DAMAGE, 4).addSubStat(Stats.SPEED, 13).
+                addSubStat(Stats.EFFECT_RES, 3);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltSwordMarchFei() {
+        AbstractCharacter<?> character = new SwordMarch();
+        character.EquipLightcone(new CruisingInTheStellarSea(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new RutilentArena(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 11).addSubStat(Stats.SPEED, 3);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltSwordMarch() {
+        AbstractCharacter<?> character = new SwordMarch();
+        character.EquipLightcone(new CruisingInTheStellarSea(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new RutilentArena(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 14);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltTopaz() {
+        AbstractCharacter<?> character = new Topaz();
+        character.EquipLightcone(new Swordplay(character));
+        character.EquipRelicSet(new TheAshblazingGrandDuke(character));
+        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltTingyun() {
+        AbstractCharacter<?> character = new Tingyun();
+        character.EquipLightcone(new MemoriesOfThePast(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 7).addSubStat(Stats.SPEED, 9).
+                addSubStat(Stats.ATK_FLAT, 2).addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltRobin() {
+        AbstractCharacter<?> character = new Robin();
+        character.EquipLightcone(new ForTomorrowsJourney(character));
+        character.EquipRelicSet(new MusketeerOfWildWheat(character, false));
+        character.EquipRelicSet(new TheWindSoaringValorous(character, false));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.ATK_PER, 7).addSubStat(Stats.SPEED, 8).
+                addSubStat(Stats.ATK_FLAT, 3).addSubStat(Stats.EFFECT_RES, 6);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltHuohuo() {
+        AbstractCharacter<?> character = new Huohuo();
+        character.EquipLightcone(new PostOpConversation(character));
+        character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
+        character.EquipRelicSet(new BrokenKeel(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
+                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
+        relicStats.addSubStat(Stats.HP_PER, 10).addSubStat(Stats.SPEED, 5).
+                addSubStat(Stats.EFFECT_RES, 1).addSubStat(Stats.HP_FLAT, 8);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static AbstractCharacter<?> getPrebuiltYunli() {
+        AbstractCharacter<?> character = new Yunli();
+        character.EquipLightcone(new DanceAtSunset(character));
+        character.EquipRelicSet(new TheWindSoaringValorous(character));
+        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static ArrayList<AbstractCharacter<?>> FeixiaoTeamLightconeCompare(Function<AbstractCharacter<?>, AbstractLightcone> lightconeSupplier) {
+        ArrayList<AbstractCharacter<?>> team = new ArrayList<>();
+        team.add(FeixiaoLightconeCompare(lightconeSupplier));
+        team.add(getPrebuiltRobin());
+        team.add(getPrebuiltAventurineSpeed());
+        team.add(getPrebuiltTopazSpeed());
+
+        return team;
+    }
+
+    private static AbstractCharacter<?> FeixiaoLightconeCompare(Function<AbstractCharacter<?>, AbstractLightcone> lightconeSupplier) {
+        AbstractCharacter<?> character = new Feixiao();
+        character.EquipLightcone(lightconeSupplier.apply(character));
+        character.EquipRelicSet(new TheWindSoaringValorous(character));
+        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
+        relicStats.equipTo(character);
+        return character;
+    }
+
+    public static ArrayList<AbstractCharacter<?>> FeixiaoTeamRelicCompare(BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> mainSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> planarSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> halfSet) {
+        ArrayList<AbstractCharacter<?>> team = new ArrayList<>();
+        team.add(getPrebuiltPela());
+        team.add(FeixiaoRelicCompare(Swordplay::new, mainSet, planarSet, halfSet));
+        team.add(getPrebuiltGallagher());
+        team.add(getPrebuiltSwordMarchFei());
+
+        return team;
+    }
+
+    private static AbstractCharacter<?> FeixiaoRelicCompare(Function<AbstractCharacter<?>, AbstractLightcone> lightconeSupplier, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> mainSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> planarSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> halfSet) {
+        AbstractCharacter<?> character = new Feixiao();
+        character.EquipLightcone(lightconeSupplier.apply(character));
+        if (halfSet != null) {
+            character.EquipRelicSet(mainSet.apply(character, false));
+            character.EquipRelicSet(halfSet.apply(character, false));
+        } else {
+            character.EquipRelicSet(mainSet.apply(character, true));
+        }
+        character.EquipRelicSet(planarSet.apply(character, true));
+
+        RelicStats relicStats = new RelicStats();
+        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
+                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
+        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
+        relicStats.equipTo(character);
+        return character;
+    }
+
     public ArrayList<AbstractCharacter<?>> getTeam() {
         return null;
     }
+
     public String toString() {
         ArrayList<AbstractCharacter<?>> team = getTeam();
         StringBuilder result = new StringBuilder();
@@ -511,6 +868,19 @@ public class PlayerTeam {
         }
     }
 
+//    public static AbstractCharacter<?> getPrebuiltFeixiao() {
+//        AbstractCharacter<?> character = new Feixiao();
+//        character.EquipLightcone(new Swordplay(character));
+//        character.EquipRelicSet(new TheWindSoaringValorous(character));
+//        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+//        RelicStats relicStats = new RelicStats();
+//        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
+//                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
+//        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 11).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 13);
+//        relicStats.equipTo(character);
+//        return character;
+//    }
+
     public static class FeixiaoRobinMarchFuXuan extends PlayerTeam {
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
@@ -703,325 +1073,12 @@ public class PlayerTeam {
         }
     }
 
-    public static AbstractCharacter<?> getPrebuiltLingshaCritSupport() {
-        AbstractCharacter<?> character = new Lingsha();
-        character.EquipLightcone(new WhatIsReal(character));
-        character.EquipRelicSet(new ThiefOfShootingMeteor(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.BREAK_EFFECT, 6).addSubStat(Stats.SPEED, 12).
-                addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltMoze() {
-        AbstractCharacter<?> character = new Moze();
-        character.EquipLightcone(new Swordplay(character));
-        character.EquipRelicSet(new TheAshblazingGrandDuke(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 17).addSubStat(Stats.CRIT_DAMAGE, 7);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltBronyaFei() {
-        AbstractCharacter<?> character = new Bronya();
-        character.EquipLightcone(new PastAndFuture(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.CRIT_DAMAGE, 15).addSubStat(Stats.SPEED, 2).
-                addSubStat(Stats.EFFECT_RES, 3);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltAsta() {
-        AbstractCharacter<?> character = new Asta();
-        character.EquipLightcone(new MemoriesOfThePast(character));
-        character.EquipRelicSet(new MessengerTraversingHackerspace(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.ATK_PER, 8).addSubStat(Stats.SPEED, 8).
-                addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltFuXuan() {
-        AbstractCharacter<?> character = new FuXuan();
-        character.EquipLightcone(new DayOneOfMyNewLife(character));
-        character.EquipRelicSet(new KnightOfPurityPalace(character, false));
-        character.EquipRelicSet(new LongevousDisciple(character, false));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.DEF_PER).addMainStat(Stats.HP_PER);
-        relicStats.addSubStat(Stats.HP_PER, 8).addSubStat(Stats.SPEED, 8).
-                addSubStat(Stats.DEF_PER, 8);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltGallagher() {
-        AbstractCharacter<?> character = new Gallagher();
-        character.EquipLightcone(new Multiplication(character));
-        character.EquipRelicSet(new ThiefOfShootingMeteor(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
-                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.BREAK_EFFECT, 6).addSubStat(Stats.SPEED, 14);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltHanya() {
-        AbstractCharacter<?> character = new Hanya();
-        character.EquipLightcone(new MemoriesOfThePast(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.ATK_PER, 6).addSubStat(Stats.SPEED, 10).
-                addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltRuanMeiCritSupport() {
-        AbstractCharacter<?> character = new RuanMei();
-        character.EquipLightcone(new MemoriesOfThePast(character));
-        character.EquipRelicSet(new ThiefOfShootingMeteor(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HP_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.DEF_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.BREAK_EFFECT, 10).addSubStat(Stats.SPEED, 7).
-                addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltSparkleFei() {
-        AbstractCharacter<?> character = new Sparkle();
-        character.EquipLightcone(new PastAndFuture(character));
-        character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.CRIT_DAMAGE, 13).addSubStat(Stats.SPEED, 4).
-                addSubStat(Stats.EFFECT_RES, 3);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltFeixiao() {
-        AbstractCharacter<?> character = new Feixiao();
-        character.EquipLightcone(new IVentureForthToHunt(character));
-        character.EquipRelicSet(new TheWindSoaringValorous(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-//    public static AbstractCharacter<?> getPrebuiltFeixiao() {
-//        AbstractCharacter<?> character = new Feixiao();
-//        character.EquipLightcone(new Swordplay(character));
-//        character.EquipRelicSet(new TheWindSoaringValorous(character));
-//        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-//        RelicStats relicStats = new RelicStats();
-//        relicStats.addMainStat(RelicStats.Stats.CRIT_RATE).addMainStat(RelicStats.Stats.SPEED).
-//                addMainStat(RelicStats.Stats.ELEMENT_DAMAGE).addMainStat(RelicStats.Stats.ATK_PER);
-//        relicStats.addSubStat(RelicStats.Stats.CRIT_RATE, 11).addSubStat(RelicStats.Stats.CRIT_DAMAGE, 13);
-//        relicStats.equipTo(character);
-//        return character;
-//    }
-
-    public static AbstractCharacter<?> getPrebuiltTopazSpeed() {
-        AbstractCharacter<?> character = new Topaz();
-        character.EquipLightcone(new Swordplay(character));
-        character.EquipRelicSet(new TheAshblazingGrandDuke(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 10).addSubStat(Stats.SPEED, 1);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltAventurineSpeed() {
-        AbstractCharacter<?> character = new Aventurine(false);
-        character.EquipLightcone(new ConcertForTwo(character));
-        character.EquipRelicSet(new KnightOfPurityPalace(character, false));
-        character.EquipRelicSet(new TheAshblazingGrandDuke(character, false));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.DEF_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.DEF_PER).addMainStat(Stats.DEF_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.DEF_PER, 3).
-                addSubStat(Stats.CRIT_DAMAGE, 3).addSubStat(Stats.SPEED, 8);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltAventurine() {
-        AbstractCharacter<?> character = new Aventurine();
-        character.EquipLightcone(new ConcertForTwo(character));
-        character.EquipRelicSet(new KnightOfPurityPalace(character, false));
-        character.EquipRelicSet(new TheAshblazingGrandDuke(character, false));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.DEF_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.DEF_PER).addMainStat(Stats.DEF_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.DEF_PER, 3).
-                addSubStat(Stats.CRIT_DAMAGE, 8);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltPela() {
-        AbstractCharacter<?> character = new Pela();
-        character.EquipLightcone(new ResolutionShinesAsPearlsOfSweat(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.EFFECT_HIT).addMainStat(Stats.SPEED).
-                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.EFFECT_HIT, 5).addSubStat(Stats.SPEED, 9).
-                addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltSparkle() {
-        AbstractCharacter<?> character = new Sparkle();
-        character.EquipLightcone(new PastAndFuture(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_DAMAGE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.CRIT_DAMAGE, 4).addSubStat(Stats.SPEED, 13).
-                addSubStat(Stats.EFFECT_RES, 3);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltSwordMarchFei() {
-        AbstractCharacter<?> character = new SwordMarch();
-        character.EquipLightcone(new CruisingInTheStellarSea(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new RutilentArena(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 11).addSubStat(Stats.SPEED, 3);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltSwordMarch() {
-        AbstractCharacter<?> character = new SwordMarch();
-        character.EquipLightcone(new CruisingInTheStellarSea(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new RutilentArena(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 10).addSubStat(Stats.CRIT_DAMAGE, 14);
-        relicStats.equipTo(character);
-        return character;
-    }
-    public static AbstractCharacter<?> getPrebuiltTopaz() {
-        AbstractCharacter<?> character = new Topaz();
-        character.EquipLightcone(new Swordplay(character));
-        character.EquipRelicSet(new TheAshblazingGrandDuke(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
-        relicStats.equipTo(character);
-        return character;
-    }
-    public static AbstractCharacter<?> getPrebuiltTingyun() {
-        AbstractCharacter<?> character = new Tingyun();
-        character.EquipLightcone(new MemoriesOfThePast(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.ATK_PER, 7).addSubStat(Stats.SPEED, 9).
-                addSubStat(Stats.ATK_FLAT, 2).addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltRobin() {
-        AbstractCharacter<?> character = new Robin();
-        character.EquipLightcone(new ForTomorrowsJourney(character));
-        character.EquipRelicSet(new MusketeerOfWildWheat(character, false));
-        character.EquipRelicSet(new TheWindSoaringValorous(character, false));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.ATK_PER, 7).addSubStat(Stats.SPEED, 8).
-                addSubStat(Stats.ATK_FLAT, 3).addSubStat(Stats.EFFECT_RES, 6);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltHuohuo() {
-        AbstractCharacter<?> character = new Huohuo();
-        character.EquipLightcone(new PostOpConversation(character));
-        character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
-        character.EquipRelicSet(new BrokenKeel(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
-                addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.HP_PER, 10).addSubStat(Stats.SPEED, 5).
-                addSubStat(Stats.EFFECT_RES, 1).addSubStat(Stats.HP_FLAT, 8);
-        relicStats.equipTo(character);
-        return character;
-    }
-
-    public static AbstractCharacter<?> getPrebuiltYunli() {
-        AbstractCharacter<?> character = new Yunli();
-        character.EquipLightcone(new DanceAtSunset(character));
-        character.EquipRelicSet(new TheWindSoaringValorous(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.ATK_PER).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 13).addSubStat(Stats.CRIT_DAMAGE, 11);
-        relicStats.equipTo(character);
-        return character;
-    }
-
     public static class FeixiaoTeamLightconeCompareBaseline extends PlayerTeam {
         @Override
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamLightconeCompare(Swordplay::new);
@@ -1033,6 +1090,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamLightconeCompare(IVentureForthToHunt::new);
@@ -1044,6 +1102,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamLightconeCompare(WorrisomeBlissful::new);
@@ -1055,53 +1114,11 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamLightconeCompare(BaptismOfPureThought::new);
         }
-    }
-
-    public static class FeixiaoTeamLightconeCompareCruising extends PlayerTeam {
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName();
-        }
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            return FeixiaoTeamLightconeCompare(CruisingInTheStellarSea::new);
-        }
-    }
-
-    public static class FeixiaoTeamLightconeCompareInTheNight extends PlayerTeam {
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName();
-        }
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            return FeixiaoTeamLightconeCompare(InTheNight::new);
-        }
-    }
-
-    public static class FeixiaoTeamLightconeCompareSleepDead extends PlayerTeam {
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName();
-        }
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            return FeixiaoTeamLightconeCompare(SleepLikeTheDead::new);
-        }
-    }
-
-    public static ArrayList<AbstractCharacter<?>> FeixiaoTeamLightconeCompare(Function<AbstractCharacter<?>, AbstractLightcone> lightconeSupplier) {
-        ArrayList<AbstractCharacter<?>> team = new ArrayList<>();
-        team.add(FeixiaoLightconeCompare(lightconeSupplier));
-        team.add(getPrebuiltRobin());
-        team.add(getPrebuiltAventurineSpeed());
-        team.add(getPrebuiltTopazSpeed());
-
-        return team;
     }
 
 //    public static ArrayList<AbstractCharacter<?>> FeixiaoTeamLightconeCompare(Function<AbstractCharacter<?>, AbstractLightcone> lightconeSupplier) {
@@ -1114,18 +1131,40 @@ public class PlayerTeam {
 //        return team;
 //    }
 
-    private static AbstractCharacter<?> FeixiaoLightconeCompare(Function<AbstractCharacter<?>,AbstractLightcone> lightconeSupplier) {
-        AbstractCharacter<?> character = new Feixiao();
-        character.EquipLightcone(lightconeSupplier.apply(character));
-        character.EquipRelicSet(new TheWindSoaringValorous(character));
-        character.EquipRelicSet(new DuranDynastyOfRunningWolves(character));
+    public static class FeixiaoTeamLightconeCompareCruising extends PlayerTeam {
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
+        }
 
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
-        relicStats.equipTo(character);
-        return character;
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            return FeixiaoTeamLightconeCompare(CruisingInTheStellarSea::new);
+        }
+    }
+
+    public static class FeixiaoTeamLightconeCompareInTheNight extends PlayerTeam {
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            return FeixiaoTeamLightconeCompare(InTheNight::new);
+        }
+    }
+
+    public static class FeixiaoTeamLightconeCompareSleepDead extends PlayerTeam {
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            return FeixiaoTeamLightconeCompare(SleepLikeTheDead::new);
+        }
     }
 
     public static class FeixiaoTeamRelicCompareBaseline extends PlayerTeam {
@@ -1133,6 +1172,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, DuranDynastyOfRunningWolves::new, null);
@@ -1144,6 +1184,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(TheAshblazingGrandDuke::new, DuranDynastyOfRunningWolves::new, null);
@@ -1155,6 +1196,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(GeniusOfBrilliantStars::new, DuranDynastyOfRunningWolves::new, null);
@@ -1166,6 +1208,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(TheAshblazingGrandDuke::new, DuranDynastyOfRunningWolves::new, MusketeerOfWildWheat::new);
@@ -1177,6 +1220,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(TheAshblazingGrandDuke::new, DuranDynastyOfRunningWolves::new, EagleOfTwilightLine::new);
@@ -1188,6 +1232,7 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, IzumoGenseiAndTakamaDivineRealm::new, null);
@@ -1199,31 +1244,10 @@ public class PlayerTeam {
         public String toString() {
             return this.getClass().getSimpleName();
         }
+
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
             return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, InertSalsotto::new, null);
-        }
-    }
-
-    public static class FeixiaoTeamRelicCompareGlamoth extends PlayerTeam {
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName();
-        }
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, FirmamentFrontlineGlamoth::new, null);
-        }
-    }
-
-    public static class FeixiaoTeamRelicCompareStation extends PlayerTeam {
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName();
-        }
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, SpaceSealingStation::new, null);
         }
     }
 
@@ -1238,32 +1262,27 @@ public class PlayerTeam {
 //        return team;
 //    }
 
-    public static ArrayList<AbstractCharacter<?>> FeixiaoTeamRelicCompare(BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> mainSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> planarSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> halfSet) {
-        ArrayList<AbstractCharacter<?>> team = new ArrayList<>();
-        team.add(getPrebuiltPela());
-        team.add(FeixiaoRelicCompare(Swordplay::new, mainSet, planarSet, halfSet));
-        team.add(getPrebuiltGallagher());
-        team.add(getPrebuiltSwordMarchFei());
+    public static class FeixiaoTeamRelicCompareGlamoth extends PlayerTeam {
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
+        }
 
-        return team;
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, FirmamentFrontlineGlamoth::new, null);
+        }
     }
 
-    private static AbstractCharacter<?> FeixiaoRelicCompare(Function<AbstractCharacter<?>,AbstractLightcone> lightconeSupplier, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> mainSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> planarSet, BiFunction<AbstractCharacter<?>, Boolean, AbstractRelicSetBonus> halfSet) {
-        AbstractCharacter<?> character = new Feixiao();
-        character.EquipLightcone(lightconeSupplier.apply(character));
-        if (halfSet != null) {
-            character.EquipRelicSet(mainSet.apply(character, false));
-            character.EquipRelicSet(halfSet.apply(character, false));
-        } else {
-            character.EquipRelicSet(mainSet.apply(character, true));
+    public static class FeixiaoTeamRelicCompareStation extends PlayerTeam {
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
         }
-        character.EquipRelicSet(planarSet.apply(character, true));
 
-        RelicStats relicStats = new RelicStats();
-        relicStats.addMainStat(Stats.CRIT_RATE).addMainStat(Stats.SPEED).
-                addMainStat(Stats.ELEMENT_DAMAGE).addMainStat(Stats.ATK_PER);
-        relicStats.addSubStat(Stats.CRIT_RATE, 6).addSubStat(Stats.CRIT_DAMAGE, 18);
-        relicStats.equipTo(character);
-        return character;
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            return FeixiaoTeamRelicCompare(TheWindSoaringValorous::new, SpaceSealingStation::new, null);
+        }
     }
 }

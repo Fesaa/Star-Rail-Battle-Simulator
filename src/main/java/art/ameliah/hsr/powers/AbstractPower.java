@@ -16,28 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractPower implements BattleEvents,BattleParticipant {
+public abstract class AbstractPower implements BattleEvents, BattleParticipant {
 
-    // TODO: Implement DOT
-    public enum PowerType {
-        BUFF, DEBUFF,DOT
-    }
-
-    @Setter
-    protected String name;
-
+    public final boolean durationBasedOnSelfTurns = true;
     private final Map<PowerStat, Float> stats = new HashMap<>();
-
     public int turnDuration;
     public PowerType type = PowerType.BUFF;
-    public final boolean durationBasedOnSelfTurns = true;
     public boolean lastsForever = false;
     public boolean justApplied = false;
     public int maxStacks = 0;
     public int stacks = 1;
+    @Setter
+    protected String name;
     @Getter
     private AbstractEntity owner;
-
     public AbstractPower() {
     }
 
@@ -62,7 +54,7 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
 
     public void merge(AbstractPower other) {
         if (this.maxStacks > 0) {
-            this.stacks = Math.min(this.stacks+1, this.maxStacks);
+            this.stacks = Math.min(this.stacks + 1, this.maxStacks);
         }
 
         this.turnDuration = other.turnDuration;
@@ -113,43 +105,45 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
      * Increase damage dealt by the character when attacking the enemy
      * Use this for DMG Boosts, that are applied as a debug on targets
      */
-    public float receiveConditionalDamageBonus(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+    public float receiveConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
 
-    public float getConditionalCritDamage(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-        return 0;
-    }
-    public float getConditionalCritRate(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-        return 0;
-    }
-    public float receiveConditionalCritDamage(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+    public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
 
-    public float getConditionDefenseIgnore(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+    public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
 
-    public float setFixedCritRate(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
+    public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+        return 0;
+    }
+
+    public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+        return 0;
+    }
+
+    public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
         return currentCrit;
     }
 
-    public float setFixedCritDmg(AbstractCharacter<?>  character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCritDmg) {
+    public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCritDmg) {
         return currentCritDmg;
     }
 
     /**
      * @return A def% bonus
      */
-    public float getConditionalDefenseBonus(AbstractCharacter<?>  character) {
+    public float getConditionalDefenseBonus(AbstractCharacter<?> character) {
         return 0;
     }
 
     /**
      * @return A break% bonus
      */
-    public float getConditionalBreakEffectBonus(AbstractCharacter<?>  character) {
+    public float getConditionalBreakEffectBonus(AbstractCharacter<?> character) {
         return 0;
     }
 
@@ -178,6 +172,7 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
 
     /**
      * Get the value of a stat
+     *
      * @param stat The stat to get
      * @return The value of the stat, 0 if the stat is not set
      */
@@ -187,7 +182,8 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
 
     /**
      * Increase the value of a stat, calls getStat internally
-     * @param stat The stat to increase
+     *
+     * @param stat  The stat to increase
      * @param value The value to increase by
      */
     public void increaseStat(PowerStat stat, float value) {
@@ -196,7 +192,8 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
 
     /**
      * Set the value of a stat, this overwrites the previous value
-     * @param stat The stat to set
+     *
+     * @param stat  The stat to set
      * @param value The value to set
      * @return The power object
      */
@@ -209,6 +206,11 @@ public abstract class AbstractPower implements BattleEvents,BattleParticipant {
     public String toString() {
         return String.format("%s(turnDuration=%d, stacks=%d, maxStacks=%d, justApplied=%b, type=%s, durationBasedOnSelfTurns=%b, lastsForever=%b)",
                 this.getName(), this.turnDuration, this.stacks, this.maxStacks, this.justApplied, this.type, this.durationBasedOnSelfTurns, this.lastsForever);
+    }
+
+    // TODO: Implement DOT
+    public enum PowerType {
+        BUFF, DEBUFF, DOT
     }
 
 }

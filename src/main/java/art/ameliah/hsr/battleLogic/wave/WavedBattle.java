@@ -7,17 +7,16 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.List;
 import java.util.Queue;
 
 public abstract class WavedBattle<T extends Wave> extends Battle {
 
-    private final Queue<Integer> talliedPositions = new ArrayDeque<>();
     protected final Queue<T> waves = new ArrayDeque<>();
+    private final Queue<Integer> talliedPositions = new ArrayDeque<>();
     protected T currentWave;
 
     @SafeVarargs
-    public WavedBattle(T ...waves) {
+    public WavedBattle(T... waves) {
         Collections.addAll(this.waves, waves);
     }
 

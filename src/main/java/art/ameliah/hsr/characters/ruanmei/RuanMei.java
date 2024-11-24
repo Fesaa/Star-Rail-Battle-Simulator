@@ -15,14 +15,14 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 
 public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterTurnGoal.SkillCounterCharacter {
-    final PermPower skillPower;
-    final AbstractPower ultPower = new RuanMeiUltPower();
-    private int skillCounter = 0;
-    private int ultCounter = 0;
     public static final String NAME = "Ruan Mei";
     public static final String SKILL_POWER_NAME = "RuanMeiSkillPower";
     public static final String ULT_POWER_NAME = "RuanMeiUltPower";
     public static final String ULT_DEBUFF_NAME = "RuanMeiUltDebuff";
+    final PermPower skillPower;
+    final AbstractPower ultPower = new RuanMeiUltPower();
+    private int skillCounter = 0;
+    private int ultCounter = 0;
 
     public RuanMei() {
         super(NAME, 1087, 660, 485, 104, 80, ElementType.ICE, 130, 100, Path.HARMONY);
@@ -46,6 +46,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
             character.addPower(skillPower);
         }
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -106,8 +107,9 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
 
     public static class RuanMeiUltDebuff extends AbstractPower {
 
-        public boolean triggered = false;
         public final AbstractCharacter<?> owner;
+        public boolean triggered = false;
+
         public RuanMeiUltDebuff(AbstractCharacter<?> owner) {
             this.setName(ULT_DEBUFF_NAME);
             this.lastsForever = true;

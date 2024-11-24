@@ -3,29 +3,24 @@ package art.ameliah.hsr.battleLogic.wave.pf;
 import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.registry.EnemyRegistry;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class PfWave implements Wave {
 
-    private AbstractEnemy boss;
     private final Queue<AbstractEnemy> enemyQueue = new LinkedList<>();
+    private AbstractEnemy boss;
 
     public boolean isBoss(AbstractEnemy enemy) {
         return this.boss != null && this.boss == enemy;
     }
 
-    public PfWave addEnemies(int ...ids) {
+    public PfWave addEnemies(int... ids) {
         for (int id : ids) {
             this.addEnemy(id);
         }

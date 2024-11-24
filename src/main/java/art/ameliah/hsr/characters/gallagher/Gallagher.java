@@ -23,7 +23,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
     private boolean isEnhanced = false;
 
     public Gallagher() {
-        super(NAME, 1305, 529, 441, 98, 80, ElementType.FIRE, 110, 100,  Path.ABUNDANCE);
+        super(NAME, 1305, 529, 441, 98, 80, ElementType.FIRE, 110, 100, Path.ABUNDANCE);
 
         this.addPower(new TracePower()
                 .setStat(PowerStat.HP_PERCENT, 18)
@@ -45,7 +45,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
 
         AbstractEnemy enemy = getBattle().getMiddleEnemy();
         if (isEnhanced) {
-            attack.hitEnemy(enemy, 2.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT*3, DamageType.BASIC);
+            attack.hitEnemy(enemy, 2.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT * 3, DamageType.BASIC);
             AbstractPower atkDebuff = new TempPower();
             atkDebuff.type = AbstractPower.PowerType.DEBUFF;
             atkDebuff.turnDuration = 2;

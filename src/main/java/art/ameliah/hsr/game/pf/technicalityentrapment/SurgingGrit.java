@@ -31,7 +31,7 @@ public class SurgingGrit implements ISurgingGrit {
 
         @Override
         public void beforeAttacked(Attack attack) {
-            if(!attack.getTypes().contains(DamageType.SKILL)) {
+            if (!attack.getTypes().contains(DamageType.SKILL)) {
                 return;
             }
 
@@ -40,8 +40,8 @@ public class SurgingGrit implements ISurgingGrit {
 
                 // https://youtu.be/INVTD86xO_Q?si=lQVkPJl4rB5vt0hK&t=502 <- got dmg from
                 attack.hitFixed(this, target, 11013);
-                getBattle().enemyCallback(idx-1, t -> attack.hitFixed(SurgingGritPower.this, t, 11013));
-                getBattle().enemyCallback(idx+1, t -> attack.hitFixed(SurgingGritPower.this, t, 11013));
+                getBattle().enemyCallback(idx - 1, t -> attack.hitFixed(SurgingGritPower.this, t, 11013));
+                getBattle().enemyCallback(idx + 1, t -> attack.hitFixed(SurgingGritPower.this, t, 11013));
             }
         }
 

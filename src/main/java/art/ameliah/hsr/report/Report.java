@@ -70,7 +70,7 @@ public class Report {
             CSV.append(enemyTeam).append("\n\n");
             CSV.append("Team,DPAV,%,dIFF\n");
             ArrayList<Float> DPAVList = new ArrayList<>();
-            for (Map.Entry<Float,PlayerTeam> entry : DPAVtracker.entrySet()) {
+            for (Map.Entry<Float, PlayerTeam> entry : DPAVtracker.entrySet()) {
                 DPAVList.add(entry.getKey());
             }
             Collections.sort(DPAVList);
@@ -141,7 +141,7 @@ public class Report {
             }
             HashMap<String, ArrayList<String>> characterMetricMap = characterMetricsMap.get(character.name);
             HashMap<String, String> characterMetrics = character.getCharacterSpecificMetricMap();
-            for (Map.Entry<String,String> entry : characterMetrics.entrySet()) {
+            for (Map.Entry<String, String> entry : characterMetrics.entrySet()) {
                 if (!characterMetricMap.containsKey(entry.getKey())) {
                     ArrayList<String> list = new ArrayList<>();
                     characterMetricMap.put(entry.getKey(), list);

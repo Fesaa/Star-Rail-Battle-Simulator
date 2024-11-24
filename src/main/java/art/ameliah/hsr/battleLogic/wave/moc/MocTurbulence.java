@@ -24,7 +24,7 @@ public abstract class MocTurbulence extends AbstractEntity {
 
     public float avUsed() {
         if (this.firstCycleHasPassed) {
-            return 150 + (this.numTurnsMetric-1) * 100;
+            return 150 + (this.numTurnsMetric - 1) * 100;
         }
         return 0;
     }

@@ -6,12 +6,14 @@ public interface ISurgingGrit {
 
     /**
      * Called when Surging Grit goes into effect
+     *
      * @param battle the battle
      */
     void apply(IBattle battle);
 
     /**
      * Called when Surging Grit leaves the battle
+     *
      * @param battle the battle
      */
     void remove(IBattle battle);

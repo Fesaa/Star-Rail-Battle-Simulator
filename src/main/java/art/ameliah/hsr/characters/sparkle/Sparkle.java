@@ -45,6 +45,7 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
             }
         }
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -91,23 +92,6 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         getBattle().generateSkillPoint(this, 3);
     }
 
-    private class SparkleSkillPower extends PermPower {
-        public SparkleSkillPower() {
-            super(SKILL_POWER_NAME);
-            this.justApplied = true;
-            this.setStat(PowerStat.CRIT_DAMAGE, (getTotalCritDamage() * 0.24f) + 45);
-        }
-
-        @Override
-        public void onTurnStart() {
-            if (justApplied) {
-                justApplied = false;
-            } else {
-                getOwner().removePower(this);
-            }
-        }
-    }
-
     public static class SparkleTalentPowerTracker extends PermPower {
         public SparkleTalentPowerTracker() {
             super("SparkleTalentPowerTracker");
@@ -141,6 +125,23 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         public SparkleUltPower() {
             this.setName(ULT_POWER_NAME);
             this.turnDuration = 2;
+        }
+    }
+
+    private class SparkleSkillPower extends PermPower {
+        public SparkleSkillPower() {
+            super(SKILL_POWER_NAME);
+            this.justApplied = true;
+            this.setStat(PowerStat.CRIT_DAMAGE, (getTotalCritDamage() * 0.24f) + 45);
+        }
+
+        @Override
+        public void onTurnStart() {
+            if (justApplied) {
+                justApplied = false;
+            } else {
+                getOwner().removePower(this);
+            }
         }
     }
 }

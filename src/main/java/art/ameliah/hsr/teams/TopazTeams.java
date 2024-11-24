@@ -25,72 +25,6 @@ import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
 import java.util.ArrayList;
 
 public class TopazTeams {
-    public static class RatioRobinAventurineTopaz extends PlayerTeam {
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
-            playerTeam.add(getPrebuiltRatioTT());
-            playerTeam.add(getPrebuiltRobinTT());
-            playerTeam.add(getPrebuiltAventurineTT());
-            playerTeam.add(getPrebuiltTopazTT());
-            return playerTeam;
-        }
-    }
-
-    public static class FeixiaoRobinAventurineTopaz extends PlayerTeam {
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
-            playerTeam.add(getPrebuiltFeixiaoTT());
-            playerTeam.add(getPrebuiltRobinTT());
-            playerTeam.add(getPrebuiltAventurineTT());
-            playerTeam.add(getPrebuiltTopazTT());
-            return playerTeam;
-        }
-    }
-
-    public static class MarchRobinAventurineTopaz extends PlayerTeam {
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
-            playerTeam.add(getPrebuiltSwordMarchTT());
-            playerTeam.add(getPrebuiltRobinTT());
-            playerTeam.add(getPrebuiltAventurineTT());
-            AbstractCharacter<?> topaz = getPrebuiltTopazTT();
-            topaz.isDPS = true;
-            playerTeam.add(topaz);
-            return playerTeam;
-        }
-    }
-
-    public static class MozeRobinAventurineTopaz extends PlayerTeam {
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
-            playerTeam.add(getPrebuiltMozeTT());
-            playerTeam.add(getPrebuiltRobinTT());
-            playerTeam.add(getPrebuiltAventurineTT());
-            AbstractCharacter<?> topaz = getPrebuiltTopazTT();
-            topaz.isDPS = true;
-            playerTeam.add(topaz);
-            return playerTeam;
-        }
-    }
-
-    public static class HuohuoYunliRobinTopaz extends PlayerTeam {
-        @Override
-        public ArrayList<AbstractCharacter<?>> getTeam() {
-            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
-            playerTeam.add(getPrebuiltHuohuoTT());
-            playerTeam.add(getPrebuiltYunliTT());
-            playerTeam.add(getPrebuiltRobinTT());
-            AbstractCharacter<?> topaz = getPrebuiltTopazTT();
-            topaz.isDPS = true;
-            playerTeam.add(topaz);
-            return playerTeam;
-        }
-    }
-
     public static AbstractCharacter<?> getPrebuiltRatioTT() {
         AbstractCharacter<?> character = new DrRatio();
         character.EquipLightcone(new BaptismOfPureThought(character));
@@ -182,5 +116,71 @@ public class TopazTeams {
 
     public static AbstractCharacter<?> getPrebuiltHuohuoTT() {
         return PlayerTeam.getPrebuiltHuohuo();
+    }
+
+    public static class RatioRobinAventurineTopaz extends PlayerTeam {
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+            playerTeam.add(getPrebuiltRatioTT());
+            playerTeam.add(getPrebuiltRobinTT());
+            playerTeam.add(getPrebuiltAventurineTT());
+            playerTeam.add(getPrebuiltTopazTT());
+            return playerTeam;
+        }
+    }
+
+    public static class FeixiaoRobinAventurineTopaz extends PlayerTeam {
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+            playerTeam.add(getPrebuiltFeixiaoTT());
+            playerTeam.add(getPrebuiltRobinTT());
+            playerTeam.add(getPrebuiltAventurineTT());
+            playerTeam.add(getPrebuiltTopazTT());
+            return playerTeam;
+        }
+    }
+
+    public static class MarchRobinAventurineTopaz extends PlayerTeam {
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+            playerTeam.add(getPrebuiltSwordMarchTT());
+            playerTeam.add(getPrebuiltRobinTT());
+            playerTeam.add(getPrebuiltAventurineTT());
+            AbstractCharacter<?> topaz = getPrebuiltTopazTT();
+            topaz.isDPS = true;
+            playerTeam.add(topaz);
+            return playerTeam;
+        }
+    }
+
+    public static class MozeRobinAventurineTopaz extends PlayerTeam {
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+            playerTeam.add(getPrebuiltMozeTT());
+            playerTeam.add(getPrebuiltRobinTT());
+            playerTeam.add(getPrebuiltAventurineTT());
+            AbstractCharacter<?> topaz = getPrebuiltTopazTT();
+            topaz.isDPS = true;
+            playerTeam.add(topaz);
+            return playerTeam;
+        }
+    }
+
+    public static class HuohuoYunliRobinTopaz extends PlayerTeam {
+        @Override
+        public ArrayList<AbstractCharacter<?>> getTeam() {
+            ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+            playerTeam.add(getPrebuiltHuohuoTT());
+            playerTeam.add(getPrebuiltYunliTT());
+            playerTeam.add(getPrebuiltRobinTT());
+            AbstractCharacter<?> topaz = getPrebuiltTopazTT();
+            topaz.isDPS = true;
+            playerTeam.add(topaz);
+            return playerTeam;
+        }
     }
 }

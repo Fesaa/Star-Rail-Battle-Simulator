@@ -18,7 +18,6 @@ public class UseBlindBet implements Loggable {
     }
 
 
-
     @Override
     public String asString() {
         return String.format("%s used Follow Up (%,d -> %,d)", character.name, initialBlindBet, this.blindBetCounter);

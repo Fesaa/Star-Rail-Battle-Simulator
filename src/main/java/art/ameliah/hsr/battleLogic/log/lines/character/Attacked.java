@@ -8,7 +8,8 @@ import art.ameliah.hsr.characters.DamageType;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record Attacked(AbstractEntity source, AbstractEntity target, float damage, List<DamageType> types) implements Loggable {
+public record Attacked(AbstractEntity source, AbstractEntity target, float damage,
+                       List<DamageType> types) implements Loggable {
 
 
     @Override

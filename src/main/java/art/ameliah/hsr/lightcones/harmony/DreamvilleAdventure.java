@@ -11,8 +11,8 @@ import java.util.List;
 
 public class DreamvilleAdventure extends AbstractLightcone {
 
-    private DamageType currBenefit;
     final AbstractPower childishness = new Childishness();
+    private DamageType currBenefit;
 
     public DreamvilleAdventure(AbstractCharacter<?> owner) {
         super(953, 423, 397, owner);
@@ -42,6 +42,7 @@ public class DreamvilleAdventure extends AbstractLightcone {
         public Childishness() {
             this.setName(this.getClass().getSimpleName());
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (currBenefit == null) {

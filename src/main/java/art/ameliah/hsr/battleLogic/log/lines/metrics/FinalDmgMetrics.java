@@ -4,7 +4,6 @@ import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
-import art.ameliah.hsr.characters.AbstractCharacter;
 
 import java.util.Comparator;
 import java.util.HashMap;

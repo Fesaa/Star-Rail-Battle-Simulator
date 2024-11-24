@@ -5,8 +5,8 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
-import art.ameliah.hsr.battleLogic.log.lines.character.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
+import art.ameliah.hsr.battleLogic.log.lines.character.HitResult;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -34,7 +34,7 @@ public class Attack implements BattleParticipant, IAttack {
 
     private boolean hasExecuted = false;
 
-    public Attack(AbstractCharacter<?> source, DamageType ...types) {
+    public Attack(AbstractCharacter<?> source, DamageType... types) {
         this.source = source;
         this.types = new HashSet<>(List.of(types));
         this.targets = new HashSet<>();
@@ -107,6 +107,7 @@ public class Attack implements BattleParticipant, IAttack {
 
     /**
      * Hit an enemy target for a fixed amount of dmg, without a source
+     *
      * @param target
      * @param dmg
      * @return
@@ -123,8 +124,9 @@ public class Attack implements BattleParticipant, IAttack {
     /**
      * Attacks are not executed when hitting. If the logic of hitting the enemy depends on its state
      * You'll want to use this function, and use the callback to access the logic
+     *
      * @param target The target
-     * @param logic Lambda function,
+     * @param logic  Lambda function,
      * @return the attack being constructed
      */
     public Attack hitEnemy(AbstractEnemy target, Consumer<DelayedHit> logic) {
@@ -140,7 +142,7 @@ public class Attack implements BattleParticipant, IAttack {
         return this.hitEnemy(this.source, target, multiplier, stat, toughnessDamage, false, types);
     }
 
-    public Attack hitEnemy(AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, DamageType ...types) {
+    public Attack hitEnemy(AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, DamageType... types) {
         return this.hitEnemy(this.source, target, multiplier, stat, toughnessDamage, false, List.of(types));
     }
 
@@ -152,7 +154,7 @@ public class Attack implements BattleParticipant, IAttack {
         return this.hitEnemy(this.source, target, multiplier, stat, toughnessDamage, true, types);
     }
 
-    public Attack hitEnemyIgnoreWeakness(AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, DamageType ...types) {
+    public Attack hitEnemyIgnoreWeakness(AbstractEnemy target, float multiplier, MultiplierStat stat, float toughnessDamage, DamageType... types) {
         return this.hitEnemy(this.source, target, multiplier, stat, toughnessDamage, true, List.of(types));
     }
 

@@ -14,7 +14,7 @@ public class MocWave implements Wave {
         this.enemies = enemies;
     }
 
-    public MocWave(AbstractEnemy ...enemies) {
+    public MocWave(AbstractEnemy... enemies) {
         this(Arrays.asList(enemies));
     }
 

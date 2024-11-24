@@ -14,6 +14,7 @@ public class RutilentArena extends AbstractRelicSetBonus {
     public RutilentArena(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public void onEquip() {
         owner.addPower(PermPower.create(PowerStat.CRIT_CHANCE, 8, "Rutilent Arena Crit Chance Bonus"));
     }
@@ -27,6 +28,7 @@ public class RutilentArena extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {

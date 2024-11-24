@@ -32,6 +32,7 @@ public class Swordplay extends AbstractLightcone {
             this.setName(this.getClass().getSimpleName());
             this.maxStacks = 5;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 16 * stacks;

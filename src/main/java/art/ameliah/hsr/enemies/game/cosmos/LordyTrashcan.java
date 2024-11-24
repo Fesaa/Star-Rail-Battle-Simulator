@@ -1,16 +1,11 @@
 package art.ameliah.hsr.enemies.game.cosmos;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Hit;
-import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
-import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
-
-import java.util.Set;
 
 public class LordyTrashcan extends AbstractEnemy {
     private float boostedATK;

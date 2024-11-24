@@ -13,6 +13,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
     public DuranDynastyOfRunningWolves(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public DuranDynastyOfRunningWolves(AbstractCharacter<?> owner, boolean isFullSet) {
         super(owner, isFullSet);
     }
@@ -26,6 +27,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         public DuranTrackerPower() {
             this.setName(this.getClass().getSimpleName());
         }
+
         @Override
         public void onAttack(Attack attack) {
             if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
@@ -45,6 +47,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.maxStacks = 5;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {

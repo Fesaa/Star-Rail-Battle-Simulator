@@ -14,9 +14,11 @@ public class InertSalsotto extends AbstractRelicSetBonus {
     public InertSalsotto(AbstractCharacter<?> owner, boolean fullSet) {
         super(owner, fullSet);
     }
+
     public InertSalsotto(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public void onEquip() {
         owner.addPower(PermPower.create(PowerStat.CRIT_CHANCE, 8, "Inert Salsotto Crit Chance Bonus"));
     }
@@ -30,6 +32,7 @@ public class InertSalsotto extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {

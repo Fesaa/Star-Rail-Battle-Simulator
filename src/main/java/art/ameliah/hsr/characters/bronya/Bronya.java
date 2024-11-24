@@ -45,6 +45,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
             }
         }
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)

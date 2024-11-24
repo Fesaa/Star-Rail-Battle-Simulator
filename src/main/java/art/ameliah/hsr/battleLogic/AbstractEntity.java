@@ -2,8 +2,6 @@ package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.LosePower;
-import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
-import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
 import art.ameliah.hsr.powers.AbstractPower;
 import lombok.Setter;
 
@@ -12,11 +10,12 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
+public abstract class AbstractEntity implements BattleEvents, BattleParticipant {
+    public static final int SPEED_PRIORITY_DEFAULT = 99;
+    private final Collection<BattleEvents> listeners = new ConcurrentLinkedQueue<>();
     public String name;
     public float baseSpeed;
     public ArrayList<AbstractPower> powerList = new ArrayList<>();
-    public static final int SPEED_PRIORITY_DEFAULT = 99;
     public int speedPriority = SPEED_PRIORITY_DEFAULT;
     public int numTurnsMetric = 0;
     @Setter
@@ -33,8 +32,6 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
         }
         return this.name;
     }
-
-    private final Collection<BattleEvents> listeners = new ConcurrentLinkedQueue<>();
 
     protected Collection<BattleEvents> getListeners() {
         return listeners;
@@ -54,7 +51,7 @@ public abstract class AbstractEntity implements BattleEvents,BattleParticipant {
     }
 
     public float getBaseAV() {
-        return (float)10000 / baseSpeed;
+        return (float) 10000 / baseSpeed;
     }
 
     public void takeTurn() {

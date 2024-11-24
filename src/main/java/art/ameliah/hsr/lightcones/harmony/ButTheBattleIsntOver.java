@@ -11,7 +11,7 @@ import art.ameliah.hsr.powers.TempPower;
  * This lightcone assumes onSpecificTrigger is called when the character uses their skill, and that
  * the passed character is next to play
  */
-public class ButTheBattleIsntOver extends AbstractLightcone  {
+public class ButTheBattleIsntOver extends AbstractLightcone {
 
     public ButTheBattleIsntOver(AbstractCharacter<?> owner) {
         super(1164, 529, 463, owner);

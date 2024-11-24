@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.hanya;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.Hit;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.hanya.BurdenLog;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -24,7 +23,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
     public static final String ULT_BUFF_NAME = "Hanya Ult Buff";
 
     public Hanya() {
-        super( NAME, 917, 564, 353, 110, 80, ElementType.PHYSICAL, 140, 100, Path.HARMONY);
+        super(NAME, 917, 564, 353, 110, 80, ElementType.PHYSICAL, 140, 100, Path.HARMONY);
 
         this.addPower(new TracePower()
                 .setStat(PowerStat.ATK_PERCENT, 28)
@@ -53,10 +52,11 @@ public class Hanya extends AbstractCharacter<Hanya> {
 
         attack.execute();
     }
+
     public void useBasic() {
         this.startAttack()
-            .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-            .execute();
+                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
+                .execute();
     }
 
     public void useUltimate() {
@@ -77,9 +77,10 @@ public class Hanya extends AbstractCharacter<Hanya> {
 
     private class BurdenPower extends AbstractPower {
 
-        private int triggersLeft = 2;
         private final int hitsToTrigger = 2;
+        private int triggersLeft = 2;
         private int hitCount = 0;
+
         public BurdenPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

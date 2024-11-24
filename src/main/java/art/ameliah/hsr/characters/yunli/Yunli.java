@@ -25,22 +25,20 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoal.FirstTurnTracked {
-    
-    public static final String NAME = "Yunli";
 
-    public boolean isParrying;
+    public static final String NAME = "Yunli";
     final AbstractPower cullPower = new CullCritDamageBuff();
     final AbstractPower techniqueDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 80, "Technique Damage Bonus");
     final AbstractPower tauntPower = new TauntPower(this);
-
-    private int numNormalCounters = 0;
-    private int num1StackCulls = 0;
-    private int num2StackCulls = 0;
-    public int numSlashes = 0;
     private final String numNormalCountersMetricName = "Normal Counters";
     private final String num1StackCullsMetricName = "Number of Culls (1 S1 stack)";
     private final String num2StackCullsMetricName = "Number of Culls (2 S1 stacks)";
     private final String numSlashesMetricName = "Number of Slashes";
+    public boolean isParrying;
+    public int numSlashes = 0;
+    private int numNormalCounters = 0;
+    private int num1StackCulls = 0;
+    private int num2StackCulls = 0;
 
     public Yunli() {
         super(NAME, 1358, 679, 461, 94, 80, ElementType.PHYSICAL, 240, 125, Path.DESTRUCTION);
@@ -65,14 +63,15 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         getBattle().enemyCallback(idx, target -> {
             attack.hitEnemy(target, 1.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
         });
-        getBattle().enemyCallback(idx-1, target -> {
+        getBattle().enemyCallback(idx - 1, target -> {
             attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
         });
-        getBattle().enemyCallback(idx+1, target -> {
+        getBattle().enemyCallback(idx + 1, target -> {
             attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
         });
         attack.execute();
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -106,10 +105,10 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
             Attack attack = this.startAttack();
             int idx = getBattle().getEnemies().indexOf(enemy);
             attack.hitEnemy(enemy, 1.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
-            getBattle().enemyCallback(idx-1, target -> {
+            getBattle().enemyCallback(idx - 1, target -> {
                 attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
             });
-            getBattle().enemyCallback(idx+1, target -> {
+            getBattle().enemyCallback(idx + 1, target -> {
                 attack.hitEnemy(target, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
             });
             attack.execute();
@@ -132,15 +131,15 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         Attack attack = this.startAttack();
         int idx = getBattle().getEnemies().indexOf(enemy);
         attack.hitEnemy(enemy, 2.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
-        getBattle().enemyCallback(idx-1, target -> {
+        getBattle().enemyCallback(idx - 1, target -> {
             attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
         });
-        getBattle().enemyCallback(idx+1, target -> {
+        getBattle().enemyCallback(idx + 1, target -> {
             attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
         });
 
         for (int numBounces = 0; numBounces < 6; numBounces++) {
-            attack.hitEnemy(getBattle().getRandomEnemy(), 0.72f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT/4, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
+            attack.hitEnemy(getBattle().getRandomEnemy(), 0.72f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT / 4, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
         }
 
         attack.execute();
@@ -154,10 +153,10 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         Attack attack = this.startAttack();
         int idx = getBattle().getEnemies().indexOf(enemy);
         attack.hitEnemy(enemy, 2.2f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
-        getBattle().enemyCallback(idx-1, target -> {
+        getBattle().enemyCallback(idx - 1, target -> {
             attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
         });
-        getBattle().enemyCallback(idx+1, target -> {
+        getBattle().enemyCallback(idx + 1, target -> {
             attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP, DamageType.ULTIMATE);
         });
 

@@ -23,53 +23,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends AbstractEntity {
-
-    @Getter
-    protected final Path path;
-
-    protected final int baseHP;
-    protected final int baseAtk;
-    protected final int baseDef;
-    public final int level;
-    public final float baseCritChance = 5.0f;
-    public final float baseCritDamage = 50.0f;
-
-    public boolean usesEnergy = true;
-    public final float maxEnergy;
-    public float currentEnergy;
-    public float ultCost;
-    protected int basicEnergyGain = 20;
-    protected int skillEnergyGain = 30;
-    protected final int ultEnergyGain = 5;
-
-    public final int tauntValue;
-    public final ElementType elementType;
-    public AbstractLightcone lightcone;
-    public final ArrayList<AbstractRelicSetBonus> relicSetBonus;
-    public final boolean useTechnique = true;
-
-    public boolean isDPS = false;
-
-    public int numSkillsMetric;
-    public int numBasicsMetric;
-    public int numUltsMetric;
-    public String statsString;
-    public final String numTurnsMetricName = "Turns taken";
-    public final String numSkillsMetricName = "Skills Used";
-    public final String numBasicsMetricName = "Basic Attacks Used";
-    public final String numUltsMetricName = "Ultimates Used";
-    public final String leftoverAVMetricName = "Leftover AV";
-    public final String leftoverEnergyMetricName = "Leftover Energy";
-    public boolean firstMove = true;
-    public boolean hasAttackingUltimate;
-    public final ArrayList<MoveType> moveHistory;
-    public final HashMap<String, String> statsMap = new HashMap<>();
-    public final ArrayList<String> statsOrder = new ArrayList<>();
-    protected final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
-    protected final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
-    protected final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
-    protected final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
+public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends AbstractEntity {
 
     public static final String ULT_ENERGY_GAIN = "from using Ultimate";
     public static final String SKILL_ENERGY_GAIN = "from using Skill";
@@ -81,9 +35,48 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     public static final String LIGHTCONE_ENERGY_GAIN = "from Lightcone effect";
     public static final String ATTACKED_ENERGY_GAIN = "from being attacked";
     public static final String TECHNIQUE_ENERGY_GAIN = "from Technique effect";
-
+    public final int level;
+    public final float baseCritChance = 5.0f;
+    public final float baseCritDamage = 50.0f;
+    public final float maxEnergy;
+    public final int tauntValue;
+    public final ElementType elementType;
+    public final ArrayList<AbstractRelicSetBonus> relicSetBonus;
+    public final boolean useTechnique = true;
+    public final String numTurnsMetricName = "Turns taken";
+    public final String numSkillsMetricName = "Skills Used";
+    public final String numBasicsMetricName = "Basic Attacks Used";
+    public final String numUltsMetricName = "Ultimates Used";
+    public final String leftoverAVMetricName = "Leftover AV";
+    public final String leftoverEnergyMetricName = "Leftover Energy";
+    public final ArrayList<MoveType> moveHistory;
+    public final HashMap<String, String> statsMap = new HashMap<>();
+    public final ArrayList<String> statsOrder = new ArrayList<>();
+    @Getter
+    protected final Path path;
+    protected final int baseHP;
+    protected final int baseAtk;
+    protected final int baseDef;
+    protected final int ultEnergyGain = 5;
+    protected final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
+    protected final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
+    protected final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
+    protected final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
     private final SortedMap<Integer, UltGoal<C>> ultGoals = new TreeMap<>();
     private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
+    public boolean usesEnergy = true;
+    public float currentEnergy;
+    public float ultCost;
+    public AbstractLightcone lightcone;
+    public boolean isDPS = false;
+    public int numSkillsMetric;
+    public int numBasicsMetric;
+    public int numUltsMetric;
+    public String statsString;
+    public boolean firstMove = true;
+    public boolean hasAttackingUltimate;
+    protected int basicEnergyGain = 20;
+    protected int skillEnergyGain = 30;
 
     public AbstractCharacter(String name, int baseHP, int baseAtk, int baseDef, int baseSpeed, int level, ElementType elementType, float maxEnergy, int tauntValue, Path path) {
         super();
@@ -228,7 +221,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
     }
 
     protected abstract void useSkill();
+
     protected abstract void useBasic();
+
     protected abstract void useUltimate();
 
     @Override
@@ -390,7 +385,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>>  extends
         if (currentEnergy > maxEnergy) {
             currentEnergy = maxEnergy;
         }
-        getBattle().addToLog(new GainEnergy(this, initialEnergy,this.currentEnergy, energyGained, source));
+        getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy, energyGained, source));
     }
 
     public void increaseEnergy(float amount, String source) {

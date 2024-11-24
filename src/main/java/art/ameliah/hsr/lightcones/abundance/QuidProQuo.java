@@ -4,7 +4,6 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class QuidProQuo extends AbstractLightcone {
 

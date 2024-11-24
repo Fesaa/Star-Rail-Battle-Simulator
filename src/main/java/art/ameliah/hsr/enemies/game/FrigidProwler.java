@@ -17,8 +17,8 @@ import java.util.Optional;
 
 public class FrigidProwler extends AbstractEnemy {
 
-    private AbstractCharacter<?> lockedIn = null;
     private final List<AbstractEnemy> otherlings = new ArrayList<>();
+    private AbstractCharacter<?> lockedIn = null;
 
     public FrigidProwler() {
         super("Frigid Prowler", EnemyType.Elite, 448625, 718, 1000, 132, 100, 92);

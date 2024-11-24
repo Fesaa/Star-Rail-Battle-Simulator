@@ -25,7 +25,7 @@ public class EnemyAction implements Loggable {
     }
 
     public EnemyAction(AbstractEnemy enemy, EnemyAttackType attackType, String action) {
-       this(enemy, null, attackType, action);
+        this(enemy, null, attackType, action);
     }
 
     public EnemyAction(AbstractEnemy enemy, AbstractCharacter<?> hit, String action) {

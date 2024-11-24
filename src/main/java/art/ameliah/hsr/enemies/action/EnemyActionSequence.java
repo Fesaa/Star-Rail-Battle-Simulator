@@ -22,7 +22,7 @@ public class EnemyActionSequence implements BattleParticipant, BattleEvents {
         this.enemy.addListener(this);
     }
 
-    public void addAction(Runnable...actions) {
+    public void addAction(Runnable... actions) {
         this.actions.add(Arrays.asList(actions));
     }
 

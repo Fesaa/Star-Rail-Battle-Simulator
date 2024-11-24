@@ -31,7 +31,7 @@ public class DelayedHit implements BattleParticipant, HitHolder {
         this.hitEnemy(this.source, this.target, multiplier, stat, toughnessDamage, false, types);
     }
 
-    public void hitEnemy(float multiplier, MultiplierStat stat, float toughnessDamage, DamageType ...types) {
+    public void hitEnemy(float multiplier, MultiplierStat stat, float toughnessDamage, DamageType... types) {
         this.hitEnemy(this.source, target, multiplier, stat, toughnessDamage, false, List.of(types));
     }
 

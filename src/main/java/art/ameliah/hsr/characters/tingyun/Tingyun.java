@@ -1,7 +1,7 @@
 package art.ameliah.hsr.characters.tingyun;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AllyHit;
+import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -21,12 +21,11 @@ import java.util.List;
 
 public class Tingyun extends AbstractCharacter<Tingyun> {
     public static final String NAME = "Tingyun";
-
-    AbstractCharacter<?> benefactor;
-    public int skillProcs = 0;
-    public int talentProcs = 0;
     private final String skillProcsMetricName = "Skill Extra Damage Procs";
     private final String talentProcsMetricName = "Talent Extra Damage Procs";
+    public int skillProcs = 0;
+    public int talentProcs = 0;
+    AbstractCharacter<?> benefactor;
 
     public Tingyun() {
         super(NAME, 847, 529, 397, 112, 80, ElementType.LIGHTNING, 130, 100, Path.HARMONY);
@@ -54,6 +53,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         speedPower.justApplied = true;
         getBattle().IncreaseSpeed(this, speedPower);
     }
+
     public void useBasic() {
         Attack attack = this.startAttack();
         AbstractEnemy target = getBattle().getEnemyWithHighestHP();
@@ -104,6 +104,23 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         return list;
     }
 
+    private static class TingyunBonusBasicDamagePower extends AbstractPower {
+        public TingyunBonusBasicDamagePower() {
+            this.setName(this.getClass().getSimpleName());
+            this.lastsForever = true;
+        }
+
+        @Override
+        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+            for (DamageType type : damageTypes) {
+                if (type == DamageType.BASIC) {
+                    return 40;
+                }
+            }
+            return 0;
+        }
+    }
+
     private class TingyunSkillPower extends TempPower {
         public TingyunSkillPower() {
             super(3);
@@ -126,22 +143,6 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
 
         public void onRemove() {
             benefactor = null;
-        }
-    }
-
-    private static class TingyunBonusBasicDamagePower extends AbstractPower {
-        public TingyunBonusBasicDamagePower() {
-            this.setName(this.getClass().getSimpleName());
-            this.lastsForever = true;
-        }
-        @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            for (DamageType type : damageTypes) {
-                if (type == DamageType.BASIC) {
-                    return 40;
-                }
-            }
-            return 0;
         }
     }
 }

@@ -122,6 +122,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
 
     public static class Reverberation extends TempPower {
         public static final String NAME = "Reverberation";
+
         public Reverberation() {
             super(2, NAME);
         }
@@ -136,6 +137,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
 
     public static class StrongReverberation extends TempPower {
         public static final String NAME = "Strong Reverberation";
+
         public StrongReverberation() {
             super(1, NAME);
         }

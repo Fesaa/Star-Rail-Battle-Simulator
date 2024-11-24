@@ -20,6 +20,7 @@ public class SkillFirstTurnGoal<C extends AbstractCharacter<C> & SkillFirstTurnG
 
     public interface FirstTurnTracked {
         boolean isFirstTurn();
+
         void setFirstTurn(boolean firstTurn);
     }
 }

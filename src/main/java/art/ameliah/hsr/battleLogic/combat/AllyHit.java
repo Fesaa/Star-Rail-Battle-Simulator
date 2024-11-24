@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class AllyHit implements BattleParticipant, HitHolder,Hit {
+public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
     @Getter
     private final AbstractCharacter<?> source;
@@ -92,7 +92,7 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
             allTypeVulnerability += power.getConditionalDamageTaken(this.source, this.target, types);
         }
 
-        return 1 + allTypeVulnerability/100;
+        return 1 + allTypeVulnerability / 100;
     }
 
     private float resMultiplier() {
@@ -102,7 +102,7 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
             resPen += power.getStat(PowerStat.RES_PEN);
         }
 
-        return 1 - (this.target.getRes(this.elementType)-resPen)/100;
+        return 1 - (this.target.getRes(this.elementType) - resPen) / 100;
     }
 
     // Currently doesn't care for enemy def buffs.
@@ -120,7 +120,7 @@ public class AllyHit implements BattleParticipant, HitHolder,Hit {
             defIgnore += power.getConditionDefenseIgnore(this.source, this.target, this.types);
         }
 
-        float nominator = (this.target.getLevel() + 20) * (1 - defReduction/100-defIgnore/100) + this.source.level+20;
+        float nominator = (this.target.getLevel() + 20) * (1 - defReduction / 100 - defIgnore / 100) + this.source.level + 20;
         return (this.source.level + 20) / nominator;
     }
 

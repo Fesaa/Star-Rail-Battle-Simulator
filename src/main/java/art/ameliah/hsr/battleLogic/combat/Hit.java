@@ -11,12 +11,16 @@ import java.util.List;
 public interface Hit {
 
     BattleParticipant getSource();
+
     AbstractEnemy getTarget();
+
     List<DamageType> getTypes();
+
     @Nullable
     ElementType getElementType();
 
     float finalDmg();
+
     float finalToughnessReduction();
 
 }

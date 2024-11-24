@@ -8,7 +8,6 @@ import art.ameliah.hsr.powers.TempPower;
 
 /**
  * Assumes onSpecificTrigger is called on skill, with the character as next to act
-
  */
 public class PastAndFuture extends AbstractLightcone {
 

@@ -26,18 +26,17 @@ import java.util.Map;
 
 public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnGoal.SkillCounterCharacter {
 
+    public static final String NAME = "Robin";
+    public static final String ULT_POWER_NAME = "RobinUltPower";
     final PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
     final RobinUltPower ultPower = new RobinUltPower();
     final RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
     final Concerto concerto = new Concerto(this);
-
+    private final String allyAttacksMetricName = "Number of Ally Attacks";
+    private final String concertoProcsMetricName = "Number of Concerto Hits";
     private int skillCounter = 0;
     private int allyAttacksMetric = 0;
     private int concertoProcs = 0;
-    private final String allyAttacksMetricName = "Number of Ally Attacks";
-    private final String concertoProcsMetricName = "Number of Concerto Hits";
-    public static final String NAME = "Robin";
-    public static final String ULT_POWER_NAME = "RobinUltPower";
 
     public Robin() {
         super(NAME, 1281, 640, 485, 102, 80, ElementType.PHYSICAL, 160, 100, Path.HARMONY);
@@ -65,6 +64,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
             character.addPower(skillPower);
         }
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getRandomEnemy(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -77,7 +77,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         AbstractEntity fastestAlly = null;
         float fastestAV = -1;
         AbstractEntity middleAlly = null;
-        for (Map.Entry<AbstractEntity,Float> entry : getBattle().getActionValueMap().entrySet()) {
+        for (Map.Entry<AbstractEntity, Float> entry : getBattle().getActionValueMap().entrySet()) {
             if (entry.getKey() instanceof AbstractCharacter && !(entry.getKey() instanceof Robin)) {
                 if (slowestAlly == null) {
                     slowestAlly = entry.getKey();
@@ -96,7 +96,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
                 }
             }
         }
-        for (Map.Entry<AbstractEntity,Float> entry : getBattle().getActionValueMap().entrySet()) {
+        for (Map.Entry<AbstractEntity, Float> entry : getBattle().getActionValueMap().entrySet()) {
             if (entry.getKey() instanceof AbstractCharacter && !(entry.getKey() instanceof Robin)) {
                 if (entry.getKey() != fastestAlly && entry.getKey() != slowestAlly) {
                     middleAlly = entry.getKey();
@@ -183,6 +183,23 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         return skillCounter;
     }
 
+    private static class RobinFixedCritPower extends AbstractPower {
+        public RobinFixedCritPower() {
+            this.setName(this.getClass().getSimpleName());
+            lastsForever = true;
+        }
+
+        @Override
+        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
+            return 100;
+        }
+
+        @Override
+        public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCritDmg) {
+            return 150;
+        }
+    }
+
     private class RobinTalentPower extends PermPower {
         public RobinTalentPower() {
             this.setName(this.getClass().getSimpleName());
@@ -204,7 +221,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
         public void updateAtkBuff() {
             float atk = getFinalAttackWithoutConcerto();
-            this.setStat(PowerStat.FLAT_ATK, (int)(0.228 * atk) + 200);
+            this.setStat(PowerStat.FLAT_ATK, (int) (0.228 * atk) + 200);
         }
 
         private float getFinalAttackWithoutConcerto() {
@@ -228,23 +245,6 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
                 return 25;
             }
             return 0;
-        }
-    }
-
-    private static class RobinFixedCritPower extends AbstractPower {
-        public RobinFixedCritPower() {
-            this.setName(this.getClass().getSimpleName());
-            lastsForever = true;
-        }
-
-        @Override
-        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
-            return 100;
-        }
-
-        @Override
-        public float setFixedCritDmg(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCritDmg) {
-            return 150;
         }
     }
 }

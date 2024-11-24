@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DrRatio extends AbstractCharacter<DrRatio> {
-    private int numFUAs = 0;
-    private final String numFUAsMetricName = "Follow up Attacks used";
     public static final String NAME = "Dr. Ratio";
+    private final String numFUAsMetricName = "Follow up Attacks used";
+    private int numFUAs = 0;
 
     public DrRatio() {
         super(NAME, 1048, 776, 461, 103, 80, ElementType.IMAGINARY, 140, 75, Path.HUNT);
@@ -48,7 +48,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
         enemy.addPower(TempPower.createDebuff(PowerStat.EFFECT_RES, -10, 2, "RatioEffectResDebuff"));
-        int debuffs = (int)enemy.powerList.stream().filter(p -> p.type == AbstractPower.PowerType.DEBUFF).count();
+        int debuffs = (int) enemy.powerList.stream().filter(p -> p.type == AbstractPower.PowerType.DEBUFF).count();
         for (int i = 0; i < debuffs; i++) {
             this.addPower(new Summation());
         }
@@ -60,6 +60,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         // Assume he always gets the FUA from his Skill
         useFollowUp(enemy);
     }
+
     public void useBasic() {
         this.startAttack()
                 .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
@@ -107,26 +108,6 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         return list;
     }
 
-    private class WisemanFolly extends PermPower {
-        private int numCharges = 2;
-        public WisemanFolly() {
-            this.setName(this.getClass().getSimpleName());
-        }
-
-        @Override
-        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
-            if (character != DrRatio.this) {
-                if (numCharges > 0) {
-                    numCharges--;
-                    DrRatio.this.useFollowUp(enemy);
-                    if (numCharges <= 0) {
-                        enemy.removePower(this);
-                    }
-                }
-            }
-        }
-    }
-
     private static class Deduction extends PermPower {
         public Deduction() {
             this.setName(this.getClass().getSimpleName());
@@ -156,6 +137,27 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         @Override
         public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return stacks * 5;
+        }
+    }
+
+    private class WisemanFolly extends PermPower {
+        private int numCharges = 2;
+
+        public WisemanFolly() {
+            this.setName(this.getClass().getSimpleName());
+        }
+
+        @Override
+        public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
+            if (character != DrRatio.this) {
+                if (numCharges > 0) {
+                    numCharges--;
+                    DrRatio.this.useFollowUp(enemy);
+                    if (numCharges <= 0) {
+                        enemy.removePower(this);
+                    }
+                }
+            }
         }
     }
 }

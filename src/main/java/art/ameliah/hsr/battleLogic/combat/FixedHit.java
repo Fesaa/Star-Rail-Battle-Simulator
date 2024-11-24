@@ -1,7 +1,6 @@
 package art.ameliah.hsr.battleLogic.combat;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -10,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class FixedHit implements HitHolder,Hit {
+public class FixedHit implements HitHolder, Hit {
 
     private final BattleParticipant source;
     private final AbstractEnemy target;

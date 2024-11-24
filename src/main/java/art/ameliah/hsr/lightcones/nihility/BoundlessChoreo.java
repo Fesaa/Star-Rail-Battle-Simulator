@@ -33,7 +33,7 @@ public class BoundlessChoreo extends AbstractLightcone {
                     .noneMatch(p -> (
                             p.getStat(PowerStat.DEFENSE_REDUCTION) != 0)
                             || p.getStat(PowerStat.SPEED_PERCENT) < 0
-                    )){
+                    )) {
                 return 0;
             }
 

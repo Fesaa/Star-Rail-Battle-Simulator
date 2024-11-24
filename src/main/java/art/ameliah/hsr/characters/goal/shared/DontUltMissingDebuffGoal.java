@@ -10,7 +10,7 @@ public class DontUltMissingDebuffGoal<C extends AbstractCharacter<C>> extends Ul
     private final String other;
     private final String[] debuffNames;
 
-    public DontUltMissingDebuffGoal(C character, String other, String ...debuffName) {
+    public DontUltMissingDebuffGoal(C character, String other, String... debuffName) {
         super(character);
         this.other = other;
         this.debuffNames = debuffName;

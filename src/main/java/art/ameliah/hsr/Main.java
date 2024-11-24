@@ -48,7 +48,7 @@ public class Main {
         Battle battle = new Battle();
         battle.lessMetrics = true;
 
-   //     battle.setPlayerTeam(new TingyunYunliRobinHuohuoTeam().getTeam());
+        //     battle.setPlayerTeam(new TingyunYunliRobinHuohuoTeam().getTeam());
 //        //battle.setPlayerTeam(new TopazYunliRobinHuohuoTeam().getTeam());
 //        //battle.setPlayerTeam(new MarchYunliRobinHuohuoTeam().getTeam());
 //       battle.setPlayerTeam(new SparkleYunliRobinHuohuoTeam().getTeam());
@@ -255,7 +255,7 @@ public class Main {
                 .stream()
                 .map(c -> new Pair<>(c.getSimpleName(), (ArrayList<AbstractCharacter<?>>) TestHelper.callMethodOnClasses(c, "getTeam")))
                 .sorted(Comparator.comparing(Pair::key))
-                .peek(p -> length.set(Math.max(length.get(), p.key().length()+3)))
+                .peek(p -> length.set(Math.max(length.get(), p.key().length() + 3)))
                 .toList();
 
         for (Pair<String, ArrayList<AbstractCharacter<?>>> p : teams) {

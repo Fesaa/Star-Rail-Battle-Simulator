@@ -3,7 +3,7 @@ package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.characters.AbstractSummoner;
 
-public class AbstractSummon<O extends AbstractSummoner<O>> extends AbstractEntity  {
+public class AbstractSummon<O extends AbstractSummoner<O>> extends AbstractEntity {
 
     protected final O summoner;
 

@@ -15,6 +15,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     public TheWindSoaringValorous(AbstractCharacter<?> owner) {
         super(owner);
     }
+
     public TheWindSoaringValorous(AbstractCharacter<?> owner, boolean isFullSet) {
         super(owner, isFullSet);
     }
@@ -49,6 +50,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 1;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {

@@ -24,6 +24,7 @@ public class EnemyTeam {
         public AllWeakEnemies2() {
             description = "2 Enemies weak to everything with 150 Speed (Each enemy performs 1.33 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -37,6 +38,7 @@ public class EnemyTeam {
         public FireWindImgLightningWeakTarget1() {
             description = "1 Fire and Wind and Imaginary and Lightning Weak Enemy with 150 Speed (Performs 2 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -49,6 +51,7 @@ public class EnemyTeam {
         public WindWeakTarget1() {
             description = "1 Wind Weak Enemy with 150 Speed (Performs 2 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -61,6 +64,7 @@ public class EnemyTeam {
         public PhysFireWeakTargets3() {
             description = "3 Physical and Fire Weak Enemies with 150 Speed (Each enemy performs 1.33 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -75,6 +79,7 @@ public class EnemyTeam {
         public PhysFireWeakTargets2() {
             description = "2 Physical and Fire Weak Enemies with 150 Speed (Each enemy performs 1.33 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -88,6 +93,7 @@ public class EnemyTeam {
         public PhysFireWeakTargets1() {
             description = "1 Physical and Fire Weak Enemy with 150 Speed (Performs 2 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -100,6 +106,7 @@ public class EnemyTeam {
         public PhysWeakTargets3() {
             description = "3 Physical Weak Enemies with 150 Speed (Each enemy performs 1.33 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -114,6 +121,7 @@ public class EnemyTeam {
         public PhysWeakTargets2() {
             description = "2 Physical Weak Enemies with 150 Speed (Each enemy performs 1.33 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -127,6 +135,7 @@ public class EnemyTeam {
         public PhysWeakTargets1() {
             description = "1 Physical Weak Enemy with 150 Speed (Performs 2 attacks per turn)";
         }
+
         @Override
         public ArrayList<AbstractEnemy> getTeam() {
             ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();

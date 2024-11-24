@@ -20,8 +20,8 @@ public class Asta extends AbstractCharacter<Asta> {
 
     public static final String NAME = "Asta";
     public static final String TALENT_BUFF_NAME = "Asta Talent Buff";
-    private final AstaTalentPower talentPower;
     public static final int MAX_STACKS = 5;
+    private final AstaTalentPower talentPower;
     private boolean justCastUlt = false;
 
     public Asta() {
@@ -126,12 +126,12 @@ public class Asta extends AbstractCharacter<Asta> {
         public void afterAttackFinish(Attack attack) {
             if (attack.getSource() == Asta.this) {
                 int chargeGain = attack.getTargets().size();
-                for (AbstractEnemy enemy :attack.getTargets()) {
+                for (AbstractEnemy enemy : attack.getTargets()) {
                     if (enemy.hasWeakness(ElementType.FIRE)) {
                         chargeGain++;
                     }
                 }
-               increaseStacks(chargeGain);
+                increaseStacks(chargeGain);
             }
         }
 

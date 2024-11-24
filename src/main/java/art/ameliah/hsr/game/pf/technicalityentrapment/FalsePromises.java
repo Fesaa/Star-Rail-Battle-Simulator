@@ -61,8 +61,8 @@ public class FalsePromises implements PureFictionBuff {
 
                 // https://youtu.be/INVTD86xO_Q?si=s8wUOlX6jAEUlSpi&t=497 <- got dmg from
                 attack.hitFixed(this, target, 5930);
-                getBattle().enemyCallback(idx-1, t -> attack.hitFixed(FalsePromisesPower.this, t, 5930));
-                getBattle().enemyCallback(idx+1, t -> attack.hitFixed(FalsePromisesPower.this, t, 5930));
+                getBattle().enemyCallback(idx - 1, t -> attack.hitFixed(FalsePromisesPower.this, t, 5930));
+                getBattle().enemyCallback(idx + 1, t -> attack.hitFixed(FalsePromisesPower.this, t, 5930));
             }
         }
     }

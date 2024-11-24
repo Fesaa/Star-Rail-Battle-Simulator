@@ -1,6 +1,5 @@
 package art.ameliah.hsr.battleLogic.wave.moc;
 
-import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 

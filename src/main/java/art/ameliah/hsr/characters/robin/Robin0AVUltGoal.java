@@ -13,7 +13,7 @@ public class Robin0AVUltGoal extends UltGoal<Robin> {
 
     @Override
     public UltGoalResult determineAction() {
-        for (Map.Entry<AbstractEntity,Float> entry : getBattle().getActionValueMap().entrySet()) {
+        for (Map.Entry<AbstractEntity, Float> entry : getBattle().getActionValueMap().entrySet()) {
             if (entry.getKey() instanceof AbstractCharacter && entry.getValue() <= 0) {
                 return UltGoalResult.DONT;
             }

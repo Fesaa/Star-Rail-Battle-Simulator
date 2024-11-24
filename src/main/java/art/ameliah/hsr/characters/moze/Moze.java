@@ -25,18 +25,17 @@ import java.util.List;
 
 public class Moze extends AbstractCharacter<Moze> {
     public static final String NAME = "Moze";
-    
-    public int FUAs = 0;
-    public int talentProcs = 0;
     private final String FUAsMetricName = "Number of Follow Up Attacks Used";
     private final String talentProcsMetricName = "Talent Extra Damage Procs";
     private final MozePreyPower preyPower;
-    private int chargeCount;
     private final int MAX_CHARGE = 9;
-    private int chargeLost = 0;
     private final int CHARGE_ATTACK_THRESHOLD = 3;
-    private boolean skillPointRecovered = false;
+    public int FUAs = 0;
+    public int talentProcs = 0;
     public boolean isDeparted = false;
+    private int chargeCount;
+    private int chargeLost = 0;
+    private boolean skillPointRecovered = false;
 
     public Moze() {
         super(NAME, 811, 600, 353, 111, 80, ElementType.LIGHTNING, 120, 75, Path.HUNT);
@@ -184,6 +183,7 @@ public class Moze extends AbstractCharacter<Moze> {
             this.type = PowerType.DEBUFF;
             this.lastsForever = true;
         }
+
         @Override
         public float receiveConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             return 40;

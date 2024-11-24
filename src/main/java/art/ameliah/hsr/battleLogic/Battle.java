@@ -42,16 +42,20 @@ import java.util.stream.Collectors;
 
 public class Battle implements IBattle {
 
-    protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
-    protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
-    protected Deque<IAttack> queue = new LinkedList<>();
-    protected boolean activeAttack = false;
-
-    private final BattleHelpers battleHelpers;
-    @Getter
-    private Logger logger;
-
+    protected static final long seed = 154172837382L;
     public final int INITIAL_SKILL_POINTS = 3;
+    public final Random enemyMoveRng = new Random(seed);
+    public final Random enemyTargetRng = new Random(seed);
+    public final Random critChanceRng = new Random(seed);
+    public final Random getRandomEnemyRng = new Random(seed);
+    public final Random procChanceRng = new Random(seed);
+    public final Random gambleChanceRng = new Random(seed);
+    public final Random qpqRng = new Random(seed);
+    public final Random milkyWayRng = new Random(seed);
+    public final Random weaveEffectRng = new Random(seed);
+    public final Random aetherRng = new Random(seed);
+    public final Random enemyEHRRng = new Random(seed);
+    private final BattleHelpers battleHelpers;
     public int numSkillPoints = INITIAL_SKILL_POINTS;
     public int MAX_SKILL_POINTS = 5;
     public int totalPlayerDamage;
@@ -66,23 +70,15 @@ public class Battle implements IBattle {
     public boolean isInCombat = false;
     public boolean lessMetrics = false;
     public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
-
     public HashMap<BattleParticipant, Float> damageContributionMap;
     public HashMap<AbstractCharacter<?>, Float> damageContributionMapPercent;
     public HashMap<AbstractEntity, Float> actionValueMap;
-
-    protected static final long seed = 154172837382L;
-    public final Random enemyMoveRng = new Random(seed);
-    public final Random enemyTargetRng = new Random(seed);
-    public final Random critChanceRng = new Random(seed);
-    public final Random getRandomEnemyRng = new Random(seed);
-    public final Random procChanceRng = new Random(seed);
-    public final Random gambleChanceRng = new Random(seed);
-    public final Random qpqRng = new Random(seed);
-    public final Random milkyWayRng = new Random(seed);
-    public final Random weaveEffectRng = new Random(seed);
-    public final Random aetherRng = new Random(seed);
-    public final Random enemyEHRRng = new Random(seed);
+    protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+    protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
+    protected Deque<IAttack> queue = new LinkedList<>();
+    protected boolean activeAttack = false;
+    @Getter
+    private Logger logger;
 
     public Battle() {
         this.battleHelpers = new BattleHelpers(this);
@@ -245,7 +241,7 @@ public class Battle implements IBattle {
 
     @Override
     public void increaseTotalPlayerDmg(float dmg) {
-        totalPlayerDamage += (int)dmg;
+        totalPlayerDamage += (int) dmg;
     }
 
     @Override
@@ -298,7 +294,8 @@ public class Battle implements IBattle {
     /**
      * Method to override for extended function if enemies aren't present at their construction
      */
-    public void onStart() {}
+    public void onStart() {
+    }
 
     @Override
     public void Start(float initialLength) {
@@ -368,7 +365,7 @@ public class Battle implements IBattle {
         currentUnit = this.getNextUnit(0);
         float nextAV = actionValueMap.get(currentUnit);
         if (nextAV > battleLength) {
-            for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
+            for (Map.Entry<AbstractEntity, Float> entry : actionValueMap.entrySet()) {
                 float newAV = entry.getValue() - battleLength;
                 entry.setValue(newAV);
             }
@@ -389,13 +386,13 @@ public class Battle implements IBattle {
         }
 
         battleLength -= nextAV;
-        for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
+        for (Map.Entry<AbstractEntity, Float> entry : actionValueMap.entrySet()) {
             float newAV = entry.getValue() - nextAV;
             entry.setValue(newAV);
         }
 
 
-        addToLog(new TurnStart(currentUnit, this.getActionValueUsed() ,actionValueMap));
+        addToLog(new TurnStart(currentUnit, this.getActionValueUsed(), actionValueMap));
         currentUnit.emit(BattleEvents::onTurnStart);
 
         // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
@@ -442,7 +439,8 @@ public class Battle implements IBattle {
      * Called after an entity's turn ends, before ult checks.
      * I.e. PF enemy add hook
      */
-    public void onEndTurn() {}
+    public void onEndTurn() {
+    }
 
     private void generateMetrics() {
         this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p, lessMetrics)));
@@ -450,7 +448,7 @@ public class Battle implements IBattle {
             this.enemyTeam.forEach(e -> addToLog(new EnemyMetrics(e)));
         }
         float usedAV = this.initialBattleLength - battleLength;
-        finalDPAV = (float)totalPlayerDamage / usedAV;
+        finalDPAV = (float) totalPlayerDamage / usedAV;
         addToLog(new BattleMetrics(this));
         addToLog(new FinalDmgMetrics(this));
     }
@@ -515,6 +513,7 @@ public class Battle implements IBattle {
         }
         return false;
     }
+
     @Override
     public AbstractCharacter<?> getCharacter(String name) {
         for (AbstractCharacter<?> character : playerTeam) {
@@ -536,7 +535,7 @@ public class Battle implements IBattle {
     @Override
     public void characterCallback(String name, Consumer<AbstractCharacter<?>> callback) {
         AbstractCharacter<?> character = this.getCharacter(name);
-        if (character != null  && callback != null) {
+        if (character != null && callback != null) {
             callback.accept(character);
         }
     }
@@ -625,7 +624,7 @@ public class Battle implements IBattle {
 
     @Override
     public void AdvanceEntity(AbstractEntity entity, float advanceAmount) {
-        for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
+        for (Map.Entry<AbstractEntity, Float> entry : actionValueMap.entrySet()) {
             if (entry.getKey() == entity) {
                 float baseAV = entity.getBaseAV();
                 float AVDecrease = baseAV * (advanceAmount / 100);
@@ -644,7 +643,7 @@ public class Battle implements IBattle {
 
     @Override
     public void DelayEntity(AbstractEntity entity, float delayAmount) {
-        for (Map.Entry<AbstractEntity,Float> entry : actionValueMap.entrySet()) {
+        for (Map.Entry<AbstractEntity, Float> entry : actionValueMap.entrySet()) {
             if (entry.getKey() == entity) {
                 float baseAV = entity.getBaseAV();
                 float AVIncrease = baseAV * (delayAmount / 100);

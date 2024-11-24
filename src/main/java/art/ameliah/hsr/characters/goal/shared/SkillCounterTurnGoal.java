@@ -12,6 +12,7 @@ public class SkillCounterTurnGoal<C extends AbstractCharacter<C> & SkillCounterT
 
     /**
      * Creates a new skill counter turn goal. The threshold is set to 0.
+     *
      * @param character the character to create the goal for
      */
     public SkillCounterTurnGoal(C character) {
@@ -20,6 +21,7 @@ public class SkillCounterTurnGoal<C extends AbstractCharacter<C> & SkillCounterT
 
     /**
      * Creates a new skill counter turn goal.
+     *
      * @param character the character to create the goal for
      * @param threshold the threshold for the skill counter
      */

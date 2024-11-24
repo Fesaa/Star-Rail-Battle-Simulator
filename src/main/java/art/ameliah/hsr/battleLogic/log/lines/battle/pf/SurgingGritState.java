@@ -23,6 +23,7 @@ public class SurgingGritState implements Loggable {
         START("started"), END("ended");
 
         private final String s;
+
         State(String s) {
             this.s = s;
         }

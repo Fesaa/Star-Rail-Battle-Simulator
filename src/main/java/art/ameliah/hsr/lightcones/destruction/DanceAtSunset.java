@@ -35,6 +35,7 @@ public class DanceAtSunset extends AbstractLightcone {
             this.turnDuration = 2;
             this.maxStacks = 2;
         }
+
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             for (DamageType type : damageTypes) {

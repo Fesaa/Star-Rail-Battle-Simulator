@@ -24,12 +24,12 @@ import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.BreakDamageHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.ConcertoEnd;
-import art.ameliah.hsr.battleLogic.log.lines.character.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
 import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
+import art.ameliah.hsr.battleLogic.log.lines.character.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.TotalDamage;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
@@ -75,9 +75,9 @@ import java.util.List;
 public abstract class Logger implements BattleParticipant {
 
     protected final IBattle battle;
-    protected PrintStream out;
     @Getter
     protected final List<Loggable> events = new ArrayList<>();
+    protected PrintStream out;
 
     public Logger(IBattle battle, PrintStream out) {
         this.battle = battle;
@@ -243,7 +243,7 @@ public abstract class Logger implements BattleParticipant {
     public void handle(ResetTracker resetTracker) {
         log(resetTracker);
     }
-    
+
     public void handle(EmergencyHeal emergencyHeal) {
         log(emergencyHeal);
     }

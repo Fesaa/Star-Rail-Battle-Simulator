@@ -72,13 +72,13 @@ public class Kafka extends AbstractEnemy {
             attack.hit(c, 10, 976);
             inflictShock.set(c.hasPower(EnemyShock.NAME));
         });
-        getBattle().characterCallback(idx-1, c -> {
+        getBattle().characterCallback(idx - 1, c -> {
             attack.hit(c, 10, 651); // Not sure about energy
             if (inflictShock.get()) {
                 c.addPower(new EnemyShock(this, 244, 3, 1));
             }
         });
-        getBattle().characterCallback(idx+1, c -> {
+        getBattle().characterCallback(idx + 1, c -> {
             attack.hit(c, 10, 651); // Not sure about energy
             if (inflictShock.get()) {
                 c.addPower(new EnemyShock(this, 244, 3, 1));
@@ -115,25 +115,6 @@ public class Kafka extends AbstractEnemy {
         }
     }
 
-    public class ExtraShockDmg extends PermPower {
-        public final String NAME = "ExtraShockDmg";
-
-        public ExtraShockDmg() {
-            this.setName(NAME);
-        }
-
-        @Override
-        public void onAttack(Attack attack) {
-        AbstractPower shock = attack.getSource().getPower(EnemyShock.NAME);
-        if (shock == null) {
-            return;
-        }
-
-        EnemyShock enemyShock = (EnemyShock)shock;
-        Kafka.this.startAttack().hit(attack.getSource(), 0, enemyShock.getDmg()).execute();
-        }
-    }
-
     public static class Cruelty extends PermPower {
         public static final String NAME = "Cruelty";
         private final Kafka kafka;
@@ -147,12 +128,31 @@ public class Kafka extends AbstractEnemy {
         @Override
         public void afterAttacked(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> types, int energyFromAttacked, float totalDmg) {
             if (this.kafka.cooldown || !character.hasPower(EnemyShock.NAME)) {
-             return;
+                return;
             }
 
 
             this.kafka.cooldown = true;
             this.kafka.startAttack().hit(character, 10, 325).execute();
+        }
+    }
+
+    public class ExtraShockDmg extends PermPower {
+        public final String NAME = "ExtraShockDmg";
+
+        public ExtraShockDmg() {
+            this.setName(NAME);
+        }
+
+        @Override
+        public void onAttack(Attack attack) {
+            AbstractPower shock = attack.getSource().getPower(EnemyShock.NAME);
+            if (shock == null) {
+                return;
+            }
+
+            EnemyShock enemyShock = (EnemyShock) shock;
+            Kafka.this.startAttack().hit(attack.getSource(), 0, enemyShock.getDmg()).execute();
         }
     }
 
