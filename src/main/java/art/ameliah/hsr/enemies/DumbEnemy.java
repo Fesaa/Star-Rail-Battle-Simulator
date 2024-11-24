@@ -2,6 +2,8 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -67,7 +69,12 @@ public class DumbEnemy extends AbstractEnemy {
 
     // Prevent dumb enemy from dying
     @Override
-    public void afterAttacked(Attack attack) {
+    public HitResult hit(Hit hit) {
+        return new HitResult(hit, hit.finalDmg(),
+                this.decreaseToughness(hit.finalToughnessReduction()),
+                this.isWeaknessBroken(),
+                this.isDead()
+                );
     }
 
     @Override

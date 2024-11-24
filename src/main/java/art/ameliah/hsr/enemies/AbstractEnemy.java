@@ -226,11 +226,14 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (this.isWeaknessBroken()) {
             return new HitResult(hit, dmgToDeal, 0, false, this.isDead());
         }
+        return new HitResult(hit, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction()), this.isWeaknessBroken(), this.isDead());
+    }
 
+    protected float decreaseToughness(float amount) {
         float initialToughness = this.currentToughness;
-        float toughnessToDeal = Math.min(hit.finalDmg(), this.currentToughness);
+        float toughnessToDeal = Math.min(amount, this.currentToughness);
         this.currentToughness -= toughnessToDeal;
-        getBattle().addToLog(new ReduceToughness(this, hit.finalToughnessReduction(), initialToughness, this.currentToughness));
+        getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.currentToughness));
 
         if (this.currentToughness == 0) {
             this.timesBrokenMetric++;
@@ -239,7 +242,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
             this.emit(BattleEvents::onWeaknessBreak);
         }
 
-        return new HitResult(hit, dmgToDeal, toughnessToDeal, this.isWeaknessBroken(), this.isDead());
+        return toughnessToDeal;
     }
 
     public boolean isDead() {
