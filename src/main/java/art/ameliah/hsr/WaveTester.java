@@ -8,6 +8,7 @@ import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.wave.moc.Moc;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFiction;
+import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.game.pf.technicalityentrapment.TechnicalityEntrapment;
 import art.ameliah.hsr.teams.Divteams;
@@ -39,9 +40,12 @@ public class WaveTester {
     }
 
     public static void PfTest() {
+
+        AbstractCharacter<?> herta2 = PlayerTeam.getPreBuiltHerta();
+        herta2.isDPS = true;
         PureFiction pureFiction = new TechnicalityEntrapment(
-                List.of(Divteams.divsFeixiao(), PlayerTeam.getPreBuiltHerta(), Divteams.divsRobin(), Divteams.divsHuoHuo()),
-                List.of(Divteams.divsFeixiao(), Divteams.divsTopaz(), Divteams.divsRobin(), Divteams.divsHuoHuo()));
+                List.of(Divteams.divsFeixiao(), PlayerTeam.getPreBuiltHerta(), PlayerTeam.getPreBuiltRobin(), Divteams.divsHuoHuo()),
+                List.of(PlayerTeam.getPreBuiltJade(), herta2, PlayerTeam.getPreBuiltRobin(), Divteams.divsHuoHuo()));
         pureFiction.setBattleLogger(WaveTesterLogger::new);
         pureFiction.Start();
     }
