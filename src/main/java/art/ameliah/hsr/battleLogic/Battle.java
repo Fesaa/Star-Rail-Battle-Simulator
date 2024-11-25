@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -56,6 +55,7 @@ public class Battle implements IBattle {
     public final Random weaveEffectRng = new Random(seed);
     public final Random aetherRng = new Random(seed);
     public final Random enemyEHRRng = new Random(seed);
+    protected final Deque<IAttack> queue = new LinkedList<>();
     private final BattleHelpers battleHelpers;
     public int numSkillPoints = INITIAL_SKILL_POINTS;
     public int MAX_SKILL_POINTS = 5;
@@ -76,7 +76,6 @@ public class Battle implements IBattle {
     public HashMap<AbstractEntity, Float> actionValueMap;
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
-    protected final Deque<IAttack> queue = new LinkedList<>();
     protected boolean activeAttack = false;
     @Getter
     private Logger logger;
@@ -452,9 +451,11 @@ public class Battle implements IBattle {
      * Called after an entity's turn ends, before ult checks.
      * I.e. PF enemy add hook
      */
-    protected void onEndTurn() {}
+    protected void onEndTurn() {
+    }
 
-    protected void onTurnStart() {}
+    protected void onTurnStart() {
+    }
 
     /**
      * Have all players try their ultimates. Not sure why Yunli is filtered out, ask Darkglade

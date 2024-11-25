@@ -4,7 +4,6 @@ import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
@@ -15,7 +14,6 @@ import art.ameliah.hsr.characters.goal.AllyTargetGoal;
 import art.ameliah.hsr.characters.goal.EnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.TurnGoal;
 import art.ameliah.hsr.characters.goal.UltGoal;
-import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.DefaultLightcone;
@@ -26,7 +24,6 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
@@ -203,7 +200,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         return new Attack(this);
     }
 
-    protected void doAttack(DamageType type, MoveType moveType, BiConsumer<AbstractEnemy,AttackLogic> logic) {
+    protected void doAttack(DamageType type, MoveType moveType, BiConsumer<AbstractEnemy, AttackLogic> logic) {
         this.startAttack().handle(type, dh -> dh.logic(this.getTarget(moveType), logic)).execute();
     }
 

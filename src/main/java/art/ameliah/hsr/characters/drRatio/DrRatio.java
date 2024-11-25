@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.drRatio;
 
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;

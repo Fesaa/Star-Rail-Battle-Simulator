@@ -30,7 +30,7 @@ public class AutomatonBeetle extends AbstractEnemy {
     @Override
     public HitResult hit(Hit hit) {
         if (this.isInvincible && !hit.getTypes().contains(DamageType.DOT)) {
-            return new HitResult(hit,this, 0, 0, false, false);
+            return new HitResult(hit, this, 0, 0, false, false);
         }
 
         return super.hit(hit);

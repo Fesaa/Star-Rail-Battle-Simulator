@@ -7,7 +7,6 @@ import art.ameliah.hsr.characters.bronya.Bronya;
 import art.ameliah.hsr.characters.feixiao.Feixiao;
 import art.ameliah.hsr.characters.fuxuan.FuXuan;
 import art.ameliah.hsr.characters.gallagher.Gallagher;
-import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.hanya.Hanya;
 import art.ameliah.hsr.characters.herta.Herta;
 import art.ameliah.hsr.characters.huohuo.Huohuo;

@@ -1,8 +1,6 @@
 package art.ameliah.hsr.characters.tingyun;
 
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;

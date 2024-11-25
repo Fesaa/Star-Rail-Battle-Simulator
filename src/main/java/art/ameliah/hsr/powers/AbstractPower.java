@@ -31,6 +31,7 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
     protected String name;
     @Getter
     private AbstractEntity owner;
+
     public AbstractPower() {
     }
 

@@ -2,9 +2,7 @@ package art.ameliah.hsr.characters.lingsha;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.FuYuan;
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
@@ -18,8 +16,8 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
-import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -128,7 +126,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
                 tryFireEnemy.ifPresentOrElse(
                         e -> al.hit(e, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT),
                         () -> al.hit(Randf.rand(nonBroken, getBattle().getEnemyTargetRng()), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
-                        );
+                );
             }
         })).afterAttackHook(() -> {
             fuYuanAttacksMetric++;

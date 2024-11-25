@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.yunli;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.character.UseCounter;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseCull;
@@ -73,8 +72,8 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
 
                     dh.addTypes(SKILL);
                     dh.logic(target, al -> al.hit(target, 1.2f, TOUGHNESS_DAMAGE_TWO_UNITS));
-                    dh.logic(idx-1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
-                    dh.logic(idx+1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                    dh.logic(idx - 1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                    dh.logic(idx + 1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
                 }).execute();
     }
 
@@ -117,9 +116,9 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
                         }
 
                         dh.addTypes(FOLLOW_UP);
-                        dh.logic(idx-1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                        dh.logic(idx - 1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
                         dh.logic(idx, (e, al) -> al.hit(e, 1.2f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
-                        dh.logic(idx+1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                        dh.logic(idx + 1, (e, al) -> al.hit(e, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
                     }).execute();
         }
         increaseEnergy(10, TALENT_ENERGY_GAIN);
@@ -144,7 +143,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
                     dh.addEnemies(targets);
                     dh.logic(al -> {
                         for (var target : targets) {
-                            al.hit(target, 0.72f, TOUGHNESS_DAMAGE_SINGLE_UNIT/4);
+                            al.hit(target, 0.72f, TOUGHNESS_DAMAGE_SINGLE_UNIT / 4);
                         }
                     });
                 }).afterAttackHook(this::cleanUpParry)
@@ -166,9 +165,9 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         dh.addTypes(FOLLOW_UP, ULTIMATE);
         int idx = getBattle().getEnemies().indexOf(enemy);
 
-        dh.logic(idx-1, (e, al) -> al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+        dh.logic(idx - 1, (e, al) -> al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
         dh.logic(idx, (e, al) -> al.hit(e, 2.2f, TOUGHNESS_DAMAGE_TWO_UNITS));
-        dh.logic(idx+1, (e, al) -> al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+        dh.logic(idx + 1, (e, al) -> al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
     private void cleanUpParry() {

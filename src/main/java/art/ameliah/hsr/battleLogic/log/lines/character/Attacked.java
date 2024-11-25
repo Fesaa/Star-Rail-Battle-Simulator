@@ -4,10 +4,8 @@ import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;

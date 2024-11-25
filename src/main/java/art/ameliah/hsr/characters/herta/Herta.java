@@ -1,16 +1,12 @@
 package art.ameliah.hsr.characters.herta;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
-import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
-import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.RandomEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
@@ -22,11 +18,9 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class Herta extends AbstractCharacter<Herta> {
 

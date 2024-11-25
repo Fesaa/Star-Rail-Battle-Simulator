@@ -8,6 +8,7 @@ public interface ISurgingGrit {
 
     /**
      * Power to grant all enemies on activation
+     *
      * @return the power, the same instance will be re-used across all enemies
      */
     @Nullable

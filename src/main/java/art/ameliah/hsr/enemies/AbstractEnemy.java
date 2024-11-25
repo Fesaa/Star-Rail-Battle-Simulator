@@ -72,6 +72,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     /**
      * Return a copy, edit will not do anything
+     *
      * @return copy of the weakness map
      */
     public Collection<ElementType> getWeaknesses() {
@@ -225,7 +226,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     public HitResult hit(Hit hit) {
         if (this.isDead()) {
-            return new HitResult(hit,this, 0, 0, false, false);
+            return new HitResult(hit, this, 0, 0, false, false);
         }
 
         final float dmgToDeal = Math.min(hit.finalDmg(), this.currentHp);
@@ -326,7 +327,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return this.getName() + "{" +
                 "currentHp=" + currentHp +
                 ", currentToughness=" + currentToughness +
-                ", hp%=" + currentHp/maxHp()*100 +
+                ", hp%=" + currentHp / maxHp() * 100 +
                 '}';
     }
 

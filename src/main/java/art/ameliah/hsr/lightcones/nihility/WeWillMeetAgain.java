@@ -1,9 +1,7 @@
 package art.ameliah.hsr.lightcones.nihility;
 
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.utils.Randf;
 

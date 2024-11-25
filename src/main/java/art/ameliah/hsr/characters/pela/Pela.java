@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.pela;
 
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -9,9 +8,9 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
-import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;

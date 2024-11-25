@@ -1,8 +1,6 @@
 package art.ameliah.hsr.characters.jade;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.battleLogic.log.lines.entity.LoseCharge;
@@ -62,7 +60,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
         getBattle().addToLog(new GainCharge(this, amount, before, this.fuaStacks));
 
         while (this.fuaStacks >= 8) {
-            getBattle().addToLog(new LoseCharge(this, 8, this.fuaStacks, this.fuaStacks-8));
+            getBattle().addToLog(new LoseCharge(this, 8, this.fuaStacks, this.fuaStacks - 8));
             this.fuaStacks -= 8;
             this.doFua();
         }
@@ -120,8 +118,8 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
             int idx = getBattle().getEnemies().indexOf(target);
 
             dh.logic(target, al -> al.hit(target, 0.9f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
-            dh.logic(idx-1, (e, al) -> al.hit(e, 0.3f, TOUGHNESS_DAMAGE_HALF_UNIT));
-            dh.logic(idx+1, (e, al) -> al.hit(e, 0.3f, TOUGHNESS_DAMAGE_HALF_UNIT));
+            dh.logic(idx - 1, (e, al) -> al.hit(e, 0.3f, TOUGHNESS_DAMAGE_HALF_UNIT));
+            dh.logic(idx + 1, (e, al) -> al.hit(e, 0.3f, TOUGHNESS_DAMAGE_HALF_UNIT));
         });
     }
 
@@ -135,7 +133,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
 
     private void doFua() {
         float mul = this.enhancedFua > 0 ? 2 : 1.2f;
-        this.enhancedFua = Math.max(0, this.enhancedFua-1);
+        this.enhancedFua = Math.max(0, this.enhancedFua - 1);
 
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
         this.doAttack(DamageType.FOLLOW_UP, dh -> dh.logic(getBattle().getEnemies(), (e, al) -> {

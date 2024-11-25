@@ -20,11 +20,8 @@ import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Aventurine extends AbstractCharacter<Aventurine> {
     public static final String NAME = "Aventurine";

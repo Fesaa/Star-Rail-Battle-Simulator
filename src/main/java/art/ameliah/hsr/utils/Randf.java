@@ -18,12 +18,11 @@ public class Randf {
     }
 
     /**
-     *
      * @param collection collection to pick from
-     * @param count amount of randomly picked elements that are needed
-     * @param random Random generator
+     * @param count      amount of randomly picked elements that are needed
+     * @param random     Random generator
+     * @param <E>        element type
      * @return Collection<E>, an ArrayList is used
-     * @param <E> element type
      */
     public static <E> Collection<E> rand(Collection<E> collection, int count, Random random) {
         Collection<E> res = new ArrayList<>(count);

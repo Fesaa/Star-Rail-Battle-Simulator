@@ -1,8 +1,6 @@
 package art.ameliah.hsr.characters.hanya;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.hanya.BurdenLog;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -12,7 +10,6 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;

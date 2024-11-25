@@ -1,6 +1,5 @@
 package art.ameliah.hsr.enemies;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
@@ -74,7 +73,7 @@ public class DumbEnemy extends AbstractEnemy {
                 this.decreaseToughness(hit.finalToughnessReduction()),
                 this.isWeaknessBroken(),
                 this.isDead()
-                );
+        );
     }
 
     @Override

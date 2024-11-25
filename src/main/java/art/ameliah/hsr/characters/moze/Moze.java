@@ -1,8 +1,6 @@
 package art.ameliah.hsr.characters.moze;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;

@@ -2,9 +2,7 @@ package art.ameliah.hsr.characters.topaz;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.Numby;
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
@@ -12,9 +10,9 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
-import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -214,6 +212,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
     public class ProofOfDebt extends AbstractPower {
         public static String NAME = "Proof of Debt Power";
+
         public ProofOfDebt() {
             this.setName(NAME);
             lastsForever = true;

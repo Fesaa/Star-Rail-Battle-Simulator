@@ -47,7 +47,8 @@ public class Attack implements IAttack, BattleParticipant {
 
     /**
      * Ease of use method, as types are commonly known
-     * @param type the type of the attack to happen
+     *
+     * @param type     the type of the attack to happen
      * @param consumer attack logic
      * @return this
      */
@@ -111,7 +112,7 @@ public class Attack implements IAttack, BattleParticipant {
         getBattle().addToLog(new Attacked(
                 this.source,
                 // Why is this needed? How come List<A extends B> instead good for List<B>?
-                this.getTargets().stream().map(e -> (AbstractEntity)e).collect(Collectors.toSet()),
+                this.getTargets().stream().map(e -> (AbstractEntity) e).collect(Collectors.toSet()),
                 this.dmgDealt,
                 this.types));
 
@@ -172,6 +173,7 @@ public class Attack implements IAttack, BattleParticipant {
 
         /**
          * Add enemies at indexes
+         *
          * @param indexes the indexes
          */
         public void addEnemies(int... indexes) {
@@ -195,7 +197,8 @@ public class Attack implements IAttack, BattleParticipant {
         /**
          * Add logic for an enemy at position idx. Uses {@link IBattle#enemyCallback(int, Consumer)}
          * This will also add the enemy to the target set
-         * @param idx the enemies index
+         *
+         * @param idx   the enemies index
          * @param logic the logic to execute when attacking
          */
         public void logic(int idx, BiConsumer<AbstractEnemy, AttackLogic> logic) {
@@ -208,8 +211,9 @@ public class Attack implements IAttack, BattleParticipant {
         /**
          * Helper method to add a target at the same time, as setting logic.
          * To be used for logic that only uses that enemy
+         *
          * @param target the target to add
-         * @param logic the logic to execute when attacking
+         * @param logic  the logic to execute when attacking
          */
         public void logic(AbstractEnemy target, Consumer<AttackLogic> logic) {
             this.addEnemies(target);
@@ -219,8 +223,9 @@ public class Attack implements IAttack, BattleParticipant {
         /**
          * Helper method to add a target at the same time, as setting logic.
          * To be used for logic that only uses that enemy
+         *
          * @param targets the targets to add
-         * @param logic the logic to execute when attacking
+         * @param logic   the logic to execute when attacking
          */
         public void logic(Collection<AbstractEnemy> targets, Consumer<AttackLogic> logic) {
             this.addEnemies(targets);
@@ -230,8 +235,9 @@ public class Attack implements IAttack, BattleParticipant {
         /**
          * Helper method to add a target at the same time, as setting logic.
          * To be used for logic that only uses that enemy. Returning the enemy in the callback for ease of use
+         *
          * @param target the target to add
-         * @param logic the logic to execute when attacking
+         * @param logic  the logic to execute when attacking
          */
         public void logic(AbstractEnemy target, BiConsumer<AbstractEnemy, AttackLogic> logic) {
             this.addEnemies(target);
@@ -241,8 +247,9 @@ public class Attack implements IAttack, BattleParticipant {
         /**
          * Helper method to add a target at the same time, as setting logic.
          * To be used for logic that only uses that enemy. Returning the targets in the callback for ease of use
+         *
          * @param targets the targets to add
-         * @param logic the logic to execute when attacking
+         * @param logic   the logic to execute when attacking
          */
         public void logic(Collection<AbstractEnemy> targets, BiConsumer<Collection<AbstractEnemy>, AttackLogic> logic) {
             this.addEnemies(targets);

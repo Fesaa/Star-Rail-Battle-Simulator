@@ -13,8 +13,8 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
-import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -115,7 +115,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
                 int procChance = 60;
 
                 PermPower ultCritDmgBuff = PermPower.create(PowerStat.CRIT_DAMAGE, 50, "March Ult Crit Dmg Buff");
-                PermPower ebaDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 88,"March Enhanced Basic Damage Bonus");
+                PermPower ebaDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 88, "March Enhanced Basic Damage Bonus");
 
                 this.addPower(ebaDamageBonus);
                 if (hasUltEnhancement) {

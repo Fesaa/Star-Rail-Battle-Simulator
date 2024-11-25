@@ -21,6 +21,18 @@ public class RelicStats {
         this.addMainStat(Stats.HP_FLAT).addMainStat(Stats.ATK_FLAT);
     }
 
+    public static Stats fromElementType(ElementType type) {
+        return switch (type) {
+            case FIRE -> Stats.FIRE_DAMAGE;
+            case ICE -> Stats.ICE_DAMAGE;
+            case WIND -> Stats.WIND_DAMAGE;
+            case LIGHTNING -> Stats.LIGHTNING_DAMAGE;
+            case PHYSICAL -> Stats.PHYSICAL_DAMAGE;
+            case QUANTUM -> Stats.QUANTUM_DAMAGE;
+            case IMAGINARY -> Stats.IMAGINARY_DAMAGE;
+        };
+    }
+
     public void equipTo(AbstractCharacter<?> character) {
         PermPower relicBonus = new PermPower();
 
@@ -44,18 +56,6 @@ public class RelicStats {
         relicBonus.setStat(character.elementType.getStatBoost(), getTotalBonus(convStat));
         relicBonus.setName("RelicStatsBonuses");
         character.addPower(relicBonus);
-    }
-
-    public static Stats fromElementType(ElementType type) {
-        return switch (type) {
-            case FIRE -> Stats.FIRE_DAMAGE;
-            case ICE -> Stats.ICE_DAMAGE;
-            case WIND -> Stats.WIND_DAMAGE;
-            case LIGHTNING -> Stats.LIGHTNING_DAMAGE;
-            case PHYSICAL -> Stats.PHYSICAL_DAMAGE;
-            case QUANTUM -> Stats.QUANTUM_DAMAGE;
-            case IMAGINARY -> Stats.IMAGINARY_DAMAGE;
-        };
     }
 
     public RelicStats addMainStat(Stats stat) {

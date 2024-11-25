@@ -30,11 +30,11 @@ public class AttackLogic {
     private final Function<Hit, HitResult> callback;
 
     public Collection<HitResult> hit(Collection<AbstractEnemy> enemies, float mul) {
-        return this.hit(this.source,  enemies, mul, MultiplierStat.ATK, 0, this.source.elementType, false);
+        return this.hit(this.source, enemies, mul, MultiplierStat.ATK, 0, this.source.elementType, false);
     }
 
     public Collection<HitResult> hit(Collection<AbstractEnemy> enemies, float mul, float toughness) {
-        return this.hit(this.source,  enemies, mul, MultiplierStat.ATK, toughness, this.source.elementType, false);
+        return this.hit(this.source, enemies, mul, MultiplierStat.ATK, toughness, this.source.elementType, false);
     }
 
     public Collection<HitResult> hit(Collection<AbstractEnemy> enemies, float mul, MultiplierStat stat, float toughness) {
@@ -42,19 +42,19 @@ public class AttackLogic {
     }
 
     public Collection<HitResult> hit(Collection<AbstractEnemy> enemies, float mul, MultiplierStat stat, float toughness, ElementType elementType, boolean ignoreWeakness) {
-        return this.hit(this.source,  enemies, mul, stat, toughness, elementType, ignoreWeakness);
+        return this.hit(this.source, enemies, mul, stat, toughness, elementType, ignoreWeakness);
     }
 
     public Collection<HitResult> hit(AbstractCharacter<?> source, Collection<AbstractEnemy> enemies, float mul) {
-        return this.hit(source,  enemies, mul, MultiplierStat.ATK, 0, source.elementType, false);
+        return this.hit(source, enemies, mul, MultiplierStat.ATK, 0, source.elementType, false);
     }
 
     public Collection<HitResult> hit(AbstractCharacter<?> source, Collection<AbstractEnemy> enemies, float mul, float toughness) {
-        return this.hit(source,  enemies, mul, MultiplierStat.ATK, toughness, source.elementType, false);
+        return this.hit(source, enemies, mul, MultiplierStat.ATK, toughness, source.elementType, false);
     }
 
     public Collection<HitResult> hit(AbstractCharacter<?> source, Collection<AbstractEnemy> enemies, float mul, MultiplierStat stat, float toughness) {
-        return this.hit(source,  enemies, mul, stat, toughness, source.elementType, false);
+        return this.hit(source, enemies, mul, stat, toughness, source.elementType, false);
     }
 
     public HitResult hit(AbstractEnemy enemy, float mul) {
@@ -89,8 +89,8 @@ public class AttackLogic {
     public Collection<HitResult> hit(AbstractCharacter<?> source, Collection<AbstractEnemy> targets, float mul, MultiplierStat stat, float toughness, ElementType elementType, boolean ignoreWeakness) {
         Collection<HitResult> results = new ArrayList<>();
         for (var target : targets) {
-             var res = this.hit(source, target, mul, stat, toughness, elementType, ignoreWeakness);
-             results.add(res);
+            var res = this.hit(source, target, mul, stat, toughness, elementType, ignoreWeakness);
+            results.add(res);
         }
         return results;
     }

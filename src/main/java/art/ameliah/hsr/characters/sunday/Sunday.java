@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.sunday;
 
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
@@ -15,8 +14,6 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
-
-import java.util.Optional;
 
 public class Sunday extends AbstractCharacter<Sunday> {
 

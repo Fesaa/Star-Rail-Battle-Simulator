@@ -1,7 +1,5 @@
 package art.ameliah.hsr.characters.gallagher;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;

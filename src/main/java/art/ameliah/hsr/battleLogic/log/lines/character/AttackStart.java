@@ -5,9 +5,6 @@ import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 
 @RequiredArgsConstructor
 public class AttackStart implements Loggable {
@@ -16,7 +13,7 @@ public class AttackStart implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s started attacking [%s] with %s", this.attack.getSource(),  this.attack.getTargets(), this.attack.getTypes());
+        return String.format("%s started attacking [%s] with %s", this.attack.getSource(), this.attack.getTargets(), this.attack.getTypes());
     }
 
     @Override

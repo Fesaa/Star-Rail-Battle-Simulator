@@ -1,6 +1,5 @@
 package art.ameliah.hsr.battleLogic.log.lines.character;
 
-import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
@@ -16,7 +15,7 @@ public record HitResultLine(HitResult hit) implements Loggable {
                 this.hit.getEnemy().maxHp(),
                 this.hit.getEnemy().getCurrentHp() + this.hit.getDmgDealt(),
                 this.hit.getEnemy().getCurrentHp()
-                );
+        );
     }
 
     @Override
