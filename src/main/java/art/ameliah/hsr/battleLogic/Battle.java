@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -92,6 +93,11 @@ public class Battle implements IBattle {
 
     public void setLogger(LogSupplier logger) {
         this.logger = logger.get(this);
+    }
+
+    @Override
+    public String prefix() {
+        return String.format("(%.2f AV) - ", this.initialLength() - this.battleLength());
     }
 
     @Override

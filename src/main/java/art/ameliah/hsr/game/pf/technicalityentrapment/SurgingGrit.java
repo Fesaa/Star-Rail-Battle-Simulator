@@ -1,7 +1,7 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
 import art.ameliah.hsr.battleLogic.IBattle;
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.ISurgingGrit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -38,7 +38,7 @@ public class SurgingGrit implements ISurgingGrit {
         }
 
         @Override
-        public void beforeAttacked(Attack attack) {
+        public void beforeAttacked(AttackLogic attack) {
             if (!attack.getTypes().contains(DamageType.SKILL)) {
                 return;
             }

@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -26,7 +26,7 @@ public class LongevousDisciple extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void afterAttacked(Attack attack) {
+    public void afterAttacked(AttackLogic attack) {
         if (!this.isFullSet) return;
 
         // Assuming stuff like eating your own/allys HP, would be implemented as attacking them

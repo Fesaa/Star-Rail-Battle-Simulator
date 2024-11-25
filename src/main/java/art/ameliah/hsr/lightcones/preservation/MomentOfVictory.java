@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.preservation;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -21,7 +21,7 @@ public class MomentOfVictory extends AbstractLightcone {
     }
 
     @Override
-    public void afterAttacked(Attack attack) {
+    public void afterAttacked(AttackLogic attack) {
         this.owner.addPower(TempPower.create(PowerStat.DEF_PERCENT, 24, 1, "Moment Of Victory Defense Boost"));
     }
 }

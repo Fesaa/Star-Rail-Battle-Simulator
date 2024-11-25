@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.destruction;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -30,7 +30,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         eclipse = 0;
     }
 
@@ -58,7 +58,7 @@ public class IShallBeMyOwnSword extends AbstractLightcone {
         }
 
         @Override
-        public void afterAttacked(Attack attack) {
+        public void afterAttacked(AttackLogic attack) {
             eclipse = Math.min(3, eclipse + 1);
         }
     }

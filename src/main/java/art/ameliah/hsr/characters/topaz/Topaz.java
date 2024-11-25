@@ -3,11 +3,13 @@ package art.ameliah.hsr.characters.topaz;
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.Numby;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
@@ -59,6 +61,8 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         this.registerGoal(0, new SkillFirstTurnGoal<>(this));
         this.registerGoal(10, new TopazTurnGoal(this));
         this.registerGoal(20, new AlwaysSkillGoal<>(this));
+
+        this.registerGoal(0, new TopazTargetGoal(this));
     }
 
     public void useSkill() {
@@ -88,9 +92,10 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
             throw new IllegalStateException("No enemy found with proofOfDebt");
         }
 
-        this.startAttack()
-                .hitEnemy(target, 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC, DamageType.FOLLOW_UP)
-                .execute();
+        this.doAttack(dh -> {
+            dh.addTypes(DamageType.BASIC, DamageType.FOLLOW_UP);
+            dh.logic(al -> al.hit(this.getTarget(MoveType.BASIC), 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+        });
     }
 
     public void useUltimate() {
@@ -121,41 +126,35 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
         types.add(DamageType.FOLLOW_UP);
 
-        AbstractEnemy target = null;
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            if (enemy.hasPower(proofOfDebt.getName())) {
-                target = enemy;
-                break;
-            }
-        }
+        this.startAttack()
+                .handle(dh -> {
+                    dh.addTypes(types);
+                    AbstractEnemy target = this.getTarget(MoveType.FOLLOW_UP);
 
-        if (target == null) {
-            throw new IllegalStateException("No targets with Proof of Debt");
-        }
+                    dh.logic(target, al -> {
+                        for (int i = 0; i < 7; i++) {
+                            al.hit(target, multiplier / 7, toughnessDamage);
+                        }
 
-        Attack attack = this.startAttack();
+                        if (this.ultCounter > 0) {
+                            al.hit(target, 0.9f, toughnessDamage);
+                            increaseEnergy(10, "from Enhanced Numby attack");
+                            this.ultCounter--;
+                        }
+                    });
+                }).afterAttackHook(() -> {
+                    if (ultCounter <= 0) {
+                        if (types.contains(DamageType.SKILL)) {
+                            numby.AdvanceForward(); //manually advance numby when topaz skills with last charge of ult
+                        }
+                        removePower(stonksPower);
+                    }
 
-        for (int i = 0; i < 7; i++) {
-            attack.hitEnemy(target, multiplier / 7, MultiplierStat.ATK, toughnessDamage, types);
-        }
-        if (ultCounter > 0) {
-            attack.hitEnemy(target, 0.9f, MultiplierStat.ATK, toughnessDamage, types);
-            increaseEnergy(10, "from Enhanced Numby attack");
-            ultCounter--;
-        }
-        attack.execute();
-
-        if (ultCounter <= 0) {
-            if (types.contains(DamageType.SKILL)) {
-                numby.AdvanceForward(); //manually advance numby when topaz skills with last charge of ult
-            }
-            removePower(stonksPower);
-        }
-
-        if (techniqueActive) {
-            techniqueActive = false;
-            increaseEnergy(60, TECHNIQUE_ENERGY_GAIN);
-        }
+                    if (techniqueActive) {
+                        techniqueActive = false;
+                        increaseEnergy(60, TECHNIQUE_ENERGY_GAIN);
+                    }
+                }).execute();
     }
 
     public void useTechnique() {
@@ -213,9 +212,10 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
     }
 
-    private class ProofOfDebt extends AbstractPower {
+    public class ProofOfDebt extends AbstractPower {
+        public static String NAME = "Proof of Debt Power";
         public ProofOfDebt() {
-            this.setName(this.getClass().getSimpleName());
+            this.setName(NAME);
             lastsForever = true;
             this.type = PowerType.DEBUFF;
         }
@@ -236,7 +236,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public void afterAttacked(Attack attack) {
+        public void afterAttacked(AttackLogic attack) {
             for (DamageType type : attack.getTypes()) {
                 if (type == DamageType.FOLLOW_UP) {
                     Topaz.this.numby.AdvanceForward();

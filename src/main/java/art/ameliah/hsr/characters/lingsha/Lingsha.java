@@ -5,6 +5,7 @@ import art.ameliah.hsr.battleLogic.FuYuan;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanLose;
@@ -14,7 +15,9 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -25,6 +28,7 @@ import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +69,8 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
 
         this.registerGoal(0, new UseExcessSkillPointsGoal<>(this));
         this.registerGoal(10, new LingshaTurnGoal(this));
+
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
@@ -81,62 +87,56 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
     }
 
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getRandomEnemy(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC,
+                dh -> dh.logic(this.getTarget(MoveType.BASIC), (e, al) -> al.hit(e, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     public void useSkill() {
-        Attack attack = this.startAttack();
-        getBattle().getEnemies().forEach(target -> {
-            attack.hitEnemy(target, 0.8f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
-        });
-
-        increaseHitCount(skillHitCountGain);
-        getBattle().AdvanceEntity(fuYuan, 20);
-        fuYuan.speedPriority = 1;
-        resetDamageTracker();
-
-        attack.execute();
+        this.startAttack()
+                .handle(DamageType.SKILL,
+                        dh -> dh.logic(getBattle().getEnemies(), (targets, al) -> al.hit(targets, 0.8f, TOUGHNESS_DAMAGE_SINGLE_UNIT)))
+                .afterAttackHook(() -> {
+                    increaseHitCount(skillHitCountGain);
+                    getBattle().AdvanceEntity(fuYuan, 20);
+                    fuYuan.speedPriority = 1;
+                    resetDamageTracker();
+                }).execute();
     }
 
     public void useUltimate() {
-        Attack attack = this.startAttack();
-        getBattle().getEnemies().forEach(target -> {
-            target.addPower(new Befog());
-            attack.hitEnemy(target, 1.5f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE);
-        });
-        getBattle().AdvanceEntity(fuYuan, 100);
-
-        attack.execute();
+        this.startAttack()
+                .handle(DamageType.ULTIMATE, dh -> dh.logic(getBattle().getEnemies(), (targets, al) -> {
+                    for (AbstractEnemy target : targets) {
+                        target.addPower(new Befog());
+                        al.hit(target, 1.5f, TOUGHNESS_DAMAGE_TWO_UNITS);
+                    }
+                })).afterAttackHook(() -> getBattle().AdvanceEntity(fuYuan, 100)).execute();
     }
 
     public void FuYuanAttack(boolean useHitCount) {
-        fuYuanAttacksMetric++;
+        this.startAttack().handle(DamageType.FOLLOW_UP, dh -> dh.logic(getBattle().getEnemies(), (targets, al) -> {
+            Collection<AbstractEnemy> nonBroken = al.hit(targets, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                    .stream()
+                    .map(HitResult::getEnemy)
+                    .filter(enemy -> !enemy.isWeaknessBroken())
+                    .toList();
 
-        List<AbstractEnemy> nonBrokenEnemies = new ArrayList<>();
-
-        Attack attack = this.startAttack();
-        getBattle().getEnemies().forEach(target -> {
-            attack.hitEnemy(target, 0.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
-            if (!target.isWeaknessBroken()) {
-                nonBrokenEnemies.add(target);
+            if (nonBroken.isEmpty()) {
+                al.hit(getBattle().getRandomEnemy(), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            } else {
+                var tryFireEnemy = nonBroken.stream().filter(e -> e.hasWeakness(ElementType.FIRE)).findAny();
+                tryFireEnemy.ifPresentOrElse(
+                        e -> al.hit(e, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT),
+                        () -> al.hit(Randf.rand(nonBroken, getBattle().getEnemyTargetRng()), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                        );
             }
-        });
-
-        if (nonBrokenEnemies.isEmpty()) {
-            attack.hitEnemy(getBattle().getRandomEnemy(), 0.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
-        } else {
-            AbstractEnemy target = Randf.rand(nonBrokenEnemies, getBattle().getGetRandomEnemyRng());
-            attack.hitEnemy(target, 0.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
-        }
-
-        if (useHitCount) {
-            decreaseHitCount(1);
-        }
-        resetDamageTracker();
-
-        attack.execute();
+        })).afterAttackHook(() -> {
+            fuYuanAttacksMetric++;
+            if (useHitCount) {
+                decreaseHitCount(1);
+            }
+            resetDamageTracker();
+        }).execute();
     }
 
     private void increaseHitCount(int amount) {

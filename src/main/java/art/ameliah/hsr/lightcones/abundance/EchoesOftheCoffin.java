@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.abundance;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -24,7 +24,7 @@ public class EchoesOftheCoffin extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         int stacks = Math.min(3, attack.getTargets().size());
         this.owner.increaseEnergy(3 * stacks, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);
     }

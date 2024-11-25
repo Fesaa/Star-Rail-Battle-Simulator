@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.jade;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -14,6 +15,8 @@ import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -38,9 +41,13 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
                 .setStat(PowerStat.EFFECT_RES, 10)
         );
 
-        this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new UltAtEndOfBattle<>(this));
+        this.registerGoal(10, DontUltMissingPowerGoal.robin(this));
+        this.registerGoal(20, new AlwaysUltGoal<>(this));
+
         this.registerGoal(0, new SkillCounterTurnGoal<>(this));
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
+
         this.registerGoal(0, new DpsAllyTargetGoal<>(this));
     }
 
@@ -71,9 +78,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
     @Override
     public void useTechnique() {
         this.increasePawnedAssets(15);
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 0.5f, MultiplierStat.ATK, 0)
-                .execute();
+        this.doAttack(dh -> dh.logic(getBattle().getEnemies(), (e, al) -> al.hit(e, 0.5f)));
     }
 
     @Override
@@ -82,7 +87,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
     }
 
     @Override
-    public void afterAttack(Attack attack) {
+    public void afterAttack(AttackLogic attack) {
         if (attack.getTypes().contains(DamageType.FOLLOW_UP) || attack.getTypes().isEmpty()) {
             return;
         }
@@ -110,23 +115,22 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
 
     @Override
     protected void useBasic() {
-        AbstractEnemy target = this.getTarget(MoveType.BASIC);
-        int idx = getBattle().getEnemies().indexOf(target);
+        this.doAttack(DamageType.BASIC, dh -> {
+            AbstractEnemy target = this.getTarget(MoveType.BASIC);
+            int idx = getBattle().getEnemies().indexOf(target);
 
-        Attack attack = this.startAttack();
-        attack.hitEnemy(target, 0.9f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
-        getBattle().enemyCallback(idx-1, e -> attack.hitEnemy(e, 0.3f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.BASIC));
-        getBattle().enemyCallback(idx+1, e -> attack.hitEnemy(e, 0.3f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.BASIC));
-
-        attack.execute();
+            dh.logic(target, al -> al.hit(target, 0.9f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dh.logic(idx-1, (e, al) -> al.hit(e, 0.3f, TOUGHNESS_DAMAGE_HALF_UNIT));
+            dh.logic(idx+1, (e, al) -> al.hit(e, 0.3f, TOUGHNESS_DAMAGE_HALF_UNIT));
+        });
     }
 
     @Override
     protected void useUltimate() {
         this.enhancedFua = 2;
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 2.4f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
-                .execute();
+        this.doAttack(DamageType.ULTIMATE, dh -> dh.logic(getBattle().getEnemies(), (e, al) -> {
+            al.hit(e, 2.4f, TOUGHNESS_DAMAGE_TWO_UNITS);
+        }));
     }
 
     private void doFua() {
@@ -134,9 +138,9 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
         this.enhancedFua = Math.max(0, this.enhancedFua-1);
 
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
-        this.startAttack()
-                .delay(dh -> dh.hitEnemies(getBattle().getEnemies(), mul, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP))
-                .execute();
+        this.doAttack(DamageType.FOLLOW_UP, dh -> dh.logic(getBattle().getEnemies(), (e, al) -> {
+            al.hit(e, mul, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+        }));
     }
 
     @Override
@@ -159,15 +163,10 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
-            attack.hitEnemies(Jade.this, attack.getTargets(), 0.25f, MultiplierStat.ATK);
-
-            // TODO: Lower HP of ally
-        }
-
-        @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
+            attack.hit(Jade.this, attack.getTargets(), 0.25f);
             Jade.this.increaseFuaStacks(attack.getTargets().size());
+            // TODO: Lower HP of ally
         }
     }
 

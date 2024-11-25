@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -45,7 +45,7 @@ public class FiresmithOfLavaForging extends AbstractRelicSetBonus {
 
         // TODO: onAfterUseUltimate
         @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
             this.getOwner().addPower(TempPower.create(PowerStat.FIRE_DMG_BOOST, 12, 1, "Firesmith of Lave Forging Fire Bonus 4PC Ultimate Bonus"));

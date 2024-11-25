@@ -1,6 +1,6 @@
 package art.ameliah.hsr.characters.aventurine;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.aventurine.UseBlindBet;
@@ -8,17 +8,23 @@ import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Aventurine extends AbstractCharacter<Aventurine> {
     public static final String NAME = "Aventurine";
@@ -48,6 +54,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new AventurineTurnGoal(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public Aventurine() {
@@ -61,17 +68,22 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
 
     public void useBasic() {
         this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.DEF, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+                .handle(dh -> {
+                    AbstractEnemy target = this.getTarget(MoveType.BASIC);
+                    dh.addEnemies(target);
+                    dh.addTypes(DamageType.BASIC);
+                    dh.logic(al -> al.hit(this.getTarget(MoveType.BASIC), 1, MultiplierStat.DEF, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                }).execute();
     }
 
     public void useUltimate() {
-        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
-        target.addPower(new AventurineUltDebuff());
-
         this.startAttack()
-                .hitEnemy(target, 2.7f, MultiplierStat.DEF, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE)
-                .execute();
+                .handle(dh -> {
+                    AbstractEnemy target = this.getTarget(MoveType.ULTIMATE);
+                    target.addPower(new AventurineUltDebuff());
+                    dh.addTypes(DamageType.ULTIMATE);
+                    dh.logic(target, al -> al.hit(this.getTarget(MoveType.ULTIMATE), 2.7f, MultiplierStat.DEF, TOUGHNESS_DAMAGE_THREE_UNITs));
+                }).execute();
 
         int blindBetGain = getBattle().getGambleChanceRng().nextInt(7) + 1;
         increaseBlindBet(blindBetGain);
@@ -84,11 +96,16 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         getBattle().addToLog(new UseBlindBet(this, initialBlindBet, this.blindBetCounter));
         increaseEnergy(7, FUA_ENERGY_GAIN);
 
-        Attack attack = this.startAttack();
-        for (int numBounces = 0; numBounces < 7; numBounces++) {
-            attack.hitEnemy(getBattle().getRandomEnemy(), 0.25f, MultiplierStat.DEF, 3.3333333333333335f, DamageType.FOLLOW_UP);
-        }
-        attack.execute();
+        this.startAttack()
+                .handle(dh -> {
+                    var targets = Randf.rand(getBattle().getEnemies(), 7, getBattle().getGetRandomEnemyRng());
+
+                    dh.addEnemies(targets);
+                    dh.addTypes(DamageType.FOLLOW_UP);
+                    dh.logic(al -> {
+                        targets.forEach(t -> al.hit(t, 0.25f, MultiplierStat.DEF, 3.3333333333333335f));
+                    });
+                }).execute();
     }
 
     public void onCombatStart() {
@@ -163,7 +180,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             if (attack.getSource() != Aventurine.this && attack.getTypes().contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;

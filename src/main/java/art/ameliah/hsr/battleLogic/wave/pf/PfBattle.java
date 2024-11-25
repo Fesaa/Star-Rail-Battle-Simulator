@@ -106,6 +106,11 @@ public class PfBattle extends WavedBattle<PfWave> {
     protected void onWaveChange() {
     }
 
+    @Override
+    public String prefix() {
+        return String.format("(%.2f AV / %d enemies left) - ", this.initialLength() - this.battleLength(), this.currentWave.size());
+    }
+
     public static class SurgingGritEntity extends AbstractEntity {
 
         private final PfBattle pf;

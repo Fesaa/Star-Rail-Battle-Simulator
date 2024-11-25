@@ -3,6 +3,8 @@ package art.ameliah.hsr.characters;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends AbstractEntity {
 
@@ -197,6 +201,18 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     protected Attack startAttack() {
         return new Attack(this);
+    }
+
+    protected void doAttack(DamageType type, MoveType moveType, BiConsumer<AbstractEnemy,AttackLogic> logic) {
+        this.startAttack().handle(type, dh -> dh.logic(this.getTarget(moveType), logic)).execute();
+    }
+
+    protected void doAttack(DamageType type, Consumer<Attack.DelayAttack> consumer) {
+        this.startAttack().handle(type, consumer).execute();
+    }
+
+    protected void doAttack(Consumer<Attack.DelayAttack> consumer) {
+        this.startAttack().handle(consumer).execute();
     }
 
     @Override

@@ -1,12 +1,15 @@
 package art.ameliah.hsr.characters.tingyun;
 
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -37,6 +40,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new TingyunTurnGoal(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
@@ -55,16 +59,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
     }
 
     public void useBasic() {
-        Attack attack = this.startAttack();
-        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
-
-        attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
-        if (benefactor != null) {
-            talentProcs++;
-            attack.hitEnemy(benefactor, target, 0.66F, MultiplierStat.ATK);
-        }
-
-        attack.execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC, (e, al) -> al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
     public void useUltimate() {
@@ -129,10 +124,10 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
             this.setStat(PowerStat.ATK_PERCENT, 55);
         }
 
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             skillProcs++;
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
-            attack.hitEnemy(new AllyHit(attack.getSource(), target, 0.64F, MultiplierStat.ATK, List.of(), 0, ElementType.LIGHTNING, false));
+            attack.hit(attack.getSource(), target, 0.64f, MultiplierStat.ATK, 0, ElementType.LIGHTNING, false, List.of());
         }
 
         public void onUseUltimate() {

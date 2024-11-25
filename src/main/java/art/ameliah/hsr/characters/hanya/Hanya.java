@@ -1,12 +1,15 @@
 package art.ameliah.hsr.characters.hanya;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.hanya.BurdenLog;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -30,31 +33,26 @@ public class Hanya extends AbstractCharacter<Hanya> {
 
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
-        Attack attack = this.startAttack();
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        attack.hitEnemy(enemy, 2.64f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
-
-        AbstractPower burden = new BurdenPower();
-        burden.setOwner(enemy);
-        if (enemy.hasPower(burden.getName())) {
-            enemy.removePower(burden.getName());
-        }
-        enemy.addPower(burden);
-
-        TempPower speedPower = TempPower.create(PowerStat.SPEED_PERCENT, 20, 1, "Hanya Skill Speed Power");
-        speedPower.justApplied = true;
-        getBattle().IncreaseSpeed(this, speedPower);
-
-        attack.execute();
+        this.doAttack(DamageType.SKILL, dh -> dh.logic(this.getTarget(MoveType.SKILL), (enemy, al) -> {
+            al.hit(enemy, 2.64f, TOUGHNESS_DAMAGE_TWO_UNITS);
+            AbstractPower burden = new BurdenPower();
+            burden.setOwner(enemy);
+            if (enemy.hasPower(burden.getName())) {
+                enemy.removePower(burden.getName());
+            }
+            enemy.addPower(burden);
+            getBattle().IncreaseSpeed(this, TempPower.create(PowerStat.SPEED_PERCENT, 20, 1, "Hanya Skill Speed Power"));
+        }));
     }
 
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC,
+                dh -> dh.logic(this.getTarget(MoveType.BASIC),
+                        (enemy, al) -> al.hit(enemy, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     public void useUltimate() {
@@ -85,7 +83,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void beforeAttacked(Attack attack) {
+        public void beforeAttacked(AttackLogic attack) {
             if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.ULTIMATE)) {
                 TempPower talentPower = TempPower.create(PowerStat.DAMAGE_BONUS, 43, 2, "Hanya Talent Power");
                 talentPower.justApplied = true;
@@ -94,7 +92,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
 
         @Override
-        public void afterAttacked(Attack attack) {
+        public void afterAttacked(AttackLogic attack) {
             if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.ULTIMATE)) {
                 hitCount++;
                 getBattle().addToLog(new BurdenLog(hitCount, hitsToTrigger));

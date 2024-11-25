@@ -1,10 +1,11 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
+import art.ameliah.hsr.utils.Randf;
 
 public class WeWillMeetAgain extends AbstractLightcone {
 
@@ -13,9 +14,7 @@ public class WeWillMeetAgain extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
-        for (AbstractEnemy enemy : attack.getTargets()) {
-            attack.hitEnemy(this.owner, enemy, 0.96f, MultiplierStat.ATK);
-        }
+    public void beforeAttack(AttackLogic attack) {
+        attack.hit(Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng()), 0.96f);
     }
 }

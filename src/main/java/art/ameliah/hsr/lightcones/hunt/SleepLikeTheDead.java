@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.hunt;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
@@ -26,7 +26,7 @@ public class SleepLikeTheDead extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         if (this.cooldown <= 0 && (attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.BASIC))) {
             AbstractPower critPower = TempPower.create(PowerStat.CRIT_CHANCE, 36, 1, "Sleep Like The Dead Crit Chance Boost");
             critPower.justApplied = true;

@@ -16,9 +16,7 @@ public class AttackStart implements Loggable {
 
     @Override
     public String asString() {
-        String targets = this.attack.getTargets().stream().map(t -> t.name).collect(Collectors.joining(","));
-        String types = this.attack.getTypes().stream().map(Objects::toString).collect(Collectors.joining(","));
-        return String.format("%s started attacking %s with %s", this.attack.getSource(), targets, types);
+        return String.format("%s started attacking [%s] with %s", this.attack.getSource(),  this.attack.getTargets(), this.attack.getTypes());
     }
 
     @Override

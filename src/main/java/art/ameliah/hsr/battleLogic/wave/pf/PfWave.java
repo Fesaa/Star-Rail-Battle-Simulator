@@ -78,6 +78,10 @@ public class PfWave implements Wave {
         return this.enemyQueue.poll();
     }
 
+    public int size() {
+        return this.enemyQueue.size();
+    }
+
     @Override
     public int maxEnemiesOnField() {
         return 5;

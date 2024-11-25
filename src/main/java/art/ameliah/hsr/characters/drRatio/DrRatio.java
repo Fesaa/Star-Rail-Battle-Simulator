@@ -1,6 +1,6 @@
 package art.ameliah.hsr.characters.drRatio;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -8,6 +8,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
@@ -43,54 +44,48 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         this.registerGoal(0, new UltAtEndOfBattle<>(this));
         this.registerGoal(20, DontUltMissingPowerGoal.robin(this));
         this.registerGoal(100, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
+        this.doAttack(DamageType.SKILL, MoveType.SKILL, (e, al) -> {
+            e.addPower(TempPower.createDebuff(PowerStat.EFFECT_RES, -10, 2, "RatioEffectResDebuff"));
+            int debuffs = (int) e.powerList.stream().filter(p -> p.type == AbstractPower.PowerType.DEBUFF).count();
+            for (int i = 0; i < debuffs; i++) {
+                this.addPower(new Summation());
+            }
 
-        enemy.addPower(TempPower.createDebuff(PowerStat.EFFECT_RES, -10, 2, "RatioEffectResDebuff"));
-        int debuffs = (int) enemy.powerList.stream().filter(p -> p.type == AbstractPower.PowerType.DEBUFF).count();
-        for (int i = 0; i < debuffs; i++) {
-            this.addPower(new Summation());
-        }
+            al.hit(e, 1.5f, TOUGHNESS_DAMAGE_TWO_UNITS);
 
-        this.startAttack()
-                .hitEnemy(enemy, 1.5f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL)
-                .execute();
-
-        // Assume he always gets the FUA from his Skill
-        useFollowUp(enemy);
+            // Assume he always gets the FUA from his Skill
+            this.useFollowUp(e);
+        });
     }
 
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC, (e, al) -> al.hit(e, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
-    public void useFollowUp(AbstractEnemy enemy) {
-        if (enemy.isDead()) {
-            enemy = getBattle().getEnemyWithHighestHP();
-        }
-
+    public void useFollowUp(final AbstractEnemy enemy) {
         moveHistory.add(MoveType.FOLLOW_UP);
         numFUAs++;
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
         increaseEnergy(5, FUA_ENERGY_GAIN);
 
-        this.startAttack()
-                .hitEnemy(enemy, 2.7f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP)
-                .execute();
+        this.doAttack(DamageType.FOLLOW_UP, dh -> {
+            AbstractEnemy target = enemy.isDead() ? getBattle().getRandomEnemy() : enemy;
+            dh.logic(target, al -> al.hit(target, 2.7f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+        });
     }
 
     public void useUltimate() {
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
 
-        this.startAttack()
-                .hitEnemy(enemy, 2.4f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE)
-                .execute();
 
-        enemy.addPower(new WisemanFolly());
+        this.doAttack(DamageType.ULTIMATE, MoveType.ULTIMATE, (e, al) -> {
+            al.hit(e, 2.4f, TOUGHNESS_DAMAGE_THREE_UNITs);
+            getBattle().getEnemies().forEach(enemy -> enemy.removePower(WisemanFolly.NAME));
+            e.addPower(new WisemanFolly());
+        });
     }
 
     public void onCombatStart() {
@@ -142,14 +137,15 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
     }
 
     private class WisemanFolly extends PermPower {
+        public static String NAME = "Wiseman Folly";
         private int numCharges = 2;
 
         public WisemanFolly() {
-            this.setName(this.getClass().getSimpleName());
+            this.setName(NAME);
         }
 
         @Override
-        public void afterAttacked(Attack attack) {
+        public void afterAttacked(AttackLogic attack) {
             if (attack.getSource() != DrRatio.this) {
                 if (numCharges > 0) {
                     numCharges--;

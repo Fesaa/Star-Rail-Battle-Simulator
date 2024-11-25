@@ -1,11 +1,13 @@
 package art.ameliah.hsr.characters.ruanmei;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -38,6 +40,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new SkillCounterTurnGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
@@ -48,9 +51,9 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
     }
 
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC,
+                dh -> dh.logic(this.getTarget(MoveType.BASIC),
+                        (enemy, al) -> al.hit(enemy, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     public void useUltimate() {
@@ -125,7 +128,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             for (AbstractEnemy enemy : attack.getTargets()) {
                 if (!enemy.hasPower(ULT_DEBUFF_NAME)) {
                     AbstractPower debuff = new RuanMeiUltDebuff(RuanMei.this);

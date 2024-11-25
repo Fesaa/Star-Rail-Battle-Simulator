@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -31,7 +31,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         if (attack.getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(new ValorousDamagePower());
         }

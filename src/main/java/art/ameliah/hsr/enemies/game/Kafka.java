@@ -1,6 +1,6 @@
 package art.ameliah.hsr.enemies.game;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -145,7 +145,7 @@ public class Kafka extends AbstractEnemy {
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             AbstractPower shock = attack.getSource().getPower(EnemyShock.NAME);
             if (shock == null) {
                 return;

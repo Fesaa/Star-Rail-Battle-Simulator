@@ -5,7 +5,9 @@ import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -33,6 +35,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
 
         this.registerGoal(0, new AlwaysBasicGoal<>(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
@@ -41,34 +44,32 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
     }
 
     public void useBasic() {
-        Attack attack = this.startAttack();
-
-        AbstractEnemy enemy = getBattle().getMiddleEnemy();
-        if (isEnhanced) {
-            attack.hitEnemy(enemy, 2.75f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT * 3, DamageType.BASIC);
-            AbstractPower atkDebuff = new TempPower();
-            atkDebuff.type = AbstractPower.PowerType.DEBUFF;
-            atkDebuff.turnDuration = 2;
-            atkDebuff.setName("Gallagher Atk Debuff");
-            enemy.addPower(atkDebuff);
-            isEnhanced = false;
-        } else {
-            attack.hitEnemy(enemy, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
-        }
-        attack.execute();
+        this.doAttack(DamageType.BASIC, dh -> dh.logic(this.getTarget(MoveType.BASIC), (e, al) -> {
+            if (isEnhanced) {
+                al.hit(e, 2.75f, TOUGHNESS_DAMAGE_THREE_UNITs);
+                AbstractPower atkDebuff = new TempPower();
+                atkDebuff.type = AbstractPower.PowerType.DEBUFF;
+                atkDebuff.turnDuration = 2;
+                atkDebuff.setName("Gallagher Atk Debuff");
+                e.addPower(atkDebuff);
+                isEnhanced = false;
+            } else {
+                al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            }
+        }));
     }
 
     public void useUltimate() {
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 1.65f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
-                .execute();
-
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            AbstractPower besotted = new Besotted();
-            enemy.addPower(besotted);
-            isEnhanced = true;
-        }
-        getBattle().AdvanceEntity(this, 100);
+        this.startAttack().handle(DamageType.ULTIMATE, dh -> dh.logic(getBattle().getEnemies(), (e, al) -> {
+            al.hit(e, 1.65f, TOUGHNESS_DAMAGE_TWO_UNITS);
+            for (AbstractEnemy enemy : e) {
+                AbstractPower besotted = new Besotted();
+                enemy.addPower(besotted);
+                isEnhanced = true;
+            }
+        })).afterAttackHook(() -> {
+            getBattle().AdvanceEntity(this, 100);
+        }).execute();
     }
 
     public void onCombatStart() {

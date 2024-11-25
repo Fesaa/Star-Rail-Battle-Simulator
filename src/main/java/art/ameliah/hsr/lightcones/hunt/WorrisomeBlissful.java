@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.hunt;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -22,7 +22,7 @@ public class WorrisomeBlissful extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         if (attack.getSource() != owner) return;
         if (attack.getTargets().isEmpty()) return;
 

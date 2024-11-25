@@ -8,7 +8,7 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 public record GainedWeakness(AbstractEnemy enemy, ElementType weakness) implements Loggable {
     @Override
     public String asString() {
-        return String.format("%s gained weakness: %s", this.enemy.name, this.weakness);
+        return String.format("%s gained weakness: %s -> %s", this.enemy.name, this.weakness, this.enemy.getWeaknesses());
     }
 
     @Override

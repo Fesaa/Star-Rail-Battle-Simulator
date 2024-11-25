@@ -88,8 +88,6 @@ public class PlayerTeam {
                 .addSubStat(Stats.SPEED, 6)
                 .equipTo(robin);
 
-        robin.clearUltGoals();
-        robin.registerGoal(0, new AlwaysUltGoal<>(robin));
         return robin;
     }
 

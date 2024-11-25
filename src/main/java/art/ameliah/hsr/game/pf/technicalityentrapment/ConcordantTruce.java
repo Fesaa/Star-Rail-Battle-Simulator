@@ -1,6 +1,6 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.ConcordantTrucePower;
 import art.ameliah.hsr.characters.DamageType;
 
@@ -11,7 +11,7 @@ public class ConcordantTruce extends ConcordantTrucePower {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void afterAttack(AttackLogic attack) {
         if (!attack.getTypes().contains(DamageType.SKILL)) {
             return;
         }

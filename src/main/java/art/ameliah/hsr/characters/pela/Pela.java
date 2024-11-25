@@ -1,11 +1,13 @@
 package art.ameliah.hsr.characters.pela;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
@@ -37,35 +39,33 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         this.registerGoal(20, new AlwaysBasicGoal<>(this));
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     // TODO: Ice res down
     @Override
     public void useSkill() {
-        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
-        this.startAttack()
-                .hitEnemy(target, 2.31f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL)
-                .execute();
+        this.doAttack(DamageType.SKILL, dh -> dh.logic(this.getTarget(MoveType.SKILL), (e, al) -> {
+            al.hit(e, 2.31f, TOUGHNESS_DAMAGE_TWO_UNITS);
+        }));
     }
 
     @Override
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, dh -> dh.logic(this.getTarget(MoveType.SKILL), (e, al) -> {
+            al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+        }));
     }
 
     @Override
     public void useUltimate() {
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 1.08f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
-                .execute();
-
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            TempPower exposed = TempPower.create(PowerStat.DEFENSE_REDUCTION, 42, 2, ULT_DEBUFF_NAME);
-            exposed.type = AbstractPower.PowerType.DEBUFF;
-            enemy.addPower(exposed);
-        }
+        this.doAttack(DamageType.ULTIMATE, dh -> dh.logic(getBattle().getEnemies(), (e, al) -> {
+            al.hit(e, 1.08f, TOUGHNESS_DAMAGE_TWO_UNITS);
+            for (AbstractEnemy enemy : e) {
+                enemy.addPower(TempPower.createDebuff(PowerStat.DEFENSE_REDUCTION, 42, 2, ULT_DEBUFF_NAME));
+            }
+        }));
     }
 
     @Override
@@ -76,15 +76,15 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
             getBattle().setUsedEntryTechnique(true);
         }
 
-        this.startAttack()
-                .hitEnemy(getBattle().getRandomEnemy(), 0.8f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS)
-                .execute();
+        this.startAttack().handle(dh -> dh.logic(getBattle().getRandomEnemy(), (e, al) -> {
+            al.hit(e, 0.8f, TOUGHNESS_DAMAGE_TWO_UNITS);
+        })).afterAttackHook(() -> {
+            for (AbstractEnemy enemy : getBattle().getEnemies()) {
+                enemy.addPower(TempPower.createDebuff(PowerStat.DEFENSE_REDUCTION, 20, 2, "Pela Technique Def Reduction"));
+            }
+        }).execute();
 
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            TempPower techniqueExposed = TempPower.create(PowerStat.DEFENSE_REDUCTION, 20, 2, "Pela Technique Def Reduction");
-            techniqueExposed.type = AbstractPower.PowerType.DEBUFF;
-            enemy.addPower(techniqueExposed);
-        }
+
     }
 
     public void onCombatStart() {
@@ -126,7 +126,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             for (AbstractEnemy enemy : attack.getTargets()) {
                 for (AbstractPower power : enemy.powerList) {
                     if (power.type == PowerType.DEBUFF) {

@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.feixiao;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
@@ -10,6 +11,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.BroynaRobinUltGoal;
@@ -69,6 +71,8 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         this.registerGoal(60, DontUltMissingPowerGoal.hanya(this));
         this.registerGoal(70, DontUltMissingDebuffGoal.pela(this));
         this.registerGoal(100, new AlwaysUltGoal<>(this));
+
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
 
@@ -97,66 +101,52 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     public void useSkill() {
         this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 48, 3, "Fei Atk Bonus"));
 
-        Attack attack = this.startAttack();
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-
-        float totalMult = 2.0f;
-        attack.hitEnemy(enemy, totalMult * 0.34f, MultiplierStat.ATK, 0, DamageType.SKILL);
-        attack.hitEnemy(enemy, totalMult * 0.33f, MultiplierStat.ATK, 0, DamageType.SKILL);
-        attack.hitEnemy(enemy, totalMult * 0.33f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL);
-
-        attack.addAfterAttack(() -> this.useFollowUp(enemy));
-
-        attack.execute();
+        this.doAttack(DamageType.SKILL, MoveType.SKILL, (e, al) -> {
+            float totalMult = 2.0f;
+            al.hit(e, totalMult * 0.33f);
+            al.hit(e, totalMult * 0.33f);
+            al.hit(e, totalMult * 0.33f, TOUGHNESS_DAMAGE_TWO_UNITS);
+            this.useFollowUp(e);
+        });
     }
 
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC, (e, al) -> al.hit(e, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
-    public void useFollowUp(AbstractEnemy target) {
-        if (target.isDead()) {
-            target = getBattle().getRandomEnemy();
-        }
-
+    public void useFollowUp(final AbstractEnemy target) {
         moveHistory.add(MoveType.FOLLOW_UP);
         numFUAs++;
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
 
-        this.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 60, 2, "Fei Damage Bonus"));
+        this.doAttack(DamageType.FOLLOW_UP, dh -> {
+            this.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 60, 2, "Fei Damage Bonus"));
+            AbstractEnemy enemy = target.isDead() ? getBattle().getRandomEnemy() : target;
 
-        this.startAttack()
-                .hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.FOLLOW_UP)
-                .execute(true);
+            dh.logic(enemy, al -> al.hit(enemy, 1.1f, TOUGHNESS_DAMAGE_HALF_UNIT));
+        });
     }
 
     public void useUltimate() {
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
+        this.startAttack()
+                .handle(dh -> {
+                    dh.addTypes(DamageType.ULTIMATE, DamageType.FOLLOW_UP);
 
-        this.addPower(ultBreakEffBuff);
+                    dh.logic(this.getTarget(MoveType.ULTIMATE), (e, al) -> {
+                        this.addPower(ultBreakEffBuff);
 
-        int numHits = 6;
-        Attack attack = this.startAttack();
-
-        float totalMult = 0.9f;
-        for (int i = 0; i < numHits; i++) {
-            attack.hitEnemy(enemy, (dh) -> {
-                if (enemy.isWeaknessBroken()) {
-                    dh.hitEnemy(totalMult * 0.1f, MultiplierStat.ATK, 0, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-                    dh.hitEnemy(totalMult * 0.9f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-                } else {
-                    dh.hitEnemy(totalMult, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-                }
-            });
-        }
-
-        attack.hitEnemy(enemy, 1.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.ULTIMATE, DamageType.FOLLOW_UP);
-
-        attack.execute();
-
-        this.removePower(ultBreakEffBuff);
+                        int numHits = 6;
+                        float totalMult = 0.9f;
+                        for (int i = 0; i < numHits; i++) {
+                            if (e.isWeaknessBroken()) {
+                                al.hit(e, totalMult * 0.1f);
+                                al.hit(e, totalMult * 0.9f, TOUGHNESS_DAMAGE_HALF_UNIT);
+                            } else {
+                                al.hit(e, totalMult, TOUGHNESS_DAMAGE_HALF_UNIT);
+                            }
+                        }
+                    });
+                }).afterAttackHook(() -> this.removePower(ultBreakEffBuff)).execute();
     }
 
     public void onTurnStart() {
@@ -186,9 +176,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
             getBattle().setUsedEntryTechnique(true);
         }
         // This assumes a fix multiplier on her technique
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 2, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT)
-                .execute();
+        this.doAttack(dh -> dh.logic(getBattle().getEnemies(), (e, al) -> al.hit(e, 2, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
         this.gainStackEnergy(1);
     }
 
@@ -237,7 +225,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
 
         @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             if (!Feixiao.this.hasPower(ultBreakEffBuff.getName())) {
                 Feixiao.this.increaseStack(1);
             }

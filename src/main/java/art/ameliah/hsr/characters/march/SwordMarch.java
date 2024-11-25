@@ -1,8 +1,7 @@
 package art.ameliah.hsr.characters.march;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
@@ -12,6 +11,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
@@ -58,13 +58,14 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         this.registerGoal(0, new SkillFirstTurnGoal<>(this));
         this.registerGoal(10, new AlwaysBasicGoal<>(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     // Assuming always dps
-    private void masterEffect(Attack attack, AbstractEnemy target) {
+    private void masterEffect(AttackLogic attack, AbstractEnemy target) {
         if (master != null) {
             boolean ignore = target.hasWeakness(this.elementType) || target.hasWeakness(master.elementType);
-            attack.hitEnemy(new AllyHit(this, target, 0.22f, MultiplierStat.ATK, List.of(), 0, this.master.elementType, true));
+            attack.hit(this, target, 0.22f, MultiplierStat.ATK, 0, this.master.elementType, ignore);
         }
     }
 
@@ -83,15 +84,10 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
 
     @Override
     public void useBasic() {
-        Attack attack = this.startAttack();
-        AbstractEnemy target = getBattle().getEnemyWithHighestHP();
-
-        attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
-        this.masterEffect(attack, target);
-
-        gainCharge(1);
-
-        attack.execute();
+        this.startAttack().handle(DamageType.BASIC, dh -> dh.logic(this.getTarget(MoveType.BASIC), (e, al) -> {
+            al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            this.masterEffect(al, e);
+        })).afterAttackHook(() -> this.gainCharge(1)).execute();
     }
 
     @Override
@@ -112,51 +108,48 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_BASIC));
         increaseEnergy(30, EBA_ENERGY_GAIN);
 
-        Attack attack = this.startAttack();
+        this.startAttack().handle(DamageType.BASIC, dh -> {
+            dh.logic(this.getTarget(MoveType.ENHANCED_BASIC), (enemy, al) -> {
+                int initialHits = 3;
+                int numExtraHits = 0;
+                int procChance = 60;
 
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        int initialHits = 3;
-        int numExtraHits = 0;
-        int procChance = 60;
+                PermPower ultCritDmgBuff = PermPower.create(PowerStat.CRIT_DAMAGE, 50, "March Ult Crit Dmg Buff");
+                PermPower ebaDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 88,"March Enhanced Basic Damage Bonus");
 
-        TempPower ultCritDmgBuff = new TempPower("March Ult Crit Dmg Buff");
-        ultCritDmgBuff.setStat(PowerStat.CRIT_DAMAGE, 50);
+                this.addPower(ebaDamageBonus);
+                if (hasUltEnhancement) {
+                    initialHits += 2;
+                    procChance = 80;
+                    numUltEnhancedEBA++;
+                    this.addPower(ultCritDmgBuff);
+                }
+                for (int i = 0; i < 3; i++) {
+                    double roll = getBattle().getProcChanceRng().nextDouble() * 100 + 1;
+                    if (roll < procChance) {
+                        numExtraHits++;
+                    } else {
+                        break;
+                    }
+                }
+                totalNumExtraHits += numExtraHits;
+                getBattle().addToLog(new ExtraHits(this, numExtraHits));
+                for (int i = 0; i < initialHits + numExtraHits; i++) {
+                    al.hit(enemy, 0.88f, TOUGHNESS_DAMAGE_HALF_UNIT);
+                    this.masterEffect(al, enemy);
+                }
+                if (hasUltEnhancement) {
+                    hasUltEnhancement = false;
+                    this.removePower(ultCritDmgBuff);
+                }
+                this.removePower(ebaDamageBonus);
+                isEnhanced = false;
+            });
+        }).afterAttackHook(this::addEHBBuffToMaster).execute();
+    }
 
-        TempPower ebaDamageBonus = new TempPower("March Enhanced Basic Damage Bonus");
-        ebaDamageBonus.setStat(PowerStat.DAMAGE_BONUS, 88);
-
-        addPower(ebaDamageBonus);
-        if (hasUltEnhancement) {
-            initialHits += 2;
-            procChance = 80;
-            numUltEnhancedEBA++;
-            addPower(ultCritDmgBuff);
-        }
-        for (int i = 0; i < 3; i++) {
-            double roll = getBattle().getProcChanceRng().nextDouble() * 100 + 1;
-            if (roll < procChance) {
-                numExtraHits++;
-            } else {
-                break;
-            }
-        }
-        totalNumExtraHits += numExtraHits;
-        getBattle().addToLog(new ExtraHits(this, numExtraHits));
-        for (int i = 0; i < initialHits + numExtraHits; i++) {
-            attack.hitEnemy(enemy, 0.88f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_HALF_UNIT, DamageType.BASIC);
-            this.masterEffect(attack, enemy);
-        }
-        attack.addAfterAttack(() -> {
-            master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2, "Enhanced Basic Master Buff"));
-        });
-        attack.execute();
-
-        if (hasUltEnhancement) {
-            hasUltEnhancement = false;
-            removePower(ultCritDmgBuff);
-        }
-        removePower(ebaDamageBonus);
-        isEnhanced = false;
+    private void addEHBBuffToMaster() {
+        this.master.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 60, 2, "Enhanced Basic Master Buff"));
     }
 
     public void useFollowUp(AbstractEnemy enemy) {
@@ -166,24 +159,24 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             numFUAs++;
             getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
 
-            Attack attack = this.startAttack();
-            attack.hitEnemy(enemy, 0.6f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
-            this.masterEffect(attack, enemy);
-
-            attack.addAfterAttack(() -> {
-                increaseEnergy(5, FUA_ENERGY_GAIN);
-                gainCharge(1);
-            });
-
-            attack.execute();
+            this.startAttack().handle(DamageType.FOLLOW_UP, dh -> {
+                AbstractEnemy target = enemy.isDead() ? getBattle().getRandomEnemy() : enemy;
+                dh.logic(target, al -> {
+                    al.hit(target, 0.6f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+                    this.masterEffect(al, target);
+                });
+            }).afterAttackHook(() -> {
+                this.increaseEnergy(5, FUA_ENERGY_GAIN);
+                this.gainCharge(1);
+            }).execute();
         }
     }
 
     public void useUltimate() {
         this.hasUltEnhancement = true;
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 2.59f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE)
-                .execute();
+        this.doAttack(DamageType.ULTIMATE,
+                dh -> dh.logic(this.getTarget(MoveType.ULTIMATE),
+                        (e, al) -> al.hit(e, 2.59f, TOUGHNESS_DAMAGE_THREE_UNITs)));
     }
 
     public void onTurnStart() {
@@ -254,12 +247,12 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             SwordMarch.this.gainCharge(1);
         }
 
         @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL)) {
                 List<AbstractEnemy> nonDead = attack.getTargets().stream().filter(e -> !e.isDead()).toList();
                 AbstractEnemy enemy;

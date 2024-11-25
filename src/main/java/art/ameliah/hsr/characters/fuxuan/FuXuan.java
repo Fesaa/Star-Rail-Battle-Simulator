@@ -1,14 +1,14 @@
 package art.ameliah.hsr.characters.fuxuan;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
-import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -32,6 +32,7 @@ public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTur
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new SkillCounterTurnGoal<>(this, 1));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
@@ -53,17 +54,14 @@ public class FuXuan extends AbstractCharacter<FuXuan> implements SkillCounterTur
                 character.removePower(skillPower);
             }
         }
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC,
+                dh -> dh.logic(this.getTarget(MoveType.BASIC),
+                        (enemy, al) -> al.hit(enemy, 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     public void useUltimate() {
-        Attack attack = this.startAttack();
-        for (AbstractEnemy enemy : getBattle().getEnemies()) {
-            attack.hitEnemy(enemy, 1, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE);
-        }
-        attack.execute();
+        this.doAttack(DamageType.ULTIMATE, dh -> dh.logic(getBattle().getEnemies(),
+                (enemies, al) -> al.hit(enemies, 1, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS)));
     }
 
     public void useTechnique() {

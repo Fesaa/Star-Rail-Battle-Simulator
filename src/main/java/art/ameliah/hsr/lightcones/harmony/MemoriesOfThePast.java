@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.harmony;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -25,7 +25,7 @@ public class MemoriesOfThePast extends AbstractLightcone {
     }
 
     @Override
-    public void afterAttack(Attack attack) {
+    public void afterAttack(AttackLogic attack) {
         if (!this.canRegen) return;
 
         this.owner.increaseEnergy(8, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);

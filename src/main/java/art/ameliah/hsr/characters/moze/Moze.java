@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.moze;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -9,6 +10,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
@@ -52,37 +54,39 @@ public class Moze extends AbstractCharacter<Moze> {
         this.registerGoal(10, DontUltMissingPowerGoal.robin(this));
         this.registerGoal(20, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
     public void useSkill() {
+        this.startAttack().handle(DamageType.SKILL, dh -> dh.logic(this.getTarget(MoveType.SKILL), (e, al) -> {
+            this.preyPower.setOwner(e);
+            e.addPower(this.preyPower);
+            this.increaseCharge(MAX_CHARGE);
+            this.isDeparted = true;
 
-        AbstractEnemy enemy = getBattle().getEnemyWithHighestHP();
-        preyPower.setOwner(enemy);
-        enemy.addPower(preyPower);
-        increaseCharge(MAX_CHARGE);
-        isDeparted = true;
-
-        this.startAttack()
-                .hitEnemy(enemy, 1.65f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.SKILL)
-                .execute();
-        getBattle().getActionValueMap().remove(this);
+            al.hit(e, 1.65f, TOUGHNESS_DAMAGE_TWO_UNITS);
+        })).afterAttackHook(() -> getBattle().getActionValueMap().remove(this)).execute();
     }
 
     @Override
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC, (e, al) -> {
+            al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+        });
     }
 
     public void useUltimate() {
         this.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 30, 2, "Moze Damage Bonus"));
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 2.92f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_THREE_UNITs, DamageType.ULTIMATE, DamageType.FOLLOW_UP)
-                .execute();
+        this.startAttack().handle(dh -> {
+            dh.addTypes(DamageType.ULTIMATE, DamageType.FOLLOW_UP);
+            AbstractEnemy target = this.getTarget(MoveType.ULTIMATE);
 
-        useFollowUp(getBattle().getEnemyWithHighestHP());
+            dh.logic(target, (e, al) -> {
+                al.hit(e, 2.92f, TOUGHNESS_DAMAGE_THREE_UNITs);
+            });
+            this.useFollowUp(target);
+        }).execute();
     }
 
     public void useFollowUp(AbstractEnemy enemy) {
@@ -95,17 +99,20 @@ public class Moze extends AbstractCharacter<Moze> {
         float initialHitsMult = totalMult * 0.08f;
         float finalHitMult = totalMult * 0.6f;
 
-        Attack attack = this.startAttack();
-        for (int i = 0; i < 5; i++) {
-            attack.hitEnemy(enemy, initialHitsMult, MultiplierStat.ATK, 0, DamageType.FOLLOW_UP);
-        }
-        attack.hitEnemy(enemy, finalHitMult, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.FOLLOW_UP);
-        attack.execute();
-
-        if (!skillPointRecovered) {
-            getBattle().generateSkillPoint(this, 1);
-            skillPointRecovered = true;
-        }
+        this.startAttack().handle(DamageType.FOLLOW_UP, dh -> {
+            AbstractEnemy target = enemy.isDead() ? getBattle().getRandomEnemy() : enemy;
+            dh.logic(target, al -> {
+                for (int i = 0; i < 5; i++) {
+                    al.hit(target, initialHitsMult);
+                }
+                al.hit(target, finalHitMult, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            });
+        }).afterAttackHook(() -> {
+            if (!skillPointRecovered) {
+                getBattle().generateSkillPoint(this, 1);
+                skillPointRecovered = true;
+            }
+        }).execute();
     }
 
     public void onTurnStart() {
@@ -200,7 +207,7 @@ public class Moze extends AbstractCharacter<Moze> {
         }
 
         @Override
-        public void beforeAttacked(Attack attack) {
+        public void beforeAttacked(AttackLogic attack) {
             AbstractEnemy enemy = (AbstractEnemy) this.getOwner();
 
             boolean trigger = true;
@@ -212,7 +219,7 @@ public class Moze extends AbstractCharacter<Moze> {
             if (trigger) {
                 talentProcs++;
 
-                attack.hitEnemy(Moze.this, enemy, 0.33f, MultiplierStat.ATK);
+                attack.hit(Moze.this, enemy, 0.33f);
                 increaseEnergy(2, TALENT_ENERGY_GAIN);
                 decreaseCharge(1);
             }

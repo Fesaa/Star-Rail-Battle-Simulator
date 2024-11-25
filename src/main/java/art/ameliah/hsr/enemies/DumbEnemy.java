@@ -70,7 +70,7 @@ public class DumbEnemy extends AbstractEnemy {
     // Prevent dumb enemy from dying
     @Override
     public HitResult hit(Hit hit) {
-        return new HitResult(hit, hit.finalDmg(),
+        return new HitResult(hit, this, hit.finalDmg(),
                 this.decreaseToughness(hit.finalToughnessReduction()),
                 this.isWeaknessBroken(),
                 this.isDead()

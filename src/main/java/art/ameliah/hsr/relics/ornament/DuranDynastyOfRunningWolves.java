@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.ornament;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -29,7 +29,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 for (AbstractCharacter<?> character : getBattle().getPlayers()) {
                     for (AbstractRelicSetBonus relicSetBonus : character.relicSetBonus) {

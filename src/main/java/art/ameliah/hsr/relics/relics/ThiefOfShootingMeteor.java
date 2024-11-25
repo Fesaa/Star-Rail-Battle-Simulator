@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -28,7 +28,7 @@ public class ThiefOfShootingMeteor extends AbstractRelicSetBonus {
     }
 
     @Override
-    public void afterAttack(Attack attack) {
+    public void afterAttack(AttackLogic attack) {
         // TODO: Generate 3 energy after weakness breaking, don't see a way to check if an enemy was broken this turn
     }
 }

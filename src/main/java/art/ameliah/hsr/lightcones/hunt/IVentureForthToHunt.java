@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.hunt;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -47,7 +47,7 @@ public class IVentureForthToHunt extends AbstractLightcone {
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 this.stacks = Math.min(2, this.stacks + 1);
             }

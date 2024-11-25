@@ -2,12 +2,14 @@ package art.ameliah.hsr.characters.robin;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.Concerto;
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
@@ -57,6 +59,8 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         this.registerGoal(30, new RobinBroynaFeixiaoUltGoal(this));
         this.registerGoal(40, new RobinDPSUltGoal(this));
         this.registerGoal(100, new AlwaysUltGoal<>(this));
+
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
@@ -68,8 +72,11 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     public void useBasic() {
         this.startAttack()
-                .hitEnemy(getBattle().getRandomEnemy(), 1.0f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+                .handle(dh -> {
+                    AbstractEnemy target = this.getTarget(MoveType.BASIC);
+                    dh.addTypes(DamageType.BASIC);
+                    dh.logic(target, al -> al.hit(this.getTarget(MoveType.BASIC), 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                }).execute();
     }
 
     public void useUltimate() {
@@ -208,7 +215,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             Robin.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
             Robin.this.allyAttacksMetric++;
         }
@@ -230,13 +237,13 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
             if (target == null) {
                 return;
             }
 
-            attack.hitEnemy(Robin.this, target, 1.2f, MultiplierStat.ATK);
+            attack.hit(Robin.this, target, 1.2f, MultiplierStat.ATK, 0, ElementType.PHYSICAL, false, List.of());
             concertoProcs++;
         }
 

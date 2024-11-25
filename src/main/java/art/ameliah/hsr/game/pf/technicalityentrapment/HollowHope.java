@@ -1,6 +1,6 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.PfBattle;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFictionBuff;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -17,7 +17,7 @@ public class HollowHope implements PureFictionBuff {
             private int weaknessBroken = 0;
 
             @Override
-            public void beforeAttack(Attack attack) {
+            public void beforeAttack(AttackLogic attack) {
                 this.weaknessBroken = attack.getTargets()
                         .stream()
                         .filter(AbstractEnemy::isWeaknessBroken)
@@ -26,7 +26,7 @@ public class HollowHope implements PureFictionBuff {
             }
 
             @Override
-            public void afterAttack(Attack attack) {
+            public void afterAttack(AttackLogic attack) {
                 int diff = attack.getTargets()
                         .stream()
                         .filter(AbstractEnemy::isWeaknessBroken)

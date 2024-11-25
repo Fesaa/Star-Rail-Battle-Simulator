@@ -1,12 +1,15 @@
 package art.ameliah.hsr.characters.asta;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -15,6 +18,9 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+import art.ameliah.hsr.utils.Randf;
+
+import java.util.Collection;
 
 public class Asta extends AbstractCharacter<Asta> {
 
@@ -37,25 +43,23 @@ public class Asta extends AbstractCharacter<Asta> {
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
     public void useSkill() {
-        Attack attack = this.startAttack();
+        this.doAttack(DamageType.SKILL, dh -> {
+            AbstractEnemy target = this.getTarget(MoveType.SKILL);
+            Collection<AbstractEnemy> bounces = Randf.rand(getBattle().getEnemies(), 5, getBattle().getGetRandomEnemyRng());
+            bounces.add(target);
 
-        attack.hitEnemy(getBattle().getEnemyWithHighestHP(), 0.55f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
-        for (int numBounces = 0; numBounces < 5; numBounces++) {
-            attack.hitEnemy(getBattle().getRandomEnemy(), 0.55F, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL);
-        }
-
-        attack.execute();
+            dh.logic(bounces, (e, al) -> al.hit(e, 0.55f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+        });
     }
 
     @Override
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC, (e, al) -> al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
     public void useUltimate() {
@@ -91,9 +95,7 @@ public class Asta extends AbstractCharacter<Asta> {
             getBattle().setUsedEntryTechnique(true);
         }
 
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 0.5f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT)
-                .execute();
+        this.doAttack(dh -> dh.logic(al -> al.hit(getBattle().getEnemies(), 0.5f, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     public void increaseStacks(int amount) {
@@ -123,7 +125,7 @@ public class Asta extends AbstractCharacter<Asta> {
         }
 
         @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             if (attack.getSource() == Asta.this) {
                 int chargeGain = attack.getTargets().size();
                 for (AbstractEnemy enemy : attack.getTargets()) {

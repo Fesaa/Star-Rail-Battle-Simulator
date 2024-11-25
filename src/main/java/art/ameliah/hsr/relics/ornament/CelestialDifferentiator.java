@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.ornament;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -32,7 +32,7 @@ public class CelestialDifferentiator extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void afterAttack(Attack attack) {
+        public void afterAttack(AttackLogic attack) {
             this.getOwner().removePower(this);
         }
     }

@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.preservation;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -18,7 +18,7 @@ public class TextureOfMemories extends AbstractLightcone {
     }
 
     @Override
-    public void afterAttacked(Attack attack) {
+    public void afterAttacked(AttackLogic attack) {
         // TODO: Check shield
         // TODO: Reduce dmg taken power
     }

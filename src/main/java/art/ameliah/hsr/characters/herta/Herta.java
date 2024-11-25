@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.herta;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
@@ -9,18 +10,23 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.RandomEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class Herta extends AbstractCharacter<Herta> {
 
@@ -37,7 +43,10 @@ public class Herta extends AbstractCharacter<Herta> {
         );
 
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
-        this.registerGoal(0, new AlwaysUltGoal<>(this));
+
+        this.registerGoal(0, new UltAtEndOfBattle<>(this));
+        this.registerGoal(10, DontUltMissingPowerGoal.robin(this));
+        this.registerGoal(20, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new RandomEnemyTargetGoal<>(this));
     }
 
@@ -50,28 +59,26 @@ public class Herta extends AbstractCharacter<Herta> {
 
     @Override
     protected void useSkill() {
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL)
-                .execute();
+        this.doAttack(DamageType.SKILL,
+                dh -> dh.logic(getBattle().getEnemies(),
+                        (enemies, al) -> al.hit(enemies, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     @Override
     protected void useBasic() {
-        AbstractEnemy target = this.getTarget(MoveType.BASIC);
-        Attack attack = this.startAttack();
-
-        attack.hitEnemy(target, 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC);
-        if (target.getCurrentHp() <= target.maxHp() * 0.5) {
-            attack.hitEnemy(target, 0.4f, MultiplierStat.ATK, 0);
-        }
-        attack.execute();
+        this.doAttack(DamageType.BASIC, dh -> dh.logic(this.getTarget(MoveType.BASIC), (e, al) -> {
+            al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+            if (e.getCurrentHp() <= e.maxHp() * 0.5f) {
+                al.hit(e, 0.4f);
+            }
+        }));
     }
 
     @Override
     protected void useUltimate() {
-        this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 2.16f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
-                .execute();
+        this.doAttack(DamageType.ULTIMATE,
+                dh -> dh.logic(getBattle().getEnemies(),
+                        (e, al) -> al.hit(e, 1.16f, TOUGHNESS_DAMAGE_TWO_UNITS)));
 
         this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 25, 1, "No One Can Betray Me E6 Herta"));
     }
@@ -118,8 +125,8 @@ public class Herta extends AbstractCharacter<Herta> {
         }
 
         @Override
-        public void afterAttack(Attack attack) {
-            boolean anyAlive = attack.getTargets().stream().noneMatch(AbstractEnemy::isDead);
+        public void afterAttack(AttackLogic attack) {
+            boolean anyAlive = attack.getTargets().stream().anyMatch(e -> !e.isDead());
             List<AbstractEnemy> newFallen = attack.getTargets().stream()
                     .filter(t -> t.getCurrentHp() < t.maxHp() * 0.5f)
                     .filter(t -> !triggeredFua.contains(t)).toList();
@@ -135,19 +142,33 @@ public class Herta extends AbstractCharacter<Herta> {
                 return;
             }
 
+            // We need to copy or Herta might have attacks with a tally of 0
+            // I'm not sure what happens in game, but I can't cancel attacks.
+            // So this way is fine
             final int tallyCopy = this.tally;
+            //final Collection<AbstractEnemy> snapShot = new HashSet<>(getBattle().getEnemies());
+
             getBattle().addToLog(new DoMove(Herta.this, MoveType.FOLLOW_UP));
             Herta.this.startAttack()
-                    .delay(dh -> {
-                        dh.hitEnemies(getBattle().getEnemies(),
-                                0.43f * tallyCopy,
-                                MultiplierStat.ATK,
-                                TOUGHNESS_DAMAGE_HALF_UNIT * tallyCopy,
-                                DamageType.FOLLOW_UP);
-                    })
-                    .execute();
+                    .handle(DamageType.FOLLOW_UP, dh -> {
+                        // Something like this should be added, so Herta doesn't attack an all new wave with her fua
+                        // TODO: But it's not working 100%, have to investigate
+                        /*if (getBattle().getEnemies().stream().noneMatch(snapShot::contains)) {
+                            dh.logic(_ -> {});
+                            dh.afterAttackHook(() -> {
+                                getBattle().addToLog(new StringLine("Adding tally back!"));
+                                // Add tally back, if not used
+                                this.tally += tallyCopy;
+                            });
+                            return;
+                        }*/
 
-            this.triggers++;
+                        dh.logic(getBattle().getEnemies(), (e, al) -> {
+                            al.hit(e, 0.43f * tallyCopy, TOUGHNESS_DAMAGE_HALF_UNIT * tallyCopy);
+                            this.triggers++;
+                        });
+                    }).execute();
+
             this.tally = 0;
             this.triggeredFua.addAll(newFallen);
         }

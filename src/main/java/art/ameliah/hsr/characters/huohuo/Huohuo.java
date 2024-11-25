@@ -4,7 +4,9 @@ import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -33,6 +35,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new SkillCounterTurnGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     public void useSkill() {
@@ -43,9 +46,8 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     }
 
     public void useBasic() {
-        this.startAttack()
-                .hitEnemy(getBattle().getEnemyWithHighestHP(), 0.5F, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC,
+                (e, al) -> al.hit(e, 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
     public void useUltimate() {

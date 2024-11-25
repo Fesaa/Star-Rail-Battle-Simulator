@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.abundance;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
@@ -20,7 +20,7 @@ public class ScentAloneStaysTrue extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
         attack.getTargets().forEach(e -> {

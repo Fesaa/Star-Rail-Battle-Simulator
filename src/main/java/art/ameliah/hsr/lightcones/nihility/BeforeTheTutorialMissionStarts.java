@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -18,7 +18,7 @@ public class BeforeTheTutorialMissionStarts extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         if (attack.getTargets().stream()
                 .anyMatch(e -> e.powerList
                         .stream()

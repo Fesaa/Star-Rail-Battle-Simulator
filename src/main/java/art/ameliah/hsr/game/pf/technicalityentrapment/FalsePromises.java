@@ -1,6 +1,6 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.PfBattle;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFictionBuff;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -16,7 +16,7 @@ public class FalsePromises implements PureFictionBuff {
     public void applyGritMechanic(PfBattle battle) {
         battle.getPlayers().forEach(player -> player.addPower(new PermPower("False Promises grit mechanic") {
             @Override
-            public void afterAttack(Attack attack) {
+            public void afterAttack(AttackLogic attack) {
                 if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                     battle.increaseGridAmount(2 * attack.getTargets().size());
                 }
@@ -51,7 +51,7 @@ public class FalsePromises implements PureFictionBuff {
         }
 
         @Override
-        public void beforeAttack(Attack attack) {
+        public void beforeAttack(AttackLogic attack) {
             if (!attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 return;
             }

@@ -1,6 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.powers.PermPower;
@@ -24,7 +24,7 @@ public class HunterOfTheGlacialForest extends AbstractRelicSetBonus {
 
     // TODO: onAfterUseUltimate
     @Override
-    public void afterAttack(Attack attack) {
+    public void afterAttack(AttackLogic attack) {
         if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
         TempPower ultPower = TempPower.create(PowerStat.CRIT_DAMAGE, 25, 2, "Hunter of the Glacial Forest Ultimate CD Boost");

@@ -20,7 +20,7 @@ public class DefaultLogger extends Logger {
 
     private String prefix() {
         if (this.inBattle()) {
-            return String.format("(%.2f AV) - ", getBattle().initialLength() - getBattle().battleLength());
+            return this.battle.prefix();
         }
         return "";
     }

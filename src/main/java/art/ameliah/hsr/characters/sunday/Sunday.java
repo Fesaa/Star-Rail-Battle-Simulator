@@ -74,9 +74,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
 
     @Override
     protected void useBasic() {
-        this.startAttack()
-                .hitEnemy(this.getTarget(MoveType.BASIC), 1, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.BASIC)
-                .execute();
+        this.doAttack(DamageType.BASIC, MoveType.BASIC, (e, al) -> al.hit(e, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
     }
 
     @Override

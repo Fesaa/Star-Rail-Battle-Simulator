@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.destruction;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -16,7 +16,7 @@ public class OnTheFallOfAnAeon extends AbstractLightcone {
     }
 
     @Override
-    public void beforeAttack(Attack attack) {
+    public void beforeAttack(AttackLogic attack) {
         this.owner.addPower(new OnTheFallOfAnAeonATKBoost());
     }
 

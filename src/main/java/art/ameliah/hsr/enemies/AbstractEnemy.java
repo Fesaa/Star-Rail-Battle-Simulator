@@ -2,7 +2,7 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,6 +68,14 @@ public abstract class AbstractEnemy extends AbstractEntity {
         this.setUpDefaultRes();
 
         this.sequence = new EnemyActionSequence(this);
+    }
+
+    /**
+     * Return a copy, edit will not do anything
+     * @return copy of the weakness map
+     */
+    public Collection<ElementType> getWeaknesses() {
+        return new HashSet<>(this.weaknessMap);
     }
 
     public boolean isWeaknessBroken() {
@@ -216,7 +225,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     public HitResult hit(Hit hit) {
         if (this.isDead()) {
-            return new HitResult(hit, 0, 0, false, false);
+            return new HitResult(hit,this, 0, 0, false, false);
         }
 
         final float dmgToDeal = Math.min(hit.finalDmg(), this.currentHp);
@@ -224,9 +233,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
         this.currentHp -= dmgToDeal;
 
         if (this.isWeaknessBroken()) {
-            return new HitResult(hit, dmgToDeal, 0, false, this.isDead());
+            return new HitResult(hit, this, dmgToDeal, 0, false, this.isDead());
         }
-        return new HitResult(hit, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction()), this.isWeaknessBroken(), this.isDead());
+        return new HitResult(hit, this, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction()), this.isWeaknessBroken(), this.isDead());
     }
 
     protected float decreaseToughness(float amount) {
@@ -294,7 +303,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     @Override
-    public void afterAttacked(Attack attack) {
+    public void afterAttacked(AttackLogic attack) {
         if (this.currentHp > 0) {
             return;
         }
