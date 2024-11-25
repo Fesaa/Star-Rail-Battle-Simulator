@@ -23,7 +23,7 @@ public class LordyTrashcan extends AbstractEnemy {
 
     @Override
     public void beforeReceiveHit(Hit hit) {
-        if (this.weaknessMap.size() > 2) {
+        if (this.weaknessMap.size() >= 2) {
             return;
         }
 
