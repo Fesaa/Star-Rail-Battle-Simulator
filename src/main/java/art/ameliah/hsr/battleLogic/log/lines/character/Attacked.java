@@ -15,7 +15,7 @@ public record Attacked(AbstractEntity source, AbstractEntity target, float damag
     @Override
     public String asString() {
         String s = source.name + " attacked "
-                + String.format("%s (%.0f)", target.name, target.getCurrentHp())
+                + target
                 + " for " + damage + " damage";
 
         if (this.types.isEmpty()) {

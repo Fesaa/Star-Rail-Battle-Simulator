@@ -8,8 +8,10 @@ public record HitResult(Hit hit) implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s hit %s(%.1f) for %.3f damage",
-                this.hit.getSource().getName(), this.hit.getTarget().getName(), this.hit.getTarget().getCurrentHp(), this.hit.finalDmg());
+        return String.format("%s hit %s for %.3f damage",
+                this.hit.getSource().getName(),
+                this.hit.getTarget().toString(),
+                this.hit.finalDmg());
     }
 
     @Override

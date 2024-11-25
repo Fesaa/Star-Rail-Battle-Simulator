@@ -2,6 +2,8 @@ package art.ameliah.hsr.characters.herta;
 
 import art.ameliah.hsr.battleLogic.combat.Attack;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.log.lines.StringLine;
+import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -49,7 +51,7 @@ public class Herta extends AbstractCharacter<Herta> {
     @Override
     protected void useSkill() {
         this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                .hitEnemies(getBattle().getEnemies(), 1.1f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_SINGLE_UNIT, DamageType.SKILL)
                 .execute();
     }
 
@@ -68,7 +70,7 @@ public class Herta extends AbstractCharacter<Herta> {
     @Override
     protected void useUltimate() {
         this.startAttack()
-                .hitEnemies(getBattle().getEnemies(), 2.16f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS)
+                .hitEnemies(getBattle().getEnemies(), 2.16f, MultiplierStat.ATK, TOUGHNESS_DAMAGE_TWO_UNITS, DamageType.ULTIMATE)
                 .execute();
 
         this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 25, 1, "No One Can Betray Me E6 Herta"));
@@ -119,7 +121,7 @@ public class Herta extends AbstractCharacter<Herta> {
         public void afterAttack(Attack attack) {
             boolean anyAlive = attack.getTargets().stream().noneMatch(AbstractEnemy::isDead);
             List<AbstractEnemy> newFallen = attack.getTargets().stream()
-                    .filter(t -> t.getCurrentHp() < t.maxHp() * 0.4f)
+                    .filter(t -> t.getCurrentHp() < t.maxHp() * 0.5f)
                     .filter(t -> !triggeredFua.contains(t)).toList();
 
             this.tally += newFallen.size();
@@ -133,12 +135,16 @@ public class Herta extends AbstractCharacter<Herta> {
                 return;
             }
 
+            final int tallyCopy = this.tally;
+            getBattle().addToLog(new DoMove(Herta.this, MoveType.FOLLOW_UP));
             Herta.this.startAttack()
-                    .hitEnemies(getBattle().getEnemies(),
-                            0.43f * this.tally,
-                            MultiplierStat.ATK,
-                            TOUGHNESS_DAMAGE_HALF_UNIT * this.tally,
-                            DamageType.FOLLOW_UP)
+                    .delay(dh -> {
+                        dh.hitEnemies(getBattle().getEnemies(),
+                                0.43f * tallyCopy,
+                                MultiplierStat.ATK,
+                                TOUGHNESS_DAMAGE_HALF_UNIT * tallyCopy,
+                                DamageType.FOLLOW_UP);
+                    })
                     .execute();
 
             this.triggers++;

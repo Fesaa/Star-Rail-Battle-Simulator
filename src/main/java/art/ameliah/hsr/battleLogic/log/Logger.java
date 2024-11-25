@@ -2,6 +2,7 @@ package art.ameliah.hsr.battleLogic.log;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.battle.AdvanceEntity;
 import art.ameliah.hsr.battleLogic.log.lines.battle.BattleEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.CombatStart;
@@ -334,6 +335,10 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(FailedHit failedHit) {
         log(failedHit);
+    }
+
+    public void handle(StringLine line) {
+        log(line);
     }
 
 }

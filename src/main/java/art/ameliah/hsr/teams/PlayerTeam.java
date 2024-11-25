@@ -7,9 +7,11 @@ import art.ameliah.hsr.characters.bronya.Bronya;
 import art.ameliah.hsr.characters.feixiao.Feixiao;
 import art.ameliah.hsr.characters.fuxuan.FuXuan;
 import art.ameliah.hsr.characters.gallagher.Gallagher;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.hanya.Hanya;
 import art.ameliah.hsr.characters.herta.Herta;
 import art.ameliah.hsr.characters.huohuo.Huohuo;
+import art.ameliah.hsr.characters.jade.Jade;
 import art.ameliah.hsr.characters.lingsha.Lingsha;
 import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.characters.moze.Moze;
@@ -26,6 +28,8 @@ import art.ameliah.hsr.lightcones.abundance.PostOpConversation;
 import art.ameliah.hsr.lightcones.abundance.WhatIsReal;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
 import art.ameliah.hsr.lightcones.erudition.GeniusesRepose;
+import art.ameliah.hsr.lightcones.erudition.YetHopeIsPriceless;
+import art.ameliah.hsr.lightcones.harmony.FlowingNightglow;
 import art.ameliah.hsr.lightcones.harmony.ForTomorrowsJourney;
 import art.ameliah.hsr.lightcones.harmony.MemoriesOfThePast;
 import art.ameliah.hsr.lightcones.harmony.PastAndFuture;
@@ -50,6 +54,7 @@ import art.ameliah.hsr.relics.ornament.IzumoGenseiAndTakamaDivineRealm;
 import art.ameliah.hsr.relics.ornament.RutilentArena;
 import art.ameliah.hsr.relics.ornament.SigoniaTheUnclaimedDesolation;
 import art.ameliah.hsr.relics.ornament.SpaceSealingStation;
+import art.ameliah.hsr.relics.ornament.SpringhtlyVonwacq;
 import art.ameliah.hsr.relics.relics.EagleOfTwilightLine;
 import art.ameliah.hsr.relics.relics.GeniusOfBrilliantStars;
 import art.ameliah.hsr.relics.relics.KnightOfPurityPalace;
@@ -57,6 +62,7 @@ import art.ameliah.hsr.relics.relics.LongevousDisciple;
 import art.ameliah.hsr.relics.relics.MessengerTraversingHackerspace;
 import art.ameliah.hsr.relics.relics.MusketeerOfWildWheat;
 import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
+import art.ameliah.hsr.relics.relics.PrisonerInDeepConfinement;
 import art.ameliah.hsr.relics.relics.TheAshblazingGrandDuke;
 import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
 import art.ameliah.hsr.relics.relics.ThiefOfShootingMeteor;
@@ -66,6 +72,44 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PlayerTeam {
+
+    public static AbstractCharacter<?> getPreBuiltRobin() {
+        Robin robin = new Robin();
+        robin.EquipLightcone(new FlowingNightglow(robin));
+        robin.EquipRelicSet(new TheWindSoaringValorous(robin, false));
+        robin.EquipRelicSet(new PrisonerInDeepConfinement(robin, false));
+        robin.EquipRelicSet(new SpringhtlyVonwacq(robin));
+        new RelicStats().addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.ATK_PER, 5)
+                .addSubStat(Stats.ATK_FLAT, 5)
+                .addSubStat(Stats.SPEED, 6)
+                .equipTo(robin);
+
+        robin.clearUltGoals();
+        robin.registerGoal(0, new AlwaysUltGoal<>(robin));
+        return robin;
+    }
+
+    public static AbstractCharacter<?> getPreBuiltJade() {
+        Jade jade = new Jade();
+        jade.EquipLightcone(new YetHopeIsPriceless(jade));
+        jade.EquipRelicSet(new GeniusOfBrilliantStars(jade));
+        jade.EquipRelicSet(new IzumoGenseiAndTakamaDivineRealm(jade));
+        new RelicStats().addMainStat(Stats.CRIT_RATE)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.QUANTUM_DAMAGE)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 11)
+                .addSubStat(Stats.CRIT_DAMAGE, 17)
+                .addSubStat(Stats.ATK_PER, 1)
+                .addSubStat(Stats.ATK_FLAT, 2)
+                .equipTo(jade);
+
+        return jade;
+    }
 
     public static AbstractCharacter<?> getPreBuiltHerta() {
         Herta herta = new Herta();

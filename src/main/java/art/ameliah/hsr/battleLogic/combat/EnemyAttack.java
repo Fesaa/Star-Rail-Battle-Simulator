@@ -32,12 +32,7 @@ public class EnemyAttack implements IAttack, BattleParticipant {
     @Override
     public void execute(boolean forceFirst) {
         if (getBattle().isAttacking()) {
-            if (forceFirst) {
-                getBattle().attackQueue().offerFirst(this);
-            } else {
-                getBattle().attackQueue().offerLast(this);
-            }
-
+            getBattle().addToQueue(this, forceFirst);
             return;
         }
         getBattle().setAttacking(true);

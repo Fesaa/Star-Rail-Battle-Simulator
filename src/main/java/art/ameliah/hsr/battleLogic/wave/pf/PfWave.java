@@ -82,4 +82,12 @@ public class PfWave implements Wave {
     public int maxEnemiesOnField() {
         return 5;
     }
+
+    @Override
+    public String toString() {
+        return "PfWave{" +
+                "enemyQueue=" + enemyQueue +
+                ", boss=" + boss +
+                '}';
+    }
 }

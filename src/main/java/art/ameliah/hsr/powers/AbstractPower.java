@@ -15,6 +15,7 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class AbstractPower implements BattleEvents, BattleParticipant {
 
@@ -204,8 +205,11 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
 
     @Override
     public String toString() {
-        return String.format("%s(turnDuration=%d, stacks=%d, maxStacks=%d, justApplied=%b, type=%s, durationBasedOnSelfTurns=%b, lastsForever=%b)",
-                this.getName(), this.turnDuration, this.stacks, this.maxStacks, this.justApplied, this.type, this.durationBasedOnSelfTurns, this.lastsForever);
+        String boosts = this.stats.entrySet().stream()
+                .map(e -> String.format("%s=%,.2f", e.getKey(), e.getValue()))
+                .collect(Collectors.joining(", "));
+        return String.format("%s(turnDuration=%d, stacks=%d, maxStacks=%d, justApplied=%b, type=%s, durationBasedOnSelfTurns=%b, lastsForever=%b, %s)",
+                this.getName(), this.turnDuration, this.stacks, this.maxStacks, this.justApplied, this.type, this.durationBasedOnSelfTurns, this.lastsForever, boosts);
     }
 
     // TODO: Implement DOT

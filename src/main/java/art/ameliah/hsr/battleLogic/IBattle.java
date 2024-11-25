@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 public interface IBattle {
 
-    Deque<IAttack> attackQueue();
+    void addToQueue(IAttack attack, boolean forceFirst);
 
     boolean isAttacking();
 

@@ -49,7 +49,18 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
     }
 
     @Override
-    public void onEndTurn() {
+    protected void onEndTurn() {
+        this.fillField();
+    }
+
+    @Override
+    protected void onTurnStart() {
+        this.fillField();
+    }
+
+    @Override
+    protected void tryUlts() {
+        super.tryUlts();
         this.fillField();
     }
 

@@ -75,7 +75,7 @@ public class Battle implements IBattle {
     public HashMap<AbstractEntity, Float> actionValueMap;
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
-    protected Deque<IAttack> queue = new LinkedList<>();
+    protected final Deque<IAttack> queue = new LinkedList<>();
     protected boolean activeAttack = false;
     @Getter
     private Logger logger;
@@ -95,8 +95,14 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public Deque<IAttack> attackQueue() {
-        return this.queue;
+    public void addToQueue(IAttack attack, boolean forceFirst) {
+        synchronized (this.queue) {
+            if (forceFirst) {
+                this.queue.offerFirst(attack);
+            } else {
+                this.queue.offerLast(attack);
+            }
+        }
     }
 
     @Override
@@ -170,7 +176,7 @@ public class Battle implements IBattle {
 
         addToLog(new EntityJoinedBattle(enemy));
         enemy.emit(BattleEvents::onCombatStart);
-        this.actionValueMap.keySet().forEach(e -> e.onEnemyJoinCombat(enemy));
+        this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onEnemyJoinCombat(enemy)));
     }
 
     /**
@@ -306,12 +312,12 @@ public class Battle implements IBattle {
         actionValueMap = new HashMap<>();
         usedEntryTechnique = false;
 
-        this.onStart();
         initialBattleLength = initialLength;
         this.battleLength = initialLength;
         totalPlayerDamage = 0;
         addToLog(new CombatStart());
         this.playerTeam.forEach(c -> addToLog(new PreCombatPlayerMetrics(c)));
+        this.onStart();
 
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
@@ -393,6 +399,7 @@ public class Battle implements IBattle {
         }
 
 
+        this.onTurnStart();
         addToLog(new TurnStart(currentUnit, this.getActionValueUsed(), actionValueMap));
         currentUnit.emit(BattleEvents::onTurnStart);
 
@@ -420,27 +427,36 @@ public class Battle implements IBattle {
             yunli.useSlash(getRandomEnemy());
         }
 
-        getPlayers().stream()
-                .filter(p -> !(p instanceof Yunli))
-                .forEach(AbstractCharacter::tryUltimate);
-        getPlayers().stream()
-                .filter(p -> !(p instanceof Yunli))
-                .forEach(AbstractCharacter::tryUltimate);
+        this.tryUlts();
+        this.tryUlts(); // Retry in case people got energy from last ult
 
         if (currentUnit instanceof AbstractSummon) {
             actionValueMap.put(currentUnit, currentUnit.getBaseAV());
         }
+        this.tryUlts();
 
-        getPlayers().stream()
-                .filter(p -> !(p instanceof Yunli))
-                .forEach(AbstractCharacter::tryUltimate);
+
+        while (!this.queue.isEmpty()) {
+            IAttack attack = this.queue.poll();
+            attack.execute();
+        }
     }
 
     /**
      * Called after an entity's turn ends, before ult checks.
      * I.e. PF enemy add hook
      */
-    public void onEndTurn() {
+    protected void onEndTurn() {}
+
+    protected void onTurnStart() {}
+
+    /**
+     * Have all players try their ultimates. Not sure why Yunli is filtered out, ask Darkglade
+     */
+    protected void tryUlts() {
+        getPlayers().stream()
+                .filter(p -> !(p instanceof Yunli))
+                .forEach(AbstractCharacter::tryUltimate);
     }
 
     private void generateMetrics() {

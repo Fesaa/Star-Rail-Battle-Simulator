@@ -10,7 +10,7 @@ import art.ameliah.hsr.powers.TempPower;
 public class EntrancedIngeniumIlluminationDragonfish extends AbstractEnemy {
 
     public EntrancedIngeniumIlluminationDragonfish() {
-        super("Entranced Ingenium: Illumination Dragonfish", EnemyType.Minion, 26263, 608, 1050, 120, 20, 85);
+        super("Dragonfish", EnemyType.Minion, 26263, 608, 1050, 120, 20, 85);
 
         this.addWeakness(ElementType.PHYSICAL);
         this.addWeakness(ElementType.LIGHTNING);

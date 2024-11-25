@@ -312,6 +312,15 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return new EnemyAttack(this);
     }
 
+    @Override
+    public String toString() {
+        return this.getName() + "{" +
+                "currentHp=" + currentHp +
+                ", currentToughness=" + currentToughness +
+                ", hp%=" + currentHp/maxHp()*100 +
+                '}';
+    }
+
     /**
      * The next action returns true, to continue acting (i.e. double action)
      */

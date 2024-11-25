@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
 import art.ameliah.hsr.battleLogic.combat.hit.DelayedHit;
 import art.ameliah.hsr.battleLogic.combat.hit.FixedHit;
 import art.ameliah.hsr.battleLogic.combat.hit.HitHolder;
+import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
@@ -46,17 +47,19 @@ public class Attack implements BattleParticipant, IAttack {
 
     public void execute(boolean forceFirst) {
         if (getBattle().isAttacking()) {
-            if (forceFirst) {
-                getBattle().attackQueue().offerFirst(this);
-            } else {
-                getBattle().attackQueue().offerLast(this);
-            }
-
+            getBattle().addToQueue(this, forceFirst);
             return;
         }
         getBattle().setAttacking(true);
 
+        // SCUFFED
+        this.hits.forEach(h -> h.getHits().forEach(hit -> {
+            this.targets.add(hit.getTarget());
+            this.types.addAll(hit.getTypes());
+        }));
+
         getBattle().addToLog(new AttackStart(this));
+
         this.source.emit(l -> l.beforeAttack(this));
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(this)));
 
@@ -120,6 +123,14 @@ public class Attack implements BattleParticipant, IAttack {
         return this;
     }
 
+    public Attack delay(Consumer<DelayedHit> consumer) {
+        if (this.hasExecuted) {
+            throw new IllegalStateException("The attack has already finished");
+        }
+        this.hits.add(new DelayedHit(this.source, null, this.types, consumer));
+        return this;
+    }
+
     /**
      * Attacks are not executed when hitting. If the logic of hitting the enemy depends on its state
      * You'll want to use this function, and use the callback to access the logic
@@ -162,7 +173,7 @@ public class Attack implements BattleParticipant, IAttack {
     }
 
     public Attack hitEnemy(AbstractCharacter<?> source, AbstractEnemy target, float multiplier, MultiplierStat stat) {
-        AllyHit hit = new AllyHit(source, target, multiplier, stat, types.stream().toList(), 0, source.elementType, false);
+        AllyHit hit = new AllyHit(source, target, multiplier, stat, List.of(), 0, source.elementType, false);
         return this.hitEnemy(hit);
     }
 
