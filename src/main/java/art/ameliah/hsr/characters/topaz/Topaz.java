@@ -92,7 +92,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
         this.doAttack(dh -> {
             dh.addTypes(DamageType.BASIC, DamageType.FOLLOW_UP);
-            dh.logic(al -> al.hit(this.getTarget(MoveType.BASIC), 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dh.logic(this.getTarget(MoveType.BASIC), (e, al) -> al.hit(e, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
         });
     }
 

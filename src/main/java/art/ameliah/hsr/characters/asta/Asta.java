@@ -93,7 +93,7 @@ public class Asta extends AbstractCharacter<Asta> {
             getBattle().setUsedEntryTechnique(true);
         }
 
-        this.doAttack(dh -> dh.logic(al -> al.hit(getBattle().getEnemies(), 0.5f, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
+        this.doAttack(dh -> dh.logic(getBattle().getEnemies(), (e, al) -> al.hit(e, 0.5f, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
     public void increaseStacks(int amount) {
