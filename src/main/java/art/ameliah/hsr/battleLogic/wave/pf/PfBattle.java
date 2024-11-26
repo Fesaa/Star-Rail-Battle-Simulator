@@ -1,25 +1,37 @@
 package art.ameliah.hsr.battleLogic.wave.pf;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
+import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.hit.FixedHit;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.GainGridPoints;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
+import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
 public class PfBattle extends WavedBattle<PfWave> {
 
     private final ConcordantTrucePower concordantTruce;
     private final PureFictionBuff pfBuff;
     private final ISurgingGrit surgingGrit;
+    private final SurgingGritEntity entity;
 
     private boolean surgingGridActive = false;
     private int gridAmount;
     private int gridOverflow;
+
+    public PfBattle(ConcordantTrucePower concordantTruce, PureFictionBuff pfBuff, ISurgingGrit surgingGrit) {
+        this.concordantTruce = concordantTruce;
+        this.pfBuff = pfBuff;
+        this.surgingGrit = surgingGrit;
+
+        var enemyBuff = this.surgingGrit.getEnemyPower();
+        this.entity = new SurgingGritEntity(this, enemyBuff);
+    }
 
     public void increaseGridAmount(int amount) {
         int current = this.gridAmount;
@@ -49,8 +61,6 @@ public class PfBattle extends WavedBattle<PfWave> {
             getEnemies().forEach(e -> e.addPower(enemyBuff));
         }
 
-        SurgingGritEntity entity = new SurgingGritEntity(this, enemyBuff);
-        entity.setBattle(this);
         this.actionValueMap.put(entity, entity.getBaseAV());
         addToLog(new SurgingGritState(SurgingGritState.State.START));
     }
@@ -88,6 +98,13 @@ public class PfBattle extends WavedBattle<PfWave> {
             this.enemyTeam.clear();
             this.goToNextWave();
             return;
+        } else if (this.currentWave.hasBoss()) {
+            var boss = this.currentWave.getBoss();
+            float dmg = boss.maxHp() / this.currentWave.totalMinions();
+
+
+            var res = boss.hitAndMayDie(new FixedHit(this.entity, boss, dmg));
+            this.addToLog(new HitResultLine(res));
         }
 
         super.onEnemyRemove(enemy, idx);
@@ -121,6 +138,7 @@ public class PfBattle extends WavedBattle<PfWave> {
             this.name = "Surging grid entity";
             this.pf = pf;
             this.enemyBuff = enemyBuff;
+            this.setBattle(pf);
         }
 
         @Override

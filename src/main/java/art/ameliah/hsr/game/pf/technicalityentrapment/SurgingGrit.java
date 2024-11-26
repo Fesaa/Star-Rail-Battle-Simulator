@@ -38,7 +38,7 @@ public class SurgingGrit implements ISurgingGrit {
         }
 
         @Override
-        public void beforeAttacked(AttackLogic attack) {
+        public void afterAttacked(AttackLogic attack) {
             if (!attack.getTypes().contains(DamageType.SKILL)) {
                 return;
             }

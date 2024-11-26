@@ -51,7 +51,7 @@ public class FalsePromises implements PureFictionBuff {
         }
 
         @Override
-        public void beforeAttack(AttackLogic attack) {
+        public void afterAttack(AttackLogic attack) {
             if (!attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 return;
             }

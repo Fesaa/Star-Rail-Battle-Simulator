@@ -15,6 +15,7 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.ruanmei.RuanMei;
 import art.ameliah.hsr.enemies.action.EnemyActionSequence;
+import art.ameliah.hsr.enemies.game.penacony.PastConfinedAndCaged;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TauntPower;
@@ -60,10 +61,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
         this.name = name;
         this.type = type;
         this.baseHP = baseHP;
+        this.currentHp = baseHP;
         this.baseATK = baseATK;
         this.baseDEF = baseDEF;
         this.baseSpeed = baseSpeed;
         this.toughness = toughness;
+        this.currentToughness = toughness;
         this.level = level;
         this.setUpDefaultRes();
 
@@ -237,6 +240,19 @@ public abstract class AbstractEnemy extends AbstractEntity {
             return new HitResult(hit, this, dmgToDeal, 0, false, this.isDead());
         }
         return new HitResult(hit, this, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction()), this.isWeaknessBroken(), this.isDead());
+    }
+
+    // TODO: FIND BETTER NAME
+    public HitResult hitAndMayDie(Hit hit) {
+        var res = this.hit(hit);
+        if (this.currentHp > 0) {
+            return res;
+        }
+
+        getBattle().addToLog(new EnemyDied(this, "after a direct hit by " + hit.getSource()));
+        getBattle().removeEnemy(this);
+        this.emit(BattleEvents::onDeath);
+        return res;
     }
 
     protected float decreaseToughness(float amount) {

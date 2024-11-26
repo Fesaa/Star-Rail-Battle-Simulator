@@ -113,6 +113,7 @@ public class AttackLogic {
     }
 
     public HitResult hitFixed(BattleParticipant source, AbstractEnemy target, float dmg) {
+        this.targets.add(target);
         return this.addHit(new FixedHit(source, target, dmg));
     }
 

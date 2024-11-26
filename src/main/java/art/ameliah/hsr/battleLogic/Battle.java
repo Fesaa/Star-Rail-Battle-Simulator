@@ -372,7 +372,7 @@ public class Battle implements IBattle {
     }
 
     private void battleLoop(Yunli yunli, SwordMarch march) {
-        addToLog(new LeftOverAV(this.battleLength));
+        addToLog(new LeftOverAV(this));
 
         currentUnit = this.getNextUnit(0);
         float nextAV = actionValueMap.get(currentUnit);

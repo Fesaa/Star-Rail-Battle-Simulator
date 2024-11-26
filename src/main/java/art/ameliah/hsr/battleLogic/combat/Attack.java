@@ -106,6 +106,8 @@ public class Attack implements IAttack, BattleParticipant {
         dh.logic.accept(attackLogic);
 
         this.source.emit(l -> l.afterAttack(attackLogic));
+        this.targets.addAll(attackLogic.getTargets());
+
         this.targets.forEach(t -> t.emit(l -> l.afterAttacked(attackLogic)));
         this.afterAttackHooks.forEach(Runnable::run);
 

@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic.wave.pf;
 import art.ameliah.hsr.battleLogic.wave.Wave;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.registry.EnemyRegistry;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -14,26 +15,34 @@ import java.util.Queue;
 public class PfWave implements Wave {
 
     private final Queue<AbstractEnemy> enemyQueue = new LinkedList<>();
+    @Getter
     private AbstractEnemy boss;
+    private int totalEnemies = 0;
+
+    public int totalMinions() {
+        return this.hasBoss() ? this.totalEnemies - 1 : this.totalEnemies;
+    }
+
+    public boolean hasBoss() {
+        return this.boss != null;
+    }
 
     public boolean isBoss(AbstractEnemy enemy) {
         return this.boss != null && this.boss == enemy;
     }
 
-    public PfWave addEnemies(int... ids) {
-        for (int id : ids) {
-            this.addEnemy(id);
+    public void addEnemies(boolean hasBoss, int... ids) {
+        for (int idx = 0; idx < ids.length; idx++) {
+            this.addEnemy(ids[idx], idx == 2 && hasBoss);
         }
-        return this;
     }
 
-    public PfWave addEnemy(int id) {
+    public void addEnemy(int id, boolean isBoss) {
         try {
-            this.addEnemy(EnemyRegistry.getEnemy(id));
+            this.addEnemy(EnemyRegistry.getEnemy(id), isBoss);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return this;
     }
 
     public PfWave addEnemy(AbstractEnemy enemy) {
@@ -50,6 +59,7 @@ public class PfWave implements Wave {
             this.boss = enemy;
         }
 
+        this.totalEnemies++;
         return this;
     }
 
@@ -67,7 +77,7 @@ public class PfWave implements Wave {
     @Override
     public boolean hasNext() {
         if (this.boss != null) {
-            return !this.boss.isDead();
+            return !this.boss.isDead() && !this.enemyQueue.isEmpty();
         }
 
         return !this.enemyQueue.isEmpty();
