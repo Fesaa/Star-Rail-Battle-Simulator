@@ -8,7 +8,7 @@ public record SecondAction(AbstractEnemy enemy) implements Loggable {
 
     @Override
     public String asString() {
-        return this.enemy.name + " takes a second action";
+        return this.enemy.getName() + " takes a second action";
     }
 
     @Override

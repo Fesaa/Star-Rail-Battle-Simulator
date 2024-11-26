@@ -9,7 +9,7 @@ public record ForcedAttack(AbstractEnemy enemy, AbstractCharacter<?> hit) implem
 
     @Override
     public String asString() {
-        return this.enemy.name + " forced to attack " + this.hit.name;
+        return this.enemy.getName() + " forced to attack " + this.hit.getName();
     }
 
     @Override

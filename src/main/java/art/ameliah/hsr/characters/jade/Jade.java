@@ -132,6 +132,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
     }
 
     private void doFua() {
+        this.actionMetric.record(MoveType.FOLLOW_UP);
         float mul = this.enhancedFua > 0 ? 2 : 1.2f;
         this.enhancedFua = Math.max(0, this.enhancedFua - 1);
 

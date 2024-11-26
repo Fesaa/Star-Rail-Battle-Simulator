@@ -47,6 +47,6 @@ public class LordyTrashcan extends AbstractEnemy {
                 .execute();
 
         // CURSED
-        this.boostedATK += (float) (Math.pow(2, this.numTurnsMetric) * this.boostedATK);
+        this.boostedATK += (float) (Math.pow(2, this.turnsMetric.get()) * this.boostedATK);
     }
 }

@@ -8,7 +8,7 @@ public record HitSinceLastHeal(AbstractCharacter<?> character, int timesHit) imp
 
     @Override
     public String asString() {
-        return String.format("%s has been hit %,d times since last heal", character.name, timesHit);
+        return String.format("%s has been hit %,d times since last heal", character.getName(), timesHit);
     }
 
     @Override

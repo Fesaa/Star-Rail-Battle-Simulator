@@ -8,7 +8,6 @@ public class EnemyMetrics implements Loggable {
 
     public final AbstractEnemy enemy;
     public final float speed;
-    public final int turnsTaken;
     public final int totalAttacks;
     public final int singleTargetAttacks;
     public final int blastAttacks;
@@ -19,7 +18,6 @@ public class EnemyMetrics implements Loggable {
         this.enemy = enemy;
 
         this.speed = enemy.getBaseSpeed();
-        this.turnsTaken = enemy.numTurnsMetric;
         this.totalAttacks = enemy.numAttacksMetric;
         this.singleTargetAttacks = enemy.numSingleTargetMetric;
         this.blastAttacks = enemy.numBlastMetric;
@@ -29,7 +27,8 @@ public class EnemyMetrics implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("Metrics for %s with %f speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", enemy.name, speed, turnsTaken, totalAttacks, singleTargetAttacks, blastAttacks, AoEAttacks, weaknessBroken);
+        return String.format("Metrics for %s with %f speed \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", enemy.getName(), speed, totalAttacks, singleTargetAttacks, blastAttacks, AoEAttacks, weaknessBroken)
+                + this.enemy.getMetricRegistry().representation();
     }
 
     @Override

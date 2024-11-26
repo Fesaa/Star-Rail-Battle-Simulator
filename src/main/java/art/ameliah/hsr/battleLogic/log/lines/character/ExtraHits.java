@@ -8,7 +8,7 @@ public record ExtraHits(AbstractCharacter<?> character, int numExtraHits) implem
 
     @Override
     public String asString() {
-        return String.format("%s rolled %,d extra hits", character.name, numExtraHits);
+        return String.format("%s rolled %,d extra hits", character.getName(), numExtraHits);
     }
 
     @Override

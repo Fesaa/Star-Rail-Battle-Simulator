@@ -7,7 +7,7 @@ import art.ameliah.hsr.battleLogic.log.Logger;
 public record EntityJoinedBattle(AbstractEntity entity) implements Loggable {
     @Override
     public String asString() {
-        return this.entity.name + " has joined the battle";
+        return this.entity.getName() + " has joined the battle";
     }
 
     @Override

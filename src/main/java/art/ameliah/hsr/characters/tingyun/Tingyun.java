@@ -10,23 +10,24 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Tingyun extends AbstractCharacter<Tingyun> {
+
     public static final String NAME = "Tingyun";
-    private final String skillProcsMetricName = "Skill Extra Damage Procs";
-    private final String talentProcsMetricName = "Talent Extra Damage Procs";
-    public int skillProcs = 0;
-    public int talentProcs = 0;
-    AbstractCharacter<?> benefactor;
+
+    protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("tingyun-talent-procs", "Talent Extra Damage Procs"));
+
+    @Getter
+    private AbstractCharacter<?> benefactor;
 
     public Tingyun() {
         super(NAME, 847, 529, 397, 112, 80, ElementType.LIGHTNING, 130, 100, Path.HARMONY);
@@ -62,7 +63,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
 
     public void useUltimate() {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            if (character.isDPS && character.currentEnergy < character.maxEnergy) {
+            if (character.isDPS && character.getCurrentEnergy().get() < character.maxEnergy) {
                 character.increaseEnergy(60, false, "from Tingyun Ult");
                 character.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 56, 2, "Tingyun Ult Damage Bonus"));
                 break;
@@ -81,20 +82,6 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
 
     public void onCombatStart() {
         addPower(new TingyunBonusBasicDamagePower());
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(skillProcsMetricName, String.valueOf(skillProcs));
-        map.put(talentProcsMetricName, String.valueOf(talentProcs));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(skillProcsMetricName);
-        list.add(talentProcsMetricName);
-        return list;
     }
 
     private static class TingyunBonusBasicDamagePower extends AbstractPower {
@@ -123,7 +110,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         }
 
         public void beforeAttack(AttackLogic attack) {
-            skillProcs++;
+            Tingyun.this.talentProcs.increment();
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
             attack.hit(attack.getSource(), target, 0.64f, MultiplierStat.ATK, 0, ElementType.LIGHTNING, false, List.of());
         }

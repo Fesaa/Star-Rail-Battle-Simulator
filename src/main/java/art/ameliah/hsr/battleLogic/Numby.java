@@ -8,12 +8,12 @@ public class Numby extends AbstractSummon<Topaz> {
     public Numby(Topaz owner) {
         super(owner);
         this.baseSpeed = 80;
-        this.name = NAME;
+        this.name = name;
     }
 
     public void takeTurn() {
         super.takeTurn();
-        this.summoner.numbyAttacksMetrics++;
+        this.summoner.getNumbyAttacks().increment();
         this.summoner.numbyAttack();
     }
 
@@ -21,11 +21,11 @@ public class Numby extends AbstractSummon<Topaz> {
         float initialAV = getBattle().getActionValueMap().get(this);
         if (initialAV > 0) {
             speedPriority = 0;
-            this.summoner.numbyAdvancedTimesMetrics++;
+            this.summoner.getNumbyAdvancedTimes().increment();
             getBattle().AdvanceEntity(this, 50);
-            this.summoner.actualNumbyAdvanceMetric += (int) Math.abs(initialAV - getBattle().getActionValueMap().get(this));
+            this.summoner.getNumbyAVAdvances().increase((int) Math.abs(initialAV - getBattle().getActionValueMap().get(this)));
         } else {
-            this.summoner.wastedNumbyAdvances++;
+            this.summoner.getWastedNumbyAdvances().increment();
         }
     }
 }

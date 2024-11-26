@@ -47,7 +47,7 @@ public class JsonLogger extends Logger {
     public static class AbstractEnemyJsonAdapter implements JsonSerializer<AbstractEnemy> {
         @Override
         public JsonElement serialize(AbstractEnemy abstractEntity, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(abstractEntity.name);
+            return new JsonPrimitive(abstractEntity.getName());
         }
     }
 
@@ -55,7 +55,7 @@ public class JsonLogger extends Logger {
         @Override
         public JsonElement serialize(AbstractCharacter<?> character, Type type, JsonSerializationContext jsonSerializationContext) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", character.name);
+            jsonObject.addProperty("name", character.getName());
             jsonObject.addProperty("lightcone", character.lightcone.toString());
             return jsonObject;
         }
@@ -64,7 +64,7 @@ public class JsonLogger extends Logger {
     public static class AbstractEntityJsonAdapter implements JsonSerializer<AbstractEntity> {
         @Override
         public JsonElement serialize(AbstractEntity abstractEntity, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(abstractEntity.name);
+            return new JsonPrimitive(abstractEntity.getName());
         }
     }
 

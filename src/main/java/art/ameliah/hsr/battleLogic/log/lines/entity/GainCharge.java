@@ -26,7 +26,7 @@ public class GainCharge implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s gained %,d %s (%,d -> %,d)", character.name, amount, charge, initialCharge, chargeCount);
+        return String.format("%s gained %,d %s (%,d -> %,d)", character.getName(), amount, charge, initialCharge, chargeCount);
     }
 
     @Override

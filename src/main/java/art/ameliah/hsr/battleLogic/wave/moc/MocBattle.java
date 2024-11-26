@@ -34,6 +34,6 @@ public class MocBattle extends WavedBattle<MocWave> {
     }
 
     public int cyclesUsed() {
-        return this.turbulence.numTurnsMetric;
+        return this.turbulence.getTurns();
     }
 }

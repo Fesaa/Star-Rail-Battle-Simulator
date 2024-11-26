@@ -13,30 +13,27 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Aventurine extends AbstractCharacter<Aventurine> {
     public static final String NAME = "Aventurine";
     private static final int BLIND_BET_CAP = 10;
+
+    protected CounterMetric<Integer> blindBetGained = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-gained", "Blind bet gained"));
+    protected CounterMetric<Integer> blindBetGainedFUA = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-fua-gained", "Blind bet gained from FUA"));
+    protected CounterMetric<Integer> blindBetCounter = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-counter", "Left over blind bet"));
+
     final AventurineTalentPower talentPower = new AventurineTalentPower();
     final boolean SPNeutral;
     private final int BLIND_BET_THRESHOLD = 7;
     private final int blindBetFollowUpPerTurn = 3;
-    private final String numFollowUpsMetricName = "Follow up Attacks used";
-    private final String numBlindBetGainedMetricName = "Blind Bet gained";
-    private final String numBlindBetFromFUAMetricName = "Blind Bet gained from Ally FUA";
-    private int numFollowUps = 0;
-    private int numBlindBetGained = 0;
-    private int numBlindBetGainedFUA = 0;
-    private int blindBetCounter = 0;
     private int blindBetFollowUpCounter = blindBetFollowUpPerTurn;
 
     public Aventurine(boolean SPNeutral) {
@@ -87,10 +84,12 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
     }
 
     public void useFollowUp() {
-        numFollowUps++;
-        int initialBlindBet = this.blindBetCounter;
-        this.blindBetCounter -= BLIND_BET_THRESHOLD;
-        getBattle().addToLog(new UseBlindBet(this, initialBlindBet, this.blindBetCounter));
+        this.actionMetric.record(MoveType.FOLLOW_UP);
+
+        int initialBlindBet = this.blindBetCounter.get();
+        this.blindBetCounter.decrease(BLIND_BET_THRESHOLD);
+
+        getBattle().addToLog(new UseBlindBet(this, initialBlindBet, this.blindBetCounter.get()));
         increaseEnergy(7, FUA_ENERGY_GAIN);
 
         this.startAttack()
@@ -116,32 +115,14 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
     }
 
     public void increaseBlindBet(int amount) {
-        numBlindBetGained += amount;
-        int initialBlindBet = this.blindBetCounter;
-        this.blindBetCounter += amount;
-        if (this.blindBetCounter > BLIND_BET_CAP) {
-            this.blindBetCounter = BLIND_BET_CAP;
-        }
-        getBattle().addToLog(new GainCharge(this, amount, initialBlindBet, this.blindBetCounter, "Blind Bet"));
-        if (this.blindBetCounter >= BLIND_BET_THRESHOLD) {
+        this.blindBetGained.increase(amount);
+
+        int initialBlindBet = this.blindBetCounter.get();
+        this.blindBetGained.increase(amount, BLIND_BET_CAP);
+        getBattle().addToLog(new GainCharge(this, amount, initialBlindBet, this.blindBetCounter.get(), "Blind Bet"));
+        if (this.blindBetCounter.get() >= BLIND_BET_THRESHOLD) {
             useFollowUp();
         }
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(numFollowUpsMetricName, String.valueOf(numFollowUps));
-        map.put(numBlindBetGainedMetricName, String.valueOf(numBlindBetGained));
-        map.put(numBlindBetFromFUAMetricName, String.valueOf(numBlindBetGainedFUA));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(numFollowUpsMetricName);
-        list.add(numBlindBetGainedMetricName);
-        list.add(numBlindBetFromFUAMetricName);
-        return list;
     }
 
     private static class AventurineUltDebuff extends AbstractPower {
@@ -181,7 +162,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
             if (attack.getSource() != Aventurine.this && attack.getTypes().contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;
-                numBlindBetGainedFUA++;
+                Aventurine.this.blindBetGainedFUA.increment();
             }
         }
     }

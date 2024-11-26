@@ -15,6 +15,7 @@ import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -23,9 +24,7 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import static art.ameliah.hsr.characters.DamageType.*;
@@ -33,18 +32,21 @@ import static art.ameliah.hsr.characters.DamageType.*;
 public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoal.FirstTurnTracked {
 
     public static final String NAME = "Yunli";
-    final AbstractPower cullPower = new CullCritDamageBuff();
-    final AbstractPower techniqueDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 80, "Technique Damage Bonus");
-    final AbstractPower tauntPower = new TauntPower(this);
-    private final String numNormalCountersMetricName = "Normal Counters";
-    private final String num1StackCullsMetricName = "Number of Culls (1 S1 stack)";
-    private final String num2StackCullsMetricName = "Number of Culls (2 S1 stacks)";
-    private final String numSlashesMetricName = "Number of Slashes";
+
+    private final AbstractPower cullPower = new CullCritDamageBuff();
+    private final AbstractPower techniqueDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 80, "Technique Damage Bonus");
+    private final AbstractPower tauntPower = new TauntPower(this);
+
+    protected CounterMetric<Integer> normalCount = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-normal-counters", "Normal counter"));
+
+    protected CounterMetric<Integer> num1StackCulls = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-1-stack-culls", "Number of Culls (1 S1 stack)"));
+
+    protected CounterMetric<Integer> num2StackCulls = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-2-stack-culls", "Number of Culls (2 S1 stacks)"));
+
+    protected CounterMetric<Integer> numSlashesMetric = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-slashes", "Number of Slashes"));
+
     public boolean isParrying;
-    public int numSlashes = 0;
-    private int numNormalCounters = 0;
-    private int num1StackCulls = 0;
-    private int num2StackCulls = 0;
+
 
     public Yunli() {
         super(NAME, 1358, 679, 461, 94, 80, ElementType.PHYSICAL, 240, 125, Path.DESTRUCTION);
@@ -104,7 +106,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         if (isParrying) {
             useCull(enemyAttack.getSource());
         } else {
-            numNormalCounters++;
+            this.normalCount.increment();
             getBattle().addToLog(new UseCounter(this));
             increaseEnergy(5, "from Normal Counter");
 
@@ -129,9 +131,9 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         AbstractPower power = new DanceAtSunset.DanceAtSunsetDamagePower();
         AbstractPower sunsetPower = getPower(power.getName());
         if (sunsetPower != null && sunsetPower.stacks == 2) {
-            num2StackCulls++;
+            this.num2StackCulls.increment();
         } else {
-            num1StackCulls++;
+            this.num1StackCulls.increment();
         }
         getBattle().addToLog(new UseCull(this));
 
@@ -152,7 +154,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
 
     public void useSlash(AbstractEnemy enemy) {
         increaseEnergy(10, "from using Slash");
-        numSlashes++;
+        this.numSlashesMetric.increment();
         getBattle().addToLog(new UseSlash(this));
 
         this.startAttack()
@@ -185,24 +187,6 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
 
     public AbstractPower getTrueSunderPower() {
         return TempPower.create(PowerStat.ATK_PERCENT, 30, 1, "True Sunder Atk Bonus");
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(numNormalCountersMetricName, String.valueOf(numNormalCounters));
-        map.put(num1StackCullsMetricName, String.valueOf(num1StackCulls));
-        map.put(num2StackCullsMetricName, String.valueOf(num2StackCulls));
-        map.put(numSlashesMetricName, String.valueOf(numSlashes));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(numNormalCountersMetricName);
-        list.add(num1StackCullsMetricName);
-        list.add(num2StackCullsMetricName);
-        list.add(numSlashesMetricName);
-        return list;
     }
 
     @Override

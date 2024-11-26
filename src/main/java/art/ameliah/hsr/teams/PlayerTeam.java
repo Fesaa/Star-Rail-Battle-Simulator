@@ -488,7 +488,7 @@ public class PlayerTeam {
         ArrayList<AbstractCharacter<?>> team = getTeam();
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < team.size(); i++) {
-            result.append(team.get(i).name);
+            result.append(team.get(i).getName());
             if (i < team.size() - 1) {
                 result.append(" | ");
             }

@@ -15,6 +15,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -22,8 +23,6 @@ import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,15 +30,16 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     public static final String NAME = "Robin";
     public static final String ULT_POWER_NAME = "RobinUltPower";
-    final PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
-    final RobinUltPower ultPower = new RobinUltPower();
-    final RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
-    final Concerto concerto = new Concerto(this);
-    private final String allyAttacksMetricName = "Number of Ally Attacks";
-    private final String concertoProcsMetricName = "Number of Concerto Hits";
+
+    private final PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
+    private final RobinUltPower ultPower = new RobinUltPower();
+    private final RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
+    private final Concerto concerto = new Concerto(this);
+
+    protected CounterMetric<Integer> allyAttacks = metricRegistry.register(CounterMetric.newIntegerCounter("robin-ally-attacks", "Number of Ally Attacks"));
+    protected CounterMetric<Integer> concertoHits = metricRegistry.register(CounterMetric.newIntegerCounter("robin-concerto-hits", "Number of Concerto Hits"));
+
     private int skillCounter = 0;
-    private int allyAttacksMetric = 0;
-    private int concertoProcs = 0;
 
     public Robin() {
         super(NAME, 1281, 640, 485, 102, 80, ElementType.PHYSICAL, 160, 100, Path.HARMONY);
@@ -160,30 +160,13 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         this.removePower(fixedCritPower);
     }
 
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(allyAttacksMetricName, String.valueOf(allyAttacksMetric));
-        map.put(concertoProcsMetricName, String.valueOf(concertoProcs));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(allyAttacksMetricName);
-        list.add(concertoProcsMetricName);
-        return list;
-    }
-
-    public HashMap<String, String> addLeftoverCharacterAVMetric(HashMap<String, String> metricMap) {
+    @Override
+    public String leftOverAV() {
         Float leftoverAV = getBattle().getActionValueMap().get(this);
         if (leftoverAV == null) {
-            leftoverAV = getBattle().getActionValueMap().get(concerto);
-            metricMap.put(leftoverAVMetricName, String.format("%.2f (Concerto)", leftoverAV));
-        } else {
-            return super.addLeftoverCharacterAVMetric(metricMap);
+            return String.format("%.2f (Concerto)", getBattle().getActionValueMap().get(concerto));
         }
-
-        return metricMap;
+        return super.leftOverAV();
     }
 
     @Override
@@ -217,7 +200,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         @Override
         public void beforeAttack(AttackLogic attack) {
             Robin.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
-            Robin.this.allyAttacksMetric++;
+            Robin.this.allyAttacks.increment();
         }
     }
 
@@ -244,7 +227,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
             }
 
             attack.hit(Robin.this, target, 1.2f, MultiplierStat.ATK, 0, ElementType.PHYSICAL, false, List.of());
-            concertoProcs++;
+            Robin.this.concertoHits.increment();
         }
 
         @Override

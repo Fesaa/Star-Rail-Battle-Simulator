@@ -25,7 +25,7 @@ public class SubscribeForMore extends AbstractLightcone {
                 return 0;
             }
 
-            if (character.maxEnergy == character.currentEnergy) {
+            if (character.maxEnergy == character.getCurrentEnergy().get()) {
                 return 48 * 2;
             }
 

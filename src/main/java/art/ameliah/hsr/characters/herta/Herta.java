@@ -142,6 +142,7 @@ public class Herta extends AbstractCharacter<Herta> {
             final int tallyCopy = this.tally;
             //final Collection<AbstractEnemy> snapShot = new HashSet<>(getBattle().getEnemies());
 
+            Herta.this.actionMetric.record(MoveType.FOLLOW_UP);
             getBattle().addToLog(new DoMove(Herta.this, MoveType.FOLLOW_UP));
             Herta.this.startAttack()
                     .handle(DamageType.FOLLOW_UP, dh -> {

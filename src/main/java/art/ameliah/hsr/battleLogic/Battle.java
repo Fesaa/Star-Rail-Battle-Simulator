@@ -330,7 +330,6 @@ public class Battle implements IBattle {
         }
         for (AbstractCharacter<?> character : playerTeam) {
             character.generateStatsString();
-            character.generateStatsReport();
         }
         isInCombat = true;
         for (AbstractCharacter<?> character : playerTeam) {
@@ -389,9 +388,9 @@ public class Battle implements IBattle {
 
         // TODO: Find a way to remove Yunli logic from here
         // Ideally the battle loop does not care about the specifics of the characters
-        if (yunli != null && yunli.currentEnergy >= yunli.ultCost) {
+        if (yunli != null && yunli.getCurrentEnergy().get() >= yunli.ultCost) {
             yunli.tryUltimate();
-            if (march != null && march.chargeCount >= march.chargeThreshold) {
+            if (march != null && march.getChargeCount().get() >= SwordMarch.CHARGE_THRESHOLD) {
                 currentUnit = march;
                 nextAV = actionValueMap.get(currentUnit);
             }
@@ -467,7 +466,7 @@ public class Battle implements IBattle {
     }
 
     private void generateMetrics() {
-        this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p, lessMetrics)));
+        this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p)));
         if (!lessMetrics) {
             this.enemyTeam.forEach(e -> addToLog(new EnemyMetrics(e)));
         }
@@ -531,7 +530,7 @@ public class Battle implements IBattle {
     @Override
     public boolean hasCharacter(String name) {
         for (AbstractCharacter<?> character : playerTeam) {
-            if (character.name.equals(name)) {
+            if (character.getName().equals(name)) {
                 return true;
             }
         }
@@ -541,7 +540,7 @@ public class Battle implements IBattle {
     @Override
     public AbstractCharacter<?> getCharacter(String name) {
         for (AbstractCharacter<?> character : playerTeam) {
-            if (character.name.equals(name)) {
+            if (character.getName().equals(name)) {
                 return character;
             }
         }

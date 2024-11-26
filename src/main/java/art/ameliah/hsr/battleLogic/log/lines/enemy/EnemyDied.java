@@ -11,7 +11,7 @@ public class EnemyDied implements Loggable {
     private final String reason;
 
     public EnemyDied(AbstractEnemy enemy, AbstractCharacter<?> killer) {
-        this(enemy, String.format("after %s attacked them", killer.name));
+        this(enemy, String.format("after %s attacked them", killer.getName()));
     }
 
     public EnemyDied(AbstractEnemy enemy, String reason) {

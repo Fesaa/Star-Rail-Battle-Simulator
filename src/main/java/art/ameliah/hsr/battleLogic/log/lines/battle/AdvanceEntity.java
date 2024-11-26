@@ -8,7 +8,7 @@ public record AdvanceEntity(AbstractEntity entity, float avDelta, float from, fl
 
     @Override
     public String asString() {
-        return String.format("%s advanced by %.1f%% (%.3f -> %.3f)", this.entity.name, this.avDelta, this.from, this.to);
+        return String.format("%s advanced by %.1f%% (%.3f -> %.3f)", this.entity.getName(), this.avDelta, this.from, this.to);
     }
 
     @Override

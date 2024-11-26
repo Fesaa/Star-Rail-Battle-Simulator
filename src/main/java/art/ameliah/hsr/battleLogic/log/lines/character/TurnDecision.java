@@ -19,7 +19,7 @@ public class TurnDecision implements Loggable {
 
     @Override
     public String asString() {
-        return character.name + " decided to " + result + " because " + turnGoal.getSimpleName();
+        return character.getName() + " decided to " + result + " because " + turnGoal.getSimpleName();
     }
 
     @Override

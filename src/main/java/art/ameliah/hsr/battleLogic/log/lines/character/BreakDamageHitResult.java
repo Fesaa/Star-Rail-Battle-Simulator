@@ -13,7 +13,7 @@ public record BreakDamageHitResult(AbstractCharacter<?> source, AbstractEnemy ta
     @Override
     public String asString() {
         return String.format("%s hit %s for %.3f Break damage - Base Damage: %.3f, Break Effect Multiplier: %.3f, Defense Multiplier: %.3f, Res Multiplier: %.3f, Damage Vuln Multiplier: %.3f, Toughness Multiplier: %.3f",
-                source.name, target.name, calculatedDamage, baseDamage, breakEffectMultiplier, defMultiplier, resMultiplier,
+                source.getName(), target.getName(), calculatedDamage, baseDamage, breakEffectMultiplier, defMultiplier, resMultiplier,
                 damageTakenMultiplier, toughnessMultiplier);
     }
 

@@ -28,10 +28,10 @@ public class DoMove implements Loggable {
     @Override
     public String asString() {
         if (this.moveType.equals(MoveType.ULTIMATE)) {
-            return String.format("%s used Ultimate (%.3f -> %.3f)", this.character.name, this.initialEnergy, this.currentEnergy);
+            return String.format("%s used Ultimate (%.3f -> %.3f)", this.character.getName(), this.initialEnergy, this.currentEnergy);
         }
 
-        return this.character.name + " used " + this.moveType;
+        return this.character.getName() + " used " + this.moveType;
     }
 
     @Override

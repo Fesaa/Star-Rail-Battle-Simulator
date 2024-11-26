@@ -16,7 +16,7 @@ public class UltDecision implements Loggable {
 
     @Override
     public String asString() {
-        return character.name + " decided to ULT because " + ultGoal.getSimpleName();
+        return character.getName() + " decided to ULT because " + ultGoal.getSimpleName();
     }
 
     @Override

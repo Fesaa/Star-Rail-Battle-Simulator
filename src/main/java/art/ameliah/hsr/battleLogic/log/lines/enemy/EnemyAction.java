@@ -41,7 +41,7 @@ public class EnemyAction implements Loggable {
         StringBuilder sb = new StringBuilder();
 
         if (this.enemy != null) {
-            sb.append(this.enemy.name);
+            sb.append(this.enemy.getName());
         } else {
             sb.append("unknown");
         }
@@ -60,7 +60,7 @@ public class EnemyAction implements Loggable {
         }
 
         if (this.hit != null) {
-            sb.append(" against ").append(this.hit.name);
+            sb.append(" against ").append(this.hit.getName());
         }
 
         return sb.toString();

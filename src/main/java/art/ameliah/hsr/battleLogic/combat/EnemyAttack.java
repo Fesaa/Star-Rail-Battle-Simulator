@@ -5,7 +5,6 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.moze.Moze;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import lombok.Getter;
 
@@ -38,10 +37,8 @@ public class EnemyAttack implements IAttack, BattleParticipant {
         getBattle().setAttacking(true);
 
         for (EnemyHit hit : this.hits) {
-            if (hit.target() instanceof Moze moze) {
-                if (moze.isDeparted) {
-                    continue;
-                }
+            if (hit.target().invincible()) {
+                continue;
             }
 
             var res = hit.target().hit(hit);

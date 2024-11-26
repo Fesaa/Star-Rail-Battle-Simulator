@@ -9,21 +9,20 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTurnGoal.SkillCounterCharacter {
+
     private static final String NAME = "Huohuo";
 
-    final HuohuoTalentPower talentPower = new HuohuoTalentPower();
-    private final String numTalentProcsMetricName = "Number of Talent Procs";
-    int talentCounter = 0;
-    private int numTalentProcs = 0;
+    protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("hh-talent-proc", "Number of Talent Procs"));
+
+    private final HuohuoTalentPower talentPower = new HuohuoTalentPower();
+    private int talentCounter = 0;
 
     public Huohuo() {
         super(NAME, 1358, 602, 509, 98, 80, ElementType.WIND, 140, 100, Path.ABUNDANCE);
@@ -77,18 +76,6 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         tryUltimate();
     }
 
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(numTalentProcsMetricName, String.valueOf(numTalentProcs));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(numTalentProcsMetricName);
-        return list;
-    }
-
     @Override
     public int getSkillCounter() {
         return talentCounter;
@@ -103,13 +90,13 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         @Override
         public void onTurnStart() {
             Huohuo.this.increaseEnergy(1, TALENT_ENERGY_GAIN);
-            numTalentProcs++;
+            Huohuo.this.talentProcs.increment();
         }
 
         @Override
         public void onUseUltimate() {
             Huohuo.this.increaseEnergy(1, TALENT_ENERGY_GAIN);
-            numTalentProcs++;
+            Huohuo.this.talentProcs.increment();
         }
     }
 }

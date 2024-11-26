@@ -19,7 +19,7 @@ public class UltAtEndOfBattle<C extends AbstractCharacter<C>> extends UltGoal<C>
             return UltGoalResult.DO;
         }
 
-        if (robin.currentEnergy >= robin.maxEnergy && !this.character.name.equals(Robin.NAME)) {
+        if (robin.getCurrentEnergy().get() >= robin.maxEnergy && !this.character.getName().equals(Robin.NAME)) {
             return UltGoalResult.DONT;
         }
 

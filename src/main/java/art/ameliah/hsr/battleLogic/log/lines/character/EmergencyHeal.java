@@ -8,7 +8,7 @@ public record EmergencyHeal(AbstractCharacter<?> character) implements Loggable 
 
     @Override
     public String asString() {
-        return "Triggering " + this.character.name + " Emergency Heal";
+        return "Triggering " + this.character.getName() + " Emergency Heal";
     }
 
     @Override

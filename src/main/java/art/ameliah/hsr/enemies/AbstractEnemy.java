@@ -15,7 +15,6 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.ruanmei.RuanMei;
 import art.ameliah.hsr.enemies.action.EnemyActionSequence;
-import art.ameliah.hsr.enemies.game.penacony.PastConfinedAndCaged;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TauntPower;
@@ -179,7 +178,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         double r = getBattle().getEnemyTargetRng().nextDouble() * totalWeight;
         for (int pos = 0; pos < getBattle().getPlayers().size(); pos++) {
             AbstractCharacter<?> character = getBattle().getPlayers().get(pos);
-            if (!character.canBeAttacked()) {
+            if (character.invincible()) {
                 // Do not update r value if character cannot be attacked. See todo for concerns.
                 continue;
             }
@@ -316,7 +315,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
 
         this.act();
-        numTurnsMetric++;
+        this.turnsMetric.increment();
     }
 
     @Override
@@ -331,7 +330,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     public String getMetrics() {
-        return String.format("Metrics for %s with %,f speed \nTurns taken: %,d \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", name, baseSpeed, numTurnsMetric, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
+        return String.format("Metrics for %s with %,f speed \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", getName(), baseSpeed, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
     }
 
     public EnemyAttack startAttack() {

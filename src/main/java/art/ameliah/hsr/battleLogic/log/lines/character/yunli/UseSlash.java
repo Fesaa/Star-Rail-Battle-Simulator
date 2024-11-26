@@ -15,7 +15,7 @@ public class UseSlash implements Loggable {
 
     @Override
     public String asString() {
-        return this.yunli.name + " used Slash";
+        return this.yunli.getName() + " used Slash";
     }
 
     @Override

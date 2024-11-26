@@ -14,32 +14,37 @@ import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked {
+
     public static final String NAME = "Topaz";
-    final AbstractPower proofOfDebt = new ProofOfDebt();
+
+    private final AbstractPower proofOfDebt = new ProofOfDebt();
     final Numby numby;
-    private final String numbyAttacksMetricName = "Numby Attacks";
-    private final String numbyAdvancedTimesMetricName = "Number of Useful Numby Advances";
-    private final String actualNumbyAdvanceMetricName = "Amount of AV Advanced by Numby";
-    private final String wastedNumbyAdvancesMetricName = "Number of Wasted Numby Advances";
-    private final String leftoverAVNumbyMetricName = "Leftover AV (Numby)";
-    private final String leftoverUltChargesMetricName = "Leftover Ult Charges";
-    public int numbyAttacksMetrics = 0;
-    public int numbyAdvancedTimesMetrics = 0;
-    public int actualNumbyAdvanceMetric = 0;
-    public int wastedNumbyAdvances = 0;
-    PermPower stonksPower = PermPower.create(PowerStat.CRIT_DAMAGE, 25, "Topaz Ult Power");
-    int ultCounter = 0;
+
+    @Getter
+    protected CounterMetric<Integer> numbyAttacks = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-numby-attacks", "Numby Attacks"));
+    @Getter
+    protected CounterMetric<Integer> numbyAdvancedTimes = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-numby-advanced-times", "Number of Useful Numby Advances"));
+    @Getter
+    protected CounterMetric<Integer> numbyAVAdvances = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-actual-numby-advance", "Amount of AV Advanced by Numby"));
+    @Getter
+    protected CounterMetric<Integer> wastedNumbyAdvances = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-wasted-numby-advances", "Number of Wasted Numby Advances"));
+    @Getter
+    protected CounterMetric<Integer> ultCharges = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-ult-charges", "Leftover Ult Charges"));
+
+
+    private PermPower stonksPower = PermPower.create(PowerStat.CRIT_DAMAGE, 25, "Topaz Ult Power");
     private boolean techniqueActive = false;
 
     public Topaz() {
@@ -98,7 +103,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
     public void useUltimate() {
         this.stonksPower = PermPower.create(PowerStat.CRIT_DAMAGE, 25, "Topaz Ult Power");
-        ultCounter = 2;
+        this.ultCharges.set(2);
         this.addPower(this.stonksPower);
     }
 
@@ -115,7 +120,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
     public void numbyAttack(List<DamageType> types) {
         float multiplier;
         float toughnessDamage;
-        if (ultCounter > 0) {
+        if (this.ultCharges.get() > 0) {
             multiplier = 2.1f;
             toughnessDamage = TOUGHNESS_DAMAGE_TWO_UNITS / 8;
         } else {
@@ -134,14 +139,14 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
                             al.hit(target, multiplier / 7, toughnessDamage);
                         }
 
-                        if (this.ultCounter > 0) {
+                        if (this.ultCharges.get() > 0) {
                             al.hit(target, 0.9f, toughnessDamage);
                             increaseEnergy(10, "from Enhanced Numby attack");
-                            this.ultCounter--;
+                            this.ultCharges.decrement();
                         }
                     });
                 }).afterAttackHook(() -> {
-                    if (ultCounter <= 0) {
+                    if (this.ultCharges.get() <= 0) {
                         if (types.contains(DamageType.SKILL)) {
                             numby.AdvanceForward(); //manually advance numby when topaz skills with last charge of ult
                         }
@@ -157,28 +162,6 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
 
     public void useTechnique() {
         techniqueActive = true;
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(leftoverAVNumbyMetricName, String.valueOf(getBattle().getActionValueMap().get(numby)));
-        map.put(leftoverUltChargesMetricName, String.valueOf(ultCounter));
-        map.put(numbyAttacksMetricName, String.valueOf(numbyAttacksMetrics));
-        map.put(numbyAdvancedTimesMetricName, String.valueOf(numbyAdvancedTimesMetrics));
-        map.put(actualNumbyAdvanceMetricName, String.valueOf(actualNumbyAdvanceMetric));
-        map.put(wastedNumbyAdvancesMetricName, String.valueOf(wastedNumbyAdvances));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(leftoverAVNumbyMetricName);
-        list.add(leftoverUltChargesMetricName);
-        list.add(numbyAttacksMetricName);
-        list.add(numbyAdvancedTimesMetricName);
-        list.add(actualNumbyAdvanceMetricName);
-        list.add(wastedNumbyAdvancesMetricName);
-        return list;
     }
 
     @Override
@@ -214,7 +197,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         public static String NAME = "Proof of Debt Power";
 
         public ProofOfDebt() {
-            this.setName(NAME);
+            this.name = NAME;
             lastsForever = true;
             this.type = PowerType.DEBUFF;
         }
@@ -242,7 +225,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
                     break;
                 }
             }
-            if (ultCounter > 0) {
+            if (Topaz.this.ultCharges.get() > 0) {
                 for (DamageType type : attack.getTypes()) {
                     if (type == DamageType.BASIC || type == DamageType.SKILL || type == DamageType.ULTIMATE) {
                         Topaz.this.numby.AdvanceForward();

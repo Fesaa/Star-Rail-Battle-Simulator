@@ -81,7 +81,7 @@ public class Asta extends AbstractCharacter<Asta> {
             return;
         }
         // check for turn 1 since this metric is incremented in takeTurn, which happens after onTurnStart. So at the time of the 2nd onTurnStart, this metric will still be 1.
-        if (numTurnsMetric >= 1) {
+        if (this.turnsMetric.get() >= 1) {
             decreaseStacks(2);
         }
     }

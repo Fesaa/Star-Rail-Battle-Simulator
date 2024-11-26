@@ -19,13 +19,13 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,20 +33,20 @@ import java.util.List;
 import java.util.Map;
 
 public class Lingsha extends AbstractSummoner<Lingsha> {
+
     public static final String NAME = "Lingsha";
+
+    protected CounterMetric<Integer> fuYuanAttackCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-attacks", "Number of Fu Yuan Attacks"));
+    protected CounterMetric<Integer> emergencyHealsCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-emergencyHeals", "Number of Emergency Heals"));
+
     static final int fuYuanMaxHitCount = 5;
     static final int skillHitCountGain = 3;
     private static final int emergencyHealCooldown = 2;
     final FuYuan fuYuan;
     final AbstractPower damageTrackerPower;
     private final HashMap<AbstractCharacter<?>, Integer> characterTimesDamageTakenMap = new HashMap<>();
-    private final String fuYuanAttacksMetricName = "Number of Fu Yuan Attacks";
-    private final String numEmergencyHealsMetricName = "Number of Emergency Heal Triggers";
-    private final String leftoverAVFuYuanMetricName = "Leftover AV (Fu Yuan)";
     int fuYuanCurrentHitCount = 0;
     private int currentEmergencyHealCD = 0;
-    private int fuYuanAttacksMetric = 0;
-    private int numEmergencyHeals = 0;
 
     public Lingsha() {
         super(NAME, 1358, 679, 437, 98, 80, ElementType.FIRE, 110, 100, Path.ABUNDANCE);
@@ -129,7 +129,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
                 );
             }
         })).afterAttackHook(() -> {
-            fuYuanAttacksMetric++;
+            this.fuYuanAttackCounter.increment();
             if (useHitCount) {
                 decreaseHitCount(1);
             }
@@ -188,20 +188,10 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         }
     }
 
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(leftoverAVFuYuanMetricName, String.valueOf(getBattle().getActionValueMap().get(fuYuan)));
-        map.put(fuYuanAttacksMetricName, String.valueOf(fuYuanAttacksMetric));
-        map.put(numEmergencyHealsMetricName, String.valueOf(numEmergencyHeals));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(leftoverAVFuYuanMetricName);
-        list.add(fuYuanAttacksMetricName);
-        list.add(numEmergencyHealsMetricName);
-        return list;
+    @Override
+    public String leftOverAV() {
+        return super.leftOverAV()
+                + String.format("\nLeft over AV: %.2f (FuYuan)", getBattle().getActionValueMap().get(this.fuYuan));
     }
 
     @Override
@@ -243,7 +233,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
             }
 
             getBattle().addToLog(new EmergencyHeal(Lingsha.this));
-            numEmergencyHeals++;
+            Lingsha.this.emergencyHealsCounter.increment();
             currentEmergencyHealCD = emergencyHealCooldown;
             Lingsha.this.FuYuanAttack(false);
         }

@@ -15,7 +15,7 @@ public class UseCull implements Loggable {
 
     @Override
     public String asString() {
-        return this.yunli.name + " used Cull";
+        return this.yunli.getName() + " used Cull";
     }
 
     @Override

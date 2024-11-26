@@ -8,7 +8,7 @@ public record UseCounter(AbstractCharacter<?> character) implements Loggable {
 
     @Override
     public String asString() {
-        return this.character.name + " used Counter";
+        return this.character.getName() + " used Counter";
     }
 
     @Override

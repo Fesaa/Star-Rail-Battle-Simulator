@@ -87,7 +87,7 @@ public class FrigidProwler extends AbstractEnemy {
     private void DevourOtherling() {
         Optional<AbstractEnemy> optionalOtherling = getBattle().getEnemies()
                 .stream()
-                .filter(e -> e.name.equals(EverwinterShadewalker.NAME))
+                .filter(e -> e.getName().equals(EverwinterShadewalker.NAME))
                 .findFirst();
 
         if (optionalOtherling.isPresent()) {
@@ -104,7 +104,7 @@ public class FrigidProwler extends AbstractEnemy {
         public static final String NAME = "Frigid Prowler";
 
         public DeepFreeze() {
-            this.setName(NAME);
+            this.name = name;
             this.type = PowerType.DEBUFF;
             this.setStat(PowerStat.SPEED_PERCENT, -12);
             // this.setStat(PowerStat.ICE_RES, -20); I don't think we can do this?

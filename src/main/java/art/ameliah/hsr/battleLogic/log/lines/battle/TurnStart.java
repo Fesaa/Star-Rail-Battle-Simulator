@@ -19,11 +19,11 @@ public record TurnStart(AbstractEntity next, float atAV,
 
     @Override
     public String asString() {
-        return "Next is " + this.next.name + " at " + this.atAV + " action value " +
+        return "Next is " + this.next.getName() + " at " + this.atAV + " action value " +
                 actionValueMap.entrySet()
                         .stream()
                         .sorted((Map.Entry.comparingByValue()))
-                        .map(e -> e.getKey().name + "=" + e.getValue())
+                        .map(e -> e.getKey().getName() + "=" + e.getValue())
                         .collect(Collectors.joining(", ", "{", "}"));
     }
 

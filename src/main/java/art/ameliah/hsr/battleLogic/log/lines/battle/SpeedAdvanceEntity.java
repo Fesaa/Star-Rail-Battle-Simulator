@@ -8,7 +8,7 @@ public record SpeedAdvanceEntity(AbstractEntity entity, float from, float to) im
 
     @Override
     public String asString() {
-        return String.format("%s advanced by speed increase (%.3f -> %.3f)", this.entity.name, this.from, this.to);
+        return String.format("%s advanced by speed increase (%.3f -> %.3f)", this.entity.getName(), this.from, this.to);
     }
 
     @Override

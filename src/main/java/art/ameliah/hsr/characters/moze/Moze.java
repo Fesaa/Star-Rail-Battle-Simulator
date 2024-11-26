@@ -14,26 +14,26 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Moze extends AbstractCharacter<Moze> {
+
     public static final String NAME = "Moze";
-    private final String FUAsMetricName = "Number of Follow Up Attacks Used";
-    private final String talentProcsMetricName = "Talent Extra Damage Procs";
+    private static final int MAX_CHARGE = 9;
+    private static final int CHARGE_ATTACK_THRESHOLD = 3;
+
+    protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("moze-talent-procs", "Number of Follow Up Attacks Used"));
+    protected CounterMetric<Integer> chargeCount = metricRegistry.register(CounterMetric.newIntegerCounter("moze-charge-count", "Left over charges"));
+
     private final MozePreyPower preyPower;
-    private final int MAX_CHARGE = 9;
-    private final int CHARGE_ATTACK_THRESHOLD = 3;
-    public int FUAs = 0;
-    public int talentProcs = 0;
+
     public boolean isDeparted = false;
-    private int chargeCount;
     private int chargeLost = 0;
     private boolean skillPointRecovered = false;
 
@@ -88,8 +88,7 @@ public class Moze extends AbstractCharacter<Moze> {
     }
 
     public void useFollowUp(AbstractEnemy enemy) {
-        moveHistory.add(MoveType.FOLLOW_UP);
-        FUAs++;
+        this.actionMetric.record(MoveType.FOLLOW_UP);
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
         increaseEnergy(10, FUA_ENERGY_GAIN);
 
@@ -119,30 +118,25 @@ public class Moze extends AbstractCharacter<Moze> {
 
     public void increaseCharge(int amount) {
         chargeLost = 0;
-        int initalStack = chargeCount;
-        chargeCount += amount;
-        if (chargeCount > MAX_CHARGE) {
-            chargeCount = MAX_CHARGE;
-        }
-        getBattle().addToLog(new GainCharge(this, amount, initalStack, chargeCount));
+        int initalStack = this.chargeCount.get();
+        this.chargeCount.increase(amount, MAX_CHARGE);
+        getBattle().addToLog(new GainCharge(this, amount, initalStack, this.chargeCount.get()));
     }
 
     public void decreaseCharge(int amount) {
-        if (chargeCount >= 1) {
-            int initalStack = chargeCount;
-            chargeCount -= amount;
+        if (this.chargeCount.get() >= 1) {
+            int initalStack = this.chargeCount.get();
+
+            this.chargeCount.decrease(amount, 0);
             chargeLost += amount;
-            if (chargeCount < 0) {
-                chargeCount = 0;
-            }
-            getBattle().addToLog(new GainCharge(this, amount, initalStack, chargeCount));
-            if (chargeLost >= CHARGE_ATTACK_THRESHOLD) {
+            getBattle().addToLog(new GainCharge(this, amount, initalStack, this.chargeCount.get()));
+            if (chargeLost >= CHARGE_ATTACK_THRESHOLD) { // Surely this can be done nicer :(
                 chargeLost -= CHARGE_ATTACK_THRESHOLD;
                 useFollowUp((AbstractEnemy) preyPower.getOwner());
             }
         }
 
-        if (chargeCount == 0) {
+        if (this.chargeCount.get() == 0) {
             preyPower.getOwner().removePower(preyPower);
         }
     }
@@ -153,33 +147,17 @@ public class Moze extends AbstractCharacter<Moze> {
     }
 
     @Override
-    public boolean canBeAttacked() {
-        return !this.isDeparted;
+    public boolean invincible() {
+        return this.isDeparted;
     }
 
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(FUAsMetricName, String.valueOf(FUAs));
-        map.put(talentProcsMetricName, String.valueOf(talentProcs));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(FUAsMetricName);
-        list.add(talentProcsMetricName);
-        return list;
-    }
-
-    public HashMap<String, String> addLeftoverCharacterAVMetric(HashMap<String, String> metricMap) {
+    @Override
+    public String leftOverAV() {
         Float leftoverAV = getBattle().getActionValueMap().get(this);
         if (leftoverAV == null) {
-            metricMap.put(leftoverAVMetricName, String.format("%,d (Charge Left)", chargeCount));
-        } else {
-            return super.addLeftoverCharacterAVMetric(metricMap);
+            return String.format("%,d (Charge Left)", chargeCount.get());
         }
-
-        return metricMap;
+        return super.leftOverAV();
     }
 
     private class MozePreyPower extends AbstractPower {
@@ -215,7 +193,7 @@ public class Moze extends AbstractCharacter<Moze> {
                 }
             }
             if (trigger) {
-                talentProcs++;
+                Moze.this.talentProcs.increment();
 
                 attack.hit(Moze.this, enemy, 0.33f);
                 increaseEnergy(2, TALENT_ENERGY_GAIN);
@@ -227,7 +205,7 @@ public class Moze extends AbstractCharacter<Moze> {
         public void onRemove() {
             getBattle().getActionValueMap().put(Moze.this, Moze.this.getBaseAV());
             getBattle().AdvanceEntity(Moze.this, 20);
-            isDeparted = false;
+            Moze.this.isDeparted = false;
         }
     }
 }

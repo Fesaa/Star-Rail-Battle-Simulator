@@ -17,6 +17,8 @@ import art.ameliah.hsr.characters.goal.UltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.DefaultLightcone;
+import art.ameliah.hsr.metrics.ActionMetric;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -24,12 +26,19 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends AbstractEntity {
+
+    protected static final String ENERGY_KEY = "energy";
+    protected static final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
+    protected static final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
+    protected static final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
+    protected static final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
 
     public static final String ULT_ENERGY_GAIN = "from using Ultimate";
     public static final String SKILL_ENERGY_GAIN = "from using Skill";
@@ -41,45 +50,35 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public static final String LIGHTCONE_ENERGY_GAIN = "from Lightcone effect";
     public static final String ATTACKED_ENERGY_GAIN = "from being attacked";
     public static final String TECHNIQUE_ENERGY_GAIN = "from Technique effect";
+
+    @Getter
+    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("Actions", "Action made"));
+    @Getter
+    protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
+
     public final int level;
     public final float baseCritChance = 5.0f;
     public final float baseCritDamage = 50.0f;
     public final float maxEnergy;
     public final int tauntValue;
     public final ElementType elementType;
-    public final ArrayList<AbstractRelicSetBonus> relicSetBonus;
+    public final List<AbstractRelicSetBonus> relicSetBonus;
     public final boolean useTechnique = true;
-    public final String numTurnsMetricName = "Turns taken";
-    public final String numSkillsMetricName = "Skills Used";
-    public final String numBasicsMetricName = "Basic Attacks Used";
-    public final String numUltsMetricName = "Ultimates Used";
-    public final String leftoverAVMetricName = "Leftover AV";
-    public final String leftoverEnergyMetricName = "Leftover Energy";
-    public final ArrayList<MoveType> moveHistory;
-    public final HashMap<String, String> statsMap = new HashMap<>();
-    public final ArrayList<String> statsOrder = new ArrayList<>();
     @Getter
     protected final Path path;
     protected final int baseHP;
     protected final int baseAtk;
     protected final int baseDef;
     protected final int ultEnergyGain = 5;
-    protected final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
-    protected final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
-    protected final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
-    protected final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
+
     private final SortedMap<Integer, UltGoal<C>> ultGoals = new TreeMap<>();
     private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
     private final SortedMap<Integer, EnemyTargetGoal<C>> enemyTargetGoals = new TreeMap<>();
     private final SortedMap<Integer, AllyTargetGoal<C>> allyTargetGoals = new TreeMap<>();
     public boolean usesEnergy = true;
-    public float currentEnergy;
     public float ultCost;
     public AbstractLightcone lightcone;
     public boolean isDPS = false;
-    public int numSkillsMetric;
-    public int numBasicsMetric;
-    public int numUltsMetric;
     public String statsString;
     public boolean firstMove = true;
     public boolean hasAttackingUltimate;
@@ -97,13 +96,12 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.elementType = elementType;
         this.maxEnergy = maxEnergy;
         this.ultCost = maxEnergy;
-        this.currentEnergy = maxEnergy / 2;
+        this.currentEnergy.set(maxEnergy / 2);
         this.tauntValue = tauntValue;
         this.path = path;
 
-        powerList = new ArrayList<>();
-        relicSetBonus = new ArrayList<>();
-        moveHistory = new ArrayList<>();
+        this.powerList = new ArrayList<>();
+        this.relicSetBonus = new ArrayList<>();
 
         this.lightcone = new DefaultLightcone(this);
     }
@@ -171,7 +169,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public final void tryUltimate() {
-        if (currentEnergy < ultCost) {
+        if (this.currentEnergy.get() < ultCost) {
             return;
         }
 
@@ -215,7 +213,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     @Override
     public final void takeTurn() {
         super.takeTurn();
-        numTurnsMetric++;
+        this.turnsMetric.increment();
 
         // TODO: Ulting at the start of the turn makes the dmg higher in some places, but lowers in a few
         // Should investigate why this is happening, and add the needed goals to make it increase at all times
@@ -243,12 +241,12 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             }
         }
 
-        throw new IllegalStateException("No valid turn goal found for: " + this.name);
+        throw new IllegalStateException("No valid turn goal found for: " + this.getName());
     }
 
     protected void skillSequence() {
-        moveHistory.add(MoveType.SKILL);
-        numSkillsMetric++;
+        this.actionMetric.record(MoveType.SKILL);
+
         getBattle().addToLog(new DoMove(this, MoveType.SKILL));
         getBattle().useSkillPoint(this, 1);
         increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
@@ -258,8 +256,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     protected void basicSequence() {
-        moveHistory.add(MoveType.BASIC);
-        numBasicsMetric++;
+        this.actionMetric.record(MoveType.BASIC);
+
         getBattle().addToLog(new DoMove(this, MoveType.BASIC));
         getBattle().generateSkillPoint(this, 1);
         increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
@@ -269,11 +267,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     protected void ultimateSequence() {
-        moveHistory.add(MoveType.ULTIMATE);
-        numUltsMetric++;
-        float initialEnergy = currentEnergy;
-        currentEnergy -= ultCost;
-        getBattle().addToLog(new DoMove(this, MoveType.ULTIMATE, initialEnergy, currentEnergy));
+        this.actionMetric.record(MoveType.ULTIMATE);
+
+        float initialEnergy = this.currentEnergy.get();
+        this.currentEnergy.decrease(this.ultCost);
+        getBattle().addToLog(new DoMove(this, MoveType.ULTIMATE, initialEnergy, this.currentEnergy.get()));
         increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
         this.emit(BattleEvents::onUseUltimate);
         this.useUltimate();
@@ -343,10 +341,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         for (AbstractPower power : powerList) {
             totalCritChance += power.getStat(PowerStat.CRIT_CHANCE);
         }
-        if (totalCritChance > 100) {
-            totalCritChance = 100;
-        }
-        return totalCritChance;
+        return Math.min(totalCritChance, 100);
     }
 
     public float getTotalCritDamage() {
@@ -384,12 +379,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public float getFinalTauntValue() {
-        int baseTauntValue = tauntValue;
         float totalBonusTauntValue = 0;
         for (AbstractPower power : powerList) {
             totalBonusTauntValue += power.getStat(PowerStat.TAUNT_VALUE);
         }
-        return (baseTauntValue * (1 + totalBonusTauntValue / 100));
+        return (this.tauntValue * (1 + totalBonusTauntValue / 100));
     }
 
     public float getTotalERR() {
@@ -434,19 +428,17 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         return totalWeaknessBreakEff;
     }
 
-    public void increaseEnergy(float amount, boolean ERRAffected, String source) {
+    public void increaseEnergy(final float amount, boolean ERRAffected, String source) {
         if (!this.usesEnergy) return;
-        float initialEnergy = currentEnergy;
+        float initialEnergy = this.currentEnergy.get();
         float totalEnergyRegenBonus = getTotalERR();
-        float energyGained = amount;
-        if (ERRAffected) {
-            energyGained = amount * (1 + totalEnergyRegenBonus / 100);
+        float energyGained = ERRAffected ? amount * (1 + totalEnergyRegenBonus / 100) : amount;
+
+        this.currentEnergy.increase(energyGained);
+        if (this.currentEnergy.get() > this.maxEnergy) {
+            this.currentEnergy.set(this.maxEnergy);
         }
-        currentEnergy += energyGained;
-        if (currentEnergy > maxEnergy) {
-            currentEnergy = maxEnergy;
-        }
-        getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy, energyGained, source));
+        getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
     }
 
     public void increaseEnergy(float amount, String source) {
@@ -473,32 +465,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public boolean lastMove(MoveType move) {
-        for (int i = moveHistory.size() - 1; i > 0; i--) {
-            MoveType previousMove = moveHistory.get(i);
-            if (previousMove == MoveType.ULTIMATE) {
-                continue;
-            } else {
-                return previousMove == move;
-            }
-        }
-        return false;
+        return this.actionMetric.lastTurnAction() == move;
     }
 
     public boolean lastMoveBefore(MoveType move) {
-        boolean skippedYet = false;
-        for (int i = moveHistory.size() - 1; i > 0; i--) {
-            MoveType previousMove = moveHistory.get(i);
-            if (previousMove == MoveType.ULTIMATE) {
-                continue;
-            } else {
-                if (!skippedYet) {
-                    skippedYet = true;
-                } else {
-                    return previousMove == move;
-                }
-            }
-        }
-        return false;
+        return this.actionMetric.lookBackTurn(2) == move;
     }
 
     public void useTechnique() {
@@ -508,102 +479,31 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     }
 
-    public boolean canBeAttacked() {
-        return true;
+    public boolean invincible() {
+        return false;
     }
 
     public String getMetrics() {
-        StringBuilder metrics = new StringBuilder(statsString + String.format("\nCombat Metrics \nTurns taken: %,d \nBasics: %,d \nSkills: %,d \nUltimates: %,d \nRotation: %s", numTurnsMetric, numBasicsMetric, numSkillsMetric, numUltsMetric, moveHistory));
-        HashMap<String, String> metricsMap = getCharacterSpecificMetricMap();
-        for (String metric : getOrderedCharacterSpecificMetricsKeys()) {
-            metrics.append("\n").append(metric).append(": ").append(metricsMap.get(metric));
-        }
-        return metrics.toString();
+        return statsString + "\nCombat Metrics\n" + this.metricRegistry.representation() +
+                "Left over AV: " + this.leftOverAV();
     }
 
     public void generateStatsString() {
-        String gearString = String.format("Metrics for %s \nLightcone: %s \nRelic Set Bonuses: ", name, lightcone);
+        String gearString = String.format("Metrics for %s \nLightcone: %s \nRelic Set Bonuses: ", getName(), lightcone);
         gearString += relicSetBonus;
         statsString = gearString + String.format("\nOut of combat stats \nAtk: %.3f \nDef: %.3f \nHP: %.3f \nSpeed: %.3f \nSame Element Damage Bonus: %.3f \nCrit Chance: %.3f%% \nCrit Damage: %.3f%% \nBreak Effect: %.3f%%", getFinalAttack(), getFinalDefense(), getFinalHP(), getFinalSpeed(), getTotalSameElementDamageBonus(), getTotalCritChance(), getTotalCritDamage(), getTotalBreakEffect());
     }
 
-    public void generateStatsReport() {
-        String lightcone = "Lightcone: ";
-        String relicSets = "Relic Set Bonuses: ";
-        String hp = "HP: ";
-        String atk = "ATK: ";
-        String def = "DEF: ";
-        String spd = "SPD: ";
-        String cr = "CRIT RATE: ";
-        String cd = "CRIT DMG: ";
-        String ehr = "Effect Hit Rate: ";
-        String effectRes = "Effect RES: ";
-        String breakEffect = "Break Effect: ";
-        String element = "ELEMENT DMG: ";
-        String err = "ERR: ";
-
-        statsOrder.add(lightcone);
-        statsOrder.add(relicSets);
-        statsOrder.add(hp);
-        statsOrder.add(atk);
-        statsOrder.add(def);
-        statsOrder.add(spd);
-        statsOrder.add(cr);
-        statsOrder.add(cd);
-        statsOrder.add(ehr);
-        statsOrder.add(effectRes);
-        statsOrder.add(breakEffect);
-        statsOrder.add(element);
-        statsOrder.add(err);
-
-        statsMap.put(lightcone, this.lightcone.toString());
-        StringBuilder relicSetBonus = new StringBuilder("|");
-        for (AbstractRelicSetBonus relic : this.relicSetBonus) {
-            relicSetBonus.append(relic.toString()).append("|");
-        }
-        statsMap.put(relicSets, relicSetBonus.toString());
-        statsMap.put(hp, String.valueOf(getFinalHP()));
-        statsMap.put(atk, String.valueOf(getFinalAttack()));
-        statsMap.put(def, String.valueOf(getFinalDefense()));
-        statsMap.put(spd, String.valueOf(getFinalSpeed()));
-        statsMap.put(cr, getTotalCritChance() + "%");
-        statsMap.put(cd, getTotalCritDamage() + "%");
-        statsMap.put(ehr, getTotalEHR() + "%");
-        statsMap.put(effectRes, getTotalEffectRes() + "%");
-        statsMap.put(breakEffect, getTotalBreakEffect() + "%");
-        statsMap.put(element, getTotalSameElementDamageBonus() + "%");
-        statsMap.put(err, getTotalERR() + "%");
+    // Override if you want some special information
+    public String leftOverAV() {
+        return String.format("%.2f", getBattle().getActionValueMap().get(this));
     }
 
     public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(numTurnsMetricName, String.valueOf(numTurnsMetric));
-        map.put(numSkillsMetricName, String.valueOf(numSkillsMetric));
-        map.put(numBasicsMetricName, String.valueOf(numBasicsMetric));
-        map.put(numUltsMetricName, String.valueOf(numUltsMetric));
-        map = addLeftoverCharacterAVMetric(map);
-        map = addLeftoverCharacterEnergyMetric(map);
-        return map;
+        return new HashMap<>();
     }
 
     public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = new ArrayList<>();
-        list.add(numTurnsMetricName);
-        list.add(numSkillsMetricName);
-        list.add(numBasicsMetricName);
-        list.add(numUltsMetricName);
-        list.add(leftoverAVMetricName);
-        list.add(leftoverEnergyMetricName);
-        return list;
-    }
-
-    public HashMap<String, String> addLeftoverCharacterAVMetric(HashMap<String, String> metricMap) {
-        metricMap.put(leftoverAVMetricName, String.format("%.2f", getBattle().getActionValueMap().get(this)));
-        return metricMap;
-    }
-
-    public HashMap<String, String> addLeftoverCharacterEnergyMetric(HashMap<String, String> metricMap) {
-        metricMap.put(leftoverEnergyMetricName, String.format("%.2f", this.currentEnergy));
-        return metricMap;
+        return new ArrayList<>();
     }
 }

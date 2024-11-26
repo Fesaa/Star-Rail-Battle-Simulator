@@ -21,7 +21,7 @@ public record Attacked(AbstractEntity source, Collection<AbstractEntity> targets
 
     @Override
     public String asString() {
-        String s = source.name + " attacked "
+        String s = source.getName() + " attacked "
                 + targets.stream().map(Objects::toString).collect(Collectors.joining(", "))
                 + " for " + damage + " damage";
 

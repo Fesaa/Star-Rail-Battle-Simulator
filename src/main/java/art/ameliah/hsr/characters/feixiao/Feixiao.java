@@ -17,37 +17,34 @@ import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingDebuffGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 public class Feixiao extends AbstractCharacter<Feixiao> {
 
     public static final String NAME = "Feixiao";
-    public final int stackThreshold = 2;
+    public static final int STACK_THRESHOLD = 2;
+
+    protected CounterMetric<Float> gainedStacks = metricRegistry.register(CounterMetric.newFloatCounter("Gained stacks", "Amount of Talent Stacks gained"));
+    protected CounterMetric<Float> wastedStacks = metricRegistry.register(CounterMetric.newFloatCounter("Wasted stacks", "Amount of overcapped Stacks"));
+    protected CounterMetric<Integer> stacks = metricRegistry.register(CounterMetric.newIntegerCounter("Stacks", "Left over stacks"));
+
     final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
-    private final String numFUAsMetricName = "Follow up Attacks used";
-    private final String numStacksMetricName = "Amount of Talent Stacks gained";
-    private final String wastedStacksMetricName = "Amount of overcapped Stacks";
-    public int stackCount = 0;
     private Random fuaRng;
-    private int numFUAs = 0;
-    private int numStacks;
-    private int wastedStacks;
     private boolean FUAReady = true;
 
     public Feixiao() {
         super(NAME, 1048, 602, 388, 112, 80, ElementType.WIND, 12, 75, Path.HUNT);
 
         this.usesEnergy = false;
-        this.currentEnergy = 0;
+        this.currentEnergy.set(0f);
         this.ultCost = 6;
         this.isDPS = true;
         this.hasAttackingUltimate = true;
@@ -75,25 +72,26 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
 
     public void increaseStack(int amount) {
-        int initialStack = stackCount;
-        stackCount += amount;
-        getBattle().addToLog(new GainCharge(this, amount, initialStack, stackCount, "Stack"));
-        if (stackCount >= stackThreshold) {
-            int energyGain = stackCount / stackThreshold;
+        int initialStack = this.stacks.get();
+        this.stacks.increase(amount);
+        getBattle().addToLog(new GainCharge(this, amount, initialStack, this.stacks.get(), "Stack"));
+        if (this.stacks.get() >= STACK_THRESHOLD) {
+            int energyGain = this.stacks.get() / STACK_THRESHOLD; // WUT?
             gainStackEnergy(energyGain);
         }
     }
 
-    public void gainStackEnergy(int energyGain) {
-        numStacks += energyGain;
-        float initialEnergy = currentEnergy;
-        currentEnergy += energyGain;
-        if (currentEnergy > maxEnergy) {
-            currentEnergy = maxEnergy;
-            wastedStacks += energyGain;
+    public void gainStackEnergy(float energyGain) {
+        this.gainedStacks.increase(energyGain);
+        float initialEnergy = this.currentEnergy.get();
+
+        this.currentEnergy.increase(energyGain);
+        if (this.currentEnergy.get() > this.maxEnergy) {
+            this.wastedStacks.increase(this.currentEnergy.get() - this.maxEnergy);
+            this.currentEnergy.set(this.maxEnergy);
         }
-        stackCount = stackCount % stackThreshold;
-        getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy, energyGain, TALENT_ENERGY_GAIN));
+        this.stacks.set(this.stacks.get() % STACK_THRESHOLD); // Again wut?
+        getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGain, TALENT_ENERGY_GAIN));
     }
 
     public void useSkill() {
@@ -113,8 +111,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     }
 
     public void useFollowUp(final AbstractEnemy target) {
-        moveHistory.add(MoveType.FOLLOW_UP);
-        numFUAs++;
+        this.actionMetric.record(MoveType.FOLLOW_UP);
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
 
         this.doAttack(DamageType.FOLLOW_UP, dh -> {
@@ -148,7 +145,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     }
 
     public void onTurnStart() {
-        if (currentEnergy >= ultCost) {
+        if (this.currentEnergy.get() >= ultCost) {
             tryUltimate(); // check for ultimate activation at start of turn as well
         }
         if (FUAReady) {
@@ -176,27 +173,6 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         // This assumes a fix multiplier on her technique
         this.doAttack(dh -> dh.logic(getBattle().getEnemies(), (e, al) -> al.hit(e, 2, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
         this.gainStackEnergy(1);
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(numFUAsMetricName, String.valueOf(numFUAs));
-        map.put(numStacksMetricName, String.valueOf(numStacks));
-        map.put(wastedStacksMetricName, String.valueOf(wastedStacks));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(numFUAsMetricName);
-        list.add(numStacksMetricName);
-        list.add(wastedStacksMetricName);
-        return list;
-    }
-
-    public HashMap<String, String> addLeftoverCharacterEnergyMetric(HashMap<String, String> metricMap) {
-        metricMap.put(leftoverEnergyMetricName, String.format("%.2f (Flying Aureus)", this.currentEnergy));
-        return metricMap;
     }
 
     private static class FeiCritDmgPower extends AbstractPower {

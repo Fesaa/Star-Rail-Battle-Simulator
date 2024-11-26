@@ -19,14 +19,10 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class DrRatio extends AbstractCharacter<DrRatio> {
     public static final String NAME = "Dr. Ratio";
-    private final String numFUAsMetricName = "Follow up Attacks used";
-    private int numFUAs = 0;
 
     public DrRatio() {
         super(NAME, 1048, 776, 461, 103, 80, ElementType.IMAGINARY, 140, 75, Path.HUNT);
@@ -66,8 +62,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
     }
 
     public void useFollowUp(final AbstractEnemy enemy) {
-        moveHistory.add(MoveType.FOLLOW_UP);
-        numFUAs++;
+        this.actionMetric.record(MoveType.FOLLOW_UP);
         getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
         increaseEnergy(5, FUA_ENERGY_GAIN);
 
@@ -89,18 +84,6 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
 
     public void onCombatStart() {
         addPower(new Deduction());
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(numFUAsMetricName, String.valueOf(numFUAs));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(numFUAsMetricName);
-        return list;
     }
 
     private static class Deduction extends PermPower {
@@ -140,7 +123,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         private int numCharges = 2;
 
         public WisemanFolly() {
-            this.setName(NAME);
+            this.name = name;
         }
 
         @Override

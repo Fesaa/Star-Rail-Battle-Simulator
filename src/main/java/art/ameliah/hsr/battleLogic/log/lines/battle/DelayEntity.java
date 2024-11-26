@@ -8,7 +8,7 @@ public record DelayEntity(AbstractEntity entity, float avDelta, float from, floa
 
     @Override
     public String asString() {
-        return String.format("%s delayed by %.1f%% (%.3f -> %.3f)", this.entity.name, this.avDelta, this.from, this.to);
+        return String.format("%s delayed by %.1f%% (%.3f -> %.3f)", this.entity.getName(), this.avDelta, this.from, this.to);
     }
 
     @Override

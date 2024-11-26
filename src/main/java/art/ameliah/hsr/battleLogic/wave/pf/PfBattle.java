@@ -1,9 +1,7 @@
 package art.ameliah.hsr.battleLogic.wave.pf;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.FixedHit;
-import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.GainGridPoints;
 import art.ameliah.hsr.battleLogic.log.lines.battle.pf.SurgingGritState;
 import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;

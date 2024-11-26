@@ -8,7 +8,7 @@ public record WeaknessBreakRecover(AbstractEnemy enemy, float from, float to) im
 
     @Override
     public String asString() {
-        return String.format("%s recovered from weakness break (%.3f -> %.3f)", this.enemy.name, this.from, this.to);
+        return String.format("%s recovered from weakness break (%.3f -> %.3f)", this.enemy.getName(), this.from, this.to);
     }
 
     @Override

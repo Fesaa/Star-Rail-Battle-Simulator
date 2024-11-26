@@ -36,7 +36,7 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
     }
 
     public AbstractPower(String name) {
-        this.setName(name);
+        this.name = name;
     }
 
     public void setOwner(AbstractEntity owner) {

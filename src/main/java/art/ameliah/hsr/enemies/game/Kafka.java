@@ -141,7 +141,7 @@ public class Kafka extends AbstractEnemy {
         public final String NAME = "ExtraShockDmg";
 
         public ExtraShockDmg() {
-            this.setName(NAME);
+            this.name = name;
         }
 
         @Override

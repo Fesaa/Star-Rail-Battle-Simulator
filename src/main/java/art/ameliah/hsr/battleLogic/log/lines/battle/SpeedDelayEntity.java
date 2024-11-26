@@ -8,7 +8,7 @@ public record SpeedDelayEntity(AbstractEntity entity, float from, float to) impl
 
     @Override
     public String asString() {
-        return String.format("%s delayed by speed decrease (%.3f -> %.3f)", this.entity.name, this.from, this.to);
+        return String.format("%s delayed by speed decrease (%.3f -> %.3f)", this.entity.getName(), this.from, this.to);
     }
 
     @Override

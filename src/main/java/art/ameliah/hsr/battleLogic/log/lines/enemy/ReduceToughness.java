@@ -8,7 +8,7 @@ public record ReduceToughness(AbstractEnemy enemy, float tDelta, float from, flo
 
     @Override
     public String asString() {
-        return String.format("%s's toughness reduced by %.3f (%.3f -> %.3f)", this.enemy.name, this.tDelta, this.from, this.to);
+        return String.format("%s's toughness reduced by %.3f (%.3f -> %.3f)", this.enemy.getName(), this.tDelta, this.from, this.to);
     }
 
     @Override

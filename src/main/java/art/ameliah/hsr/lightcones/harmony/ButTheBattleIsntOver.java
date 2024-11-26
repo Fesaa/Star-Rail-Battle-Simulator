@@ -1,6 +1,7 @@
 package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
@@ -31,7 +32,7 @@ public class ButTheBattleIsntOver extends AbstractLightcone {
     @Override
     public void onUseUltimate() {
         // Metric is incremented before hook is called, so there is an offset.
-        if (this.owner.numUltsMetric % 2 == 1) {
+        if (this.owner.getActionMetric().frequency(MoveType.ULTIMATE) % 2 == 1) {
             getBattle().generateSkillPoint(this.owner, 1);
         }
     }

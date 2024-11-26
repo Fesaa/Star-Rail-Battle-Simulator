@@ -13,7 +13,7 @@ public class TingyunTurnGoal extends TurnGoal<Tingyun> {
     public TurnGoalResult determineAction() {
         if (getBattle().getSkillPoints() > 0) {
             boolean moveGood = (character.lastMove(MoveType.BASIC) && character.lastMoveBefore(MoveType.BASIC));
-            if (character.benefactor == null || moveGood) {
+            if (character.getBenefactor() == null || moveGood) {
                 return TurnGoalResult.SKILL;
             }
         }

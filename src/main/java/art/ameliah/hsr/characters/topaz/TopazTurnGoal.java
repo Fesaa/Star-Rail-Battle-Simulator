@@ -9,7 +9,7 @@ public class TopazTurnGoal extends TurnGoal<Topaz> {
 
     @Override
     public TurnGoalResult determineAction() {
-        if (getBattle().getSkillPoints() <= 3 || character.ultCounter > 0) {
+        if (getBattle().getSkillPoints() <= 3 || character.getUltCharges().get() > 0) {
             return TurnGoalResult.BASIC;
         }
 

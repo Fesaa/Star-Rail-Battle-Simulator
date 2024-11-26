@@ -10,7 +10,7 @@ public record GainEnergy(AbstractCharacter<?> character, float initialEnergy, fl
 
     @Override
     public String asString() {
-        return String.format("%s gained %.3f Energy (%.3f -> %.3f) %s", this.character.name, energyGained, initialEnergy, currentEnergy, source);
+        return String.format("%s gained %.3f Energy (%.3f -> %.3f) %s", this.character.getName(), energyGained, initialEnergy, currentEnergy, source);
     }
 
     @Override

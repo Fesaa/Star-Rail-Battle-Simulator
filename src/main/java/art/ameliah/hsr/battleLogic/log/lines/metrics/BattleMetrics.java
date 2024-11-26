@@ -31,7 +31,7 @@ public class BattleMetrics implements Loggable {
         this.leftOverEnergy = battle.getPlayers()
                 .stream()
                 .collect(HashMap::new,
-                        (map, character) -> map.put(character, character.currentEnergy),
+                        (map, character) -> map.put(character, character.getCurrentEnergy().get()),
                         HashMap::putAll);
     }
 
@@ -43,14 +43,14 @@ public class BattleMetrics implements Loggable {
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
-                .map(e -> String.format("%s: %.2f", e.getKey().name, e.getValue()))
+                .map(e -> String.format("%s: %.2f", e.getKey().getName(), e.getValue()))
                 .collect(Collectors.joining(" | "))
                 + "\n";
         out += "Leftover Energy: " + leftOverEnergy
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
-                .map(e -> String.format("%s: %.2f", e.getKey().name, e.getValue()))
+                .map(e -> String.format("%s: %.2f", e.getKey().getName(), e.getValue()))
                 .collect(Collectors.joining(" | "));
         return out;
     }

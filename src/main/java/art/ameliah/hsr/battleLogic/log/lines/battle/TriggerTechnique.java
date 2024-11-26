@@ -13,7 +13,7 @@ public record TriggerTechnique(List<AbstractCharacter<?>> characters) implements
     public String asString() {
         return "Triggering Techniques for " + this.characters
                 .stream()
-                .map(c -> c.name)
+                .map(c -> c.getName())
                 .collect(Collectors.joining(", "));
     }
 

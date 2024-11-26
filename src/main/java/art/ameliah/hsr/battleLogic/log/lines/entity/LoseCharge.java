@@ -8,7 +8,7 @@ public record LoseCharge(AbstractEntity character, int amount, int initialCharge
 
     @Override
     public String asString() {
-        return String.format("%s loses %,d Charge (%,d -> %,d)", character.name, amount, initialCharge, chargeCount);
+        return String.format("%s loses %,d Charge (%,d -> %,d)", character.getName(), amount, initialCharge, chargeCount);
     }
 
     @Override

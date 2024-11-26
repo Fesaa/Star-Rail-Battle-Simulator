@@ -16,34 +16,31 @@ import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.BoolMetric;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Sword March";
-    public final int chargeThreshold = 7;
-    private final String numEBAMetricName = "Enhanced Basic Attacks used";
-    private final String numFUAsMetricName = "Follow up Attacks used";
-    private final String numUltEnhancedEBAUsed = "Ult Boosted Enhanced Basic Attacks used";
-    private final String numExtraHitsMetricName = "Number of extra hits with EBA";
-    private final String leftoverChargeMetricName = "Leftover Charge";
+    public static final int CHARGE_THRESHOLD = 7;
+
+    protected CounterMetric<Integer> ultEnhancedEBA = this.metricRegistry.register(CounterMetric.newIntegerCounter("EHB boosted by ult"));
+    protected CounterMetric<Integer> extraHits = this.metricRegistry.register(CounterMetric.newIntegerCounter("Extra hits during EHB"));
+    @Getter
+    protected CounterMetric<Integer> chargeCount = this.metricRegistry.register(CounterMetric.newIntegerCounter("Charge count"));
+    protected BoolMetric hasUltEnhancement = this.metricRegistry.register("Has ult enchantment", BoolMetric.class);
+
     public AbstractCharacter<?> master;
-    public int chargeCount = 0;
     private Random fuaRng;
-    private int numEBA = 0;
-    private int numFUAs = 0;
-    private int numUltEnhancedEBA;
-    private int totalNumExtraHits;
     private boolean isEnhanced;
-    private boolean hasUltEnhancement;
     private boolean FUAReady = true;
 
     public SwordMarch() {
@@ -103,8 +100,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     }
 
     public void useEnhancedBasicAttack() {
-        moveHistory.add(MoveType.ENHANCED_BASIC);
-        numEBA++;
+        this.actionMetric.record(MoveType.ENHANCED_BASIC);
         getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_BASIC));
         increaseEnergy(30, EBA_ENERGY_GAIN);
 
@@ -118,10 +114,11 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
                 PermPower ebaDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 88, "March Enhanced Basic Damage Bonus");
 
                 this.addPower(ebaDamageBonus);
-                if (hasUltEnhancement) {
+                if (this.hasUltEnhancement.value()) {
+                    this.ultEnhancedEBA.increment();
+
                     initialHits += 2;
                     procChance = 80;
-                    numUltEnhancedEBA++;
                     this.addPower(ultCritDmgBuff);
                 }
                 for (int i = 0; i < 3; i++) {
@@ -132,18 +129,19 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
                         break;
                     }
                 }
-                totalNumExtraHits += numExtraHits;
+                this.extraHits.increase(numExtraHits);
+
                 getBattle().addToLog(new ExtraHits(this, numExtraHits));
                 for (int i = 0; i < initialHits + numExtraHits; i++) {
                     al.hit(enemy, 0.88f, TOUGHNESS_DAMAGE_HALF_UNIT);
                     this.masterEffect(al, enemy);
                 }
-                if (hasUltEnhancement) {
-                    hasUltEnhancement = false;
+                if (this.hasUltEnhancement.value()) {
+                    this.hasUltEnhancement.flip();
                     this.removePower(ultCritDmgBuff);
                 }
                 this.removePower(ebaDamageBonus);
-                isEnhanced = false;
+                this.isEnhanced = false;
             });
         }).afterAttackHook(this::addEHBBuffToMaster).execute();
     }
@@ -155,8 +153,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     public void useFollowUp(AbstractEnemy enemy) {
         if (FUAReady) {
             FUAReady = false;
-            moveHistory.add(MoveType.FOLLOW_UP);
-            numFUAs++;
+            this.actionMetric.record(MoveType.FOLLOW_UP);
             getBattle().addToLog(new DoMove(this, MoveType.FOLLOW_UP));
 
             this.startAttack().handle(DamageType.FOLLOW_UP, dh -> {
@@ -173,7 +170,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     }
 
     public void useUltimate() {
-        this.hasUltEnhancement = true;
+        this.hasUltEnhancement.set(true);
         this.doAttack(DamageType.ULTIMATE,
                 dh -> dh.logic(this.getTarget(MoveType.ULTIMATE),
                         (e, al) -> al.hit(e, 2.59f, TOUGHNESS_DAMAGE_THREE_UNITs)));
@@ -182,7 +179,7 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     public void onTurnStart() {
         FUAReady = true;
         increaseEnergy(5, "from E4");
-        if (currentEnergy >= ultCost) {
+        if (this.currentEnergy.get() >= this.ultCost) {
             tryUltimate();
         }
     }
@@ -200,34 +197,15 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
     }
 
     public void gainCharge(int amount) {
-        int initialCharge = this.chargeCount;
-        this.chargeCount += amount;
-        getBattle().addToLog(new GainCharge(this, amount, initialCharge, this.chargeCount));
-        if (this.chargeCount >= chargeThreshold) {
-            this.chargeCount -= chargeThreshold;
+        int currentCharge = this.chargeCount.get();
+        this.chargeCount.increase(amount);
+
+        getBattle().addToLog(new GainCharge(this, amount, currentCharge, this.chargeCount.get()));
+        if (this.chargeCount.get() >= CHARGE_THRESHOLD) {
+            this.chargeCount.decrease(CHARGE_THRESHOLD);
             getBattle().AdvanceEntity(this, 100);
-            isEnhanced = true;
+            this.isEnhanced = true;
         }
-    }
-
-    public HashMap<String, String> getCharacterSpecificMetricMap() {
-        HashMap<String, String> map = super.getCharacterSpecificMetricMap();
-        map.put(leftoverChargeMetricName, String.valueOf(chargeCount));
-        map.put(numFUAsMetricName, String.valueOf(numFUAs));
-        map.put(numEBAMetricName, String.valueOf(numEBA));
-        map.put(numUltEnhancedEBAUsed, String.valueOf(numUltEnhancedEBA));
-        map.put(numExtraHitsMetricName, String.valueOf(totalNumExtraHits));
-        return map;
-    }
-
-    public ArrayList<String> getOrderedCharacterSpecificMetricsKeys() {
-        ArrayList<String> list = super.getOrderedCharacterSpecificMetricsKeys();
-        list.add(leftoverChargeMetricName);
-        list.add(numFUAsMetricName);
-        list.add(numEBAMetricName);
-        list.add(numUltEnhancedEBAUsed);
-        list.add(numExtraHitsMetricName);
-        return list;
     }
 
     @Override

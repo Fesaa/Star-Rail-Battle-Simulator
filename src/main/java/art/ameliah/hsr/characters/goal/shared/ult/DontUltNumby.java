@@ -22,7 +22,7 @@ public class DontUltNumby<C extends AbstractCharacter<C>> extends UltGoal<C> {
 
 
         for (Map.Entry<AbstractEntity, Float> entry : getBattle().getActionValueMap().entrySet()) {
-            if (entry.getKey().name.equals(Numby.NAME)) {
+            if (entry.getKey().getName().equals(Numby.NAME)) {
                 if (entry.getValue() <= 0) {
                     return UltGoalResult.DONT;
                 }
