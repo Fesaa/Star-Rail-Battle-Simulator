@@ -12,6 +12,7 @@ import art.ameliah.hsr.enemies.AllWeakEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
 import art.ameliah.hsr.teams.PlayerTeam;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -24,6 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static art.ameliah.hsr.teams.PlayerTeam.FeixiaoBronyaAventurineMoze;
 
 public class Main {
+
+    public static String commitHash = TestHelper.commitHash();
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.UK);
@@ -129,9 +132,15 @@ public class Main {
     }
 
     private static IBattle constructBattle(Pair<String, ArrayList<AbstractCharacter<?>>> p) {
+        String path = "export/" + commitHash;
+        File dir = new File(path);
+        if (!dir.exists() && !dir.mkdir()) {
+            throw new RuntimeException("Couldn't create directory " + path);
+        }
+
         PrintStream printStream;
         try {
-            printStream = new PrintStream(new FileOutputStream("export/" + p.key() + ".log"));
+            printStream = new PrintStream(new FileOutputStream(path + "/" + p.key() + ".log"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
