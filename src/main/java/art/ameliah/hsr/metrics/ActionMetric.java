@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class ActionMetric extends AbstractMetric {
 
+    private static final List<MoveType> turnActionTypes = List.of(MoveType.BASIC, MoveType.SKILL, MoveType.ENHANCED_BASIC);
+
     private final List<MoveType> actions = new ArrayList<>();
     private final List<MoveType> turnActions = new ArrayList<>();
     private final Map<MoveType, Integer> frequency = new HashMap<>();
@@ -21,7 +23,7 @@ public class ActionMetric extends AbstractMetric {
         this.actions.addLast(type);
         this.frequency.put(type, this.frequency.getOrDefault(type, 0) + 1);
 
-        if (type != MoveType.ULTIMATE) {
+        if (turnActions.contains(type)) {
             this.turnActions.addLast(type);
         }
     }
@@ -30,26 +32,29 @@ public class ActionMetric extends AbstractMetric {
         return this.frequency.getOrDefault(type, 0);
     }
 
-    public MoveType lookBackTurn(int i) {
-        if (i >= this.turnActions.size()) {
-            return null;
+    public boolean lastMove(MoveType move) {
+        for (int i = this.actions.size() - 1; i > 0; i--) {
+            MoveType previousMove = this.actions.get(i);
+            if (turnActionTypes.contains(previousMove)) {
+                return previousMove.equals(move);
+            }
         }
-        return this.turnActions.get(this.turnActions.size() - i);
+        return false;
     }
 
-    public MoveType lastTurnAction() {
-        return this.lookBackTurn(1);
-    }
-
-    public MoveType lookBack(int i) {
-        if (i >= this.actions.size()) {
-            return null;
+    public boolean lastMoveBefore(MoveType move) {
+        boolean skippedYet = false;
+        for (int i = this.actions.size() - 1; i > 0; i--) {
+            MoveType previousMove = this.actions.get(i);
+            if (turnActionTypes.contains(previousMove)) {
+                if (!skippedYet) {
+                    skippedYet = true;
+                } else {
+                    return previousMove.equals(move);
+                }
+            }
         }
-        return this.actions.get(this.actions.size() - i);
-    }
-
-    public MoveType last() {
-        return this.lookBack(1);
+        return false;
     }
 
     @Override

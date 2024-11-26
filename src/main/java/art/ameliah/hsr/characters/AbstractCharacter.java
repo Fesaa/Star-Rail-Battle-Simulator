@@ -465,11 +465,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public boolean lastMove(MoveType move) {
-        return this.actionMetric.lastTurnAction() == move;
+        return this.actionMetric.lastMove(move);
     }
 
     public boolean lastMoveBefore(MoveType move) {
-        return this.actionMetric.lookBackTurn(2) == move;
+        return this.actionMetric.lastMoveBefore(move);
     }
 
     public void useTechnique() {

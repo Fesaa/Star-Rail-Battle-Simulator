@@ -118,7 +118,8 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         this.blindBetGained.increase(amount);
 
         int initialBlindBet = this.blindBetCounter.get();
-        this.blindBetGained.increase(amount, BLIND_BET_CAP);
+        this.blindBetCounter.increase(amount, BLIND_BET_CAP);
+
         getBattle().addToLog(new GainCharge(this, amount, initialBlindBet, this.blindBetCounter.get(), "Blind Bet"));
         if (this.blindBetCounter.get() >= BLIND_BET_THRESHOLD) {
             useFollowUp();
