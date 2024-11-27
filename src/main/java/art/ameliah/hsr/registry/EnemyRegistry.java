@@ -3,7 +3,10 @@ package art.ameliah.hsr.registry;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.game.cosmos.LordyTrashcan;
 import art.ameliah.hsr.enemies.game.jarilovi.AutomatonBeetle;
+import art.ameliah.hsr.enemies.game.jarilovi.AutomatonHound;
+import art.ameliah.hsr.enemies.game.jarilovi.Gepard;
 import art.ameliah.hsr.enemies.game.jarilovi.IncinerationShadewalker;
+import art.ameliah.hsr.enemies.game.jarilovi.SilvermaneCannoneer;
 import art.ameliah.hsr.enemies.game.luofu.EntrancedIngeniumIlluminationDragonfish;
 import art.ameliah.hsr.enemies.game.luofu.SableclawWolftrooper;
 import art.ameliah.hsr.enemies.game.penacony.PastConfinedAndCaged;
@@ -24,6 +27,9 @@ public class EnemyRegistry {
         register(1022020, IncinerationShadewalker.class);
         register(3003030, PastConfinedAndCaged.class);
         register(300303006, PastConfinedAndCaged.class);
+        register(1002030, SilvermaneCannoneer.class);
+        register(1012010, AutomatonHound.class);
+        register(100402014, Gepard.class);
     }
 
     private static void register(int id, Class<? extends AbstractEnemy> clazz) {

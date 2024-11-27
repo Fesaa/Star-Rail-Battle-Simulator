@@ -54,6 +54,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     // Moc increases hp this way
     @Setter
     protected int HPMultiplier = 1;
+    @Setter
     @Getter
     protected float currentHp = 0;
     protected float currentToughness = 0;
