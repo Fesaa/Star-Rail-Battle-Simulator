@@ -12,6 +12,9 @@ import art.ameliah.hsr.powers.PermPower;
 import java.util.List;
 
 public class FalsePromises implements PureFictionBuff {
+
+    private final AbstractPower power = new FalsePromisesPower();
+
     @Override
     public void applyGritMechanic(PfBattle battle) {
         battle.getPlayers().forEach(player -> player.addPower(new PermPower("False Promises grit mechanic") {
@@ -26,7 +29,6 @@ public class FalsePromises implements PureFictionBuff {
 
     @Override
     public void applySurgingGritBuff(PfBattle battle) {
-        AbstractPower power = new FalsePromisesPower();
         battle.getPlayers().forEach(player -> player.addPower(power));
     }
 

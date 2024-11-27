@@ -75,7 +75,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
                 .handle(dh -> {
                     AbstractEnemy target = this.getTarget(MoveType.BASIC);
                     dh.addTypes(DamageType.BASIC);
-                    dh.logic(target, al -> al.hit(this.getTarget(MoveType.BASIC), 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+                    dh.logic(target, al -> al.hit(target, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT));
                 }).execute();
     }
 
