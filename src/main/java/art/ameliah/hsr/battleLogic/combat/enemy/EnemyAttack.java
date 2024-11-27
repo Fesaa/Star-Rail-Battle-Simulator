@@ -31,13 +31,13 @@ public class EnemyAttack extends AbstractAttack<AbstractEnemy, AbstractCharacter
         EnemyAttackLogic al = new EnemyAttackLogic(this.source, this.targets, this.types, this::handleHit);
 
         this.source.emit(l -> l.beforeAttack(al));
-        this.targets.forEach(t -> t.emit(l -> l.beforeAttack(al)));
+        this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(al)));
 
         dh.getLogic().accept(al);
 
         this.targets.forEach(t -> t.emit(l -> l.afterAttacked(al)));
 
-        this.source.emit(l -> l.afterAttacked(al));
+        this.source.emit(l -> l.afterAttack(al));
     }
 
     private EnemyHitResult handleHit(EnemyHit hit) {
@@ -46,6 +46,7 @@ public class EnemyAttack extends AbstractAttack<AbstractEnemy, AbstractCharacter
         }
 
         var res = hit.target().hit(hit);
+        this.dmgDealt += res.dmgDealt();
         getBattle().addToLog(new Attacked(source, hit.target(), hit.dmg(), List.of()));
         return res;
     }
