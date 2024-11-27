@@ -1,6 +1,6 @@
 package art.ameliah.hsr.enemies.game.luofu.moonrage;
 
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.powers.PermPower;
 
 public class MoonRageTracker extends PermPower {
@@ -35,7 +35,7 @@ public class MoonRageTracker extends PermPower {
     }
 
     @Override
-    public void afterAttack(EnemyAttack attack) {
+    public void afterAttack(EnemyAttackLogic attack) {
         bloodLustStacks++;
 
         for (var enemy : getBattle().getEnemies()) {

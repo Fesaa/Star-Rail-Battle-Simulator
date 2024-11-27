@@ -2,8 +2,9 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyDelayAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
@@ -28,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public abstract class AbstractEnemy extends AbstractEntity {
     public static final int DEFAULT_RES = 20;
@@ -335,6 +337,10 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     public EnemyAttack startAttack() {
         return new EnemyAttack(this);
+    }
+
+    public void doAttack(Consumer<EnemyDelayAttack> da) {
+        this.startAttack().handle(da).execute();
     }
 
     @Override

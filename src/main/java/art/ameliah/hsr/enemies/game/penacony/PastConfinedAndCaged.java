@@ -1,7 +1,8 @@
 package art.ameliah.hsr.enemies.game.penacony;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -11,6 +12,7 @@ import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 public class PastConfinedAndCaged extends AbstractEnemy {
 
@@ -59,17 +61,18 @@ public class PastConfinedAndCaged extends AbstractEnemy {
     }
 
     private void CleansingFlagellation() {
-        this.startAttack().hit(this.getRandomTarget(), 10, 784).execute();
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 10, 784)));
     }
 
     private void AdmonishmentOfTheMasses() {
-        int idx = this.getRandomTargetPosition();
+        this.doAttack(da -> {
+            int idx = this.getRandomTargetPosition();
+            BiConsumer<AbstractCharacter<?>, EnemyAttackLogic> l = (c, al) -> al.hit(c, 10, 653);
 
-        EnemyAttack attack = this.startAttack();
-        getBattle().characterCallback(idx-1, c -> attack.hit(c, 10, 653));
-        getBattle().characterCallback(idx, c -> attack.hit(c, 10, 653));
-        getBattle().characterCallback(idx+1, c -> attack.hit(c, 10, 653));
-        attack.execute();
+            da.logic(idx-1, l);
+            da.logic(idx, l);
+            da.logic(idx+1, l);
+        });
     }
 
     private void ShackleBearingMessenger() {
@@ -87,13 +90,13 @@ public class PastConfinedAndCaged extends AbstractEnemy {
 
         float dmgPerLock = 3267 / (float) locks;
 
-        EnemyAttack attack = this.startAttack();
-        for (var lock : this.lockedOn) {
-            attack.hit(lock, 15, dmgPerLock);
-        }
-        attack.execute();
-
-        this.lockedOn.clear();
-        this.charging = false;
+        this.startAttack().handle(da -> {
+            da.logic(this.lockedOn, (c, al) -> {
+                al.hit(c, 15, dmgPerLock);
+            });
+        }).afterAttackHook(() -> {
+            this.lockedOn.clear();
+            this.charging = false;
+        }).execute();
     }
 }

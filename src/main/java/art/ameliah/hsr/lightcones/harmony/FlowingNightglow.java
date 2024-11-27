@@ -1,6 +1,6 @@
 package art.ameliah.hsr.lightcones.harmony;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;

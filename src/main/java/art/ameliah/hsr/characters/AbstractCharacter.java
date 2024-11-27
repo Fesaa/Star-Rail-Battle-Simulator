@@ -2,8 +2,9 @@ package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.Attack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
@@ -202,11 +203,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.startAttack().handle(type, dh -> dh.logic(this.getTarget(moveType), logic)).execute();
     }
 
-    protected void doAttack(DamageType type, Consumer<Attack.DelayAttack> consumer) {
+    protected void doAttack(DamageType type, Consumer<DelayAttack> consumer) {
         this.startAttack().handle(type, consumer).execute();
     }
 
-    protected void doAttack(Consumer<Attack.DelayAttack> consumer) {
+    protected void doAttack(Consumer<DelayAttack> consumer) {
         this.startAttack().handle(consumer).execute();
     }
 

@@ -1,7 +1,7 @@
 package art.ameliah.hsr.battleLogic;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -25,7 +25,7 @@ public interface BattleEvents {
      *
      * @param attack the attack
      */
-    default void afterAttacked(EnemyAttack attack) {
+    default void afterAttacked(EnemyAttackLogic attack) {
     }
 
     /**
@@ -55,7 +55,7 @@ public interface BattleEvents {
      *
      * @param attack the attack
      */
-    default void beforeAttack(EnemyAttack attack) {
+    default void beforeAttack(EnemyAttackLogic attack) {
     }
 
     /**
@@ -71,7 +71,7 @@ public interface BattleEvents {
      *
      * @param attack the attack
      */
-    default void beforeAttacked(EnemyAttack attack) {
+    default void beforeAttacked(EnemyAttackLogic attack) {
     }
 
     /**
@@ -103,7 +103,7 @@ public interface BattleEvents {
      *
      * @param attack the attack
      */
-    default void afterAttack(EnemyAttack attack) {
+    default void afterAttack(EnemyAttackLogic attack) {
     }
 
     /**

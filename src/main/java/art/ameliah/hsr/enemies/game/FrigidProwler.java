@@ -1,6 +1,6 @@
 package art.ameliah.hsr.enemies.game;
 
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -60,8 +60,10 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     private void IceWheelFist(AbstractCharacter<?> target) {
-        this.startAttack().hit(target, 10, 976).execute();
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Ice Wheel Fist"));
+        this.doAttack(da -> {
+            da.logic(target, al -> al.hit(target, 10, 976));
+            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Ice Wheel Fist"));
+        });
     }
 
     private void SummonOtherling() {
@@ -73,15 +75,15 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     private void FrozenStorm() {
-        EnemyAttack attack = this.startAttack();
-        getBattle().getPlayers().forEach(p -> {
-            attack.hit(p, 5, 325);
-            if (this.successfulHit(p, 100)) {
-                p.addPower(new DeepFreeze());
+        this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
+            for (var player : c) {
+                al.hit(player, 5, 325);
+                if (this.successfulHit(player, 100)) {
+                    player.addPower(new DeepFreeze());
+                }
+                getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Frozen Storm"));
             }
-        });
-        attack.execute();
-        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Frozen Storm"));
+        }));
     }
 
     private void DevourOtherling() {

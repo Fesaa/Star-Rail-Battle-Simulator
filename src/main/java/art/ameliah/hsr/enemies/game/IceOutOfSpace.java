@@ -1,6 +1,6 @@
 package art.ameliah.hsr.enemies.game;
 
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -40,21 +40,20 @@ public class IceOutOfSpace extends AbstractEnemy {
     }
 
     private void ChillingLament() {
-        AbstractCharacter<?> target = this.getRandomTarget();
-        EnemyAttack attack = this.startAttack();
-        attack.hit(target, 10, 813);
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 813);
 
-        // Guessing it works like this, but not certain
-        if (this.freezingPointState && this.successfulHit(target, 60)) {
-            target.addPower(new EnemyFrozen(this, 1, 325));
-        }
+            // Guessing it works like this, but not certain
+            if (this.freezingPointState && this.successfulHit(c, 60)) {
+                c.addPower(new EnemyFrozen(this, 1, 325));
+            }
 
-        if (this.freezingPointState && target.hasPower(EnemyFrozen.NAME)) {
-            attack.hit(target, 0, 325);
-        }
+            if (this.freezingPointState && c.hasPower(EnemyFrozen.NAME)) {
+                al.hit(c, 325);
+            }
 
-        attack.execute();
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Chilling Lament"));
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Chilling Lament"));
+        }));
     }
 
     private void FrostyAbsorption() {
@@ -63,17 +62,19 @@ public class IceOutOfSpace extends AbstractEnemy {
     }
 
     private void EverwinterRain() {
-        this.startAttack().hit(getBattle().getPlayers(), 15, 651).execute();
+        this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
+            al.hit(c, 15, 651);
 
-        getBattle().getPlayers()
-                .stream()
-                .filter(p -> !p.hasPower(EnemyFrozen.NAME))
-                .sorted((_, _) -> getBattle().getEnemyTargetRng().nextInt(-1, 2))
-                .limit(2)
-                .filter(p -> this.successfulHit(p, 60))
-                .forEach(p -> p.addPower(new EnemyFrozen(this, 1, 325)));
+            getBattle().getPlayers()
+                    .stream()
+                    .filter(p -> !p.hasPower(EnemyFrozen.NAME))
+                    .sorted((_, _) -> getBattle().getEnemyTargetRng().nextInt(-1, 2))
+                    .limit(2)
+                    .filter(p -> this.successfulHit(p, 60))
+                    .forEach(p -> p.addPower(new EnemyFrozen(this, 1, 325)));
 
-        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Everwinter Rain"));
+            getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Everwinter Rain"));
+        }));
     }
 }
 

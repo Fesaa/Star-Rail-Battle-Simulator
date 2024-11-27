@@ -1,7 +1,8 @@
 package art.ameliah.hsr.enemies.game;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -55,43 +56,45 @@ public class Kafka extends AbstractEnemy {
     }
 
     private void MidnightTumult() {
-        AbstractCharacter<?> target = this.getRandomTarget();
-        this.startAttack().hit(target, 10, 813).execute();
-        target.addPower(new EnemyShock(this, 244, 3, 1));
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Midnight Tumult"));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 813);
+            c.addPower(new EnemyShock(this, 244, 3, 1));
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Midnight Tumult"));
+
+        }));
     }
 
     private void CaressingMoonlight() {
-        int idx = this.getRandomTargetPosition();
+        this.doAttack(da -> {
+            int idx = this.getRandomTargetPosition();
 
-        EnemyAttack attack = this.startAttack();
+            AtomicBoolean inflictShock = new AtomicBoolean(false);
+            da.logic(idx, (c, al) -> {
+                al.hit(c, 10, 976);
+                inflictShock.set(c.hasPower(EnemyShock.NAME));
+            });
+            da.logic(idx-1, (c, al) -> {
+                al.hit(c, 10, 651);
+                if (inflictShock.get()) {
+                    c.addPower(new EnemyShock(this, 244, 3, 1));
+                }
+            });
+            da.logic(idx+1, (c, al) -> {
+                al.hit(c, 10, 651);
+                if (inflictShock.get()) {
+                    c.addPower(new EnemyShock(this, 244, 3, 1));
+                }
+            });
 
-        AtomicBoolean inflictShock = new AtomicBoolean(false);
-        getBattle().characterCallback(idx, c -> {
-            attack.hit(c, 10, 976);
-            inflictShock.set(c.hasPower(EnemyShock.NAME));
+            getBattle().addToLog(new EnemyAction(this, getBattle().getCharacter(idx), EnemyAttackType.BLAST, "Caressing Moonlight"));
         });
-        getBattle().characterCallback(idx - 1, c -> {
-            attack.hit(c, 10, 651); // Not sure about energy
-            if (inflictShock.get()) {
-                c.addPower(new EnemyShock(this, 244, 3, 1));
-            }
-        });
-        getBattle().characterCallback(idx + 1, c -> {
-            attack.hit(c, 10, 651); // Not sure about energy
-            if (inflictShock.get()) {
-                c.addPower(new EnemyShock(this, 244, 3, 1));
-            }
-        });
-
-        attack.execute();
-
-        getBattle().addToLog(new EnemyAction(this, getBattle().getCharacter(idx), EnemyAttackType.BLAST, "Caressing Moonlight"));
     }
 
     private void SilentAndSharpMockery() {
-        this.startAttack().hit(getBattle().getPlayers(), 15, 813).execute();
-        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Silent and Sharp Mockery"));
+        this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
+            al.hit(c, 15, 813);
+            getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Silent and Sharp Mockery"));
+        }));
     }
 
     private void SpiritWhisper() {
@@ -125,15 +128,18 @@ public class Kafka extends AbstractEnemy {
         }
 
         @Override
-        public void afterAttacked(EnemyAttack attack) {
+        public void afterAttacked(EnemyAttackLogic attack) {
             AbstractCharacter<?> target = Randf.rand(attack.getTargets(), getBattle().getEnemyTargetRng());
+            if (target == null) {
+                return;
+            }
             if (this.kafka.cooldown || !target.hasPower(EnemyShock.NAME)) {
                 return;
             }
 
 
             this.kafka.cooldown = true;
-            this.kafka.startAttack().hit(target, 10, 325).execute();
+            this.kafka.doAttack(da -> da.logic(target, al -> al.hit(target, 10, 325)));
         }
     }
 
@@ -152,7 +158,7 @@ public class Kafka extends AbstractEnemy {
             }
 
             EnemyShock enemyShock = (EnemyShock) shock;
-            Kafka.this.startAttack().hit(attack.getSource(), 0, enemyShock.getDmg()).execute();
+            Kafka.this.doAttack(da -> da.logic(attack.getSource(), (c, al) -> al.hit(c, enemyShock.getDmg())));
         }
     }
 

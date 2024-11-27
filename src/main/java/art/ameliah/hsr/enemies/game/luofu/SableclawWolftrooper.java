@@ -40,15 +40,13 @@ public class SableclawWolftrooper extends AbstractEnemy implements MoonRageAble 
 
     @Override
     protected void act() {
-        var target = this.getRandomTarget();
-        this.startAttack().hit(target, 10, this.attackDmg()).execute();
 
-        if (this.inMoonRage && this.successfulHit(target, 75)) { // check chance
-            // TODO: add bleed
-            target.addPower(new EnemyBleed());
-        }
-
-
+        this.startAttack().handle(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, this.attackDmg());
+            if (this.inMoonRage && this.successfulHit(c, 75)) { // check chance
+                c.addPower(new EnemyBleed());
+            }
+        })).execute();
     }
 
     @Override

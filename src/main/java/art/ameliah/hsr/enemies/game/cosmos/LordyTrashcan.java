@@ -42,11 +42,10 @@ public class LordyTrashcan extends AbstractEnemy {
 
     @Override
     protected void act() {
-        this.startAttack()
-                .hit(getRandomTarget(), this.boostedATK)
-                .execute();
-
-        // CURSED
-        this.boostedATK += (float) (Math.pow(2, this.turnsMetric.get()) * this.boostedATK);
+        this.startAttack().handle(da -> da.logic(getRandomTarget(), (c, al) -> al.hit(c, this.boostedATK)))
+                .afterAttackHook(() -> {
+                    // CURSED
+                    this.boostedATK += (float) (Math.pow(2, this.turnsMetric.get()) * this.boostedATK);
+                }).execute();
     }
 }

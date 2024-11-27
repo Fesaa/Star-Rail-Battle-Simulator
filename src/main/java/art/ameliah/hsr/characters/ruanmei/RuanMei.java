@@ -1,6 +1,6 @@
 package art.ameliah.hsr.characters.ruanmei;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;

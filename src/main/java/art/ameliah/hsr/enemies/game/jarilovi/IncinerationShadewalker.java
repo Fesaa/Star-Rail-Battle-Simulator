@@ -26,12 +26,12 @@ public class IncinerationShadewalker extends AbstractEnemy {
 
     @Override
     protected void act() {
-        var target = this.getRandomTarget();
-        this.startAttack().hit(target, 15, 653).execute();
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 15, 653);
 
-        if (this.successfulHit(target, 100)) {
-            target.addPower(new EnemyBurn(this, 108, 3));
-        }
-
+            if (this.successfulHit(c, 100)) {
+                c.addPower(new EnemyBurn(this, 108, 3));
+            }
+        }));
     }
 }

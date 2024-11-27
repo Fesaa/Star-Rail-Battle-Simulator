@@ -1,6 +1,7 @@
-package art.ameliah.hsr.battleLogic.combat;
+package art.ameliah.hsr.battleLogic.combat.ally;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
+import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
 import art.ameliah.hsr.battleLogic.combat.hit.FixedHit;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;

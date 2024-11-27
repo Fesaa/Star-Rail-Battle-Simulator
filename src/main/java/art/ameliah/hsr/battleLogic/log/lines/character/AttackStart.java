@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic.log.lines.character;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
+import art.ameliah.hsr.battleLogic.combat.base.AbstractAttack;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AttackStart implements Loggable {
 
-    private final Attack attack;
+    private final AbstractAttack<?, ?, ?, ?> attack;
 
     @Override
     public String asString() {

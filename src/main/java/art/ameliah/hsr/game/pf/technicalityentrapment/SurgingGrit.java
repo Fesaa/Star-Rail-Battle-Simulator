@@ -1,7 +1,7 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
 import art.ameliah.hsr.battleLogic.IBattle;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.ISurgingGrit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;

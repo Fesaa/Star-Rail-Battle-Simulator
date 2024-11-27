@@ -34,17 +34,16 @@ public class EntrancedIngeniumIlluminationDragonfish extends AbstractEnemy {
 
     @Override
     protected void act() {
-        this.startAttack()
-                .hit(getBattle().getPlayers(), 5, 326)
-                .execute();
+        this.startAttack().handle(da -> {
+            da.logic(getBattle().getPlayers(), (c, al) -> al.hit(c, 5, 326));
+        }).afterAttackHook(() -> {
+            var targets = this.getRandomTargets(getBattle().getPlayers().size() > 2 ? 2 : 1);
 
-        var targets = this.getRandomTargets(getBattle().getPlayers().size() > 2 ? 2 : 1);
-
-        for (var target : targets) {
-            if (this.successfulHit(target, 80)) {
-                target.addPower(TempPower.createDebuff(PowerStat.DEFENSE_REDUCTION, 30, 2, "Entranced Ingenium: Illumination Dragonfish def down"));
+            for (var target : targets) {
+                if (this.successfulHit(target, 80)) {
+                    target.addPower(TempPower.createDebuff(PowerStat.DEFENSE_REDUCTION, 30, 2, "Entranced Ingenium: Illumination Dragonfish def down"));
+                }
             }
-
-        }
+        }).execute();
     }
 }

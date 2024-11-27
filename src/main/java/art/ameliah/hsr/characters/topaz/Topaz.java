@@ -2,7 +2,7 @@ package art.ameliah.hsr.characters.topaz;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.Numby;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;

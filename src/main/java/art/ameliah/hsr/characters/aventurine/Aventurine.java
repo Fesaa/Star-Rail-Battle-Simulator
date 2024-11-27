@@ -1,8 +1,8 @@
 package art.ameliah.hsr.characters.aventurine;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.aventurine.UseBlindBet;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -147,7 +147,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
 
         @Override
-        public void afterAttack(EnemyAttack attack) {
+        public void afterAttack(EnemyAttackLogic attack) {
             int count = attack.getTargets().stream().mapToInt(t -> {
                 if (t == Aventurine.this) {
                     return 2;

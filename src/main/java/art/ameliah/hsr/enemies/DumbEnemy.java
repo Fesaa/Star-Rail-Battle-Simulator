@@ -1,11 +1,13 @@
 package art.ameliah.hsr.enemies;
 
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
+
+import java.util.function.BiConsumer;
 
 public class DumbEnemy extends AbstractEnemy {
 
@@ -26,30 +28,30 @@ public class DumbEnemy extends AbstractEnemy {
             numAoEMetric++;
             getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
 
-            this.startAttack()
-                    .hit(getBattle().getPlayers(), 10, dmgToDeal)
-                    .execute();
+            this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> al.hit(c, 10, dmgToDeal)));
             return;
         }
 
-        int targetPos = this.getRandomTargetPosition();
-        AbstractCharacter<?> target = getBattle().getPlayers().get(targetPos); // Fine to throw if pos is too large.
-
         if (attackType == EnemyAttackType.SINGLE) {
             numSingleTargetMetric++;
-            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE));
-            this.startAttack()
-                    .hit(target, 10, dmgToDeal)
-                    .execute();
+            this.doAttack(da -> da.logic(this.getRandomTarget(), (e, al) -> {
+                getBattle().addToLog(new EnemyAction(this, e, EnemyAttackType.SINGLE));
+                al.hit(e, 10, dmgToDeal);
+            }));
         } else {
             numBlastMetric++;
-            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
 
-            EnemyAttack attack = this.startAttack();
-            attack.hit(target, 10, dmgToDeal);
-            getBattle().characterCallback(targetPos + 1, t -> attack.hit(t, 10, dmgToDeal));
-            getBattle().characterCallback(targetPos - 1, t -> attack.hit(t, 10, dmgToDeal));
-            attack.execute();
+            this.doAttack(da -> {
+                var target = this.getRandomTarget();
+                var targetPos = getBattle().getPlayers().indexOf(target);
+                getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST));
+
+                BiConsumer<AbstractCharacter<?>, EnemyAttackLogic> hitLogic = (c, al) -> al.hit(c, 10, dmgToDeal);
+
+                da.logic(targetPos-1, hitLogic);
+                da.logic(targetPos, hitLogic);
+                da.logic(targetPos+1, hitLogic);
+            });
         }
     }
 

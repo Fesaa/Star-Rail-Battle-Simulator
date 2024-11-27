@@ -1,7 +1,7 @@
 package art.ameliah.hsr.characters.march;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;

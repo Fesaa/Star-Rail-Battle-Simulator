@@ -2,7 +2,7 @@ package art.ameliah.hsr.characters.lingsha;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.battleLogic.FuYuan;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
@@ -221,7 +221,7 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
         }
 
         @Override
-        public void afterAttacked(EnemyAttack attack) {
+        public void afterAttacked(EnemyAttackLogic attack) {
             attack.getTargets().forEach(t -> {
                 int timesHit = characterTimesDamageTakenMap.merge(t, 1, Integer::sum);
                 getBattle().addToLog(new HitSinceLastHeal(t, timesHit));

@@ -1,7 +1,7 @@
 package art.ameliah.hsr.enemies.game;
 
-import art.ameliah.hsr.battleLogic.combat.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -10,8 +10,10 @@ import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
+import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
@@ -48,24 +50,24 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void LightningRecollection() {
-        AbstractCharacter<?> target = this.getRandomTarget();
-        this.startAttack().hit(target, 10, 976).execute();
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Lightning Recollection"));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 976);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Lightning Recollection"));
+        }));
     }
 
     private void LightningCondemnation() {
-        int idx = this.getRandomTargetPosition();
-        AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
 
-        EnemyAttack attack = this.startAttack();
+        this.doAttack(da -> {
+            int idx = this.getRandomTargetPosition();
+            AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
 
-        attack.hit(target, 10, 976);
-        getBattle().characterCallback(idx - 1, c -> attack.hit(c, 5, 488));
-        getBattle().characterCallback(idx + 1, c -> attack.hit(c, 5, 488));
+            da.logic(idx-1, (c, al) -> al.hit(c, 5, 488));
+            da.logic(idx, (c, al) -> al.hit(c, 10, 976));
+            da.logic(idx+1, (c, al) -> al.hit(c, 5, 488));
 
-        attack.execute();
-
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
+            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
+        });
     }
 
     private void Ban() {
@@ -75,24 +77,25 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void InevitablePunishment(AbstractCharacter<?> target) {
-        this.startAttack().hit(target, 10, 1139).execute();
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Inevitable Punishment"));
+        this.doAttack(da -> da.logic(target, (c, al) -> {
+            al.hit(c, 10, 1139);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Inevitable Punishment"));
+        }));
     }
 
     private void ThunderstormCondemnation() {
-        EnemyAttack attack = this.startAttack();
-        for (int i = 0; i < 8; i++) {
-            AbstractCharacter<?> target = this.getRandomTarget();
-            attack.hit(target, 10, 325);
-            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE)); // TODO: Decide if this is the correct type
-
-            if (this.successfulHit(target, 50)) {
-                target.addPower(new EnemyShock(this, 162, 2, 1));
+        this.doAttack(da -> {
+            for (int i = 0; i < 8; i++) {
+                AbstractCharacter<?> target = this.getRandomTarget();
+                da.logic(target, (c, al) -> {
+                    al.hit(c, 10, 325);
+                    if (this.successfulHit(c, 50)) {
+                        c.addPower(new EnemyShock(this, 162, 2, 1));
+                    }
+                });
+                getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE)); // TODO: Decide if this is the correct type
             }
-        }
-
-        attack.execute();
-
+        });
     }
 
     public static class TranquilBan extends TempPower {

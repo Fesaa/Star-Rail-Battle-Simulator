@@ -1,6 +1,7 @@
 package art.ameliah.hsr.enemies.game;
 
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -54,57 +55,63 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     private void Adjudicate() {
-        AbstractCharacter<?> target = this.getRandomTarget();
-        this.startAttack().hit(target, 10, 976).execute();
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Adjudicate"));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 976);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Adjudicate"));
+        }));
     }
 
     private void Subdue() {
-        AbstractCharacter<?> target = this.getRandomTarget();
-        this.startAttack().hit(target, 10, 1171).execute();
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 1171);
 
-        if (getBattle().getEnemyEHRRng().nextDouble() * 100 > SubdueProc) {
-            return;
-        }
+            if (getBattle().getEnemyEHRRng().nextDouble() * 100 < SubdueProc) {
+                c.addPower(new Reverberation());
+            }
 
-        target.addPower(new Reverberation());
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Subdue"));
+
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Subdue"));
+        }));
     }
 
     private void RevertYinAndYang() {
-        this.startAttack().hit(getBattle().getPlayers(), 10, 976).execute();
+        this.startAttack().handle(da -> {
+            da.logic(getBattle().getPlayers(), (c, al) -> {
+                al.hit(c, 10, 976);
+            });
+        }).afterAttackHook(() -> {
+            long notReverberated = getBattle().getPlayers()
+                    .stream()
+                    .filter(p -> p.hasPower(Reverberation.NAME))
+                    .count();
 
-        long notReverberated = getBattle().getPlayers()
-                .stream()
-                .filter(p -> p.hasPower(Reverberation.NAME))
-                .count();
+            if (notReverberated > 2) {
+                this.getRandomTargets(2).stream()
+                        .filter(p -> this.successfulHit(p, 35))
+                        .forEach(p -> p.addPower(new Reverberation()));
+                return;
+            }
 
-        if (notReverberated > 2) {
-            this.getRandomTargets(2).stream()
-                    .filter(p -> this.successfulHit(p, 35))
-                    .forEach(p -> p.addPower(new Reverberation()));
-            return;
-        }
-
-        AbstractCharacter<?> target = this.getRandomTarget();
-        if (this.successfulHit(target, 35)) {
-            target.addPower(new Reverberation());
-        }
-        getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Revert Yin and Yang"));
+            AbstractCharacter<?> target = this.getRandomTarget();
+            if (this.successfulHit(target, 35)) {
+                target.addPower(new Reverberation());
+            }
+        }).afterAttackHook(() -> {
+            getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Revert Yin and Yang"));
+        }).execute();
     }
 
     private void HeavensFall(AbstractCharacter<?> target) {
-        EnemyAttack attack = this.startAttack();
-        attack.hit(target, 20, 976);
+        this.doAttack(da -> da.logic(target, (c, al) -> {
+            al.hit(c, 20, 976);
 
-        if (target.hasPower(StrongReverberation.NAME)) {
-            attack.hit(target, 0, 976);
-            target.removePower(StrongReverberation.NAME);
-        }
+            if (c.hasPower(StrongReverberation.NAME)) {
+                al.hit(c, 976);
+                c.removePower(StrongReverberation.NAME);
+            }
 
-        attack.execute();
-
-        getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Heavens Fall"));
+            getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Heavens Fall"));
+        }));
     }
 
     private void SoulWarrant() {
@@ -127,7 +134,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
         }
 
         @Override
-        public void afterAttacked(EnemyAttack attack) {
+        public void afterAttacked(EnemyAttackLogic attack) {
             this.getOwner().removePower(this);
             this.getOwner().addPower(new StrongReverberation());
             getBattle().DelayEntity(this.getOwner(), 70);

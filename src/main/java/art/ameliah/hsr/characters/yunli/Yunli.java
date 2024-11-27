@@ -1,7 +1,7 @@
 package art.ameliah.hsr.characters.yunli;
 
-import art.ameliah.hsr.battleLogic.combat.Attack;
-import art.ameliah.hsr.battleLogic.combat.EnemyAttack;
+import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
+import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.UseCounter;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseCull;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseSlash;
@@ -101,7 +101,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
     }
 
     @Override
-    public void afterAttacked(EnemyAttack enemyAttack) {
+    public void afterAttacked(EnemyAttackLogic enemyAttack) {
         addPower(getTrueSunderPower());
         if (isParrying) {
             useCull(enemyAttack.getSource());
@@ -163,7 +163,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
                 .execute();
     }
 
-    private void baseIntuit(AbstractEnemy enemy, Attack.DelayAttack dh) {
+    private void baseIntuit(AbstractEnemy enemy, DelayAttack dh) {
         dh.addTypes(FOLLOW_UP, ULTIMATE);
         int idx = getBattle().getEnemies().indexOf(enemy);
 
