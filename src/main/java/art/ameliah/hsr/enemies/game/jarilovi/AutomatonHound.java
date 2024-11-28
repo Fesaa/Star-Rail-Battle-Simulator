@@ -2,6 +2,7 @@ package art.ameliah.hsr.enemies.game.jarilovi;
 
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -30,12 +31,13 @@ public class AutomatonHound extends AbstractEnemy {
 
 
     private void VerticalStrike() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 15, 544)));
     }
 
     private void SelfHealingModule() {
         getBattle().getEnemies().forEach(e -> {
-            e.setCurrentHp(e.getCurrentHp() + 0.25f * e.maxHp());
+            e.getCurrentHp().set(e.getCurrentHp().get() + 0.25f * e.maxHp());
         });
     }
 }

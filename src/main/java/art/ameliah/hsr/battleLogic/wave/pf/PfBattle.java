@@ -101,7 +101,7 @@ public class PfBattle extends WavedBattle<PfWave> {
             float dmg = boss.maxHp() / this.currentWave.totalMinions();
 
 
-            var res = boss.hitAndMayDie(new FixedHit(this.entity, boss, dmg));
+            var res = boss.hitDirectly(new FixedHit(this.entity, boss, dmg));
             this.addToLog(new HitResultLine(res));
         }
 

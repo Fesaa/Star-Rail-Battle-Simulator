@@ -1,7 +1,6 @@
-package art.ameliah.hsr.enemies.game;
+package art.ameliah.hsr.enemies.game.stellaronhunters;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -56,15 +55,16 @@ public class Kafka extends AbstractEnemy {
     }
 
     private void MidnightTumult() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
             al.hit(c, 10, 813);
             c.addPower(new EnemyShock(this, 244, 3, 1));
             getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Midnight Tumult"));
-
         }));
     }
 
     private void CaressingMoonlight() {
+        this.actionMetric.record(EnemyAttackType.BLAST);
         this.doAttack(da -> {
             int idx = this.getRandomTargetPosition();
 
@@ -91,6 +91,7 @@ public class Kafka extends AbstractEnemy {
     }
 
     private void SilentAndSharpMockery() {
+        this.actionMetric.record(EnemyAttackType.AOE);
         this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
             al.hit(c, 15, 813);
             getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Silent and Sharp Mockery"));
@@ -103,6 +104,7 @@ public class Kafka extends AbstractEnemy {
             target.addPower(new Dominating());
         }
 
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Spirit Whisper"));
         getBattle().AdvanceEntity(target, 100);
     }

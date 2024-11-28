@@ -5,7 +5,7 @@ import art.ameliah.hsr.enemies.game.cosmos.LordyTrashcan;
 import art.ameliah.hsr.enemies.game.jarilovi.AutomatonBeetle;
 import art.ameliah.hsr.enemies.game.jarilovi.AutomatonHound;
 import art.ameliah.hsr.enemies.game.jarilovi.Gepard;
-import art.ameliah.hsr.enemies.game.jarilovi.IncinerationShadewalker;
+import art.ameliah.hsr.enemies.game.jarilovi.fragmentum.IncinerationShadewalker;
 import art.ameliah.hsr.enemies.game.jarilovi.SilvermaneCannoneer;
 import art.ameliah.hsr.enemies.game.luofu.EntrancedIngeniumIlluminationDragonfish;
 import art.ameliah.hsr.enemies.game.luofu.SableclawWolftrooper;

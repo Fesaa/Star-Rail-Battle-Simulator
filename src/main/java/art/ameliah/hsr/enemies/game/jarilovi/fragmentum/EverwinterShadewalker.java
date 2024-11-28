@@ -1,7 +1,6 @@
-package art.ameliah.hsr.enemies.game;
+package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
-import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -26,6 +25,7 @@ public class EverwinterShadewalker extends AbstractEnemy {
 
     @Override
     protected void act() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
             al.hit(c, 15, 976);
 

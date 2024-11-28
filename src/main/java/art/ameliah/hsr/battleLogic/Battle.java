@@ -592,7 +592,7 @@ public class Battle implements IBattle {
     public AbstractEnemy getEnemyWithHighestHP() {
         AbstractEnemy enemy = null;
         for (AbstractEnemy e : this.getEnemies()) {
-            if (enemy == null || e.getCurrentHp() > enemy.getCurrentHp()) {
+            if (enemy == null || e.getCurrentHp().get() > enemy.getCurrentHp().get()) {
                 enemy = e;
             }
         }

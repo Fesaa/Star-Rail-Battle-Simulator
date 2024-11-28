@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -44,6 +45,7 @@ public class AutomatonBeetle extends AbstractEnemy {
 
     @Override
     protected void act() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 15, 653)));
         this.isInvincible = true;
     }

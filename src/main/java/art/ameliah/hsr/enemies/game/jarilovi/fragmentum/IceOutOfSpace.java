@@ -1,8 +1,6 @@
-package art.ameliah.hsr.enemies.game;
+package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
-import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -40,6 +38,7 @@ public class IceOutOfSpace extends AbstractEnemy {
     }
 
     private void ChillingLament() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
             al.hit(c, 10, 813);
 
@@ -62,6 +61,7 @@ public class IceOutOfSpace extends AbstractEnemy {
     }
 
     private void EverwinterRain() {
+        this.actionMetric.record(EnemyAttackType.AOE);
         this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
             al.hit(c, 15, 651);
 

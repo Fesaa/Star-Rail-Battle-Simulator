@@ -1,7 +1,6 @@
-package art.ameliah.hsr.enemies.game;
+package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -10,10 +9,8 @@ import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
-import art.ameliah.hsr.utils.Randf;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
@@ -50,6 +47,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void LightningRecollection() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
             al.hit(c, 10, 976);
             getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Lightning Recollection"));
@@ -57,7 +55,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void LightningCondemnation() {
-
+        this.actionMetric.record(EnemyAttackType.BLAST);
         this.doAttack(da -> {
             int idx = this.getRandomTargetPosition();
             AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
@@ -77,6 +75,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void InevitablePunishment(AbstractCharacter<?> target) {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(target, (c, al) -> {
             al.hit(c, 10, 1139);
             getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Inevitable Punishment"));
@@ -84,6 +83,7 @@ public class GuardianShadow extends AbstractEnemy {
     }
 
     private void ThunderstormCondemnation() {
+        this.actionMetric.record(EnemyAttackType.AOE);
         this.doAttack(da -> {
             for (int i = 0; i < 8; i++) {
                 AbstractCharacter<?> target = this.getRandomTarget();
@@ -93,7 +93,7 @@ public class GuardianShadow extends AbstractEnemy {
                         c.addPower(new EnemyShock(this, 162, 2, 1));
                     }
                 });
-                getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE)); // TODO: Decide if this is the correct type
+                getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.AOE));
             }
         });
     }

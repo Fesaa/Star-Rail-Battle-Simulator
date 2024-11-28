@@ -12,8 +12,8 @@ public record HitResultLine(HitResult hit) implements Loggable {
                 this.hit.getHit().getSource().getName(),
                 this.hit.getHit().getTarget().toString(),
                 this.hit.getHit().finalDmg(),
-                this.hit.getEnemy().getCurrentHp() + this.hit.getDmgDealt(),
-                this.hit.getEnemy().getCurrentHp()
+                this.hit.getEnemy().getCurrentHp().get() + this.hit.getDmgDealt(),
+                this.hit.getEnemy().getCurrentHp().get()
         );
     }
 

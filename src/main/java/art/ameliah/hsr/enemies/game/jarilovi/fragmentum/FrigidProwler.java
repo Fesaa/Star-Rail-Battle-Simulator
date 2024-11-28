@@ -1,6 +1,5 @@
-package art.ameliah.hsr.enemies.game;
+package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -60,6 +59,7 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     private void IceWheelFist(AbstractCharacter<?> target) {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> {
             da.logic(target, al -> al.hit(target, 10, 976));
             getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.SINGLE, "Ice Wheel Fist"));
@@ -75,6 +75,7 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     private void FrozenStorm() {
+        this.actionMetric.record(EnemyAttackType.AOE);
         this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
             for (var player : c) {
                 al.hit(player, 5, 325);

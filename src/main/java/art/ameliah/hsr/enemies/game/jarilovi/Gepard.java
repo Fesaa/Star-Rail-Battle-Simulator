@@ -3,6 +3,7 @@ package art.ameliah.hsr.enemies.game.jarilovi;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -34,14 +35,17 @@ public class Gepard extends AbstractEnemy {
     }
 
     private void FistOfConviction() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 10, 653)));
     }
 
     private void SmiteOfFrost() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 15, 980)));
     }
 
     private void FrigidWaterfall() {
+        this.actionMetric.record(EnemyAttackType.AOE);
         this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> al.hit(c, 15, 762)));
     }
 

@@ -62,7 +62,7 @@ public class Herta extends AbstractCharacter<Herta> {
     protected void useBasic() {
         this.doAttack(DamageType.BASIC, dh -> dh.logic(this.getTarget(MoveType.BASIC), (e, al) -> {
             al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            if (e.getCurrentHp() <= e.maxHp() * 0.5f) {
+            if (e.getCurrentHp().get() <= e.maxHp() * 0.5f) {
                 al.hit(e, 0.4f);
             }
         }));
@@ -84,7 +84,7 @@ public class Herta extends AbstractCharacter<Herta> {
                 return 0;
             }
 
-            if (enemy.getCurrentHp() >= enemy.maxHp() * 0.5f) {
+            if (enemy.getCurrentHp().get() >= enemy.maxHp() * 0.5f) {
                 return 20 + 25;
             }
 
@@ -122,7 +122,7 @@ public class Herta extends AbstractCharacter<Herta> {
         public void afterAttack(AttackLogic attack) {
             boolean anyAlive = attack.getTargets().stream().anyMatch(e -> !e.isDead());
             List<AbstractEnemy> newFallen = attack.getTargets().stream()
-                    .filter(t -> t.getCurrentHp() < t.maxHp() * 0.5f)
+                    .filter(t -> t.getCurrentHp().get() < t.maxHp() * 0.5f)
                     .filter(t -> !triggeredFua.contains(t)).toList();
 
             this.tally += newFallen.size();

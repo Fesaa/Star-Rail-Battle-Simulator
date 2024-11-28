@@ -20,12 +20,11 @@ public class DumbEnemy extends AbstractEnemy {
     }
 
     public void attack() {
-        numAttacksMetric++;
         float dmgToDeal = this.attackDmg();
 
         EnemyAttackType attackType = rollAttackType();
         if (attackType == EnemyAttackType.AOE) {
-            numAoEMetric++;
+            this.actionMetric.record(EnemyAttackType.AOE);
             getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
 
             this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> al.hit(c, 10, dmgToDeal)));
@@ -33,13 +32,13 @@ public class DumbEnemy extends AbstractEnemy {
         }
 
         if (attackType == EnemyAttackType.SINGLE) {
-            numSingleTargetMetric++;
+            this.actionMetric.record(EnemyAttackType.SINGLE);
             this.doAttack(da -> da.logic(this.getRandomTarget(), (e, al) -> {
                 getBattle().addToLog(new EnemyAction(this, e, EnemyAttackType.SINGLE));
                 al.hit(e, 10, dmgToDeal);
             }));
         } else {
-            numBlastMetric++;
+            this.actionMetric.record(EnemyAttackType.BLAST);
 
             this.doAttack(da -> {
                 var target = this.getRandomTarget();

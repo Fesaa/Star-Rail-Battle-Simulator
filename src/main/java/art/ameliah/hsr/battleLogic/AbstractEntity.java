@@ -23,6 +23,8 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
     @Getter
     protected MetricRegistry metricRegistry = new MetricRegistry(this);
     protected CounterMetric<Integer> turnsMetric = metricRegistry.register(CounterMetric.newIntegerCounter("Turns taken", "Amount of taken turns"));
+    @Getter
+    protected CounterMetric<Float> currentHp = metricRegistry.register(CounterMetric.newFloatCounter("enemy-hp", "Left over HP"));
 
     public List<AbstractPower> powerList = new ArrayList<>();
     public float baseSpeed;
@@ -128,10 +130,6 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
 
     public void resetSpeedPriority() {
         speedPriority = SPEED_PRIORITY_DEFAULT;
-    }
-
-    public float getCurrentHp() {
-        return 0;
     }
 
     public int getTurns() {

@@ -3,6 +3,7 @@ package art.ameliah.hsr.enemies.game.cosmos;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -37,11 +38,12 @@ public class LordyTrashcan extends AbstractEnemy {
         if (this.isDead()) {
             return;
         }
-        this.currentHp = -1;
+        this.currentHp.set(-1f);
     }
 
     @Override
     protected void act() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.startAttack().handle(da -> da.logic(getRandomTarget(), (c, al) -> al.hit(c, this.boostedATK)))
                 .afterAttackHook(() -> {
                     // CURSED

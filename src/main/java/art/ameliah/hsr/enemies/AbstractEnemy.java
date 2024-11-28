@@ -16,6 +16,8 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.ruanmei.RuanMei;
 import art.ameliah.hsr.enemies.action.EnemyActionSequence;
+import art.ameliah.hsr.metrics.CounterMetric;
+import art.ameliah.hsr.metrics.EnemyActionMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TauntPower;
@@ -34,36 +36,37 @@ import java.util.function.Consumer;
 public abstract class AbstractEnemy extends AbstractEntity {
     public static final int DEFAULT_RES = 20;
 
-    public final EnemyType type;
+    @Getter
+    private final EnemyType type;
 
+    @Getter
+    protected final int level;
     protected final int baseHP;
     protected final int baseATK;
     protected final int baseDEF;
     protected final int toughness;
-    @Getter
-    protected final int level;
+
+    protected EnemyActionMetric actionMetric = metricRegistry.register(new EnemyActionMetric("enemy-action-metric", "Action metrics"));
+    protected CounterMetric<Integer> weaknessBreakMetric = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-weakness-break-metric", "Times weakness broken"));
+    protected CounterMetric<Integer> timesAttacked = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-times-attack", "Times attacked"));
+
+
 
     protected final Map<ElementType, Integer> resMap = new HashMap<>();
     protected final Set<ElementType> weaknessMap = new HashSet<>();
     protected final EnemyActionSequence sequence;
-    public int numAttacksMetric = 0;
-    public int numSingleTargetMetric = 0;
-    public int numBlastMetric = 0;
-    public int numAoEMetric = 0;
-    public int timesBrokenMetric = 0;
     // Moc increases hp this way
     @Setter
     protected int HPMultiplier = 1;
     @Setter
     @Getter
-    protected float currentHp = 0;
     protected float currentToughness = 0;
 
     public AbstractEnemy(String name, EnemyType type, int baseHP, int baseATK, int baseDEF, float baseSpeed, int toughness, int level) {
         this.name = name;
         this.type = type;
         this.baseHP = baseHP;
-        this.currentHp = baseHP;
+        this.currentHp.set((float) this.baseHP);
         this.baseATK = baseATK;
         this.baseDEF = baseDEF;
         this.baseSpeed = baseSpeed;
@@ -234,9 +237,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
             return new HitResult(hit, this, 0, 0, false, false);
         }
 
-        final float dmgToDeal = Math.min(hit.finalDmg(), this.currentHp);
+        final float dmgToDeal = Math.min(hit.finalDmg(), this.currentHp.get());
 
-        this.currentHp -= dmgToDeal;
+        this.currentHp.decrease(dmgToDeal);
 
         if (this.isWeaknessBroken()) {
             return new HitResult(hit, this, dmgToDeal, 0, false, this.isDead());
@@ -244,10 +247,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return new HitResult(hit, this, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction()), this.isWeaknessBroken(), this.isDead());
     }
 
-    // TODO: FIND BETTER NAME
-    public HitResult hitAndMayDie(Hit hit) {
+    public HitResult hitDirectly(Hit hit) {
         var res = this.hit(hit);
-        if (this.currentHp > 0) {
+        if (this.currentHp.get() > 0) {
             return res;
         }
 
@@ -268,7 +270,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         getBattle().addToLog(new ReduceToughness(this, amount, initialToughness, this.currentToughness));
 
         if (this.currentToughness == 0) {
-            this.timesBrokenMetric++;
+            this.weaknessBreakMetric.increment();
             getBattle().DelayEntity(this, 25);
             getBattle().getPlayers().forEach(p -> p.onWeaknessBreak(this));
             this.emit(BattleEvents::onWeaknessBreak);
@@ -278,12 +280,12 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     public boolean isDead() {
-        return this.currentHp <= 0;
+        return this.currentHp.get() <= 0;
     }
 
     @Override
     public void onCombatStart() {
-        this.currentHp = this.baseHP * this.HPMultiplier;
+        this.currentHp.set((float) (this.baseHP * this.HPMultiplier));
         this.currentToughness = this.toughness;
     }
 
@@ -323,7 +325,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
     @Override
     public void afterAttacked(AttackLogic attack) {
-        if (this.currentHp > 0) {
+        this.timesAttacked.increment();
+        if (this.currentHp.get() > 0) {
             return;
         }
 
@@ -333,7 +336,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     public String getMetrics() {
-        return String.format("Metrics for %s with %,f speed \nTotal attacks: %,d \nSingle-target attacks: %,d \nBlast attacks: %,d \nAoE attacks: %,d \nWeakness Broken: %,d", getName(), baseSpeed, numAttacksMetric, numSingleTargetMetric, numBlastMetric, numAoEMetric, timesBrokenMetric);
+        return String.format("Metrics for %s with %,.3f speed\n%s", this.getName(), this.getBaseSpeed(), this.metricRegistry.representation());
     }
 
     public EnemyAttack startAttack() {
@@ -347,9 +350,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
     @Override
     public String toString() {
         return this.getName() + "{" +
-                "currentHp=" + currentHp +
+                "currentHp=" + currentHp.get() +
                 ", currentToughness=" + currentToughness +
-                ", hp%=" + currentHp / maxHp() * 100 +
+                ", hp%=" + currentHp.get() / maxHp() * 100 +
                 '}';
     }
 

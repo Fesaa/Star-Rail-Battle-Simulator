@@ -1,6 +1,5 @@
-package art.ameliah.hsr.enemies.game;
+package art.ameliah.hsr.enemies.game.luofu;
 
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -55,6 +54,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     private void Adjudicate() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
             al.hit(c, 10, 976);
             getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Adjudicate"));
@@ -62,6 +62,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     private void Subdue() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
             al.hit(c, 10, 1171);
 
@@ -75,6 +76,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     private void RevertYinAndYang() {
+        this.actionMetric.record(EnemyAttackType.AOE);
         this.startAttack().handle(da -> {
             da.logic(getBattle().getPlayers(), (c, al) -> {
                 al.hit(c, 10, 976);
@@ -102,6 +104,7 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     }
 
     private void HeavensFall(AbstractCharacter<?> target) {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(target, (c, al) -> {
             al.hit(c, 20, 976);
 

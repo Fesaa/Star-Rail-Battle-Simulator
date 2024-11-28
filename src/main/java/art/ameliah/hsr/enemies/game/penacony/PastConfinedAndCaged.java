@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -61,10 +62,12 @@ public class PastConfinedAndCaged extends AbstractEnemy {
     }
 
     private void CleansingFlagellation() {
+        this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 10, 784)));
     }
 
     private void AdmonishmentOfTheMasses() {
+        this.actionMetric.record(EnemyAttackType.BLAST);
         this.doAttack(da -> {
             int idx = this.getRandomTargetPosition();
             BiConsumer<AbstractCharacter<?>, EnemyAttackLogic> l = (c, al) -> al.hit(c, 10, 653);
@@ -82,6 +85,14 @@ public class PastConfinedAndCaged extends AbstractEnemy {
         this.charging = true;
     }
 
+    private EnemyAttackType typeForLock() {
+        return switch (this.lockedOn.size()) {
+            case 1 -> EnemyAttackType.SINGLE;
+            case 2, 3 -> EnemyAttackType.BLAST;
+            default -> EnemyAttackType.AOE;
+        };
+    }
+
     private void DesmiosEvangelion() {
         int locks = this.lockedOn.size();
         if (locks == 0) {
@@ -90,6 +101,7 @@ public class PastConfinedAndCaged extends AbstractEnemy {
 
         float dmgPerLock = 3267 / (float) locks;
 
+        this.actionMetric.record(this.typeForLock());
         this.startAttack().handle(da -> {
             da.logic(this.lockedOn, (c, al) -> {
                 al.hit(c, 15, dmgPerLock);
