@@ -23,7 +23,5 @@ Need to check, so we can make them all dynamic. Or something. Not sure.
 ### Look into actual game data to construct stages
 dim's data dump wiki
 
-### Compare some logs from my sanity dumb
-There are a lot of changes, which makes sense. As I fixed a ton of small bugs along
-the way while working on the latest Attack reword. But just to double-check, also
-has to rewrite the same nonsense again, so ya.
+### Figure out how the extra dmg in PF actually works...
+I've watched some YT video's, and the dmg I'm using doesn't match at all. 
