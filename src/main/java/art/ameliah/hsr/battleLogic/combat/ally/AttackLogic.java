@@ -109,10 +109,13 @@ public class AttackLogic {
         return this.addHit(new AllyHit(source, target, mul, stat, types, toughness, elementType, ignoreWeakness));
     }
 
-    private HitResult hitFixed(AbstractEnemy target, float dmg) {
-        return this.hitFixed(this.source, target, dmg);
-    }
-
+    /**
+     * Used for buffs, etc
+     * @param source The buff (should be a power most likely)
+     * @param target The target
+     * @param dmg Dmg to deal
+     * @return The result of the hit
+     */
     public HitResult hitFixed(BattleParticipant source, AbstractEnemy target, float dmg) {
         this.targets.add(target);
         return this.addHit(new FixedHit(source, target, dmg));
