@@ -136,6 +136,13 @@ public class Herta extends AbstractCharacter<Herta> {
                 return;
             }
 
+            // Inperfect solution to Herta doing FUA 5 times in a row, I'm not sure how I could add to current attack.
+            // And keep it working. Still adds to tally, dmg will go off w/ the next one
+            if (attack.getSource() == Herta.this && attack.getTypes().contains(DamageType.FOLLOW_UP)) {
+                this.triggeredFua.addAll(newFallen);
+                return;
+            }
+
             // We need to copy or Herta might have attacks with a tally of 0
             // I'm not sure what happens in game, but I can't cancel attacks.
             // So this way is fine
