@@ -4,8 +4,9 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
+import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
-import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.wave.moc.Moc;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFiction;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -69,9 +70,15 @@ public class WaveTester {
         }
 
         @Override
-        public void handle(FinalDmgMetrics finalDmgMetrics) {
-            System.out.println(finalDmgMetrics.asString());
-            this.log(finalDmgMetrics);
+        public void handle(EnemyAction enemyAction) {
+            System.out.println(this.getBattle().prefix() + enemyAction.asString());
+            this.log(enemyAction);
+        }
+
+        @Override
+        public void handle(DoMove doMove) {
+            System.out.println(this.getBattle().prefix() + doMove.asString());
+            this.log(doMove);
         }
 
         @Override

@@ -80,7 +80,6 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public float ultCost;
     public AbstractLightcone lightcone;
     public boolean isDPS = false;
-    public String statsString;
     public boolean firstMove = true;
     public boolean hasAttackingUltimate;
     protected int basicEnergyGain = 20;
@@ -485,14 +484,14 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public String getMetrics() {
-        return statsString + "\nCombat Metrics\n" + this.metricRegistry.representation() +
+        return this.statsString() + "\nCombat Metrics\n" + this.metricRegistry.representation() +
                 "Left over AV: " + this.leftOverAV();
     }
 
-    public void generateStatsString() {
+    private String statsString() {
         String gearString = String.format("Metrics for %s \nLightcone: %s \nRelic Set Bonuses: ", getName(), lightcone);
         gearString += relicSetBonus;
-        statsString = gearString + String.format("\nOut of combat stats \nAtk: %.3f \nDef: %.3f \nHP: %.3f \nSpeed: %.3f \nSame Element Damage Bonus: %.3f \nCrit Chance: %.3f%% \nCrit Damage: %.3f%% \nBreak Effect: %.3f%%", getFinalAttack(), getFinalDefense(), getFinalHP(), getFinalSpeed(), getTotalSameElementDamageBonus(), getTotalCritChance(), getTotalCritDamage(), getTotalBreakEffect());
+        return gearString + String.format("\nOut of combat stats \nAtk: %.3f \nDef: %.3f \nHP: %.3f \nSpeed: %.3f \nSame Element Damage Bonus: %.3f \nCrit Chance: %.3f%% \nCrit Damage: %.3f%% \nBreak Effect: %.3f%%", getFinalAttack(), getFinalDefense(), getFinalHP(), getFinalSpeed(), getTotalSameElementDamageBonus(), getTotalCritChance(), getTotalCritDamage(), getTotalBreakEffect());
     }
 
     // Override if you want some special information

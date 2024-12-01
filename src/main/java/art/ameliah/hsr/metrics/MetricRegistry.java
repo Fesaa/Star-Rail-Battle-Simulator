@@ -1,12 +1,14 @@
 package art.ameliah.hsr.metrics;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MetricRegistry {
 
     private final Object owner;
-    private final HashMap<String, Metric> metrics = new HashMap<>();
+    private final List<Metric> metrics = new ArrayList<>();
 
     public MetricRegistry(Object owner) {
         this.owner = owner;
@@ -19,7 +21,7 @@ public class MetricRegistry {
      * @param <T> type
      */
     public <T extends Metric> T register(T metric) {
-        this.metrics.put(metric.getKey(), metric);
+        this.metrics.addLast(metric);
         return metric;
     }
 
@@ -54,7 +56,7 @@ public class MetricRegistry {
         StringBuilder sb = new StringBuilder();
 
         //sb.append("Metrics for: ").append(owner.getClass().getSimpleName());
-        for (Metric metric : metrics.values()) {
+        for (Metric metric : this.metrics) {
             if (metric.needHeader()) {
                 sb.append(metric.getName()).append("\n");
             }

@@ -27,6 +27,8 @@ public interface IBattle {
 
     void Start(float AV);
 
+    String metrics();
+
     boolean getLessMetrics();
 
     boolean usedEntryTechnique();
@@ -107,17 +109,11 @@ public interface IBattle {
 
     void addToLog(Loggable addition);
 
-    HashMap<BattleParticipant, Float> getDamageContributionMap();
-
-    HashMap<AbstractCharacter<?>, Float> getDamageContributionMapPercent();
-
     HashMap<AbstractEntity, Float> getActionValueMap();
 
     int getTotalPlayerDmg();
 
     float getActionValueUsed();
-
-    float getFinalDPAV();
 
     int getTotalSkillPointsUsed();
 
@@ -130,8 +126,6 @@ public interface IBattle {
     float initialLength();
 
     float battleLength();
-
-    BattleHelpers getHelper();
 
     long getSeed();
 

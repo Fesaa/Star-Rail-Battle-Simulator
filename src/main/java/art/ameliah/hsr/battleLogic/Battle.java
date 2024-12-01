@@ -20,13 +20,15 @@ import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.battle.UseSkillPoint;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.EnemyMetrics;
-import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.characters.yunli.Yunli;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.CounterMetric;
+import art.ameliah.hsr.metrics.DmgContributionMetric;
+import art.ameliah.hsr.metrics.MetricRegistry;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.utils.Comparators;
 import lombok.Getter;
@@ -37,57 +39,46 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class Battle implements IBattle {
+public class Battle extends RngProvider implements IBattle {
 
-    protected static final long seed = 154172837382L;
-    public final int INITIAL_SKILL_POINTS = 3;
-    public final Random enemyMoveRng = new Random(seed);
-    public final Random enemyTargetRng = new Random(seed);
-    public final Random critChanceRng = new Random(seed);
-    public final Random getRandomEnemyRng = new Random(seed);
-    public final Random procChanceRng = new Random(seed);
-    public final Random gambleChanceRng = new Random(seed);
-    public final Random qpqRng = new Random(seed);
-    public final Random milkyWayRng = new Random(seed);
-    public final Random weaveEffectRng = new Random(seed);
-    public final Random aetherRng = new Random(seed);
-    public final Random enemyEHRRng = new Random(seed);
-    protected final Deque<IAttack> queue = new LinkedList<>();
-    private final BattleHelpers battleHelpers;
-    public int numSkillPoints = INITIAL_SKILL_POINTS;
+    private static final int INITIAL_SKILL_POINTS = 3;
     public int MAX_SKILL_POINTS = 5;
-    public int totalPlayerDamage;
-    public float finalDPAV;
-    public int totalSkillPointsUsed = 0;
-    public int totalSkillPointsGenerated = 0;
-    public String log = "";
+
+    protected MetricRegistry metricRegistry = new MetricRegistry(this);
+    protected CounterMetric<Float> totalPlayerDamage = metricRegistry.register(CounterMetric.newFloatCounter("battle-total-player-dmg", "Total player dmg"));
+    protected CounterMetric<Integer> totalSkillPointsUsed = metricRegistry.register(CounterMetric.newIntegerCounter("battle-total-sp-used", "Total skill points used"));
+    protected CounterMetric<Integer> totalSkillPointsGenerated = metricRegistry.register(CounterMetric.newIntegerCounter("battle-total-sp-generated", "Total skill points generated"));
+    protected CounterMetric<Integer> currentSkillPoints = metricRegistry.register(CounterMetric.newIntegerCounter("battle-current-skill-points", "Current skill points", INITIAL_SKILL_POINTS));
+    protected CounterMetric<Float> avLeftOver = metricRegistry.register(CounterMetric.newFloatCounter("battle-av-left-over", "AV left over"));
+    protected CounterMetric<Float> avUsed = metricRegistry.register(CounterMetric.newFloatCounter("battle-av-used", "AV used"));
+    protected DmgContributionMetric dmgContributionMetric = metricRegistry.register(new DmgContributionMetric(this, "battle-dmg-contribution", "Dmg Contributions"));
+
+    protected final Deque<IAttack> queue = new LinkedList<>();
+
+
     public float initialBattleLength;
-    public float battleLength;
     public AbstractEntity currentUnit;
     public boolean usedEntryTechnique = false;
     public boolean isInCombat = false;
     public boolean lessMetrics = false;
     public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
-    public HashMap<BattleParticipant, Float> damageContributionMap;
-    public HashMap<AbstractCharacter<?>, Float> damageContributionMapPercent;
-    public HashMap<AbstractEntity, Float> actionValueMap;
+    public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
     protected boolean activeAttack = false;
     @Getter
     private Logger logger;
 
+    private boolean hasStarted = false;
+
     public Battle() {
-        this.battleHelpers = new BattleHelpers(this);
         this.logger = new DefaultLogger(this);
     }
 
     public Battle(LogSupplier logger) {
-        this.battleHelpers = new BattleHelpers(this);
         this.logger = logger.get(this);
     }
 
@@ -230,7 +221,7 @@ public class Battle implements IBattle {
     @Override
     public boolean isAboutToEnd() {
         AbstractEntity next = this.getNextUnit(0);
-        return actionValueMap.get(next) > battleLength;
+        return actionValueMap.get(next) > this.avLeftOver.get();
     }
 
     @Override
@@ -240,18 +231,12 @@ public class Battle implements IBattle {
 
     @Override
     public void updateContribution(BattleParticipant source, float damageContribution) {
-        if (damageContributionMap.containsKey(source)) {
-            float existingTotal = damageContributionMap.get(source);
-            float updatedTotal = existingTotal + damageContribution;
-            damageContributionMap.put(source, updatedTotal);
-        } else {
-            damageContributionMap.put(source, damageContribution);
-        }
+        this.dmgContributionMetric.record(source, damageContribution);
     }
 
     @Override
     public void increaseTotalPlayerDmg(float dmg) {
-        totalPlayerDamage += (int) dmg;
+        this.totalPlayerDamage.increase(dmg);
     }
 
     @Override
@@ -261,34 +246,28 @@ public class Battle implements IBattle {
 
     @Override
     public float battleLength() {
-        return this.battleLength;
-    }
-
-    @Override
-    public BattleHelpers getHelper() {
-        return this.battleHelpers;
+        return this.avLeftOver.get();
     }
 
     @Override
     public void useSkillPoint(AbstractCharacter<?> character, int amount) {
-        int initialSkillPoints = numSkillPoints;
-        numSkillPoints -= amount;
-        totalSkillPointsUsed += amount;
-        addToLog(new UseSkillPoint(character, amount, initialSkillPoints, numSkillPoints));
-        if (numSkillPoints < 0) {
+        int cur = this.currentSkillPoints.get();
+        this.currentSkillPoints.decrease(amount);
+        this.totalSkillPointsUsed.increase(amount);
+
+        addToLog(new UseSkillPoint(character, amount, cur, this.currentSkillPoints.get()));
+        if (this.currentSkillPoints.get() < 0) {
             throw new RuntimeException("ERROR - SKILL POINTS WENT NEGATIVE");
         }
     }
 
     @Override
     public void generateSkillPoint(AbstractCharacter<?> character, int amount) {
-        int initialSkillPoints = numSkillPoints;
-        numSkillPoints += amount;
-        totalSkillPointsGenerated += amount;
-        if (numSkillPoints > MAX_SKILL_POINTS) {
-            numSkillPoints = MAX_SKILL_POINTS;
-        }
-        addToLog(new GenerateSkillPoint(character, amount, initialSkillPoints, numSkillPoints));
+        int cur = this.currentSkillPoints.get();
+        this.currentSkillPoints.increase(amount);
+        this.totalSkillPointsGenerated.increase(amount, MAX_SKILL_POINTS);
+
+        addToLog(new GenerateSkillPoint(character, amount, cur, this.currentSkillPoints.get()));
     }
 
     @Override
@@ -298,7 +277,7 @@ public class Battle implements IBattle {
 
     @Override
     public int getSkillPoints() {
-        return this.numSkillPoints;
+        return this.currentSkillPoints.get();
     }
 
     /**
@@ -309,15 +288,14 @@ public class Battle implements IBattle {
 
     @Override
     public void Start(float initialLength) {
-        damageContributionMap = new HashMap<>();
-        damageContributionMapPercent = new HashMap<>();
-        numSkillPoints = INITIAL_SKILL_POINTS;
-        actionValueMap = new HashMap<>();
-        usedEntryTechnique = false;
+        if (this.hasStarted) {
+            throw new RuntimeException("Battle class is not re-usable");
+        }
+        this.hasStarted = true;
 
-        initialBattleLength = initialLength;
-        this.battleLength = initialLength;
-        totalPlayerDamage = 0;
+        this.initialBattleLength = initialLength;
+        this.avLeftOver.set(initialLength);
+
         addToLog(new CombatStart());
         this.playerTeam.forEach(c -> addToLog(new PreCombatPlayerMetrics(c)));
         this.onStart();
@@ -325,9 +303,6 @@ public class Battle implements IBattle {
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
             enemy.emit(BattleEvents::onCombatStart);
-        }
-        for (AbstractCharacter<?> character : playerTeam) {
-            character.generateStatsString();
         }
         isInCombat = true;
         for (AbstractCharacter<?> character : playerTeam) {
@@ -338,7 +313,7 @@ public class Battle implements IBattle {
         addToLog(new TriggerTechnique(this.playerTeam
                 .stream()
                 .filter(c -> c.useTechnique)
-                .collect(Collectors.toList())));
+                .toList()));
         for (AbstractCharacter<?> character : playerTeam) {
             if (character.useTechnique) {
                 character.useTechnique();
@@ -348,7 +323,7 @@ public class Battle implements IBattle {
         Yunli yunli = getYunli();
         SwordMarch march = getSwordMarch();
 
-        while (battleLength > 0 && this.isInCombat) {
+        while (this.avLeftOver.get() > 0 && this.isInCombat) {
             try {
                 // This represents on icon on the AV bar in game
                 this.battleLoop(yunli, march); // TODO: THIS SHOULD NOT NEED CHARACTERS
@@ -363,8 +338,6 @@ public class Battle implements IBattle {
                 break;
             }
         }
-
-        calcPercentContribution();
         this.generateMetrics();
     }
 
@@ -373,9 +346,9 @@ public class Battle implements IBattle {
 
         currentUnit = this.getNextUnit(0);
         float nextAV = actionValueMap.get(currentUnit);
-        if (nextAV > battleLength) {
+        if (nextAV > this.avLeftOver.get()) {
             for (Map.Entry<AbstractEntity, Float> entry : actionValueMap.entrySet()) {
-                float newAV = entry.getValue() - battleLength;
+                float newAV = entry.getValue() - this.avLeftOver.get();
                 entry.setValue(newAV);
             }
             addToLog(new BattleEnd());
@@ -394,7 +367,8 @@ public class Battle implements IBattle {
             }
         }
 
-        battleLength -= nextAV;
+        this.avLeftOver.decrease(nextAV);
+        this.avUsed.increase(nextAV);
         for (Map.Entry<AbstractEntity, Float> entry : actionValueMap.entrySet()) {
             float newAV = entry.getValue() - nextAV;
             entry.setValue(newAV);
@@ -463,28 +437,27 @@ public class Battle implements IBattle {
                 .forEach(AbstractCharacter::tryUltimate);
     }
 
+    @Override
+    public String metrics() {
+        String avPerChar = "Leftover AV: " + this.actionValueMap
+                .entrySet()
+                .stream()
+                .sorted(Comparators::CompareSpd)
+                .map(e -> String.format("%s: %.2f", e.getKey().getName(), e.getValue()))
+                .collect(Collectors.joining(" | "));
+        String leftOverEnergy = "\nLeftover energy: " + this.playerTeam.stream()
+                .sorted((p1, p2) -> Float.compare(p1.getCurrentEnergy().get(), p2.getCurrentEnergy().get()))
+                .map(e -> String.format("%s: %.2f", e.getName(), e.getCurrentEnergy().get()))
+                .collect(Collectors.joining(" | "));
+        return this.metricRegistry.representation() + avPerChar + leftOverEnergy;
+    }
+
     private void generateMetrics() {
         this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p)));
         if (!lessMetrics) {
             this.enemyTeam.forEach(e -> addToLog(new EnemyMetrics(e)));
         }
-        float usedAV = this.initialBattleLength - battleLength;
-        finalDPAV = (float) totalPlayerDamage / usedAV;
         addToLog(new BattleMetrics(this));
-        addToLog(new FinalDmgMetrics(this));
-    }
-
-    public void calcPercentContribution() {
-        for (AbstractCharacter<?> character : playerTeam) {
-            Float damage = damageContributionMap.get(character);
-            if (damage == null) {
-                damageContributionMap.put(character, 0.0f);
-                damageContributionMapPercent.put(character, 0.0f);
-            } else {
-                float percent = damage / totalPlayerDamage * 100;
-                damageContributionMapPercent.put(character, percent);
-            }
-        }
     }
 
     private Yunli getYunli() {
@@ -604,43 +577,29 @@ public class Battle implements IBattle {
     }
 
     @Override
-    public HashMap<BattleParticipant, Float> getDamageContributionMap() {
-        return this.damageContributionMap;
-    }
-
-    @Override
-    public HashMap<AbstractCharacter<?>, Float> getDamageContributionMapPercent() {
-        return this.damageContributionMapPercent;
-    }
-
-    @Override
     public HashMap<AbstractEntity, Float> getActionValueMap() {
         return this.actionValueMap;
     }
 
     @Override
     public int getTotalPlayerDmg() {
-        return this.totalPlayerDamage;
+        Float dmg = this.totalPlayerDamage.get();
+        return dmg == null ? 0 : (int)(float)dmg;
     }
 
     @Override
     public float getActionValueUsed() {
-        return this.initialBattleLength - this.battleLength;
-    }
-
-    @Override
-    public float getFinalDPAV() {
-        return this.finalDPAV;
+        return this.initialBattleLength - this.avLeftOver.get();
     }
 
     @Override
     public int getTotalSkillPointsUsed() {
-        return this.totalSkillPointsUsed;
+        return this.totalSkillPointsUsed.get();
     }
 
     @Override
     public int getTotalSkillPointsGenerated() {
-        return this.totalSkillPointsGenerated;
+        return this.totalSkillPointsGenerated.get();
     }
 
     @Override
@@ -712,65 +671,7 @@ public class Battle implements IBattle {
         addToLog(new SpeedDelayEntity(entity, currAV, newCurrAV));
     }
 
-    @Override
-    public long getSeed() {
-        return seed;
-    }
 
-    @Override
-    public Random getEnemyMoveRng() {
-        return enemyMoveRng;
-    }
-
-    @Override
-    public Random getEnemyTargetRng() {
-        return enemyTargetRng;
-    }
-
-    @Override
-    public Random getCritChanceRng() {
-        return critChanceRng;
-    }
-
-    @Override
-    public Random getGetRandomEnemyRng() {
-        return getRandomEnemyRng;
-    }
-
-    @Override
-    public Random getProcChanceRng() {
-        return procChanceRng;
-    }
-
-    @Override
-    public Random getGambleChanceRng() {
-        return gambleChanceRng;
-    }
-
-    @Override
-    public Random getQpqRng() {
-        return qpqRng;
-    }
-
-    @Override
-    public Random getMilkyWayRng() {
-        return milkyWayRng;
-    }
-
-    @Override
-    public Random getWeaveEffectRng() {
-        return weaveEffectRng;
-    }
-
-    @Override
-    public Random getAetherRng() {
-        return aetherRng;
-    }
-
-    @Override
-    public Random getEnemyEHRRng() {
-        return enemyEHRRng;
-    }
 
     public static class ForceBattleEnd extends RuntimeException {
         public ForceBattleEnd() {

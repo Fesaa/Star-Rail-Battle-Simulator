@@ -136,7 +136,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
 
         @Override
         public String representation() {
-            return String.format("%s: %d", this.getDescription(), this.value);
+            return String.format("%s: %,d", this.getDescription(), this.value);
         }
     }
 
@@ -178,7 +178,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
 
         @Override
         public String representation() {
-            return String.format("%s: %.2f", this.getDescription(), this.value);
+            return String.format("%s: %,.2f", this.getDescription(), this.value);
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
 
         @Override
         public String representation() {
-            return String.format("%s: %d", this.getDescription(), this.value);
+            return String.format("%s: %,d", this.getDescription(), this.value);
         }
     }
 

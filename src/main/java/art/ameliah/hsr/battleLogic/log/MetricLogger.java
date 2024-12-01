@@ -3,7 +3,6 @@ package art.ameliah.hsr.battleLogic.log;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.EnemyMetrics;
-import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
 
@@ -41,10 +40,5 @@ public class MetricLogger extends JsonLogger {
     @Override
     public void handle(EnemyMetrics enemyMetrics) {
         super.log(enemyMetrics);
-    }
-
-    @Override
-    public void handle(FinalDmgMetrics finalDmgMetrics) {
-        super.log(finalDmgMetrics);
     }
 }

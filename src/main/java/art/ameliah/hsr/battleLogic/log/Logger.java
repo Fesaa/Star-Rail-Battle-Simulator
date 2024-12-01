@@ -59,7 +59,6 @@ import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.EnemyMetrics;
-import art.ameliah.hsr.battleLogic.log.lines.metrics.FinalDmgMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
 import lombok.Getter;
@@ -279,10 +278,6 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(CombatStart combatStart) {
         log(combatStart);
-    }
-
-    public void handle(FinalDmgMetrics finalDmgMetrics) {
-        log(finalDmgMetrics);
     }
 
     public void handle(UltDecision ultDecision) {
