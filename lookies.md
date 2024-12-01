@@ -24,4 +24,7 @@ Need to check, so we can make them all dynamic. Or something. Not sure.
 dim's data dump wiki
 
 ### Figure out how the extra dmg in PF actually works...
-I've watched some YT video's, and the dmg I'm using doesn't match at all. 
+I've watched some YT video's, and the dmg I'm using doesn't match at all.
+
+### Add logging for all enemy attacks
+Make it automatic? :sob:
