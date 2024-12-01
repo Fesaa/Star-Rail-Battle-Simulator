@@ -30,79 +30,10 @@ public class Main {
     public static void main(String[] args) {
         Locale.setDefault(Locale.UK);
 
-        //debugTeam();
-        ameliasSanityCheck();
+        //ameliasSanityCheck();
         //WaveTester.MocTest();
         //WaveTester.MocDivTest();
-        //WaveTester.PfTest();
-    }
-
-    public static void debugTeam() {
-        Battle battle = new Battle();
-        battle.lessMetrics = true;
-
-        //     battle.setPlayerTeam(new TingyunYunliRobinHuohuoTeam().getTeam());
-//        //battle.setPlayerTeam(new TopazYunliRobinHuohuoTeam().getTeam());
-//        //battle.setPlayerTeam(new MarchYunliRobinHuohuoTeam().getTeam());
-//       battle.setPlayerTeam(new SparkleYunliRobinHuohuoTeam().getTeam());
-////        battle.setPlayerTeam(new SparkleYunliTingyunHuohuoTeam().getTeam());
-////        battle.setPlayerTeam(new PelaYunliTingyunHuohuoTeam().getTeam());
-////        battle.setPlayerTeam(new TopazYunliRobinAventurineTeam().getTeam());
-//
-//        ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
-//        enemyTeam.add(new PhysWeakEnemy(0, 2));
-//        enemyTeam.add(new PhysWeakEnemy(1, 2));
-//        enemyTeam.add(new PhysWeakEnemy(2, 2));
-//        battle.setEnemyTeam(enemyTeam);
-
-        //battle.setPlayerTeam(new FeixiaoRobinAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinAventurineMoze().getTeam());
-        //battle.setPlayerTeam(new FeixiaoSparkleAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoSparkleAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRuanMeiAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRuanMeiAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoPelaAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoPelaAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoPelaGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinAventurinePela().getTeam());
-        //battle.setPlayerTeam(new FeixiaoTopazAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoHanyaAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoHanyaAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRuanMeiGallagherTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRuanMeiGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinGallagherTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinTopazFuXuan().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinMarchFuXuan().getTeam());
-        //battle.setPlayerTeam(new FeixiaoHanyaGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new AstaFeixiaoGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoBronyaAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoBronyaAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoHanyaGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinGallagherBronya().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinLingshaTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRuanMeiLingshaTopaz().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRobinLingshaMarch().getTeam());
-        //battle.setPlayerTeam(new PelaFeixiaoGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoMozeGallagherMarch().getTeam());
-        //battle.setPlayerTeam(new FeixiaoRuanMeiAventurineMarch().getTeam());
-        //battle.setPlayerTeam(new TopazTeams.RatioRobinAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new TopazTeams.FeixiaoRobinAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new TopazTeams.MarchRobinAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new TopazTeams.MozeRobinAventurineTopaz().getTeam());
-        //battle.setPlayerTeam(new TopazTeams.HuohuoYunliRobinTopaz().getTeam());
-        //battle.setPlayerTeam(new PelaYunliRobinHuohuoTeam().getTeam());
-        battle.setPlayerTeam(new FeixiaoBronyaAventurineMoze().getTeam());
-
-        ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
-        //enemyTeam.add(new WindWeakEnemy(0, 0));
-        //enemyTeam.add(new FireWindImgLightningWeakEnemy(0, 0));
-        enemyTeam.add(new AllWeakEnemy(0, 2));
-        enemyTeam.add(new AllWeakEnemy(1, 2));
-        battle.setEnemyTeam(enemyTeam);
-
-        battle.Start(550);
+        WaveTester.PfTest();
     }
 
     @SuppressWarnings("unchecked")
