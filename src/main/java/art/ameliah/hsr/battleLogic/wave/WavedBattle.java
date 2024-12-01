@@ -73,6 +73,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
             }
 
             this.addEnemyAt(nextEnemy, nextIdx);
+            this.afterEnemyAdd(nextEnemy, nextIdx);
         }
         this.talliedPositions.clear();
     }
@@ -90,5 +91,6 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
     }
 
     protected abstract void onWaveChange();
+    protected abstract void afterEnemyAdd(AbstractEnemy enemy, int idx);
 
 }

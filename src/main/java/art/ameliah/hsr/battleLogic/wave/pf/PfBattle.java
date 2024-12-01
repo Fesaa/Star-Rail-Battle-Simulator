@@ -128,6 +128,11 @@ public class PfBattle extends WavedBattle<PfWave> {
     }
 
     @Override
+    protected void afterEnemyAdd(AbstractEnemy enemy, int idx) {
+        this.AdvanceEntity(enemy, 70);
+    }
+
+    @Override
     public String prefix() {
         return String.format("(%.2f AV / %d enemies left) - ", this.initialLength() - this.battleLength(), this.currentWave.size());
     }

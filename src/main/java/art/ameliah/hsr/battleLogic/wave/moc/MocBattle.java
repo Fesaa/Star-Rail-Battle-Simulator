@@ -2,6 +2,7 @@ package art.ameliah.hsr.battleLogic.wave.moc;
 
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.enemies.AbstractEnemy;
 
 public class MocBattle extends WavedBattle<MocWave> {
 
@@ -31,6 +32,10 @@ public class MocBattle extends WavedBattle<MocWave> {
         this.avLeftOver.set(this.initialBattleLength - this.turbulence.avUsed());
         this.actionValueMap.forEach((k, _) -> this.actionValueMap.put(k, k.getBaseAV()));
         getPlayers().forEach(AbstractCharacter::tryUltimate);
+    }
+
+    @Override
+    protected void afterEnemyAdd(AbstractEnemy enemy, int idx) {
     }
 
     public int cyclesUsed() {
