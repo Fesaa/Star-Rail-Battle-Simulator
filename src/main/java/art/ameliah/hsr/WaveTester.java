@@ -47,7 +47,7 @@ public class WaveTester {
         AbstractCharacter<?> herta2 = PlayerTeam.getPreBuiltHerta();
         herta2.isDPS = true;
         PureFiction pureFiction = new TechnicalityEntrapment(
-                List.of(PlayerTeam.getPreBuiltJade(), herta, PlayerTeam.getPreBuiltRobin(), Divteams.divsHuoHuo()),
+                List.of(PlayerTeam.getPreBuiltJade(), herta, PlayerTeam.getPreBuiltRobin(), PlayerTeam.getPrebuiltRuanMeiCritSupport()),
                 List.of(PlayerTeam.getPreBuiltJade(), herta2, PlayerTeam.getPreBuiltRobin(), Divteams.divsHuoHuo()));
         pureFiction.setBattleLogger(WaveTesterLogger::new);
         pureFiction.Start();

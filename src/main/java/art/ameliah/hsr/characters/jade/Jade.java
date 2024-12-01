@@ -163,7 +163,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
 
         @Override
         public void afterAttack(AttackLogic attack) {
-            attack.hit(Jade.this, attack.getTargets(), 0.25f);
+            attack.additionalDmg(Jade.this, attack.getTargets(), 0.25f);
             Jade.this.increaseFuaStacks(attack.getTargets().size());
             // TODO: Lower HP of ally
         }

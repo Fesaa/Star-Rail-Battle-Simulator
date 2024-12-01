@@ -30,6 +30,26 @@ public class AttackLogic {
     private final Collection<DamageType> types;
     private final Function<Hit, HitResult> callback;
 
+    public Collection<HitResult> additionalDmg(AbstractCharacter<?> source, Collection<AbstractEnemy> targets, float mul, ElementType type) {
+        List<HitResult> results = new ArrayList<>();
+        for (var target : targets) {
+            results.add(this.additionalDmg(source, target, mul, type));
+        }
+        return results;
+    }
+
+    public Collection<HitResult> additionalDmg(AbstractCharacter<?> source, Collection<AbstractEnemy> targets, float mul) {
+        return this.additionalDmg(source, targets, mul, source.elementType);
+    }
+
+    public HitResult additionalDmg(AbstractCharacter<?> source, AbstractEnemy target, float mul, ElementType type) {
+        return this.hit(source, target, mul, MultiplierStat.ATK, 0, type, false, List.of(DamageType.ADDITIONAL_DAMAGE));
+    }
+
+    public HitResult additionalDmg(AbstractCharacter<?> source, AbstractEnemy target, float mul) {
+        return this.additionalDmg(source, target, mul, source.elementType);
+    }
+
     public Collection<HitResult> hit(Collection<AbstractEnemy> enemies, float mul) {
         return this.hit(this.source, enemies, mul, MultiplierStat.ATK, 0, this.source.elementType, false);
     }

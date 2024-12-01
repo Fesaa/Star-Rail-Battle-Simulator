@@ -226,7 +226,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
                 return;
             }
 
-            attack.hit(Robin.this, target, 1.2f, MultiplierStat.ATK, 0, ElementType.PHYSICAL, false, List.of());
+            attack.additionalDmg(Robin.this, target, 1.2f);
             Robin.this.concertoHits.increment();
         }
 

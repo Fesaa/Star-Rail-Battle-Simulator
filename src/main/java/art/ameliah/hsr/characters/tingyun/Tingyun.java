@@ -112,7 +112,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         public void beforeAttack(AttackLogic attack) {
             Tingyun.this.talentProcs.increment();
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
-            attack.hit(attack.getSource(), target, 0.64f, MultiplierStat.ATK, 0, ElementType.LIGHTNING, false, List.of());
+            attack.additionalDmg(attack.getSource(), target, 0.64f, ElementType.LIGHTNING);
         }
 
         public void onUseUltimate() {
