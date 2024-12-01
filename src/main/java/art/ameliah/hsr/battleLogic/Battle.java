@@ -28,6 +28,7 @@ import art.ameliah.hsr.characters.march.SwordMarch;
 import art.ameliah.hsr.characters.yunli.Yunli;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
+import art.ameliah.hsr.utils.Comparators;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -218,16 +219,13 @@ public class Battle implements IBattle {
         return this.actionValueMap
                 .entrySet()
                 .stream()
-                .sorted((e1, e2) -> {
-                    if (e1.getValue().equals(e2.getValue())) {
-                        return Integer.compare(e1.getKey().speedPriority, e2.getKey().speedPriority);
-                    }
-                    return Float.compare(e1.getValue(), e2.getValue());
-                })
+                .sorted(Comparators::CompareSpd)
                 .toList()
                 .get(index)
                 .getKey();
     }
+
+
 
     @Override
     public boolean isAboutToEnd() {

@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.battle;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
+import art.ameliah.hsr.utils.Comparators;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ public record TurnStart(AbstractEntity next, float atAV,
         return "Next is " + this.next.getName() + " at " + this.atAV + " action value " +
                 actionValueMap.entrySet()
                         .stream()
-                        .sorted((Map.Entry.comparingByValue()))
+                        .sorted(Comparators::CompareSpd)
                         .map(e -> e.getKey().getName() + "=" + e.getValue())
                         .collect(Collectors.joining(", ", "{", "}"));
     }
