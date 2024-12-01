@@ -264,8 +264,8 @@ public class Battle extends RngProvider implements IBattle {
     @Override
     public void generateSkillPoint(AbstractCharacter<?> character, int amount) {
         int cur = this.currentSkillPoints.get();
-        this.currentSkillPoints.increase(amount);
-        this.totalSkillPointsGenerated.increase(amount, MAX_SKILL_POINTS);
+        this.currentSkillPoints.increase(amount, MAX_SKILL_POINTS);
+        this.totalSkillPointsGenerated.increase(amount);
 
         addToLog(new GenerateSkillPoint(character, amount, cur, this.currentSkillPoints.get()));
     }
