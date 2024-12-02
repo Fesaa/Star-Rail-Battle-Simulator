@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.luofu;
 
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -47,6 +48,7 @@ public class SableclawWolftrooper extends AbstractEnemy implements MoonRageAble 
             if (this.inMoonRage && this.successfulHit(c, 75)) { // check chance
                 c.addPower(new EnemyBleed());
             }
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
         })).execute();
     }
 

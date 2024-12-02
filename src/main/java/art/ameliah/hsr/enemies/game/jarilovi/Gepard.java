@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.jarilovi;
 
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -36,17 +37,26 @@ public class Gepard extends AbstractEnemy {
 
     private void FistOfConviction() {
         this.actionMetric.record(EnemyAttackType.SINGLE);
-        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 10, 653)));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 653);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
+        }));
     }
 
     private void SmiteOfFrost() {
         this.actionMetric.record(EnemyAttackType.SINGLE);
-        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 15, 980)));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 15, 980);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
+        }));
     }
 
     private void FrigidWaterfall() {
         this.actionMetric.record(EnemyAttackType.AOE);
-        this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> al.hit(c, 15, 762)));
+        this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
+            al.hit(c, 15, 762);
+            getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
+        }));
     }
 
     private void SiegeSupport() {

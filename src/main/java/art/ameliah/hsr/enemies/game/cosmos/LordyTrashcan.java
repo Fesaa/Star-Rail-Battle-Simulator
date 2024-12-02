@@ -1,6 +1,7 @@
 package art.ameliah.hsr.enemies.game.cosmos;
 
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -44,7 +45,10 @@ public class LordyTrashcan extends AbstractEnemy {
     @Override
     protected void act() {
         this.actionMetric.record(EnemyAttackType.SINGLE);
-        this.startAttack().handle(da -> da.logic(getRandomTarget(), (c, al) -> al.hit(c, this.boostedATK)))
+        this.startAttack().handle(da -> da.logic(getRandomTarget(), (c, al) -> {
+                    al.hit(c, this.boostedATK);
+                    getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
+                }))
                 .afterAttackHook(() -> {
                     // CURSED
                     this.boostedATK += (float) (Math.pow(2, this.turnsMetric.get()) * this.boostedATK);

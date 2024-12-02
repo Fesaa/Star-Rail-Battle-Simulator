@@ -3,6 +3,7 @@ package art.ameliah.hsr.enemies.game.jarilovi;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -46,7 +47,10 @@ public class AutomatonBeetle extends AbstractEnemy {
     @Override
     protected void act() {
         this.actionMetric.record(EnemyAttackType.SINGLE);
-        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 15, 653)));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 15, 653);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
+        }));
         this.isInvincible = true;
     }
 }

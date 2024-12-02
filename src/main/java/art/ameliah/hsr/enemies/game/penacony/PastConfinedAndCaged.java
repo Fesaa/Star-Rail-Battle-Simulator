@@ -3,6 +3,7 @@ package art.ameliah.hsr.enemies.game.penacony;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -63,7 +64,10 @@ public class PastConfinedAndCaged extends AbstractEnemy {
 
     private void CleansingFlagellation() {
         this.actionMetric.record(EnemyAttackType.SINGLE);
-        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> al.hit(c, 10, 784)));
+        this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
+            al.hit(c, 10, 784);
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
+        }));
     }
 
     private void AdmonishmentOfTheMasses() {
@@ -75,6 +79,7 @@ public class PastConfinedAndCaged extends AbstractEnemy {
             da.logic(idx-1, l);
             da.logic(idx, l);
             da.logic(idx+1, l);
+            getBattle().addToLog(new EnemyAction(this, getBattle().getPlayers().get(idx), EnemyAttackType.BLAST));
         });
     }
 

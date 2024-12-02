@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.luofu;
 
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -37,7 +38,10 @@ public class EntrancedIngeniumIlluminationDragonfish extends AbstractEnemy {
     protected void act() {
         this.actionMetric.record(EnemyAttackType.AOE);
         this.startAttack().handle(da -> {
-            da.logic(getBattle().getPlayers(), (c, al) -> al.hit(c, 5, 326));
+            da.logic(getBattle().getPlayers(), (c, al) -> {
+                al.hit(c, 5, 326);
+                getBattle().addToLog(new EnemyAction(this, null, EnemyAttackType.AOE));
+            });
         }).afterAttackHook(() -> {
             var targets = this.getRandomTargets(getBattle().getPlayers().size() > 2 ? 2 : 1);
 

@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
+import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
@@ -34,6 +35,7 @@ public class IncinerationShadewalker extends AbstractEnemy {
             if (this.successfulHit(c, 100)) {
                 c.addPower(new EnemyBurn(this, 108, 3));
             }
+            getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE));
         }));
     }
 }
