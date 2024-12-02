@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
-import art.ameliah.hsr.characters.lingsha.Lingsha;
+import art.ameliah.hsr.characters.abundance.lingsha.Lingsha;
 
 public class FuYuan extends AbstractSummon<Lingsha> {
 

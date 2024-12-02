@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
-import art.ameliah.hsr.characters.topaz.Topaz;
+import art.ameliah.hsr.characters.hunt.topaz.Topaz;
 
 public class Numby extends AbstractSummon<Topaz> {
     public static final String NAME = "Numby";

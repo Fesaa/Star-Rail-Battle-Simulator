@@ -1,12 +1,12 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.bronya.Bronya;
+import art.ameliah.hsr.characters.harmony.bronya.Bronya;
 import art.ameliah.hsr.characters.goal.UltGoal;
-import art.ameliah.hsr.characters.hanya.Hanya;
-import art.ameliah.hsr.characters.robin.Robin;
-import art.ameliah.hsr.characters.ruanmei.RuanMei;
-import art.ameliah.hsr.characters.sparkle.Sparkle;
+import art.ameliah.hsr.characters.harmony.hanya.Hanya;
+import art.ameliah.hsr.characters.harmony.robin.Robin;
+import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
+import art.ameliah.hsr.characters.harmony.sparkle.Sparkle;
 
 public class DontUltMissingPowerGoal<C extends AbstractCharacter<C>> extends UltGoal<C> {
 

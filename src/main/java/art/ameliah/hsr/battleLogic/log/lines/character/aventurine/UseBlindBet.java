@@ -3,7 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.character.aventurine;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.aventurine.Aventurine;
+import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
 
 public class UseBlindBet implements Loggable {
 

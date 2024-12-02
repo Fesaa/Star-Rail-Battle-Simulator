@@ -3,7 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.character.yunli;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.yunli.Yunli;
+import art.ameliah.hsr.characters.destruction.yunli.Yunli;
 
 public class UseSlash implements Loggable {
 

@@ -14,7 +14,7 @@ import art.ameliah.hsr.battleLogic.log.lines.enemy.RuanMeiDelay;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.WeaknessBreakRecover;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
-import art.ameliah.hsr.characters.ruanmei.RuanMei;
+import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
 import art.ameliah.hsr.enemies.action.EnemyActionSequence;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.EnemyActionMetric;

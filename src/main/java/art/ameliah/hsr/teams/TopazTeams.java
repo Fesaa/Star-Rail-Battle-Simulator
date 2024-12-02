@@ -1,12 +1,12 @@
 package art.ameliah.hsr.teams;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.aventurine.Aventurine;
-import art.ameliah.hsr.characters.drRatio.DrRatio;
-import art.ameliah.hsr.characters.march.SwordMarch;
-import art.ameliah.hsr.characters.moze.Moze;
-import art.ameliah.hsr.characters.topaz.Topaz;
-import art.ameliah.hsr.characters.yunli.Yunli;
+import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
+import art.ameliah.hsr.characters.hunt.drRatio.DrRatio;
+import art.ameliah.hsr.characters.hunt.march.SwordMarch;
+import art.ameliah.hsr.characters.hunt.moze.Moze;
+import art.ameliah.hsr.characters.hunt.topaz.Topaz;
+import art.ameliah.hsr.characters.destruction.yunli.Yunli;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
 import art.ameliah.hsr.lightcones.hunt.BaptismOfPureThought;
 import art.ameliah.hsr.lightcones.hunt.WorrisomeBlissful;

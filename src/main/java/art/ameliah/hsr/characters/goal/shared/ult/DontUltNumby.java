@@ -4,7 +4,7 @@ import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.Numby;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.goal.UltGoal;
-import art.ameliah.hsr.characters.topaz.Topaz;
+import art.ameliah.hsr.characters.hunt.topaz.Topaz;
 
 import java.util.Map;
 

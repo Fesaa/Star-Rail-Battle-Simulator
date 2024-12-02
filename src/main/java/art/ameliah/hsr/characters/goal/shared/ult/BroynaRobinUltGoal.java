@@ -1,9 +1,9 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.bronya.Bronya;
+import art.ameliah.hsr.characters.harmony.bronya.Bronya;
 import art.ameliah.hsr.characters.goal.UltGoal;
-import art.ameliah.hsr.characters.robin.Robin;
+import art.ameliah.hsr.characters.harmony.robin.Robin;
 
 import static art.ameliah.hsr.characters.goal.UltGoal.UltGoalResult.DO;
 import static art.ameliah.hsr.characters.goal.UltGoal.UltGoalResult.PASS;
