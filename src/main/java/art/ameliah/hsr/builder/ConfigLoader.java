@@ -12,7 +12,7 @@ public class ConfigLoader {
 
     public static final Gson gson = new Gson();
 
-    public static List<List<AbstractCharacter<?>>> loadTeams() {
+    public static List<BattleConfig> loadTeams() {
         Config config;
         try (FileReader reader = new FileReader("configs/teams.json")) {
             config = gson.fromJson(reader, Config.class);
@@ -20,11 +20,10 @@ public class ConfigLoader {
             throw new RuntimeException(e);
         }
 
-        List<List<AbstractCharacter<?>>> teams = new ArrayList<>();
-        for (var team : config.getTeams()) {
+        for (var battle : config.getBattles()) {
             List<AbstractCharacter<?>> characters = new ArrayList<>();
 
-            for (var id : team) {
+            for (var id : battle.getTeam()) {
                 var character = config.getCharacters().get(id);
                 if (character == null) {
                     throw new RuntimeException("Character '" + id + "' not found. Did you configure it?");
@@ -33,10 +32,10 @@ public class ConfigLoader {
                 characters.add(character.toCharacter());
             }
 
-            teams.add(characters);
+            battle.setCharacters(characters);
         }
 
-        return teams;
+        return config.getBattles();
     }
 
 

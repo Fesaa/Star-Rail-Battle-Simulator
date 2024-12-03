@@ -12,6 +12,6 @@ public class Config {
 
     public Map<Integer, CharacterConfig> characters;
 
-    public List<List<Integer>> teams;
+    public List<BattleConfig> battles;
 
 }

@@ -42,13 +42,12 @@ public class Main {
     }
 
     public static void run() {
-        var teams = ConfigLoader.loadTeams();
+        var battles = ConfigLoader.loadTeams();
 
-        for (var team : teams) {
-            String key = team.stream().map(p -> String.format("%s(%s)", p.getName(), p.lightcone.getName())).collect(Collectors.joining(","));
-            System.out.println(key);
-            var b1 = new FirstHalf(team, new EmptyAir());
-            b1.setLogger(b -> new WaveTester.WaveTesterLogger(b, key));
+        for (var battle : battles) {
+            System.out.println(battle.getKey());
+            var b1 = new FirstHalf(battle.getCharacters(), new EmptyAir());
+            b1.setLogger(b -> new WaveTester.WaveTesterLogger(b, battle.getKey()));
             b1.Start(450);
             System.out.println();
             System.out.println();

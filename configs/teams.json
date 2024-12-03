@@ -1,12 +1,19 @@
 {
-  "teams": [
-    [3, 1, 4, 5],
-    [3, 2, 4, 5],
-    [6, 2, 4, 5],
-    [6, 2, 7, 5]
+  "battles": [
+    {
+      "key": "Herta^2 (Into the Unreachable Veil - Sigonia)",
+      "battleType": "PURE_FICTION",
+      "team": [3, 1, 5, 6]
+    },
+    {
+      "key": "Herta^2 (Into the Unreachable Veil - Izumo)",
+      "battleType": "PURE_FICTION",
+      "team": [3, 1, 5, 6]
+    }
   ],
   "characters": {
     "1": {
+      "name": "The Herta",
       "id": 1401,
       "lcId": 23037,
       "relics": [
@@ -22,22 +29,23 @@
       ]
     },
     "2": {
+      "name": "The Herta",
       "id": 1401,
       "lcId": 23037,
       "relics": [
         {"id":  122, "fullSet":  true},
-        {"id": 311}
+        {"id": 314}
       ],
-      "mainStats": ["CRIT_RATE", "SPEED", "ICE_DAMAGE", "ATK_PER"],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
       "subStats": [
         {"stat":  "CRIT_CHANCE", "amount":  50},
         {"stat":  "CRIT_DAMAGE", "amount":  100},
-        {"stat":  "ATK_PERCENT", "amount":  15},
-        {"stat":  "FLAT_SPEED", "amount":  5}
+        {"stat":  "ATK_PERCENT", "amount":  15}
 
       ]
     },
     "3": {
+      "name": "Jade",
       "id": 1314,
       "lcId": 23028,
       "relics": [
@@ -51,6 +59,7 @@
       ]
     },
     "4": {
+      "name": "Robin",
       "id": 1309,
       "lcId": 23026,
       "relics": [
@@ -66,6 +75,7 @@
       ]
     },
     "5": {
+      "name": "Ruan Mei",
       "id": 1303,
       "lcId": 21004,
       "relics": [
@@ -80,6 +90,7 @@
       ]
     },
     "6": {
+      "name": "Herta",
       "id": 1013,
       "lcId": 23000,
       "relics": [
@@ -94,10 +105,11 @@
       ]
     },
     "7": {
+      "name": "Herta",
       "id": 1313,
       "lcId": 23003,
       "relics": [
-        {"id":  114, "fullSet":  true},
+        {"id":  121, "fullSet":  true},
         {"id":  310}
       ],
       "mainStats": ["CRIT_DAMAGE", "SPEED", "DEF_PER", "ERR"],
