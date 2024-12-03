@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -21,7 +22,7 @@ public class AbstractDelayAttack<S extends BattleParticipant, T extends BattlePa
 
     protected final S source;
     private final Set<DamageType> types = new HashSet<>();
-    private final Set<T> targets = new HashSet<>();
+    private final Set<T> targets = new LinkedHashSet<>();
     private final List<Runnable> hooks = new ArrayList<>();
     private Consumer<A> logic;
 

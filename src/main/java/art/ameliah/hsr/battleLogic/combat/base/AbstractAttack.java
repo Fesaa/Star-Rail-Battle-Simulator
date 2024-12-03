@@ -12,6 +12,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -33,7 +34,7 @@ public abstract class AbstractAttack<S extends AbstractEntity, T extends BattleP
     protected final Set<DamageType> types = new HashSet<>();
 
     @Getter
-    protected final Set<T> targets = new HashSet<>();
+    protected final Set<T> targets = new LinkedHashSet<>();
 
     protected final List<Runnable> afterAttackHooks = new ArrayList<>();
     protected Consumer<D> consumer = null;

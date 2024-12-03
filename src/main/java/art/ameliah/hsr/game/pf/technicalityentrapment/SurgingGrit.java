@@ -41,7 +41,8 @@ public class SurgingGrit implements ISurgingGrit {
                 return;
             }
 
-            for (var target : attack.getTargets()) {
+            List<AbstractEnemy> targetsCopy = new ArrayList<>(attack.getTargets());
+            for (var target : targetsCopy) {
                 int idx = getBattle().getEnemies().indexOf(target);
 
                 // https://youtu.be/INVTD86xO_Q?si=lQVkPJl4rB5vt0hK&t=502 <- got dmg from

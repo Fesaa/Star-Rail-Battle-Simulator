@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic.wave;
 
 import art.ameliah.hsr.battleLogic.Battle;
+import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -32,6 +33,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
 
         this.currentWave = this.waves.remove();
         this.setEnemyTeam(this.currentWave.startEnemies());
+        this.getPlayers().forEach(p -> p.emit(BattleEvents::onWaveStart));
     }
 
     @Override
@@ -88,6 +90,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
         this.talliedPositions.clear();
         this.currentWave.startEnemies().forEach(this::addEnemy);
         this.onWaveChange();
+        this.getPlayers().forEach(p -> p.emit(BattleEvents::onWaveStart));
     }
 
     protected abstract void onWaveChange();

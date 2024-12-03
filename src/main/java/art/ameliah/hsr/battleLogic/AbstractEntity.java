@@ -124,6 +124,11 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
         return null;
     }
 
+    public int getPowerStacks(String powerName) {
+        var power = this.getPower(powerName);
+        return power == null ? 0 : power.stacks;
+    }
+
     public String toString() {
         return getName();
     }

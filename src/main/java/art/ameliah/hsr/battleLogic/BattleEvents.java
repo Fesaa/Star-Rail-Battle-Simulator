@@ -15,9 +15,20 @@ public interface BattleEvents {
     }
 
     /**
+     * Also called on battle start
+     */
+    default void onWaveStart() {}
+
+    /**
      * Called when an enemy join the battle while it has already started
      */
     default void onEnemyJoinCombat(AbstractEnemy enemy) {
+    }
+
+    /**
+     * Called when an enemy dies
+     */
+    default void onEnemyRemove(AbstractEnemy enemy, int idx) {
     }
 
     /**

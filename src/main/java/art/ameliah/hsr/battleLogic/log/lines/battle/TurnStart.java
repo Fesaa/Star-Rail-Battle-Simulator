@@ -6,7 +6,6 @@ import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.utils.Comparators;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public record TurnStart(AbstractEntity next, float atAV,

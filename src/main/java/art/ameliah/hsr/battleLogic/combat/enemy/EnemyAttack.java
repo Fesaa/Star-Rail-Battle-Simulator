@@ -1,19 +1,13 @@
 package art.ameliah.hsr.battleLogic.combat.enemy;
 
-import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.combat.base.AbstractAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class EnemyAttack extends AbstractAttack<AbstractEnemy, AbstractCharacter<?>, EnemyAttackLogic, EnemyDelayAttack> {
 

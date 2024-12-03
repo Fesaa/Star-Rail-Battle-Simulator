@@ -1,10 +1,18 @@
 package art.ameliah.hsr.utils;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
+import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyType;
 
 import java.util.Map;
 
 public class Comparators {
+
+    public static int CompareRarity(AbstractEnemy e) {
+        if (e.getType().equals(EnemyType.Boss)) return -2;
+        if (e.getType().equals(EnemyType.Elite)) return -1;
+        return 0;
+    }
 
     public static int CompareSpd(Map.Entry<AbstractEntity, Float> e1, Map.Entry<AbstractEntity, Float> e2) {
         if (!e1.getValue().equals(e2.getValue())) {

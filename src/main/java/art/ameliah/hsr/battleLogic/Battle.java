@@ -23,8 +23,8 @@ import art.ameliah.hsr.battleLogic.log.lines.metrics.EnemyMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.hunt.march.SwordMarch;
 import art.ameliah.hsr.characters.destruction.yunli.Yunli;
+import art.ameliah.hsr.characters.hunt.march.SwordMarch;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
@@ -155,6 +155,8 @@ public class Battle extends RngProvider implements IBattle {
         this.actionValueMap.remove(enemy);
 
         this.onEnemyRemove(enemy, idx);
+        this.getPlayers().forEach(p -> p.emit(l -> l.onEnemyRemove(enemy, idx)));
+        this.getEnemies().forEach(e -> e.emit(l -> l.onEnemyRemove(enemy, idx)));
     }
 
     @Override
