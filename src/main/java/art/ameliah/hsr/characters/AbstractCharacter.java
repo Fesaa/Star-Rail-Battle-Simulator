@@ -32,6 +32,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends AbstractEntity {
 
@@ -491,6 +492,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     private String statsString() {
         String gearString = String.format("Metrics for %s \nLightcone: %s \nRelic Set Bonuses: ", getName(), lightcone);
         gearString += relicSetBonus;
+        gearString += String.format("Powers: %s\n", powerList.stream().map(AbstractPower::getName).collect(Collectors.joining("\n\t")));
         return gearString + String.format("\nOut of combat stats \nAtk: %.3f \nDef: %.3f \nHP: %.3f \nSpeed: %.3f \nSame Element Damage Bonus: %.3f \nCrit Chance: %.3f%% \nCrit Damage: %.3f%% \nBreak Effect: %.3f%%", getFinalAttack(), getFinalDefense(), getFinalHP(), getFinalSpeed(), getTotalSameElementDamageBonus(), getTotalCritChance(), getTotalCritDamage(), getTotalBreakEffect());
     }
 

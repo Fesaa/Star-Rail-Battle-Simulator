@@ -58,17 +58,20 @@ public class WaveTester {
     public static class WaveTesterLogger extends DefaultLogger {
 
         public WaveTesterLogger(IBattle battle) {
+            this(battle, battle.getClass().getSimpleName());
+        }
+
+        public WaveTesterLogger(IBattle battle, String key) {
             super(battle);
 
             PrintStream printStream;
             try {
-                printStream = new PrintStream(new FileOutputStream("export_2/" + battle.getClass().getSimpleName() + ".log"));
+                printStream = new PrintStream(new FileOutputStream("export_2/" + key + ".log"));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
 
             this.out = printStream;
-
         }
 
         @Override

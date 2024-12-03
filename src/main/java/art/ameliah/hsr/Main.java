@@ -10,6 +10,7 @@ import art.ameliah.hsr.builder.ConfigLoader;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
+import art.ameliah.hsr.game.pf.technicalityentrapment.EmptyAir;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
 import art.ameliah.hsr.teams.PlayerTeam;
@@ -23,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -43,9 +45,10 @@ public class Main {
         var teams = ConfigLoader.loadTeams();
 
         for (var team : teams) {
-            System.out.println(team.stream().map(p -> String.format("%s(%s)", p.getName(), p.lightcone.getName())).toList());
-            var b1 = new FirstHalf(team, new FalsePromises());
-            b1.setLogger(WaveTester.WaveTesterLogger::new);
+            String key = team.stream().map(p -> String.format("%s(%s)", p.getName(), p.lightcone.getName())).collect(Collectors.joining(","));
+            System.out.println(key);
+            var b1 = new FirstHalf(team, new EmptyAir());
+            b1.setLogger(b -> new WaveTester.WaveTesterLogger(b, key));
             b1.Start(450);
             System.out.println();
             System.out.println();
