@@ -44,6 +44,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
 
         this.registerGoal(0, new UltAtEndOfBattle<>(this));
         this.registerGoal(10, DontUltMissingPowerGoal.robin(this));
+        this.registerGoal(15, new HertaUltGoal(this));
         this.registerGoal(20, new AlwaysUltGoal<>(this));
 
         this.registerGoal(0, new AlwaysSkillGoal<>(this));
@@ -94,7 +95,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
                 .sorted(Comparator.comparingInt(Comparators::CompareRarity)).toList();
 
         for (var target : targets) {
-            int copy = Math.max(42-target.getPowerStacks(Interpretation.NAME), tally);
+            int copy = Math.min(42-target.getPowerStacks(Interpretation.NAME), tally);
             target.addPower(new Interpretation(copy));
 
             tally = Math.max(tally-copy, 0);
