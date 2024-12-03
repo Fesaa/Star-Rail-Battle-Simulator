@@ -35,6 +35,7 @@ import art.ameliah.hsr.relics.relics.MusketeerOfWildWheat;
 import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.PioneerDiverOfDeadWaters;
 import art.ameliah.hsr.relics.relics.PrisonerInDeepConfinement;
+import art.ameliah.hsr.relics.relics.SacerdosRelivedOrdeal;
 import art.ameliah.hsr.relics.relics.ScholarLostInErudition;
 import art.ameliah.hsr.relics.relics.TheAshblazingGrandDuke;
 import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
@@ -67,7 +68,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
         register(118, WatchMakerMasterOfDreamMachinations.class);
         register(119, IronCavalryAgainstTheScourge.class);
         register(120, TheWindSoaringValorous.class);
-        //register(121, );
+        register(121, SacerdosRelivedOrdeal.class);
         register(122, ScholarLostInErudition.class);
 
 

@@ -43,6 +43,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
                 character.addPower(skillPower);
                 getBattle().AdvanceEntity(character, 100);
                 lightcone.onSpecificTrigger(character, null);
+                this.relicSetBonus.forEach(rs -> rs.useOnAlly(character, MoveType.SKILL));
                 break;
             }
         }

@@ -178,6 +178,8 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
      * @param stat The stat to get
      * @return The value of the stat, 0 if the stat is not set
      */
+    // TODO: Should be * this by the amount of stacks?
+    // dunno if that would break anything
     public float getStat(PowerStat stat) {
         return this.stats.getOrDefault(stat, 0f);
     }

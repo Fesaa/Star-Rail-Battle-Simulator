@@ -67,6 +67,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
                 getBattle().AdvanceEntity(s, 100);
             });
         }
+        this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
     }
 
     @Override
@@ -87,6 +88,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
         getBattle().getPlayers().forEach(p -> p.removePower(Sunday.TheBeatified));
         target.addPower(new TheBeatified());
         this.theBeatifiedTurnsRemaining = 3;
+        this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.ULTIMATE));
     }
 
     private float ultimateEnergyCharge(AbstractCharacter<?> target) {

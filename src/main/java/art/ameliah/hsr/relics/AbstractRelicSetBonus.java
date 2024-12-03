@@ -4,6 +4,10 @@ import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.MoveType;
+
+import java.util.Collection;
+import java.util.List;
 
 public abstract class AbstractRelicSetBonus implements BattleEvents, BattleParticipant {
     public final AbstractCharacter<?> owner;
@@ -26,6 +30,12 @@ public abstract class AbstractRelicSetBonus implements BattleEvents, BattleParti
     public void onEquip() {
 
     }
+
+    public final void useOnAlly(AbstractCharacter<?> target, MoveType action) {
+        this.useOnAlly(List.of(target), action);
+    }
+
+    public void useOnAlly(Collection<AbstractCharacter<?>> targets, MoveType action) {}
 
     public boolean isFullSet() {
         return isFullSet;
