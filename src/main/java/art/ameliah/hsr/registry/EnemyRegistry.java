@@ -14,11 +14,11 @@ import art.ameliah.hsr.enemies.game.penacony.PastConfinedAndCaged;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EnemyRegistry {
+public class EnemyRegistry extends AbstractRegistry<AbstractEnemy> {
 
-    private static final Map<Integer, Class<? extends AbstractEnemy>> register = new HashMap<>();
+    public static final EnemyRegistry INSTANCE = new EnemyRegistry();
 
-    static {
+    private EnemyRegistry() {
         register(1012030, AutomatonBeetle.class);
         register(2012010, EntrancedIngeniumIlluminationDragonfish.class);
         register(3002050, LordyTrashcan.class);
@@ -30,22 +30,6 @@ public class EnemyRegistry {
         register(1002030, SilvermaneCannoneer.class);
         register(1012010, AutomatonHound.class);
         register(100402014, Gepard.class);
-    }
-
-    private static void register(int id, Class<? extends AbstractEnemy> clazz) {
-        try {
-            register.put(id, clazz);
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static AbstractEnemy getEnemy(int id) throws Exception {
-        if (!register.containsKey(id)) {
-            throw new RuntimeException("Packet with id " + id + " is not registered.");
-        } else {
-            return register.get(id).getConstructor().newInstance();
-        }
     }
 
 }

@@ -1,14 +1,17 @@
 package art.ameliah.hsr;
 
 import art.ameliah.hsr.battleLogic.Battle;
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
+import art.ameliah.hsr.builder.ConfigLoader;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
-import art.ameliah.hsr.enemies.AllWeakEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
+import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
+import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
 import art.ameliah.hsr.teams.PlayerTeam;
 
 import java.io.File;
@@ -21,8 +24,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static art.ameliah.hsr.teams.PlayerTeam.FeixiaoBronyaAventurineMoze;
-
 public class Main {
 
     public static String commitHash = TestHelper.commitHash();
@@ -30,10 +31,25 @@ public class Main {
     public static void main(String[] args) {
         Locale.setDefault(Locale.UK);
 
+        run();
+
         //ameliasSanityCheck();
         //WaveTester.MocTest();
         //WaveTester.MocDivTest();
-        WaveTester.PfTest();
+        //WaveTester.PfTest();
+    }
+
+    public static void run() {
+        var teams = ConfigLoader.loadTeams();
+
+        for (var team : teams) {
+            System.out.println(team.stream().map(p -> String.format("%s(%s)", p.getName(), p.lightcone.getName())).toList());
+            var b1 = new FirstHalf(team, new FalsePromises());
+            b1.setLogger(WaveTester.WaveTesterLogger::new);
+            b1.Start(450);
+            System.out.println();
+            System.out.println();
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -50,7 +50,7 @@ public class WaveTester {
         b1.setLogger(WaveTesterLogger::new);
         b1.Start(450);
 
-        var b2 = new FirstHalf(List.of(PlayerTeam.getPreBuiltHerta(), PlayerTeam.getPreBuildTheHerta(IntoTheUnreachableVeil::new), PlayerTeam.getPreBuiltRobin(), PlayerTeam.getPrebuiltHuohuo()), new FalsePromises());
+        var b2 = new FirstHalf(List.of(PlayerTeam.getPreBuiltHerta(), PlayerTeam.getPreBuildTheHerta(IntoTheUnreachableVeil::new), PlayerTeam.getPreBuiltRobin(), PlayerTeam.getPrebuiltLingshaCritSupport()), new FalsePromises());
         b2.setLogger(WaveTesterLogger::new);
         b2.Start(450);
     }

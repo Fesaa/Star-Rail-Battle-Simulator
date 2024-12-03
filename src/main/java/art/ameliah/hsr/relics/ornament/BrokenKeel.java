@@ -10,6 +10,11 @@ import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import java.util.List;
 
 public class BrokenKeel extends AbstractRelicSetBonus {
+
+    public BrokenKeel(AbstractCharacter<?> owner, boolean fullSet) {
+        super(owner, fullSet);
+    }
+
     public BrokenKeel(AbstractCharacter<?> owner) {
         super(owner);
     }

@@ -1,0 +1,110 @@
+{
+  "teams": [
+    [3, 1, 4, 5],
+    [3, 2, 4, 5],
+    [6, 2, 4, 5],
+    [6, 2, 7, 5]
+  ],
+  "characters": {
+    "1": {
+      "id": 1401,
+      "lcId": 23037,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 313}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  50},
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "ATK_PERCENT", "amount":  15}
+
+      ]
+    },
+    "2": {
+      "id": 1401,
+      "lcId": 23037,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 311}
+      ],
+      "mainStats": ["CRIT_RATE", "SPEED", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  50},
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "ATK_PERCENT", "amount":  15},
+        {"stat":  "FLAT_SPEED", "amount":  5}
+
+      ]
+    },
+    "3": {
+      "id": 1314,
+      "lcId": 23028,
+      "relics": [
+        {"id":  108, "fullSet":  true},
+        {"id": 314}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "QUANTUM_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  33.3},
+        {"stat":  "CRIT_DAMAGE", "amount":  99.5}
+      ]
+    },
+    "4": {
+      "id": 1309,
+      "lcId": 23026,
+      "relics": [
+        {"id":  116, "fullSet":  false},
+        {"id":  120, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["ATK_PER", "ATK_PER", "ATK_PER", "ERR"],
+      "subStats": [
+        {"stat":  "ATK_PERCENT", "amount":  20.2},
+        {"stats":  "FLAT_ATK", "amount":  97},
+        {"stat":  "SPEED", "amount":  11.8}
+      ]
+    },
+    "5": {
+      "id": 1303,
+      "lcId": 21004,
+      "relics": [
+        {"id":  111, "fullSet":  false},
+        {"id":  118, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["DEF_PER", "ATK_PER", "DEF_PER", "ERR"],
+      "subStats": [
+        {"stat":  "BREAK_EFFECT", "amount":  60.1},
+        {"stat":  "SPEED", "amount":  11.8}
+      ]
+    },
+    "6": {
+      "id": 1013,
+      "lcId": 23000,
+      "relics": [
+        {"id":  104, "fullSet":  true},
+        {"id": 308}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  50},
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "ATK_PERCENT", "amount":  15}
+      ]
+    },
+    "7": {
+      "id": 1313,
+      "lcId": 23003,
+      "relics": [
+        {"id":  114, "fullSet":  true},
+        {"id":  310}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "SPEED", "DEF_PER", "ERR"],
+      "subStats": [
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "FLAT_SPEED", "amount":  20}
+      ]
+    }
+  }
+}

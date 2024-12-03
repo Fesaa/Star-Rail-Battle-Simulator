@@ -39,7 +39,7 @@ public class PfWave implements Wave {
 
     public void addEnemy(int id, boolean isBoss) {
         try {
-            this.addEnemy(EnemyRegistry.getEnemy(id), isBoss);
+            this.addEnemy(EnemyRegistry.INSTANCE.get(id), isBoss);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

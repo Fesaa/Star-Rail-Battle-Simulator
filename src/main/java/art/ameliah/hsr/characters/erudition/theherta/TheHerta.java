@@ -35,6 +35,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
 
     public TheHerta() {
         super(NAME, 1164, 679, 485, 99, 80, ElementType.ICE, 220, 75, Path.ERUDITION);
+        this.isDPS = true;
 
         this.addPower(new TracePower()
                 .setStat(PowerStat.ICE_DMG_BOOST, 22.4f)
