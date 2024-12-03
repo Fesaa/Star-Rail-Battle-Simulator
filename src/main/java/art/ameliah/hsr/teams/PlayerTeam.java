@@ -1,6 +1,7 @@
 package art.ameliah.hsr.teams;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.erudition.theherta.TheHerta;
 import art.ameliah.hsr.characters.harmony.asta.Asta;
 import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
 import art.ameliah.hsr.characters.harmony.bronya.Bronya;
@@ -62,6 +63,7 @@ import art.ameliah.hsr.relics.relics.MessengerTraversingHackerspace;
 import art.ameliah.hsr.relics.relics.MusketeerOfWildWheat;
 import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.PrisonerInDeepConfinement;
+import art.ameliah.hsr.relics.relics.ScholarLostInErudition;
 import art.ameliah.hsr.relics.relics.TheAshblazingGrandDuke;
 import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
 import art.ameliah.hsr.relics.relics.ThiefOfShootingMeteor;
@@ -106,6 +108,23 @@ public class PlayerTeam {
                 .equipTo(jade);
 
         return jade;
+    }
+
+    public static AbstractCharacter<?> getPreBuildTheHerta(Function<AbstractCharacter<?>, AbstractLightcone> lc) {
+        TheHerta herta = new TheHerta();
+        herta.isDPS = true;
+        herta.EquipLightcone(lc.apply(herta));
+        herta.EquipRelicSet(new ScholarLostInErudition(herta));
+        herta.EquipRelicSet(new SigoniaTheUnclaimedDesolation(herta));
+        new RelicStats().addMainStat(Stats.CRIT_RATE)
+                .addMainStat(Stats.ATK_PER)
+                .addMainStat(Stats.ICE_DAMAGE)
+                .addMainStat(Stats.ATK_PER)
+                .addSubStat(Stats.CRIT_RATE, 12)
+                .addSubStat(Stats.CRIT_DAMAGE, 15)
+                .addSubStat(Stats.SPEED, 3)
+                .equipTo(herta);
+        return herta;
     }
 
     public static AbstractCharacter<?> getPreBuiltHerta() {

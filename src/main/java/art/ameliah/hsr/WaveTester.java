@@ -5,13 +5,18 @@ import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
+import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.BattleMetrics;
 import art.ameliah.hsr.battleLogic.wave.moc.Moc;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFiction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
+import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
+import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
 import art.ameliah.hsr.game.pf.technicalityentrapment.TechnicalityEntrapment;
+import art.ameliah.hsr.lightcones.erudition.IntoTheUnreachableVeil;
+import art.ameliah.hsr.lightcones.erudition.NightOnTheMilkyWay;
 import art.ameliah.hsr.teams.Divteams;
 import art.ameliah.hsr.teams.FeixiaoTeams;
 import art.ameliah.hsr.teams.PlayerTeam;
@@ -41,16 +46,13 @@ public class WaveTester {
     }
 
     public static void PfTest() {
+        var b1 = new FirstHalf(List.of(PlayerTeam.getPreBuiltHerta(), PlayerTeam.getPreBuildTheHerta(NightOnTheMilkyWay::new), PlayerTeam.getPreBuiltRobin(), PlayerTeam.getPrebuiltHuohuo()), new FalsePromises());
+        b1.setLogger(WaveTesterLogger::new);
+        b1.Start(450);
 
-        AbstractCharacter<?> herta = PlayerTeam.getPreBuiltHerta();
-        herta.isDPS = true;
-        AbstractCharacter<?> herta2 = PlayerTeam.getPreBuiltHerta();
-        herta2.isDPS = true;
-        PureFiction pureFiction = new TechnicalityEntrapment(
-                List.of(PlayerTeam.getPreBuiltJade(), herta, PlayerTeam.getPreBuiltRobin(), PlayerTeam.getPrebuiltRuanMeiCritSupport()),
-                List.of(PlayerTeam.getPreBuiltJade(), herta2, PlayerTeam.getPreBuiltRobin(), Divteams.divsHuoHuo()));
-        pureFiction.setBattleLogger(WaveTesterLogger::new);
-        pureFiction.Start();
+        var b2 = new FirstHalf(List.of(PlayerTeam.getPreBuiltHerta(), PlayerTeam.getPreBuildTheHerta(IntoTheUnreachableVeil::new), PlayerTeam.getPreBuiltRobin(), PlayerTeam.getPrebuiltHuohuo()), new FalsePromises());
+        b2.setLogger(WaveTesterLogger::new);
+        b2.Start(450);
     }
 
     public static class WaveTesterLogger extends DefaultLogger {
@@ -71,13 +73,11 @@ public class WaveTester {
 
         @Override
         public void handle(EnemyAction enemyAction) {
-            System.out.println(this.getBattle().prefix() + enemyAction.asString());
             this.log(enemyAction);
         }
 
         @Override
         public void handle(DoMove doMove) {
-            System.out.println(this.getBattle().prefix() + doMove.asString());
             this.log(doMove);
         }
 
@@ -98,7 +98,6 @@ public class WaveTester {
             this.log(turnEnd);
             this.out.println();
         }
-
     }
 
 }
