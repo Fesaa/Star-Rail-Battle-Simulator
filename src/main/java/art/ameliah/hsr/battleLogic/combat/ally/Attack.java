@@ -48,7 +48,7 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
             this.dmgDealt += hit.finalDmg();
 
             getBattle().increaseTotalPlayerDmg(hit.finalDmg());
-            getBattle().updateContribution(hit.getSource(), hit.finalDmg());
+            getBattle().updateContribution(hit.getSource(), res);
             getBattle().addToLog(new HitResultLine(res));
         } else {
             getBattle().addToLog(new FailedHit(hit));

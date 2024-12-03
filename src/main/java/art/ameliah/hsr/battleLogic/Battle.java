@@ -1,6 +1,7 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.combat.IAttack;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.LogSupplier;
 import art.ameliah.hsr.battleLogic.log.Loggable;
@@ -232,8 +233,8 @@ public class Battle extends RngProvider implements IBattle {
     }
 
     @Override
-    public void updateContribution(BattleParticipant source, float damageContribution) {
-        this.dmgContributionMetric.record(source, damageContribution);
+    public void updateContribution(BattleParticipant source, HitResult hit) {
+        this.dmgContributionMetric.record(source, hit);
     }
 
     @Override

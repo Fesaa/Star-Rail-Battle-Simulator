@@ -1,6 +1,8 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.combat.IAttack;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -119,7 +121,7 @@ public interface IBattle {
 
     int getTotalSkillPointsGenerated();
 
-    void updateContribution(BattleParticipant source, float damageContribution);
+    void updateContribution(BattleParticipant source, HitResult hit);
 
     void increaseTotalPlayerDmg(float dmg);
 
