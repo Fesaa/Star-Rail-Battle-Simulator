@@ -38,13 +38,13 @@ public class NightOnTheMilkyWay extends AbstractLightcone {
 
         @Override
         public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 15 * getBattle().getEnemies().size();
+            return 9 * getBattle().getEnemies().size();
         }
 
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
             if (getBattle().getMilkyWayRng().nextInt(100) < weaknessBoostUptime) {
-                return 50;
+                return 30;
             }
             return 0;
         }
