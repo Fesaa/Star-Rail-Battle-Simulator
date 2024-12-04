@@ -16,7 +16,7 @@ public class BattleConfig {
 
     public BattleType battleType;
 
-    public List<Integer> team;
+    public List<TeamCharacter> team;
 
     @Expose
     public List<AbstractCharacter<?>> characters = new ArrayList<>();

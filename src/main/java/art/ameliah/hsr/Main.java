@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
+import art.ameliah.hsr.battleLogic.log.VoidLogger;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.builder.ConfigLoader;
@@ -13,6 +14,7 @@ import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
 import art.ameliah.hsr.game.pf.technicalityentrapment.EmptyAir;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
+import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.teams.PlayerTeam;
 
 import java.io.File;
@@ -46,10 +48,13 @@ public class Main {
 
         for (var battle : battles) {
             System.out.println(battle.getKey());
-            var b1 = new FirstHalf(battle.getCharacters(), new EmptyAir());
-            b1.setLogger(b -> new WaveTester.WaveTesterLogger(b, battle.getKey()));
-            b1.Start(450);
-            System.out.println();
+            var b = new FirstHalf(battle.getCharacters(), new EmptyAir());
+            b.setLogger(bat -> new WaveTester.WaveTesterLogger(bat, battle.getKey()));
+            b.Start(450);
+
+            //DmgContributionMetric metric = b.getMetricRegistry().getMetric("battle-dmg-contribution");
+            //System.out.printf("Total dmg: %,d%n", b.getTotalPlayerDmg());
+            //System.out.println(metric.representation());
             System.out.println();
         }
     }

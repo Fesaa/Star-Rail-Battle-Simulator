@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class MetricRegistry {
 
@@ -12,6 +13,12 @@ public class MetricRegistry {
 
     public MetricRegistry(Object owner) {
         this.owner = owner;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Metric> T getMetric(String key) {
+        Optional<Metric> m = metrics.stream().filter(metric -> metric.getKey().equals(key)).findFirst();
+        return (T) m.orElse(null);
     }
 
     /**

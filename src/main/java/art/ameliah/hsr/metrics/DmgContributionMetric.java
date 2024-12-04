@@ -46,6 +46,6 @@ public class DmgContributionMetric extends AbstractMetric{
                     return String.format("%s: %,.0f DMG (%.3f%%)", entry.getKey().getName(), entry.getValue(), percent);
                 })
                 .collect(Collectors.joining(" | "));
-        return String.format("Total Damage: %,d\nDamage Contribution: %s \nOverflow damage %s", this.battle.getTotalPlayerDmg(), log, overflow);
+        return String.format("Damage Contribution: %s \nOverflow damage %s", log, overflow);
     }
 }

@@ -48,6 +48,7 @@ public class Battle extends RngProvider implements IBattle {
     private static final int INITIAL_SKILL_POINTS = 3;
     public int MAX_SKILL_POINTS = 5;
 
+    @Getter
     protected MetricRegistry metricRegistry = new MetricRegistry(this);
     protected CounterMetric<Float> totalPlayerDamage = metricRegistry.register(CounterMetric.newFloatCounter("battle-total-player-dmg", "Total player dmg"));
     protected CounterMetric<Integer> totalSkillPointsUsed = metricRegistry.register(CounterMetric.newIntegerCounter("battle-total-sp-used", "Total skill points used"));

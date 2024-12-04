@@ -68,6 +68,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
             });
         }
         this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
+        this.lightcone.useOnAlly(target, MoveType.SKILL);
     }
 
     @Override
@@ -89,6 +90,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
         target.addPower(new TheBeatified());
         this.theBeatifiedTurnsRemaining = 3;
         this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.ULTIMATE));
+        this.lightcone.useOnAlly(target, MoveType.ULTIMATE);
     }
 
     private float ultimateEnergyCharge(AbstractCharacter<?> target) {

@@ -6,6 +6,7 @@ import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.metrics.MetricRegistry;
 import art.ameliah.hsr.powers.AbstractPower;
 
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 public interface IBattle {
+
+    MetricRegistry getMetricRegistry();
 
     String prefix();
 

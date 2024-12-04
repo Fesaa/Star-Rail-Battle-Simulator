@@ -37,6 +37,7 @@ import art.ameliah.hsr.lightcones.erudition.TheDayTheCosmosFell;
 import art.ameliah.hsr.lightcones.erudition.TheSeriousnessOfBreakfast;
 import art.ameliah.hsr.lightcones.erudition.TodayIsAnotherPeacefulDay;
 import art.ameliah.hsr.lightcones.erudition.YetHopeIsPriceless;
+import art.ameliah.hsr.lightcones.harmony.AGroundedAscent;
 import art.ameliah.hsr.lightcones.harmony.ButTheBattleIsntOver;
 import art.ameliah.hsr.lightcones.harmony.CarveTheMoonWeaveTheClouds;
 import art.ameliah.hsr.lightcones.harmony.DanceDanceDance;
@@ -182,6 +183,7 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         register(24003, SolitaryHealing.class);
         register(24004, EternalCalculus.class);
         register(23037, IntoTheUnreachableVeil.class);
+        register(23034, AGroundedAscent.class);
     }
 
     public AbstractLightcone getLightCone(int id, AbstractCharacter<?> owner) throws Exception {

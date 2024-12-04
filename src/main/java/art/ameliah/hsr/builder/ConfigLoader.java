@@ -23,13 +23,18 @@ public class ConfigLoader {
         for (var battle : config.getBattles()) {
             List<AbstractCharacter<?>> characters = new ArrayList<>();
 
-            for (var id : battle.getTeam()) {
-                var character = config.getCharacters().get(id);
+            for (var tc : battle.getTeam()) {
+                var character = switch (tc.type) {
+                    case NEW -> tc.character.toCharacter();
+                    case REFERENCE -> config.getCharacters().get(tc.referenceId).toCharacter();
+                };
                 if (character == null) {
-                    throw new RuntimeException("Character '" + id + "' not found. Did you configure it?");
+                    throw new RuntimeException("Character '" + tc.referenceId + "' not found. Did you configure it?");
                 }
 
-                characters.add(character.toCharacter());
+                character.isDPS = tc.isDps;
+
+                characters.add(character);
             }
 
             battle.setCharacters(characters);

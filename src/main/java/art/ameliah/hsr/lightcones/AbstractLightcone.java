@@ -4,7 +4,11 @@ import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+
+import java.util.Collection;
+import java.util.List;
 
 public abstract class AbstractLightcone implements BattleEvents, BattleParticipant {
 
@@ -32,6 +36,12 @@ public abstract class AbstractLightcone implements BattleEvents, BattleParticipa
     public void onSpecificTrigger(AbstractCharacter<?> character, AbstractEnemy enemy) {
 
     }
+
+    public final void useOnAlly(AbstractCharacter<?> target, MoveType action) {
+        this.useOnAlly(List.of(target), action);
+    }
+
+    public void useOnAlly(Collection<AbstractCharacter<?>> targets, MoveType action) {}
 
     public String toString() {
         return this.getClass().getSimpleName();
