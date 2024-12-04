@@ -18,7 +18,7 @@ public class AttackEnd implements Loggable {
     public String asString() {
         String targets = this.attack.getTargets().stream().map(BattleParticipant::getName).sorted(String::compareTo).collect(Collectors.joining(","));
         String types = this.attack.getTypes().stream().map(Objects::toString).collect(Collectors.joining(","));
-        return String.format("%s finished attacking %s with %s", this.attack.getSource(), targets, types);
+        return String.format("%s finished attacking %s with %s for %,.2f", this.attack.getSource(), targets, types, attack.getDmgDealt());
     }
 
     @Override

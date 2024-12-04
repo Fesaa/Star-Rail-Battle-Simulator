@@ -39,6 +39,7 @@ public abstract class AbstractAttack<S extends AbstractEntity, T extends BattleP
     protected final List<Runnable> afterAttackHooks = new ArrayList<>();
     protected Consumer<D> consumer = null;
 
+    @Getter
     protected float dmgDealt = 0;
     protected boolean hasCompleted = false;
 
