@@ -3,6 +3,7 @@ package art.ameliah.hsr.characters.erudition.theherta;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
+import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -30,6 +31,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
     public static final String NAME = "The Herta";
 
     protected CounterMetric<Integer> inspiration = metricRegistry.register(CounterMetric.newIntegerCounter("the-herta-inspiration", "Inspiration stacks"));
+    protected CounterMetric<Integer> interpretation = metricRegistry.register(CounterMetric.newIntegerCounter("the-herta-interpretation", "Interpretation stacks"));
 
     private boolean eruditionGoal = false;
 
@@ -204,14 +206,15 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
                 .mapToInt(e -> e.getPowerStacks(Interpretation.NAME))
                 .sum();
 
+        this.interpretation.increase(interpretationTally, 99);
+        getBattle().addToLog(new GainCharge(this, interpretationTally, this.interpretation, "Interpretation Ult charges"));
+
         getBattle().getEnemies().forEach(e -> e.removePower(Interpretation.NAME));
 
         List<AbstractEnemy> priorityList = getBattle().getEnemies()
                 .stream()
                 .sorted(Comparator.comparingInt(Comparators::CompareRarity))
                 .toList();
-
-        float extraMul = Math.min(0.99f, (float) interpretationTally /100);
 
         for (var e : priorityList) {
             e.addPower(new Interpretation(Math.min(interpretationTally, 42)));
@@ -223,6 +226,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
             }
         }
 
+        float extraMul = this.interpretation.get() / 100f;
         this.startAttack().handle(DamageType.ULTIMATE, da -> {
             da.logic(getBattle().getEnemies(), (e, al) -> {
                 al.hit(e, 2f + extraMul, TOUGHNESS_DAMAGE_TWO_UNITS);

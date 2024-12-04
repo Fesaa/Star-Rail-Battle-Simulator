@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic.log.lines.entity;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
+import art.ameliah.hsr.metrics.CounterMetric;
 
 public class GainCharge implements Loggable {
 
@@ -21,6 +22,22 @@ public class GainCharge implements Loggable {
         this.amount = amount;
         this.initialCharge = initialCharge;
         this.chargeCount = chargeCount;
+        this.charge = charge;
+    }
+
+    public GainCharge(AbstractEntity entity, int amount, CounterMetric<?> metric, String charge) {
+        this.character = entity;
+        this.initialCharge = (int) metric.last();
+        this.chargeCount = (int) metric.get();
+        this.amount = amount;
+        this.charge = charge;
+    }
+
+    public GainCharge(AbstractEntity entity, CounterMetric<?> metric, String charge) {
+        this.character = entity;
+        this.initialCharge = (int) metric.last();
+        this.chargeCount = (int) metric.get();
+        this.amount = this.chargeCount - this.initialCharge;
         this.charge = charge;
     }
 
