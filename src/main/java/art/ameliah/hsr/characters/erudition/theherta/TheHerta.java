@@ -15,6 +15,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -23,8 +24,12 @@ import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Comparators;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TheHerta extends AbstractCharacter<TheHerta> {
 
@@ -111,9 +116,9 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
     @Override
     protected void skillSequence() {
         if (this.inspiration.get() > 0) {
-            this.emit(BattleEvents::onUseBasic);
+            this.emit(BattleEvents::onUseSkill);
             this.enhancedSkill();
-            this.emit(BattleEvents::afterUseBasic);
+            this.emit(BattleEvents::afterUseSkill);
             return;
         }
 
@@ -211,18 +216,32 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
 
         getBattle().getEnemies().forEach(e -> e.removePower(Interpretation.NAME));
 
-        List<AbstractEnemy> priorityList = getBattle().getEnemies()
-                .stream()
-                .sorted(Comparator.comparingInt(Comparators::CompareRarity))
-                .toList();
+        var enemies = getBattle().getEnemies().stream().collect(Collectors.groupingBy(AbstractEnemy::getType));
 
-        for (var e : priorityList) {
-            e.addPower(new Interpretation(Math.min(interpretationTally, 42)));
+        Map<EnemyType, Integer> tallyMap = new HashMap<>();
 
-            interpretationTally = Math.max(interpretationTally-42, 0);
+        EnemyType[] types = {EnemyType.Boss, EnemyType.Elite, EnemyType.Minion};
 
-            if (interpretationTally == 0) {
-                break;
+        for (EnemyType type : types) {
+            List<AbstractEnemy> enemyList = enemies.getOrDefault(type, Collections.emptyList());
+            if (enemyList.isEmpty()) continue;
+
+            int tally = Math.min(interpretationTally, enemyList.size() * 42);
+            interpretationTally = Math.max(interpretationTally-tally, 0);
+            tallyMap.put(type, tally);
+        }
+
+        for (EnemyType type : types) {
+            List<AbstractEnemy> enemyList = enemies.getOrDefault(type, Collections.emptyList());
+            if (enemyList.isEmpty()) continue;
+
+            int totalTally = tallyMap.get(type);
+            int baseTally = totalTally / enemyList.size();
+            int remainder = totalTally % enemyList.size();
+
+            for (int i = 0; i < enemyList.size(); i++) {
+                int tally = baseTally + (i == enemyList.size() - 1 ? remainder : 0);
+                enemyList.get(i).addPower(new Interpretation(tally));
             }
         }
 

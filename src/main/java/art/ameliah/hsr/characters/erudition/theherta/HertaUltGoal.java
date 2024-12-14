@@ -10,7 +10,7 @@ public class HertaUltGoal extends UltGoal<TheHerta> {
 
     @Override
     public UltGoalResult determineAction() {
-        if (getBattle().getActionValueMap().get(this.character) < this.character.getBaseAV() * 0.5f) {
+        if (getBattle().getActionValueMap().get(this.character) < this.character.getBaseAV() * 0.25f) {
             return UltGoalResult.DONT;
         }
 

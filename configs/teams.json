@@ -1,75 +1,6 @@
 {
   "battles": [
     {
-      "key": "Jade, The Herta, Sunday, HouHuo",
-      "battleType": "PURE_FICTION",
-      "team": [
-        {
-          "type": "REFERENCE",
-          "referenceId": 3
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 1,
-          "isDps": true
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 7
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 8
-        }
-      ]
-    },
-    {
-      "key": "Jade, The Herta, Robin, HuoHuo",
-      "battleType": "PURE_FICTION",
-      "team": [
-        {
-          "type": "REFERENCE",
-          "referenceId": 3
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 1,
-          "isDps": true
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 4
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 8
-        }
-      ]
-    },
-    {
-      "key": "Jade, The Herta (debt), Robin, Lingsha",
-      "battleType": "PURE_FICTION",
-      "team": [
-      {
-        "type": "REFERENCE",
-        "referenceId": 3
-      },
-      {
-        "type": "REFERENCE",
-        "referenceId": 1,
-        "isDps": true
-      },
-      {
-        "type": "REFERENCE",
-        "referenceId": 4
-      },
-      {
-        "type": "REFERENCE",
-        "referenceId": 9
-      }
-    ]
-    },
-    {
       "key": "Jade, The Herta, Robin, Lingsha (debt)",
       "battleType": "PURE_FICTION",
       "team": [
@@ -89,6 +20,75 @@
           "type": "REFERENCE",
           "referenceId": 9,
           "isDps": true
+        }
+      ]
+    },
+    {
+      "key": "Jade, The Herta, Sunday, Lingsha (debt)",
+      "battleType": "PURE_FICTION",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 1
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 9,
+          "isDps": true
+        }
+      ]
+    },
+    {
+      "key": "Herta, The Herta, Robin, Lingsha",
+      "battleType": "PURE_FICTION",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 9
+        }
+      ]
+    },
+    {
+      "key": "Herta, The Herta, Sunday, Lingsha",
+      "battleType": "PURE_FICTION",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 9
         }
       ]
     }
