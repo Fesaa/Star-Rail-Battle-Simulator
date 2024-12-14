@@ -57,6 +57,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("Actions", "Action made"));
     @Getter
     protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
+    protected CounterMetric<Float> overflowEnergy = metricRegistry.register(CounterMetric.newFloatCounter("overflow"+ENERGY_KEY, "Overflow energy"));
 
     public final int level;
     public final float baseCritChance = 5.0f;
@@ -435,10 +436,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float totalEnergyRegenBonus = getTotalERR();
         float energyGained = ERRAffected ? amount * (1 + totalEnergyRegenBonus / 100) : amount;
 
-        this.currentEnergy.increase(energyGained);
-        if (this.currentEnergy.get() > this.maxEnergy) {
-            this.currentEnergy.set(this.maxEnergy);
-        }
+        float overflow = this.currentEnergy.increase(energyGained, this.maxEnergy);
+        this.overflowEnergy.increase(overflow);
         getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
     }
 

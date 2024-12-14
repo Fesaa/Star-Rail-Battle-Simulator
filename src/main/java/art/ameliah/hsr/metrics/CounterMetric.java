@@ -74,9 +74,9 @@ public abstract class CounterMetric<T> extends AbstractMetric {
     abstract public void increment();
     abstract public void decrement();
     abstract public void increase(T value);
-    abstract public void increase(T value, T max);
+    abstract public T increase(T value, T max);
     abstract public void decrease(T value);
-    abstract public void decrease(T value, T min);
+    abstract public T decrease(T value, T min);
 
 
     private static class IntCounterMetric extends CounterMetric<Integer> {
@@ -104,9 +104,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void increase(Integer value, Integer max) {
+        public Integer increase(Integer value, Integer max) {
             this.lastValue = this.value;
             this.value = Math.min(this.value + value, max);
+            return Math.abs(this.lastValue + value - this.value);
         }
 
         @Override
@@ -116,9 +117,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void decrease(Integer value, Integer min) {
+        public Integer decrease(Integer value, Integer min) {
             this.lastValue = this.value;
             this.value = Math.max(this.value - value, min);
+            return Math.abs(this.lastValue - value + this.value);
         }
 
         @Override
@@ -152,9 +154,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void increase(Float value, Float max) {
+        public Float increase(Float value, Float max) {
             this.lastValue = this.value;
             this.value = Math.min(this.value + value, max);
+            return Math.abs(this.lastValue + value - this.value);
         }
 
         @Override
@@ -164,9 +167,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void decrease(Float value, Float min) {
+        public Float decrease(Float value, Float min) {
             this.lastValue = this.value;
             this.value = Math.max(this.value - value, min);
+            return Math.abs(this.lastValue - value + this.value);
         }
 
         @Override
@@ -200,9 +204,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void increase(Double value, Double max) {
+        public Double increase(Double value, Double max) {
             this.lastValue = this.value;
             this.value = Math.min(this.value + value, max);
+            return Math.abs(this.lastValue + value - this.value);
         }
 
         @Override
@@ -212,9 +217,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void decrease(Double value, Double min) {
+        public Double decrease(Double value, Double min) {
             this.lastValue = this.value;
             this.value = Math.max(this.value - value, min);
+            return Math.abs(this.lastValue - value + this.value);
         }
 
         @Override
@@ -248,9 +254,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void increase(Long value, Long max) {
+        public Long increase(Long value, Long max) {
             this.lastValue = this.value;
             this.value = Math.min(this.value + value, max);
+            return Math.abs(this.lastValue + value - this.value);
         }
 
         @Override
@@ -260,9 +267,10 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
 
         @Override
-        public void decrease(Long value, Long min) {
+        public Long decrease(Long value, Long min) {
             this.lastValue = this.value;
             this.value = Math.max(this.value - value, min);
+            return Math.abs(this.lastValue - value + this.value);
         }
 
         @Override
