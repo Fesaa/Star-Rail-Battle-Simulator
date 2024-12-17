@@ -34,6 +34,7 @@ import art.ameliah.hsr.relics.relics.MessengerTraversingHackerspace;
 import art.ameliah.hsr.relics.relics.MusketeerOfWildWheat;
 import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.PioneerDiverOfDeadWaters;
+import art.ameliah.hsr.relics.relics.PoetOfMourningCollapse;
 import art.ameliah.hsr.relics.relics.PrisonerInDeepConfinement;
 import art.ameliah.hsr.relics.relics.SacerdosRelivedOrdeal;
 import art.ameliah.hsr.relics.relics.ScholarLostInErudition;
@@ -70,6 +71,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
         register(120, TheWindSoaringValorous.class);
         register(121, SacerdosRelivedOrdeal.class);
         register(122, ScholarLostInErudition.class);
+        register(124, PoetOfMourningCollapse.class);
 
 
         register(301, SpaceSealingStation.class);
