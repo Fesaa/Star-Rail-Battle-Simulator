@@ -17,6 +17,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.metrics.CounterMetric;
+import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -73,7 +74,9 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
 
     @Override
     public void onWaveStart() {
-        getBattle().getEnemies().forEach(e -> e.addPower(new Interpretation(4)));
+        AbstractEnemy target = getBattle().getEnemies().stream()
+                .min(Comparator.comparingInt(Comparators::CompareRarity)).orElseThrow();
+        target.addPower(new Interpretation(25));
     }
 
     @Override
@@ -168,8 +171,13 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
             AbstractEnemy target = this.getTarget(MoveType.ENHANCED_SKILL);
             int idx = getBattle().getEnemies().indexOf(target);
 
+            AbstractPower eSkillIceDmg = PermPower.create(PowerStat.ICE_DMG_BOOST, 50, "The Herta Enhanced Skill, Ice Dmg Boost");
+            if (target.getPowerStacks(Interpretation.NAME) == 42) {
+                this.addPower(eSkillIceDmg);
+            }
+
             float primMul = target.getPowerStacks(Interpretation.NAME) * (this.eruditionGoal ? 0.16f : 0.08f);
-            float adjMul = target.getPowerStacks(Interpretation.NAME) * (this.eruditionGoal ? 0.1f : 0.05f);
+            float adjMul = target.getPowerStacks(Interpretation.NAME) * (this.eruditionGoal ? 0.08f : 0.04f);
             da.logic(target, al -> {
                 al.hit(target, 0.8f + primMul);
                 target.addPower(new Interpretation());
@@ -192,6 +200,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
             });
 
             target.getPower(Interpretation.NAME).stacks = 1;
+            this.removePower(eSkillIceDmg);
         }).execute();
     }
 
@@ -206,6 +215,9 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
 
     @Override
     protected void useUltimate() {
+        this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 80, 3, "The Herta Ult ATK% buf"));
+
+
         int interpretationTally = getBattle().getEnemies()
                 .stream()
                 .mapToInt(e -> e.getPowerStacks(Interpretation.NAME))
