@@ -201,6 +201,8 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
 
             target.getPower(Interpretation.NAME).stacks = 1;
             this.removePower(eSkillIceDmg);
+        }).afterAttackHook(() -> {
+            this.increaseEnergy(30, "The Herta Talent?");
         }).execute();
     }
 
