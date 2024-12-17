@@ -32,10 +32,7 @@ public class IntoTheUnreachableVeil extends AbstractLightcone {
             return;
         }
 
-        var count = this.owner.getActionMetric().frequency(MoveType.ULTIMATE);
-        if (count % 2 == 1) {
-            getBattle().generateSkillPoint(this.owner, 1);
-        }
+        getBattle().generateSkillPoint(this.owner, 1);
     }
 
     public static class IntoTheUnreachableVeilPower extends TempPower {
