@@ -1,53 +1,7 @@
 {
   "battles": [
     {
-      "key": "Jade, The Herta, Robin, Lingsha (debt)",
-      "battleType": "PURE_FICTION",
-      "team": [
-        {
-          "type": "REFERENCE",
-          "referenceId": 3
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 1
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 4
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 9,
-          "isDps": true
-        }
-      ]
-    },
-    {
-      "key": "Jade, The Herta, Sunday, Lingsha (debt)",
-      "battleType": "PURE_FICTION",
-      "team": [
-        {
-          "type": "REFERENCE",
-          "referenceId": 3
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 1
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 7
-        },
-        {
-          "type": "REFERENCE",
-          "referenceId": 9,
-          "isDps": true
-        }
-      ]
-    },
-    {
-      "key": "Herta, The Herta, Robin, Lingsha",
+      "key": "Herta, The Herta (GR), Mei, HuoHuo",
       "battleType": "PURE_FICTION",
       "team": [
         {
@@ -56,21 +10,21 @@
         },
         {
           "type": "REFERENCE",
-          "referenceId": 1,
+          "referenceId": 10,
           "isDps": true
         },
         {
           "type": "REFERENCE",
-          "referenceId": 4
+          "referenceId": 5
         },
         {
           "type": "REFERENCE",
-          "referenceId": 9
+          "referenceId": 8
         }
       ]
     },
     {
-      "key": "Herta, The Herta, Sunday, Lingsha",
+      "key": "Herta, The Herta (MW), Mei, HuoHuo",
       "battleType": "PURE_FICTION",
       "team": [
         {
@@ -79,19 +33,20 @@
         },
         {
           "type": "REFERENCE",
-          "referenceId": 1,
+          "referenceId": 11,
           "isDps": true
         },
         {
           "type": "REFERENCE",
-          "referenceId": 7
+          "referenceId": 5
         },
         {
           "type": "REFERENCE",
-          "referenceId": 9
+          "referenceId": 8
         }
       ]
     }
+
   ],
   "characters": {
     "1": {
@@ -230,6 +185,38 @@
         {"stat":  "FLAT_SPEED", "amount": 20 }
       ]
 
+    },
+    "10": {
+      "name": "My Herta (Geniuses' Repose)",
+      "id": 1401,
+      "isDps": true,
+      "lcId": 21020,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 309}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stats": "CRIT_CHANCE", "amount": 37},
+        {"stats": "CRIT_DAMAGE", "amount": 60},
+        {"stats": "ATK_PERCENT", "amount": 12}
+      ]
+    },
+    "11": {
+      "name": "My Herta (Night on the Milky Way)",
+      "id": 1401,
+      "isDps": true,
+      "lcId": 23000,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 309}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stats": "CRIT_CHANCE", "amount": 37},
+        {"stats": "CRIT_DAMAGE", "amount": 60},
+        {"stats": "ATK_PERCENT", "amount": 12}
+      ]
     }
   }
 }
