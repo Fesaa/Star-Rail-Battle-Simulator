@@ -96,7 +96,14 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
 
     public AbstractRelicSetBonus get(int id, AbstractCharacter<?> owner, boolean fullSet) throws Exception {
         if (registry.containsKey(id)) {
-            return registry.get(id).getConstructor(AbstractCharacter.class, boolean.class).newInstance(owner, fullSet);
+            var relicSet = registry.get(id);
+
+            try {
+                return relicSet.getConstructor(AbstractCharacter.class, boolean.class).newInstance(owner, fullSet);
+            } catch (NoSuchMethodException ignored) {
+                System.out.printf("[WARN] %s is being constructed without fullSet boolean. If this is not an ornament, this may lead to bugs.\n", relicSet.getSimpleName());
+                return registry.get(id).getConstructor(AbstractCharacter.class).newInstance(owner);
+            }
         }
         throw new RuntimeException("Element with id" + id + " not found");
     }
