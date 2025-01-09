@@ -8,5 +8,6 @@ public enum Path {
     PRESERVATION,
     ERUDITION,
     HUNT,
+    REMEMBRANCE,
     UNKNOWN
 }
