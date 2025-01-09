@@ -20,7 +20,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
 
     @Override
     public void onCombatStart() {
-        getBattle().getPlayers().forEach(c -> c.addPower(new DuranTrackerPower()));
+        getBattle().registerForPlayers(c -> c.addPower(new DuranTrackerPower()));
     }
 
     private static class DuranTrackerPower extends PermPower {

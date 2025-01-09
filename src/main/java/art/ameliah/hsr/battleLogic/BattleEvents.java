@@ -20,6 +20,12 @@ public interface BattleEvents {
     default void onWaveStart() {}
 
     /**
+     * Called when an ally joins the battle while it has already started (memosprites)
+     */
+    default void onPlayerJoinCombat(AbstractCharacter<?> ally) {
+    }
+
+    /**
      * Called when an enemy join the battle while it has already started
      */
     default void onEnemyJoinCombat(AbstractEnemy enemy) {

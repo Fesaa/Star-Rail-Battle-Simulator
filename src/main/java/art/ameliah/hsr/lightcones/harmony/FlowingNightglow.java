@@ -22,7 +22,7 @@ public class FlowingNightglow extends AbstractLightcone {
     @Override
     public void onCombatStart() {
         AbstractPower power = new FlowingNightglowPower();
-        getBattle().getPlayers().forEach(c -> c.addPower(power));
+        getBattle().registerForPlayers(c -> c.addPower(power));
     }
 
     @Override

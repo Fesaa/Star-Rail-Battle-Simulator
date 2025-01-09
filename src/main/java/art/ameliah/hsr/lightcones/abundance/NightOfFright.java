@@ -34,7 +34,7 @@ public class NightOfFright extends AbstractLightcone {
 
     @Override
     public void onCombatStart() {
-        getBattle().getPlayers().forEach(c -> c.addPower(new NightOfFrightPower()));
+        getBattle().registerForPlayers(c -> c.addPower(new NightOfFrightPower()));
     }
 
     public class NightOfFrightPower extends PermPower {

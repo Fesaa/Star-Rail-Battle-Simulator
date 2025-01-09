@@ -161,8 +161,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (taunt instanceof TauntPower) {
             AbstractCharacter<?> taunter = ((TauntPower) taunt).taunter;
             getBattle().addToLog(new ForcedAttack(this, taunter));
-            for (int i = 0; i < getBattle().getPlayers().size(); i++) {
-                if (getBattle().getPlayers().get(i) == taunter) {
+            for (int i = 0; i < getBattle().playerSize(); i++) {
+                if (getBattle().getCharacter(i) == taunter) {
                     return i;
                 }
             }

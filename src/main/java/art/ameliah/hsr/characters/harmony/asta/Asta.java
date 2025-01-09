@@ -68,10 +68,10 @@ public class Asta extends AbstractCharacter<Asta> {
     }
 
     public void onCombatStart() {
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(talentPower);
-            character.addPower(PermPower.create(PowerStat.FIRE_DMG_BOOST, 18, "Asta Fire Damage Bonus"));
-        }
+        getBattle().registerForPlayers(p -> {
+            p.addPower(talentPower);
+            p.addPower(PermPower.create(PowerStat.FIRE_DMG_BOOST, 18, "Asta Fire Damage Bonus"));
+        });
         addPower(new AstaERRPower());
     }
 

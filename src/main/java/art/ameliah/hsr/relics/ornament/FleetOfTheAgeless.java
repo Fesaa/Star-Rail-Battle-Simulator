@@ -21,6 +21,7 @@ public class FleetOfTheAgeless extends AbstractRelicSetBonus {
 
     @Override
     public void onCombatStart() {
+        // Doesn't give to memosprites
         getBattle().getPlayers().forEach(c -> c.addPower(new FleetOfTheAgelessPower()));
     }
 

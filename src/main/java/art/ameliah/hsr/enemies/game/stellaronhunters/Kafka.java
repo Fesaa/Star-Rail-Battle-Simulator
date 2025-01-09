@@ -46,7 +46,7 @@ public class Kafka extends AbstractEnemy {
     @Override
     public void onCombatStart() {
         super.onCombatStart();
-        getBattle().getPlayers().forEach(p -> p.addPower(new Cruelty(this)));
+        getBattle().registerForPlayers(p -> p.addPower(new Cruelty(this)));
     }
 
     @Override

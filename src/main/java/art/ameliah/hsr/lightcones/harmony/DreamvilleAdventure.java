@@ -35,7 +35,7 @@ public class DreamvilleAdventure extends AbstractLightcone {
 
     @Override
     public void onCombatStart() {
-        getBattle().getPlayers().forEach(c -> c.addPower(childishness));
+        getBattle().registerForPlayers(c -> c.addPower(childishness));
     }
 
     public class Childishness extends PermPower {

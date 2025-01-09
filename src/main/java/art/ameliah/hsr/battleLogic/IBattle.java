@@ -1,7 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.combat.IAttack;
-import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -44,6 +43,18 @@ public interface IBattle {
 
     boolean hasCharacter(String name);
 
+    void registerForPlayers(Consumer<AbstractCharacter<?>> consumer);
+
+    void registerForEnemy(Consumer<AbstractEnemy> consumer);
+
+    void doOnceForPlayers(Consumer<AbstractCharacter<?>> consumer);
+
+    void doOnceForEnemy(Consumer<AbstractEnemy> consumer);
+
+    int playerSize();
+
+    int enemiesSize();
+
     AbstractCharacter<?> getCharacter(String name);
 
     AbstractCharacter<?> getCharacter(int index);
@@ -72,6 +83,20 @@ public interface IBattle {
 
     void removeEnemy(AbstractEnemy enemy);
 
+    void addPlayerAt(AbstractCharacter<?> ally, int idx, float initialAA);
+
+    default void addPlayerAt(AbstractCharacter<?> ally, int idx) {
+        this.addPlayerAt(ally, idx, 0);
+    }
+
+    default void addAlly(AbstractCharacter<?> ally, float initialAA) {
+        this.addPlayerAt(ally, this.playerSize(), initialAA);
+    }
+
+    default void addAlly(AbstractCharacter<?> ally) {
+        this.addPlayerAt(ally, this.playerSize(), 0);
+    }
+
     void addEnemyAt(AbstractEnemy enemy, int idx, float initialAA);
 
     default void addEnemyAt(AbstractEnemy enemy, int idx) {
@@ -79,7 +104,7 @@ public interface IBattle {
     }
 
     default void addEnemy(AbstractEnemy enemy, float initialAA) {
-        this.addEnemyAt(enemy, getEnemies().size(), initialAA);
+        this.addEnemyAt(enemy, enemiesSize(), initialAA);
     }
 
     default void addEnemy(AbstractEnemy enemy) {

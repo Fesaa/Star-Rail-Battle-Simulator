@@ -24,6 +24,7 @@ public class BrokenKeel extends AbstractRelicSetBonus {
     }
 
     public void onCombatStart() {
+        // Doesn't give to memosprites for some reason
         getBattle().getPlayers().forEach(character -> character.addPower(new BrokenKeelStackPower()));
     }
 

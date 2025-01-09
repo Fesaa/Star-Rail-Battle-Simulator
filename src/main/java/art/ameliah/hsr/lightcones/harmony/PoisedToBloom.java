@@ -22,6 +22,7 @@ public class PoisedToBloom extends AbstractLightcone {
 
     @Override
     public void onCombatStart() {
+        // Not moving this to register: if two or more **characters**
         getBattle().getPlayers()
                 .stream()
                 .filter(c -> !c.getPath().equals(Path.UNKNOWN))
