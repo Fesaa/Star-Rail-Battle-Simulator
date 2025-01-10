@@ -126,7 +126,7 @@ public class AttackLogic {
             throw new IllegalStateException("Cannot hit target that isn't part of Attack");
         }
 
-        return this.addHit(new AllyHit(source, target, mul, stat, types, toughness, elementType, ignoreWeakness));
+        return this.addHit(new AllyHit(this, source, target, mul, stat, types, toughness, elementType, ignoreWeakness));
     }
 
     /**
@@ -138,7 +138,7 @@ public class AttackLogic {
      */
     public HitResult hitFixed(BattleParticipant source, AbstractEnemy target, float dmg) {
         this.targets.add(target);
-        return this.addHit(new FixedHit(source, target, dmg));
+        return this.addHit(new FixedHit(this, source, target, dmg));
     }
 
 

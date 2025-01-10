@@ -8,5 +8,6 @@ public enum DamageType {
     DOT,
     BREAK,
     SUPER_BREAK,
-    ADDITIONAL_DAMAGE
+    ADDITIONAL_DAMAGE,
+    TRUE_DAMAGE,
 }

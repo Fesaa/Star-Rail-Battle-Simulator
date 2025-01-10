@@ -18,7 +18,7 @@ public class PlanetaryRendezvous extends AbstractLightcone {
                 return;
             }
 
-            p.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 24, "Planetary Rendezvous DMG Boost")));
+            p.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 24, "Planetary Rendezvous DMG Boost"));
         });
     }
 }

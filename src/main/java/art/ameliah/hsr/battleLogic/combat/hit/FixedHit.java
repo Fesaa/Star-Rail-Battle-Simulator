@@ -1,16 +1,22 @@
 package art.ameliah.hsr.battleLogic.combat.hit;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 public class FixedHit implements HitHolder, Hit {
 
+    @Getter
+    @Nullable
+    private final AttackLogic attackLogic;
     private final BattleParticipant source;
     private final AbstractEnemy target;
     private final float dmg;
@@ -32,7 +38,7 @@ public class FixedHit implements HitHolder, Hit {
 
     @Override
     public List<DamageType> getTypes() {
-        return List.of();
+        return List.of(DamageType.TRUE_DAMAGE);
     }
 
     @Override

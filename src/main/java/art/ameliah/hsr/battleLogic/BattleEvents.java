@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
@@ -98,6 +99,13 @@ public interface BattleEvents {
      */
     default void beforeDoHit(Hit hit) {
     }
+
+    /**
+     * Hook for {@link AbstractCharacter<>}, after the hit has happened
+     *
+     * @param hit the resulting hti
+     */
+    default void afterDoHit(HitResult hit) {}
 
     /**
      * Hook for {@link AbstractEnemy}, before hit happens

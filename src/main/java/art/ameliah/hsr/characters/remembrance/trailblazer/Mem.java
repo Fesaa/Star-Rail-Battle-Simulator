@@ -2,7 +2,9 @@ package art.ameliah.hsr.characters.remembrance.trailblazer;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
+import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.Path;
@@ -112,7 +114,7 @@ public class Mem extends Memosprite<Mem> {
                 .execute();
     }
 
-    public static class TrueDmgPower extends TempPower {
+    public class TrueDmgPower extends TempPower {
 
         public TrueDmgPower() {
             super(3, "TrueDmgPower");
@@ -121,8 +123,25 @@ public class Mem extends Memosprite<Mem> {
         }
 
         @Override
-        public void afterAttack(AttackLogic attack) {
-            //TODO: Implement True DMG, not really possible right now. Dmg isn't exposed
+        public void afterDoHit(HitResult hit) {
+            float dmg = hit.getHit().finalDmg();
+            float mul = 0.28f;
+
+            var character = (AbstractCharacter<?>)this.getOwner();
+
+            if (character.usesEnergy && character.maxEnergy > 100) {
+                float excess = character.maxEnergy - 100;
+                double increase = Math.floor(excess/10);
+                mul += (float) Math.min(increase * 0.02f, 0.2f);
+            }
+
+            if (!character.usesEnergy) {
+                mul += 0.06f;
+            }
+
+            float trueDmg = dmg * mul;
+
+            hit.getHit().getAttackLogic().hitFixed(Mem.this, hit.getEnemy(), trueDmg);
         }
     }
 }

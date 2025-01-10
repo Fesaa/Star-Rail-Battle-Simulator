@@ -107,7 +107,7 @@ public class PfBattle extends WavedBattle<PfWave> {
             // from: https://discord.com/channels/1304114229653278791/1304529194197454922/1318602624315953223
             float dmg = boss.maxHp() * 0.03f;
 
-            var res = boss.hitDirectly(new FixedHit(this.entity, boss, dmg));
+            var res = boss.hitDirectly(new FixedHit(null, this.entity, boss, dmg));
             this.addToLog(new HitResultLine(res));
         }
 

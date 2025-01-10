@@ -3,6 +3,7 @@ package art.ameliah.hsr.battleLogic.combat.hit;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -16,6 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
+    @Getter
+    private final AttackLogic attackLogic;
     @Getter
     private final AbstractCharacter<?> source;
     @Getter
