@@ -439,8 +439,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         float overflow = this.currentEnergy.increase(energyGained, this.maxEnergy);
         this.overflowEnergy.increase(overflow);
-        this.emit(l -> l.onGainEnergy(energyGained, overflow));
         getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
+        this.emit(l -> l.onGainEnergy(energyGained, overflow));
     }
 
     public void increaseEnergy(float amount, String source) {

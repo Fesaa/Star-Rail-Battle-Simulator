@@ -1,5 +1,6 @@
 package art.ameliah.hsr.characters.remembrance.trailblazer;
 
+import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -134,6 +135,8 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
 
     public class EnergyListener extends PermPower {
 
+        private float energyTally = 0;
+
         public EnergyListener() {
             super("Mem EnergyListener");
         }
@@ -141,7 +144,13 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         @Override
         public void onGainEnergy(float amount, float overflow) {
             float trueAmount = amount - overflow;
-            int charge = (int) Math.floor(trueAmount/10);
+            this.energyTally += trueAmount;
+
+            int charge = (int) Math.floor(this.energyTally/10);
+            if (charge > 0) {
+                this.energyTally %= 10;
+            }
+
             if (Trailblazer.this.mem != null && charge > 0) {
                 Trailblazer.this.mem.increaseCharge(charge);
             }
