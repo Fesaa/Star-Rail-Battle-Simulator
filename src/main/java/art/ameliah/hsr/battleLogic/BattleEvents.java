@@ -5,7 +5,10 @@ import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+
+import java.util.Collection;
 
 public interface BattleEvents {
 
@@ -178,6 +181,25 @@ public interface BattleEvents {
      */
     default void afterUseUltimate() {
     }
+
+    /**
+     * Called after the owner uses any ability on an ally. This is not implemented for everyone.
+     * Double check before using, implement if needed.
+     */
+    default void afterUseOnAlly(Collection<AbstractCharacter<?>> allies) {
+    }
+
+    /**
+     * Called after summoning a memosprite
+     */
+    default void afterSummon(Memosprite<?> memosprite) {}
+
+    /**
+     * Called after gaining an amount of energy
+     * @param amount the amount gained
+     * @param overflow the amount that overflew
+     */
+    default void onGainEnergy(float amount, float overflow) {}
 
     /**
      * Called when the owner dies

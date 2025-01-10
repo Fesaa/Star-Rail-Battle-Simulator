@@ -43,6 +43,11 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         hit.getTarget().emit(l -> l.beforeReceiveHit(hit));
 
         HitResult res = hit.getTarget().hit(hit);
+
+        if (source instanceof AbstractCharacter<?> e) {
+            e.emit(l -> l.afterDoHit(res));
+        }
+
         // TODO: Metrics update, record overflow etc
         if (res.success()) {
             this.dmgDealt += hit.finalDmg();

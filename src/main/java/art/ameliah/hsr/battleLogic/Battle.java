@@ -175,7 +175,7 @@ public class Battle extends RngProvider implements IBattle {
         if (idx >= this.playerTeam.size()) {
             this.playerTeam.add(ally);
         } else {
-            this.playerTeam.set(idx, ally);
+            this.playerTeam.add(idx, ally);
         }
 
         ally.setBattle(this);

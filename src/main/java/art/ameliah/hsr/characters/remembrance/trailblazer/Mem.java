@@ -5,6 +5,7 @@ import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
+import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.Path;
@@ -15,6 +16,8 @@ import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
+
+import java.util.List;
 
 /**
  * Mem currently cannot disappear, "No... Regrets" is not implemented. There is no ally dmg
@@ -45,7 +48,9 @@ public class Mem extends Memosprite<Mem> {
     }
 
     public void increaseCharge(int amount) {
+        int initialCharge = this.charge.get();
         this.charge.increase(amount, 100);
+        getBattle().addToLog(new GainCharge(this, amount, initialCharge, this.charge.get()));
 
         if (this.charge.get() == 100) {
             getBattle().AdvanceEntity(this, 100);
@@ -82,17 +87,23 @@ public class Mem extends Memosprite<Mem> {
         this.baddiesTrouble();
     }
 
+    @Override
+    public Trailblazer getMaster() {
+        return this.trailblazer;
+    }
+
     private void lemmeHelpYou() {
         AbstractCharacter<?> ally = this.getAllyTarget();
-        if (ally == this) {
-            return;
+        if (ally != this) {
+            getBattle().AdvanceEntity(ally, 100);
         }
-        getBattle().AdvanceEntity(ally, 100);
         ally.addPower(new TrueDmgPower());
 
         if (ally instanceof Memomaster<?> memomaster) {
             memomaster.getMemo().addPower(new TrueDmgPower());
         }
+        this.charge.set(0);
+        this.emit(l -> l.afterUseOnAlly(List.of(ally)));
     }
 
     private void baddiesTrouble() {

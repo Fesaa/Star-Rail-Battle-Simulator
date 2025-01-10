@@ -333,6 +333,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float totalBonusFlatSpeed = 0;
         for (AbstractPower power : powerList) {
             totalBonusSpeedPercent += power.getStat(PowerStat.SPEED_PERCENT);
+            totalBonusSpeedPercent += power.getConditionalSpeedBoost(this);
             totalBonusFlatSpeed += power.getStat(PowerStat.FLAT_SPEED);
         }
         return (totalBaseSpeed * (1 + totalBonusSpeedPercent / 100) + totalBonusFlatSpeed);
@@ -438,6 +439,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         float overflow = this.currentEnergy.increase(energyGained, this.maxEnergy);
         this.overflowEnergy.increase(overflow);
+        this.emit(l -> l.onGainEnergy(energyGained, overflow));
         getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
     }
 

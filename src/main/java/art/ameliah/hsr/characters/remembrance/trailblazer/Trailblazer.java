@@ -5,21 +5,27 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Trailblazer extends Memomaster<Trailblazer> {
+public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Trailblazer(Remembrance)";
 
     private Mem mem;
     private boolean firstSummon = true;
     private boolean e2Cooldown = false;
+    private boolean firstTurn = true;
 
     public Trailblazer() {
         super(NAME, 1048, 543, 631, 103, 80, ElementType.ICE, 160, 100, Path.REMEMBRANCE);
@@ -30,17 +36,25 @@ public class Trailblazer extends Memomaster<Trailblazer> {
                 .setStat(PowerStat.HP_PERCENT, 14)
         );
         this.addPower(new E6());
+
+        this.registerGoal(0, new SkillFirstTurnGoal<>(this));
+        this.registerGoal(10, new AlwaysBasicGoal<>(this));
+        this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
-    public Memosprite<Mem> getMemo() {
+    public @Nullable Memosprite<?> getMemo() {
         return this.mem;
     }
 
     @Override
     public void onCombatStart() {
         getBattle().AdvanceEntity(this, 30);
-        getBattle().registerForPlayers(p -> p.addPower(new EidolonsListener()));
+        getBattle().registerForPlayers(p -> {
+            p.addPower(new EidolonsListener());
+            p.addPower(new EnergyListener());
+        });
     }
 
     @Override
@@ -61,7 +75,8 @@ public class Trailblazer extends Memomaster<Trailblazer> {
         });
     }
 
-    private void summonMem() {
+    @Override
+    protected void summonMemo() {
         this.mem = new Mem(this);
         int idx = getBattle().getPlayers().indexOf(this.mem);
         getBattle().addPlayerAt(this.mem, idx+1);
@@ -70,12 +85,13 @@ public class Trailblazer extends Memomaster<Trailblazer> {
             this.mem.increaseCharge(40);
             this.firstSummon = false;
         }
+        this.emit(l -> l.afterSummon(this.mem));
     }
 
     @Override
     protected void useSkill() {
         if (this.mem == null) {
-            this.summonMem();
+            this.summonMemo();
             return;
         }
 
@@ -85,7 +101,7 @@ public class Trailblazer extends Memomaster<Trailblazer> {
 
     @Override
     protected void useBasic() {
-        this.doAttack(al -> {
+        this.doAttack(DamageType.BASIC, al -> {
             al.logic(getTarget(MoveType.BASIC), (e, dl) -> {
                 dl.hit(e, 1, 10);
             });
@@ -95,15 +111,41 @@ public class Trailblazer extends Memomaster<Trailblazer> {
     @Override
     protected void useUltimate() {
         if (this.mem == null) {
-            this.summonMem();
+            this.summonMemo();
         }
 
         this.mem.increaseCharge(40);
-        this.doAttack(al -> {
+        this.doAttack(DamageType.ULTIMATE ,al -> {
             al.logic(getBattle().getEnemies(), (e, dl) -> {
                 dl.hit(this.mem, e, 2.4f, 20);
             });
         });
+    }
+
+    @Override
+    public boolean isFirstTurn() {
+        return this.firstTurn;
+    }
+
+    @Override
+    public void setFirstTurn(boolean firstTurn) {
+        this.firstTurn = firstTurn;
+    }
+
+    public class EnergyListener extends PermPower {
+
+        public EnergyListener() {
+            super("Mem EnergyListener");
+        }
+
+        @Override
+        public void onGainEnergy(float amount, float overflow) {
+            float trueAmount = amount - overflow;
+            int charge = (int) Math.floor(trueAmount/10);
+            if (Trailblazer.this.mem != null && charge > 0) {
+                Trailblazer.this.mem.increaseCharge(charge);
+            }
+        }
     }
 
     public class EidolonsListener extends PermPower {

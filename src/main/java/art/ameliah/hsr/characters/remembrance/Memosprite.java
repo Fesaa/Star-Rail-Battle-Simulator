@@ -13,6 +13,7 @@ public abstract class Memosprite<C extends Memosprite<C>> extends AbstractCharac
     }
 
     protected abstract void memoSkill();
+    public abstract AbstractCharacter<?> getMaster();
 
     @Override
     protected final void useBasic() {

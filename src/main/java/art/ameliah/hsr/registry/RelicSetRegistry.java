@@ -26,6 +26,7 @@ import art.ameliah.hsr.relics.relics.EagleOfTwilightLine;
 import art.ameliah.hsr.relics.relics.FiresmithOfLavaForging;
 import art.ameliah.hsr.relics.relics.GeniusOfBrilliantStars;
 import art.ameliah.hsr.relics.relics.GuardInTheWutheringSnow;
+import art.ameliah.hsr.relics.relics.HeroOfTriumphantSong;
 import art.ameliah.hsr.relics.relics.HunterOfTheGlacialForest;
 import art.ameliah.hsr.relics.relics.IronCavalryAgainstTheScourge;
 import art.ameliah.hsr.relics.relics.KnightOfPurityPalace;
@@ -71,6 +72,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
         register(120, TheWindSoaringValorous.class);
         register(121, SacerdosRelivedOrdeal.class);
         register(122, ScholarLostInErudition.class);
+        register(123, HeroOfTriumphantSong.class);
         register(124, PoetOfMourningCollapse.class);
 
 
