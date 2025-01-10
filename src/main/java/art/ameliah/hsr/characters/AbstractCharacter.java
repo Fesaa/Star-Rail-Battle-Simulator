@@ -251,10 +251,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.SKILL));
         getBattle().useSkillPoint(this, 1);
-        increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
         this.emit(BattleEvents::onUseSkill);
         this.useSkill();
         this.emit(BattleEvents::afterUseSkill);
+        increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
     }
 
     protected void basicSequence() {
@@ -262,10 +262,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.BASIC));
         getBattle().generateSkillPoint(this, 1);
-        increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
         this.emit(BattleEvents::onUseBasic);
         this.useBasic();
         this.emit(BattleEvents::afterUseBasic);
+        increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
     }
 
     protected void ultimateSequence() {
@@ -274,10 +274,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float initialEnergy = this.currentEnergy.get();
         this.currentEnergy.decrease(this.ultCost);
         getBattle().addToLog(new DoMove(this, MoveType.ULTIMATE, initialEnergy, this.currentEnergy.get()));
-        increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
         this.emit(BattleEvents::onUseUltimate);
         this.useUltimate();
         this.emit(BattleEvents::afterUseUltimate);
+        increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
     }
 
     protected abstract void useSkill();
