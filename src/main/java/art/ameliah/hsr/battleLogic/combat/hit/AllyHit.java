@@ -103,7 +103,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
         float resPen = 0;
 
         for (var power : this.source.powerList) {
-            resPen += power.getStat(PowerStat.RES_PEN);
+            resPen += power.getTotalStat(PowerStat.RES_PEN);
         }
 
         return 1 - (this.target.getRes(this.elementType) - resPen) / 100;
@@ -117,7 +117,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
         for (var power : this.target.powerList) {
             defReduction += power.getStat(PowerStat.DEFENSE_REDUCTION);
-            defIgnore += power.getStat(PowerStat.DEFENSE_IGNORE);
+            defIgnore += power.getTotalStat(PowerStat.DEFENSE_IGNORE);
         }
 
         for (var power : this.source.powerList) {
@@ -132,8 +132,8 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
         float dmgMultiplier = 0;
 
         for (var power : this.source.powerList) {
-            dmgMultiplier += power.getStat(this.elementType.getStatBoost());
-            dmgMultiplier += power.getStat(PowerStat.DAMAGE_BONUS);
+            dmgMultiplier += power.getTotalStat(this.elementType.getStatBoost());
+            dmgMultiplier += power.getTotalStat(PowerStat.DAMAGE_BONUS);
             dmgMultiplier += power.getConditionalDamageBonus(this.source, this.target, this.types);
         }
 
