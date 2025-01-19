@@ -40,11 +40,8 @@ public class NightOfFright extends AbstractLightcone {
     public class NightOfFrightPower extends PermPower {
         public NightOfFrightPower() {
             this.setName(this.getClass().getSimpleName());
-        }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 2.4f * atkStacks;
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 2.4f * atkStacks);
         }
     }
 }

@@ -120,6 +120,8 @@ public class Asta extends AbstractCharacter<Asta> {
             this.setName(TALENT_BUFF_NAME);
             this.lastsForever = true;
             this.stacks = 0;
+
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 15.4f * this.stacks);
         }
 
         @Override
@@ -134,11 +136,6 @@ public class Asta extends AbstractCharacter<Asta> {
                 increaseStacks(chargeGain);
             }
         }
-
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 15.4f * stacks;
-        }
     }
 
     private class AstaERRPower extends AbstractPower {
@@ -146,10 +143,11 @@ public class Asta extends AbstractCharacter<Asta> {
         public AstaERRPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
+
+            this.setConditionalStat(PowerStat.ENERGY_REGEN, this::energyRegen);
         }
 
-        @Override
-        public float getConditionalERR(AbstractCharacter<?> character) {
+        public float energyRegen(AbstractCharacter<?> character) {
             if (talentPower.stacks >= 2) {
                 return 15;
             }

@@ -25,6 +25,8 @@ public class EternalCalculus extends AbstractLightcone {
         public EternalCalculusPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
+
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 8f * this.stacks);
         }
 
         @Override
@@ -33,11 +35,6 @@ public class EternalCalculus extends AbstractLightcone {
             if (this.stacks > 3) {
                 getBattle().IncreaseSpeed(this.getOwner(), TempPower.create(PowerStat.SPEED_PERCENT, 16, 1, "Eternal Calculus Speed Boost"));
             }
-        }
-
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 8 * this.stacks;
         }
     }
 }

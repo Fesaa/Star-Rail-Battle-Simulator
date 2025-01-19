@@ -27,10 +27,11 @@ public class TaliaKingdomOfBanditry extends AbstractRelicSetBonus {
     public static class TaliaKingdomOfBanditryPower extends PermPower {
         public TaliaKingdomOfBanditryPower() {
             super("Talia Kingdom of Banditry extra break bonus");
+
+            this.setConditionalStat(PowerStat.BREAK_EFFECT, this::breakEffectBonus);
         }
 
-        @Override
-        public float getConditionalBreakEffectBonus(AbstractCharacter<?> character) {
+        public float breakEffectBonus(AbstractCharacter<?> character) {
             if (character.getFinalSpeed() >= 145) {
                 return 20;
             }

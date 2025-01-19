@@ -27,10 +27,11 @@ public class SpaceSealingStation extends AbstractRelicSetBonus {
     public static class SpaceSealingStationPower extends PermPower {
         public SpaceSealingStationPower() {
             super("Space Sealing Station extra ATK bonus");
+
+            this.setConditionalStat(PowerStat.ATK_PERCENT, this::atkBonus);
         }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
+        public float atkBonus(AbstractCharacter<?> character) {
             if (character.getFinalSpeed() >= 120) {
                 return 12;
             }

@@ -27,10 +27,11 @@ public class BelobogOfTheArchitects extends AbstractRelicSetBonus {
     public static class BelobogOfTheArchitectsPower extends PermPower {
         public BelobogOfTheArchitectsPower() {
             super("Belobog of the Architects extra DEF bonus");
+
+            this.setConditionalStat(PowerStat.DEF_PERCENT, this::defenseBonus);
         }
 
-        @Override
-        public float getConditionalDefenseBonus(AbstractCharacter<?> character) {
+        public float defenseBonus(AbstractCharacter<?> character) {
             if (character.getTotalEHR() >= 50) {
                 return 15;
             }

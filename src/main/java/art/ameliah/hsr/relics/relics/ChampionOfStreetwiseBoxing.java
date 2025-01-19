@@ -30,11 +30,8 @@ public class ChampionOfStreetwiseBoxing extends AbstractRelicSetBonus {
     public static class ChampionOfStreetwiseBoxing4PCPower extends PermPower {
         public ChampionOfStreetwiseBoxing4PCPower() {
             super("Champion of Streetwise Boxing 4PC Power");
-        }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 5 * this.stacks;
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 5f * this.stacks);
         }
 
         @Override

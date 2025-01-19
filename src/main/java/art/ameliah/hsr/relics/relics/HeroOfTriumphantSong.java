@@ -31,6 +31,8 @@ public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
     public static class HeroOfTriumphantSong4PC extends PermPower {
         public HeroOfTriumphantSong4PC() {
             super("Hero of Triumphant Song 4PC");
+
+            this.setConditionalStat(PowerStat.SPEED_PERCENT, this::speedBoost);
         }
 
         @Override
@@ -41,8 +43,7 @@ public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
             }
         }
 
-        @Override
-        public float getConditionalSpeedBoost(AbstractCharacter<?> character) {
+        public float speedBoost(AbstractCharacter<?> character) {
             if (character instanceof Memomaster<?> memomaster) {
                 if (memomaster.getMemo() != null) {
                     return 6;

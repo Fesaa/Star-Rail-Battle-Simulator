@@ -15,12 +15,17 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class AbstractPower implements BattleEvents, BattleParticipant {
 
     public final boolean durationBasedOnSelfTurns = true;
+
     private final Map<PowerStat, Float> stats = new HashMap<>();
+    private final Map<PowerStat, Function<AbstractCharacter<?>, Float>> conditionalStats = new HashMap<>();
+
     public int turnDuration;
     public PowerType type = PowerType.BUFF;
     public boolean lastsForever = false;
@@ -30,7 +35,7 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
     @Setter
     protected String name;
     @Getter
-    private AbstractEntity owner;
+    protected AbstractEntity owner;
 
     public AbstractPower() {
     }
@@ -81,12 +86,55 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
         return this.getOwner().getBattle();
     }
 
-    public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-        return 0;
+    /**
+     * Set a conditional stat, a stat may only have one conditional function
+     * @param stat the power stat
+     * @param condition the function returning the conditional value
+     */
+    public void setConditionalStat(PowerStat stat, Function<AbstractCharacter<?>, Float> condition) {
+        this.conditionalStats.put(stat, condition);
     }
 
-    public float getConditionalERR(AbstractCharacter<?> character) {
-        return 0;
+    /**
+     * Get the value of a stat
+     *
+     * @param stat The stat to get
+     * @return The value of the stat, 0 if the stat is not set
+     */
+    // TODO: Should be * this by the amount of stacks?
+    // dunno if that would break anything
+    public float getStat(PowerStat stat) {
+        return this.stats.getOrDefault(stat, 0f);
+    }
+
+    public float getConditionalStat(PowerStat stat, AbstractCharacter<?> character) {
+        var func = this.conditionalStats.get(stat);
+        if (func == null) {
+            return 0.0F;
+        }
+        return func.apply(character);
+    }
+
+    /**
+     *
+     * @return the sum of {@link AbstractPower#getConditionalStat(PowerStat, AbstractCharacter)}
+     * and {@link AbstractPower#getStat(PowerStat)}
+     */
+    public float getTotalStat(PowerStat stat, AbstractCharacter<?> character) {
+        return this.getStat(stat) + this.getConditionalStat(stat, character);
+    }
+
+    /**
+     * Returns the total stat for the power, if the owner of this power is not of type {@link AbstractCharacter},
+     * the conditional will not be called
+     * @return the sum of {@link AbstractPower#getConditionalStat(PowerStat, AbstractCharacter)}
+     * and {@link AbstractPower#getStat(PowerStat)}
+     */
+    public float getTotalStat(PowerStat stat) {
+        if (this.owner instanceof AbstractCharacter<?> character) {
+            return this.getStat(stat) + this.getConditionalStat(stat, character);
+        }
+        return this.getStat(stat);
     }
 
     /**
@@ -135,35 +183,6 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
         return currentCritDmg;
     }
 
-    /**
-     * @return A def% bonus
-     */
-    public float getConditionalDefenseBonus(AbstractCharacter<?> character) {
-        return 0;
-    }
-
-    /**
-     *
-     * @return A SPD% bonus
-     */
-    public float getConditionalSpeedBoost(AbstractCharacter<?> character) {
-        return 0;
-    }
-
-    /**
-     * @return A break% bonus
-     */
-    public float getConditionalBreakEffectBonus(AbstractCharacter<?> character) {
-        return 0;
-    }
-
-    /**
-     * @return A flat HP bonus
-     */
-    public float getConditionalFlatHpBonus(AbstractCharacter<?> character) {
-        return 0;
-    }
-
     @Override
     public void onEndTurn() {
         if (!lastsForever && durationBasedOnSelfTurns) {
@@ -185,18 +204,6 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
 
     public void onRemove() {
 
-    }
-
-    /**
-     * Get the value of a stat
-     *
-     * @param stat The stat to get
-     * @return The value of the stat, 0 if the stat is not set
-     */
-    // TODO: Should be * this by the amount of stacks?
-    // dunno if that would break anything
-    public float getStat(PowerStat stat) {
-        return this.stats.getOrDefault(stat, 0f);
     }
 
     /**

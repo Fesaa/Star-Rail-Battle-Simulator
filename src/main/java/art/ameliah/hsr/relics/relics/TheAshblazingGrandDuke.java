@@ -6,6 +6,7 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.AbstractPower;
+import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
 import java.util.List;
@@ -71,11 +72,8 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;
             this.maxStacks = 8;
-        }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return stacks * 6.0f;
+            this.setConditionalStat(PowerStat.ATK_PERCENT, (_) -> this.stacks * 6.0f);
         }
     }
 

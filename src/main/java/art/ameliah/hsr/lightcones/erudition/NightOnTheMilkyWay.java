@@ -5,6 +5,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
+import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.List;
 
@@ -34,11 +35,8 @@ public class NightOnTheMilkyWay extends AbstractLightcone {
         public NightOnTheMilkyWayPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
-        }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 9 * getBattle().getEnemies().size();
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 9f * getBattle().getEnemies().size());
         }
 
         @Override

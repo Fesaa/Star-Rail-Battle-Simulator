@@ -45,11 +45,8 @@ public class FlowingNightglow extends AbstractLightcone {
         public FlowingNightglowERRPower() {
             this.setName(ERPowerName);
             this.maxStacks = 5;
-        }
 
-        @Override
-        public float getConditionalERR(AbstractCharacter<?> character) {
-            return 3 * stacks;
+            this.setConditionalStat(PowerStat.ENERGY_REGEN, _ -> 3f * this.stacks);
         }
     }
 

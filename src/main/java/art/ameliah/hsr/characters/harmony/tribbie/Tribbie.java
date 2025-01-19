@@ -103,8 +103,11 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
 
     public static class GlassBallWithWings extends PermPower {
 
-        @Override
-        public float getConditionalFlatHpBonus(AbstractCharacter<?> character) {
+        public GlassBallWithWings() {
+            this.setConditionalStat(PowerStat.FLAT_HP, this::hpBonus);
+        }
+
+        public float hpBonus(AbstractCharacter<?> character) {
             double total = getBattle().getPlayers().stream()
                     .mapToDouble(AbstractCharacter::getFinalHP)
                     .sum();

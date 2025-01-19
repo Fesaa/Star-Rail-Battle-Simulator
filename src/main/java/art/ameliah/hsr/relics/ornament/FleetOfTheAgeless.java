@@ -28,10 +28,11 @@ public class FleetOfTheAgeless extends AbstractRelicSetBonus {
     public class FleetOfTheAgelessPower extends PermPower {
         public FleetOfTheAgelessPower() {
             super("Fleet of the Ageless ATK bonus");
+
+            this.setConditionalStat(PowerStat.ATK_PERCENT, this::atkBonus);
         }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
+        public float atkBonus(AbstractCharacter<?> character) {
             if (FleetOfTheAgeless.this.owner.getFinalSpeed() >= 120) {
                 return 8;
             }

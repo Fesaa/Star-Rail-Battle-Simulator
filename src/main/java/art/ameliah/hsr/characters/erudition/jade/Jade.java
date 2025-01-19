@@ -174,11 +174,8 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
 
         public PawnedAsset() {
             super(NAME);
-        }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return Jade.this.pawnedAssets * 0.5f;
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> Jade.this.pawnedAssets * 0.5f);
         }
 
         @Override

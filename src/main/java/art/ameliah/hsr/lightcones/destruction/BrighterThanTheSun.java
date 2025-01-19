@@ -31,16 +31,9 @@ public class BrighterThanTheSun extends AbstractLightcone {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
             this.maxStacks = 2;
-        }
 
-        @Override
-        public float getConditionalAtkBonus(AbstractCharacter<?> character) {
-            return 18 * this.stacks;
-        }
-
-        @Override
-        public float getConditionalERR(AbstractCharacter<?> character) {
-            return 6 * this.stacks;
+            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 18f * this.stacks);
+            this.setConditionalStat(PowerStat.ENERGY_REGEN, _ -> 6f * this.stacks);
         }
     }
 
