@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
 import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -194,7 +195,7 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
         }
 
         if (!lastsForever && turnDuration <= 0) {
-            if (getStat(PowerStat.SPEED_PERCENT) > 0 || getStat(PowerStat.FLAT_SPEED) > 0) {
+            if (getTotalStat(PowerStat.SPEED_PERCENT) > 0 || getTotalStat(PowerStat.FLAT_SPEED) > 0) {
                 getBattle().DecreaseSpeed(this.getOwner(), this);
             } else {
                 this.getOwner().removePower(this);
