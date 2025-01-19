@@ -157,6 +157,13 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
         return 0;
     }
 
+    /**
+     * @return A flat HP bonus
+     */
+    public float getConditionalFlatHpBonus(AbstractCharacter<?> character) {
+        return 0;
+    }
+
     @Override
     public void onEndTurn() {
         if (!lastsForever && durationBasedOnSelfTurns) {

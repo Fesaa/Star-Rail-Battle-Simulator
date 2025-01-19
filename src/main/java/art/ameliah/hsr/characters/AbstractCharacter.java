@@ -69,6 +69,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public final boolean useTechnique = true;
     @Getter
     protected final Path path;
+    @Getter
     protected final int baseHP;
     protected final int baseAtk;
     protected final int baseDef;
@@ -280,9 +281,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
     }
 
-    protected abstract void useSkill();
-
     protected abstract void useBasic();
+
+    protected abstract void useSkill();
 
     protected abstract void useUltimate();
 
@@ -323,6 +324,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         for (AbstractPower power : powerList) {
             totalBonusHPPercent += power.getStat(PowerStat.HP_PERCENT);
             totalBonusFlatHP += power.getStat(PowerStat.FLAT_HP);
+            totalBonusFlatHP += power.getConditionalFlatHpBonus(this);
         }
         return (totalBaseHP * (1 + totalBonusHPPercent / 100) + totalBonusFlatHP);
     }
