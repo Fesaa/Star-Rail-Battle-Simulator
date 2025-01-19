@@ -157,10 +157,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
     public void onCombatStart() {
         this.fuaRng = new Random(getBattle().getSeed());
         gainStackEnergy(3);
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            AbstractPower feiPower = new FeiTalentPower();
-            character.addPower(feiPower);
-        }
+        getBattle().registerForPlayers(p -> p.addPower(new FeiTalentPower()));
         addPower(new FeiCritDmgPower());
     }
 

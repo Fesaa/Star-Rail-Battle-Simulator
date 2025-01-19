@@ -127,9 +127,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     public void onCombatStart() {
         getBattle().AdvanceEntity(this, 25);
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(new RobinTalentPower());
-        }
+        getBattle().registerForPlayers(p -> p.addPower(new RobinTalentPower()));
     }
 
     public void onTurnStart() {

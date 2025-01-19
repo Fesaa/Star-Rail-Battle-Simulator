@@ -78,14 +78,15 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         } else {
             quantumAtkBonus = 5;
         }
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            if (character.elementType == ElementType.QUANTUM) {
-                PermPower quantumNocturne = PermPower.create(PowerStat.ATK_PERCENT, quantumAtkBonus, "Sparkle Quantum Atk Bonus");
-                character.addPower(quantumNocturne);
-            }
-        }
 
-        getBattle().getPlayers().forEach(c -> c.addPower(new SparkleTalentPowerTracker()));
+        getBattle().registerForPlayers(p -> {
+            if (p.elementType == ElementType.QUANTUM) {
+                PermPower quantumNocturne = PermPower.create(PowerStat.ATK_PERCENT, quantumAtkBonus, "Sparkle Quantum Atk Bonus");
+                p.addPower(quantumNocturne);
+            }
+
+            p.addPower(new SparkleTalentPowerTracker());
+        });
     }
 
     public void useTechnique() {

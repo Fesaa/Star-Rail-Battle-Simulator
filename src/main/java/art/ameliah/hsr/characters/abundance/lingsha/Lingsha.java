@@ -168,10 +168,10 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
     public void onCombatStart() {
         getBattle().getActionValueMap().put(fuYuan, fuYuan.getBaseAV());
         increaseHitCount(skillHitCountGain);
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            characterTimesDamageTakenMap.put(character, 0);
-            character.addPower(damageTrackerPower);
-        }
+        getBattle().registerForPlayers(p -> {
+            characterTimesDamageTakenMap.put(p, 0);
+            p.addPower(damageTrackerPower);
+        });
     }
 
     public void useTechnique() {

@@ -60,9 +60,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
     public void onCombatStart() {
         talentCounter = 1;
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(talentPower);
-        }
+        getBattle().registerForPlayers(p -> p.addPower(talentPower));
     }
 
     public void onTurnStart() {

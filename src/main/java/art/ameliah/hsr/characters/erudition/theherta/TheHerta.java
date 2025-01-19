@@ -66,10 +66,10 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
         int erudition = getBattle().getPlayers().stream().filter(p -> p.getPath().equals(Path.ERUDITION)).toList().size();
         if (erudition > 1) {
             this.eruditionGoal = true;
-            getBattle().getPlayers().forEach(p -> p.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 80, "Message From Beyond the Veil")));
+            getBattle().registerForPlayers(p -> p.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 80, "Message From Beyond the Veil")));
         }
 
-        getBattle().getPlayers().forEach(p -> p.addPower(new AlooflyHonest()));
+        getBattle().registerForPlayers(p -> p.addPower(new AlooflyHonest()));
     }
 
     @Override

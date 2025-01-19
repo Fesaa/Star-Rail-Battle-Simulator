@@ -48,7 +48,7 @@ public class Herta extends AbstractCharacter<Herta> {
     public void onCombatStart() {
         this.addPower(new HertaSkillDMGBoost());
         PermPower p = new HertaFuaListener();
-        getBattle().getPlayers().forEach(player -> player.addPower(p));
+        getBattle().registerForPlayers(player -> player.addPower(p));
     }
 
     @Override

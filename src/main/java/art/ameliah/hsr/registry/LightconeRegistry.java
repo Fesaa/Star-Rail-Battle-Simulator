@@ -45,6 +45,7 @@ import art.ameliah.hsr.lightcones.harmony.DreamvilleAdventure;
 import art.ameliah.hsr.lightcones.harmony.EarthlyEscapade;
 import art.ameliah.hsr.lightcones.harmony.FlowingNightglow;
 import art.ameliah.hsr.lightcones.harmony.ForTomorrowsJourney;
+import art.ameliah.hsr.lightcones.harmony.IfTimeWereAFlower;
 import art.ameliah.hsr.lightcones.harmony.MemoriesOfThePast;
 import art.ameliah.hsr.lightcones.harmony.PastAndFuture;
 import art.ameliah.hsr.lightcones.harmony.PastSelfInMirror;
@@ -90,6 +91,7 @@ import art.ameliah.hsr.lightcones.preservation.TextureOfMemories;
 import art.ameliah.hsr.lightcones.preservation.ThisIsMe;
 import art.ameliah.hsr.lightcones.preservation.TrendOfTheUniversalMarket;
 import art.ameliah.hsr.lightcones.preservation.WeAreWildfire;
+import art.ameliah.hsr.lightcones.remembrance.VictoryInABlink;
 
 public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
 
@@ -182,8 +184,10 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         register(24002, TextureOfMemories.class);
         register(24003, SolitaryHealing.class);
         register(24004, EternalCalculus.class);
-        register(23037, IntoTheUnreachableVeil.class);
         register(23034, AGroundedAscent.class);
+        register(23037, IntoTheUnreachableVeil.class);
+        register(23038, IfTimeWereAFlower.class);
+        register(21050, VictoryInABlink.class);
     }
 
     public AbstractLightcone getLightCone(int id, AbstractCharacter<?> owner) throws Exception {

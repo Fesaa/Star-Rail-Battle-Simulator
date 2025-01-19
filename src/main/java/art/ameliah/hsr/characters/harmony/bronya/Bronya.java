@@ -66,9 +66,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
     }
 
     public void onCombatStart() {
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 10, "Bronya Trace Damage Bonus"));
-        }
+        getBattle().registerForPlayers(p -> p.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 10, "Bronya Trace Damage Bonus")));
         this.addPower(new BronyaBasicCritPower());
     }
 

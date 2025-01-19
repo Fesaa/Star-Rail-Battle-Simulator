@@ -105,8 +105,8 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
     }
 
     public void onCombatStart() {
-        getBattle().getPlayers().forEach(p -> p.addPower(talentPower));
-        getBattle().getEnemies().forEach(e -> e.addPower(talentPower));
+        getBattle().registerForPlayers(p -> p.addPower(talentPower));
+        getBattle().registerForEnemy(e -> e.addPower(talentPower));
         addPower(PermPower.create(PowerStat.CRIT_CHANCE, 48, "Aventurine Crit Chance Bonus"));
     }
 

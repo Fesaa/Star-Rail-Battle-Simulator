@@ -143,9 +143,24 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
     }
 
     /**
+     *
+     * @return A SPD% bonus
+     */
+    public float getConditionalSpeedBoost(AbstractCharacter<?> character) {
+        return 0;
+    }
+
+    /**
      * @return A break% bonus
      */
     public float getConditionalBreakEffectBonus(AbstractCharacter<?> character) {
+        return 0;
+    }
+
+    /**
+     * @return A flat HP bonus
+     */
+    public float getConditionalFlatHpBonus(AbstractCharacter<?> character) {
         return 0;
     }
 

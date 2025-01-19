@@ -16,6 +16,7 @@ import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
 import art.ameliah.hsr.characters.harmony.sparkle.Sparkle;
 import art.ameliah.hsr.characters.harmony.sunday.Sunday;
 import art.ameliah.hsr.characters.harmony.tingyun.Tingyun;
+import art.ameliah.hsr.characters.harmony.tribbie.Tribbie;
 import art.ameliah.hsr.characters.hunt.drRatio.DrRatio;
 import art.ameliah.hsr.characters.hunt.feixiao.Feixiao;
 import art.ameliah.hsr.characters.hunt.march.SwordMarch;
@@ -24,6 +25,7 @@ import art.ameliah.hsr.characters.hunt.topaz.Topaz;
 import art.ameliah.hsr.characters.nihility.pela.Pela;
 import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
 import art.ameliah.hsr.characters.preservation.fuxuan.FuXuan;
+import art.ameliah.hsr.characters.remembrance.trailblazer.Trailblazer;
 
 public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
 
@@ -50,9 +52,12 @@ public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
         register(1305, DrRatio.class);
         register(1306, Sparkle.class);
         register(1309, Robin.class);
+        register(1313, Sunday.class);
         register(1314, Jade.class);
         register(1401, TheHerta.class);
-        register(1313, Sunday.class);
+        register(1403, Tribbie.class);
+        register(8007, Trailblazer.class);
+        register(8008, Trailblazer.class);
     }
 
 }

@@ -69,6 +69,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public final boolean useTechnique = true;
     @Getter
     protected final Path path;
+    @Getter
     protected final int baseHP;
     protected final int baseAtk;
     protected final int baseDef;
@@ -251,10 +252,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.SKILL));
         getBattle().useSkillPoint(this, 1);
-        increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
         this.emit(BattleEvents::onUseSkill);
         this.useSkill();
         this.emit(BattleEvents::afterUseSkill);
+        increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
     }
 
     protected void basicSequence() {
@@ -262,10 +263,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.BASIC));
         getBattle().generateSkillPoint(this, 1);
-        increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
         this.emit(BattleEvents::onUseBasic);
         this.useBasic();
         this.emit(BattleEvents::afterUseBasic);
+        increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
     }
 
     protected void ultimateSequence() {
@@ -274,15 +275,15 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float initialEnergy = this.currentEnergy.get();
         this.currentEnergy.decrease(this.ultCost);
         getBattle().addToLog(new DoMove(this, MoveType.ULTIMATE, initialEnergy, this.currentEnergy.get()));
-        increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
         this.emit(BattleEvents::onUseUltimate);
         this.useUltimate();
         this.emit(BattleEvents::afterUseUltimate);
+        increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
     }
 
-    protected abstract void useSkill();
-
     protected abstract void useBasic();
+
+    protected abstract void useSkill();
 
     protected abstract void useUltimate();
 
@@ -323,6 +324,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         for (AbstractPower power : powerList) {
             totalBonusHPPercent += power.getStat(PowerStat.HP_PERCENT);
             totalBonusFlatHP += power.getStat(PowerStat.FLAT_HP);
+            totalBonusFlatHP += power.getConditionalFlatHpBonus(this);
         }
         return (totalBaseHP * (1 + totalBonusHPPercent / 100) + totalBonusFlatHP);
     }
@@ -333,6 +335,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float totalBonusFlatSpeed = 0;
         for (AbstractPower power : powerList) {
             totalBonusSpeedPercent += power.getStat(PowerStat.SPEED_PERCENT);
+            totalBonusSpeedPercent += power.getConditionalSpeedBoost(this);
             totalBonusFlatSpeed += power.getStat(PowerStat.FLAT_SPEED);
         }
         return (totalBaseSpeed * (1 + totalBonusSpeedPercent / 100) + totalBonusFlatSpeed);
@@ -439,6 +442,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.currentEnergy.increase(energyGained, this.maxEnergy);
         this.overflowEnergy.increase(overflow);
         getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
+        this.emit(l -> l.onGainEnergy(energyGained, overflow));
     }
 
     public void increaseEnergy(float amount, String source) {

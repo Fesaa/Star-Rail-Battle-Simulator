@@ -83,13 +83,12 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
     }
 
     public void onCombatStart() {
-        for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 20, "Ruan Mei Break Buff"));
-
-            if (character != this) {
-                character.addPower(PermPower.create(PowerStat.SPEED_PERCENT, 10, "Ruan Mei Speed Buff"));
+        getBattle().registerForPlayers(p -> {
+            p.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 20, "Ruan Mei Break Buff"));
+            if (p != this) {
+                p.addPower(PermPower.create(PowerStat.SPEED_PERCENT, 10, "Ruan Mei Speed Buff"));
             }
-        }
+        });
     }
 
     public void onWeaknessBreak(AbstractEnemy enemy) {

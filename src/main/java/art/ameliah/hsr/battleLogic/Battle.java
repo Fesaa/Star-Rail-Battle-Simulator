@@ -37,9 +37,11 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -67,10 +69,17 @@ public class Battle extends RngProvider implements IBattle {
     public boolean isInCombat = false;
     public boolean lessMetrics = false;
     public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
+
     public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
+
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+    protected Set<Consumer<AbstractCharacter<?>>> playerListeners = new HashSet<>();
+
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
+    protected Set<Consumer<AbstractEnemy>> enemyListeners = new HashSet<>();
+
     protected boolean activeAttack = false;
+
     @Getter
     private Logger logger;
 
@@ -157,13 +166,34 @@ public class Battle extends RngProvider implements IBattle {
         this.actionValueMap.remove(enemy);
 
         this.onEnemyRemove(enemy, idx);
-        this.getPlayers().forEach(p -> p.emit(l -> l.onEnemyRemove(enemy, idx)));
-        this.getEnemies().forEach(e -> e.emit(l -> l.onEnemyRemove(enemy, idx)));
+        this.doOnceForPlayers(p -> p.emit(l -> l.onEnemyRemove(enemy, idx)));
+        this.doOnceForEnemy(e -> e.emit(l -> l.onEnemyRemove(enemy, idx)));
+    }
+
+    @Override
+    public void addPlayerAt(AbstractCharacter<?> ally, int idx, float initialAA) {
+        if (idx >= this.playerTeam.size()) {
+            this.playerTeam.add(ally);
+        } else {
+            this.playerTeam.add(idx, ally);
+        }
+
+        ally.setBattle(this);
+        this.actionValueMap.put(ally, ally.getBaseAV());
+        if (initialAA > 0) {
+            this.AdvanceEntity(ally, initialAA);
+        }
+
+        addToLog(new EntityJoinedBattle(ally));
+
+        this.playerListeners.forEach(listener -> listener.accept(ally));
+        ally.emit(BattleEvents::onCombatStart);
+        this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onPlayerJoinCombat(ally)));
     }
 
     @Override
     public void addEnemyAt(AbstractEnemy enemy, int idx, float initialAA) {
-        if (idx > this.enemyTeam.size()) {
+        if (idx >= this.enemyTeam.size()) {
             this.enemyTeam.add(enemy);
         } else {
             this.enemyTeam.add(idx, enemy);
@@ -176,6 +206,8 @@ public class Battle extends RngProvider implements IBattle {
         }
 
         addToLog(new EntityJoinedBattle(enemy));
+
+        this.enemyListeners.forEach(l -> l.accept(enemy));
         enemy.emit(BattleEvents::onCombatStart);
         this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onEnemyJoinCombat(enemy)));
     }
@@ -400,7 +432,7 @@ public class Battle extends RngProvider implements IBattle {
 
         // Character keep their buffs until the next card is at 0AV
         currentUnit.emit(BattleEvents::onEndTurn);
-        this.addToLog(new TurnEnd(this.currentUnit, getEnemies()));
+        this.addToLog(new TurnEnd(this.currentUnit, this.enemyTeam));
         this.onEndTurn();
 
         if (yunli != null && yunli.isParrying) {
@@ -436,7 +468,7 @@ public class Battle extends RngProvider implements IBattle {
      * Have all players try their ultimates. Not sure why Yunli is filtered out, ask Darkglade
      */
     protected void tryUlts() {
-        getPlayers().stream()
+        this.playerTeam.stream()
                 .filter(p -> !(p instanceof Yunli))
                 .forEach(AbstractCharacter::tryUltimate);
     }
@@ -513,6 +545,38 @@ public class Battle extends RngProvider implements IBattle {
     }
 
     @Override
+    public void registerForPlayers(Consumer<AbstractCharacter<?>> consumer) {
+        this.doOnceForPlayers(consumer);
+        this.playerListeners.add(consumer);
+    }
+
+    @Override
+    public void registerForEnemy(Consumer<AbstractEnemy> consumer) {
+        this.doOnceForEnemy(consumer);
+        this.enemyListeners.add(consumer);
+    }
+
+    @Override
+    public void doOnceForPlayers(Consumer<AbstractCharacter<?>> consumer) {
+        this.playerTeam.forEach(consumer);
+    }
+
+    @Override
+    public void doOnceForEnemy(Consumer<AbstractEnemy> consumer) {
+        this.enemyTeam.forEach(consumer);
+    }
+
+    @Override
+    public int playerSize() {
+        return this.playerTeam.size();
+    }
+
+    @Override
+    public int enemiesSize() {
+        return this.enemyTeam.size();
+    }
+
+    @Override
     public AbstractCharacter<?> getCharacter(String name) {
         for (AbstractCharacter<?> character : playerTeam) {
             if (character.getName().equals(name)) {
@@ -566,7 +630,7 @@ public class Battle extends RngProvider implements IBattle {
     @Override
     public AbstractEnemy getEnemyWithHighestHP() {
         AbstractEnemy enemy = null;
-        for (AbstractEnemy e : this.getEnemies()) {
+        for (AbstractEnemy e : this.enemyTeam) {
             if (enemy == null || e.getCurrentHp().get() > enemy.getCurrentHp().get()) {
                 enemy = e;
             }
