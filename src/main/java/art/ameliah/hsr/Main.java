@@ -14,6 +14,7 @@ import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
 import art.ameliah.hsr.game.pf.technicalityentrapment.EmptyAir;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.teams.PlayerTeam;
 
@@ -79,8 +80,13 @@ public class Main {
             enemyTeam.add(new FireWindImgLightningWeakEnemy(0, 0));
             battle.setEnemyTeam(enemyTeam);
 
-            System.out.print(Prefix);
+            System.out.println(Prefix);
             battle.Start(550);
+
+            CounterMetric<Float> playerDmg = battle.getMetricRegistry().getMetric("battle-total-player-dmg");
+            DmgContributionMetric dmg = battle.getMetricRegistry().getMetric("battle-dmg-contribution");
+
+            System.out.println(dmg.representation() + "\nTotal Dmg: " + String.format("%,.3f", playerDmg.get()) + "\n");
         }
     }
 
