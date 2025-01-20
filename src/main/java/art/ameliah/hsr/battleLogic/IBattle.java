@@ -159,6 +159,8 @@ public interface IBattle {
 
     float battleLength();
 
+    int maxEnemiesOnField();
+
     long getSeed();
 
     Random getEnemyMoveRng();

@@ -2,6 +2,7 @@ package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyDelayAttack;
@@ -244,7 +245,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (this.isWeaknessBroken()) {
             return new HitResult(hit, this, dmgToDeal, 0, false, this.isDead());
         }
-        return new HitResult(hit, this, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction()), this.isWeaknessBroken(), this.isDead());
+        return new HitResult(hit, this, dmgToDeal, this.decreaseToughness(hit.finalToughnessReduction(), hit.getSource()), this.isWeaknessBroken(), this.isDead());
     }
 
     public HitResult hitDirectly(Hit hit) {
@@ -255,11 +256,11 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
         getBattle().addToLog(new EnemyDied(this, "after a direct hit by " + hit.getSource()));
         getBattle().removeEnemy(this);
-        this.emit(BattleEvents::onDeath);
+        this.emit(l -> l.onDeath(hit.getSource()));
         return res;
     }
 
-    protected float decreaseToughness(float amount) {
+    protected float decreaseToughness(float amount, BattleParticipant source) {
         float initialToughness = this.currentToughness;
         float toughnessToDeal = Math.min(amount, this.currentToughness);
         if (toughnessToDeal == 0) {
@@ -272,8 +273,17 @@ public abstract class AbstractEnemy extends AbstractEntity {
         if (this.currentToughness == 0) {
             this.weaknessBreakMetric.increment();
             getBattle().DelayEntity(this, 25);
+
+            if (source instanceof AbstractCharacter<?> character) {
+                float extraDelay = character.elementType.getExtraDelay() * (1 + character.getTotalBreakEffect()/100);
+                getBattle().DelayEntity(this, extraDelay);
+
+                //TODO: Further implement missing weakness break mechanics
+                // https://honkai-star-rail.fandom.com/wiki/Toughness#Weakness_Break
+            }
+
             getBattle().getPlayers().forEach(p -> p.onWeaknessBreak(this));
-            this.emit(BattleEvents::onWeaknessBreak);
+            this.emit(l -> l.onWeaknessBreak(source));
         }
 
         return toughnessToDeal;
@@ -332,7 +342,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
         getBattle().addToLog(new EnemyDied(this, attack.getSource()));
         getBattle().removeEnemy(this);
-        this.emit(BattleEvents::onDeath);
+        this.emit(l -> l.onDeath(attack.getSource()));
     }
 
     public String getMetrics() {

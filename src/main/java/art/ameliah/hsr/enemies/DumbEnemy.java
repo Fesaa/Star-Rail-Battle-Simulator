@@ -71,7 +71,7 @@ public class DumbEnemy extends AbstractEnemy {
     @Override
     public HitResult hit(Hit hit) {
         return new HitResult(hit, this, hit.finalDmg(),
-                this.decreaseToughness(hit.finalToughnessReduction()),
+                this.decreaseToughness(hit.finalToughnessReduction(), hit.getSource()),
                 this.isWeaknessBroken(),
                 this.isDead()
         );

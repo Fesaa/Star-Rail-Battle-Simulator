@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -49,8 +50,8 @@ public class FrigidProwler extends AbstractEnemy {
     }
 
     @Override
-    public void onDeath() {
-        super.onDeath();
+    public void onDeath(BattleParticipant source) {
+        super.onDeath(source);
         this.otherlings.forEach(getBattle()::removeEnemy);
     }
 

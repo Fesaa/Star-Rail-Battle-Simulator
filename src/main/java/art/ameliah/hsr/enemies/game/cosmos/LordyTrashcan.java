@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.cosmos;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
@@ -35,7 +36,7 @@ public class LordyTrashcan extends AbstractEnemy {
     }
 
     @Override
-    public void onWeaknessBreak() {
+    public void onWeaknessBreak(BattleParticipant source) {
         if (this.isDead()) {
             return;
         }

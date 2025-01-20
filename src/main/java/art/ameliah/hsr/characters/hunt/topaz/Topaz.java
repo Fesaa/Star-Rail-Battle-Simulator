@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.hunt.topaz;
 
 import art.ameliah.hsr.battleLogic.AbstractSummon;
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.Numby;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -203,7 +204,7 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
         }
 
         @Override
-        public void onDeath() {
+        public void onDeath(BattleParticipant source) {
             getBattle().getRandomEnemy().addPower(this);
         }
 

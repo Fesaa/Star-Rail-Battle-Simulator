@@ -34,7 +34,7 @@ public class EnemyActionSequence implements BattleParticipant, BattleEvents {
     }
 
     @Override
-    public void onWeaknessBreak() {
+    public void onWeaknessBreak(BattleParticipant source) {
         this.idx = 0;
     }
 

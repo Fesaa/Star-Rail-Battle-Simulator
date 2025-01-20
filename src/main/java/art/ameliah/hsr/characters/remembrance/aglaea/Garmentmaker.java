@@ -1,5 +1,6 @@
 package art.ameliah.hsr.characters.remembrance.aglaea;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -50,7 +51,7 @@ public class Garmentmaker extends Memosprite<Garmentmaker> {
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(BattleParticipant source) {
         this.aglaea.increaseEnergy(20, "Bloom of Drying Grass");
     }
 

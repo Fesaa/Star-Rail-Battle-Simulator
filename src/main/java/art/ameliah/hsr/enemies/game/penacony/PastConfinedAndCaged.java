@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.penacony;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
@@ -42,7 +43,7 @@ public class PastConfinedAndCaged extends AbstractEnemy {
     }
 
     @Override
-    public void onWeaknessBreak() {
+    public void onWeaknessBreak(BattleParticipant source) {
         if (this.charging) {
             getBattle().DelayEntity(this, 50); // TODO: No idea if this number is correct
         }

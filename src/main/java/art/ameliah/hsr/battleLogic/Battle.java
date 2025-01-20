@@ -286,6 +286,11 @@ public class Battle extends RngProvider implements IBattle {
     }
 
     @Override
+    public int maxEnemiesOnField() {
+        return 5;
+    }
+
+    @Override
     public void useSkillPoint(AbstractCharacter<?> character, int amount) {
         int cur = this.currentSkillPoints.get();
         this.currentSkillPoints.decrease(amount);

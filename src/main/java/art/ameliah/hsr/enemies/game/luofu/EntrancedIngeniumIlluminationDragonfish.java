@@ -1,5 +1,6 @@
 package art.ameliah.hsr.enemies.game.luofu;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -23,7 +24,7 @@ public class EntrancedIngeniumIlluminationDragonfish extends AbstractEnemy {
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(BattleParticipant source) {
 
         // Both of these require big changes
         // TODO: deal dmg to other enemies. Currently not really possible as it expects a character I think?

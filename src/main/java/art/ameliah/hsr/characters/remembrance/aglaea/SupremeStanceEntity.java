@@ -17,7 +17,7 @@ public class SupremeStanceEntity extends AbstractEntity {
 
         if (garmentmaker != null) {
             getBattle().removeEntity(garmentmaker);
-            garmentmaker.onDeath();
+            garmentmaker.onDeath(this);
         }
 
         getBattle().removeEntity(this);

@@ -66,6 +66,11 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
         this.fillField();
     }
 
+    @Override
+    public int maxEnemiesOnField() {
+        return this.currentWave.maxEnemiesOnField();
+    }
+
     protected final void fillField() {
         while (this.enemyTeam.size() < this.currentWave.maxEnemiesOnField() && this.currentWave.hasNext()) {
             AbstractEnemy nextEnemy = this.currentWave.nextEnemy();

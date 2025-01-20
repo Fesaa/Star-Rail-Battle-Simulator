@@ -60,7 +60,7 @@ public interface BattleEvents {
     /**
      * Called when the enemy has their weakness broken
      */
-    default void onWeaknessBreak() {
+    default void onWeaknessBreak(BattleParticipant source) {
     }
 
     /**
@@ -204,6 +204,6 @@ public interface BattleEvents {
     /**
      * Called when the owner dies
      */
-    default void onDeath() {
+    default void onDeath(BattleParticipant reason) {
     }
 }
