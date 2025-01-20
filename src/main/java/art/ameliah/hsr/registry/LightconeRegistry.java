@@ -91,6 +91,7 @@ import art.ameliah.hsr.lightcones.preservation.TextureOfMemories;
 import art.ameliah.hsr.lightcones.preservation.ThisIsMe;
 import art.ameliah.hsr.lightcones.preservation.TrendOfTheUniversalMarket;
 import art.ameliah.hsr.lightcones.preservation.WeAreWildfire;
+import art.ameliah.hsr.lightcones.remembrance.TimeWovenIntoGold;
 import art.ameliah.hsr.lightcones.remembrance.VictoryInABlink;
 
 public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
@@ -185,6 +186,7 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         register(24003, SolitaryHealing.class);
         register(24004, EternalCalculus.class);
         register(23034, AGroundedAscent.class);
+        register(23036, TimeWovenIntoGold.class);
         register(23037, IntoTheUnreachableVeil.class);
         register(23038, IfTimeWereAFlower.class);
         register(21050, VictoryInABlink.class);

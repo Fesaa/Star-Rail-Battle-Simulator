@@ -10,4 +10,6 @@ public enum DamageType {
     SUPER_BREAK,
     ADDITIONAL_DAMAGE,
     TRUE_DAMAGE,
+    MEMOSPRITE_DAMAGE,
+    TECHNIQUE_DAMAGE,
 }

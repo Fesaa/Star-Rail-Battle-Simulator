@@ -530,6 +530,18 @@ public class Battle extends RngProvider implements IBattle {
     }
 
     @Override
+    public void removeEntity(AbstractEntity entity) {
+        if (entity instanceof AbstractCharacter<?> character) {
+            this.playerTeam.remove(character);
+        }
+        if (entity instanceof AbstractEnemy enemy) {
+            this.enemyTeam.remove(enemy);
+        }
+
+        this.actionValueMap.remove(entity);
+    }
+
+    @Override
     public List<AbstractCharacter<?>> getPlayers() {
         return this.playerTeam;
     }

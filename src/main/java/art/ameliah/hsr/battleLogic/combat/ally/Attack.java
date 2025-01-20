@@ -8,8 +8,15 @@ import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, AttackLogic,DelayAttack> {
+
+    @Getter
+    private final Collection<Hit> pastHits = new ArrayList<>();
 
     public Attack(AbstractCharacter<?> source) {
         super(source);
@@ -22,7 +29,7 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
 
     @Override
     protected void attack(DelayAttack dh) {
-        AttackLogic attackLogic = new AttackLogic(this.source, this.targets, this.types, this::handleHit);
+        AttackLogic attackLogic = new AttackLogic(this.source, this.targets, this.types, this, this::handleHit);
 
         this.source.emit(l -> l.beforeAttack(attackLogic));
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(attackLogic)));
@@ -44,7 +51,6 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
 
         HitResult res = hit.getTarget().hit(hit);
 
-        // TODO: Metrics update, record overflow etc
         if (res.success()) {
             this.dmgDealt += hit.finalDmg();
 
@@ -59,6 +65,7 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
             e.emit(l -> l.afterDoHit(res));
         }
 
+        this.pastHits.add(hit);
         return res;
     }
 

@@ -7,6 +7,7 @@ import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
@@ -100,7 +101,10 @@ public class Mem extends Memosprite<Mem> {
         ally.addPower(new TrueDmgPower());
 
         if (ally instanceof Memomaster<?> memomaster) {
-            memomaster.getMemo().addPower(new TrueDmgPower());
+            Memosprite<?> memosprite = memomaster.getMemo();
+            if (memosprite != null) {
+                memosprite.addPower(new TrueDmgPower());
+            }
         }
         this.charge.set(0);
         this.emit(l -> l.afterUseOnAlly(List.of(ally)));
@@ -108,7 +112,7 @@ public class Mem extends Memosprite<Mem> {
 
     private void baddiesTrouble() {
         this.startAttack()
-                .handle(al -> {
+                .handle(DamageType.MEMOSPRITE_DAMAGE,al -> {
 
                     for (int i = 0; i < 4; i++) {
                         al.logic(getBattle().getRandomEnemy(), (e, dl) ->

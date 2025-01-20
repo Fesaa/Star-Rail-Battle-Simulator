@@ -28,6 +28,8 @@ public class AttackLogic {
     private final Collection<AbstractEnemy> targets;
     @Getter
     private final Collection<DamageType> types;
+    @Getter
+    private final Attack attack;
     private final Function<Hit, HitResult> callback;
 
     public Collection<HitResult> additionalDmg(AbstractCharacter<?> source, Collection<AbstractEnemy> targets, float mul, ElementType type) {

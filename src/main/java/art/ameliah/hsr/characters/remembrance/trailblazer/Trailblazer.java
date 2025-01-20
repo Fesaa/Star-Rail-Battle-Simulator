@@ -79,7 +79,7 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
     @Override
     protected void summonMemo() {
         this.mem = new Mem(this);
-        int idx = getBattle().getPlayers().indexOf(this.mem);
+        int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.mem, idx+1);
 
         if (this.firstSummon) {

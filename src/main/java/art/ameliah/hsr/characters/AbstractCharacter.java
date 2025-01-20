@@ -160,6 +160,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         throw new IllegalStateException("No ally target found");
     }
 
+    protected final int getTargetIdx(MoveType type) {
+        AbstractEnemy target = this.getTarget(type);
+        return getBattle().getEnemies().indexOf(target);
+    }
+
     protected final AbstractEnemy getTarget(MoveType type) {
         for (EnemyTargetGoal<C> goal : this.enemyTargetGoals.values()) {
             var optionalEnemy = goal.getTarget(type);

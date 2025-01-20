@@ -39,6 +39,8 @@ public interface IBattle {
 
     void setUsedEntryTechnique(boolean usedEntryTechnique);
 
+    void removeEntity(AbstractEntity entity);
+
     List<AbstractCharacter<?>> getPlayers();
 
     boolean hasCharacter(String name);

@@ -25,6 +25,7 @@ import art.ameliah.hsr.characters.hunt.topaz.Topaz;
 import art.ameliah.hsr.characters.nihility.pela.Pela;
 import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
 import art.ameliah.hsr.characters.preservation.fuxuan.FuXuan;
+import art.ameliah.hsr.characters.remembrance.aglaea.Aglaea;
 import art.ameliah.hsr.characters.remembrance.trailblazer.Trailblazer;
 
 public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
@@ -55,6 +56,7 @@ public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
         register(1313, Sunday.class);
         register(1314, Jade.class);
         register(1401, TheHerta.class);
+        register(1402, Aglaea.class);
         register(1403, Tribbie.class);
         register(8007, Trailblazer.class);
         register(8008, Trailblazer.class);
