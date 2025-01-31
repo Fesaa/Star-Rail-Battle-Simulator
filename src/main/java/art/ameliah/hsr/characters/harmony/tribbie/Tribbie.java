@@ -28,7 +28,7 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
     private final CounterMetric<Integer> zoneCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME+"::zoneCountdown"));
 
     public Tribbie() {
-        super(NAME, 1048, 524, 728, 96, 80, ElementType.QUANTUM, 180, 100, Path.HARMONY);
+        super(NAME, 1048, 524, 728, 96, 80, ElementType.QUANTUM, 120, 100, Path.HARMONY);
 
         this.addPower(new TracePower()
                 .setStat(PowerStat.CRIT_DAMAGE, 37.3f)
@@ -46,7 +46,7 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
     public void onCombatStart() {
         getBattle().registerForPlayers(p -> p.addPower(new TribbieTalentListener()));
         this.addPower(new GlassBallWithWings());
-        this.increaseEnergy(48, "Pebble at Crossroads?");
+        this.increaseEnergy(30, "Pebble at Crossroads?");
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
         this.doAttack(DamageType.ULTIMATE, dl -> {
             getBattle().getPlayers().forEach(p -> p.addPower(new TribbieZoneListener()));
             getBattle().getEnemies().forEach(e -> e.addPower(new TribbieZoneDebuff()));
-            this.zoneCountdown.set(3);
+            this.zoneCountdown.set(2);
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.hit(e, 0.3f, MultiplierStat.HP, 20);
