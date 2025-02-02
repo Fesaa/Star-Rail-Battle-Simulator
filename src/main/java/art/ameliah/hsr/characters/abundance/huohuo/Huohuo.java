@@ -1,11 +1,13 @@
 package art.ameliah.hsr.characters.abundance.huohuo;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.ally.LowestHpGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
@@ -20,8 +22,6 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     private static final String NAME = "Huohuo";
 
     protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("hh-talent-proc", "Number of Talent Procs"));
-
-    private final HuohuoTalentPower talentPower = new HuohuoTalentPower();
     private int talentCounter = 0;
 
     public Huohuo() {
@@ -35,13 +35,22 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new SkillCounterTurnGoal<>(this));
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
+        this.registerGoal(0, new LowestHpGoal<>(this));
     }
 
     public void useSkill() {
         talentCounter = 2;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-            character.addPower(talentPower);
+            character.addPower(new HuohuoTalentPower());
         }
+        int idx = this.getAllyTargetIdx();
+
+        double main = this.getFinalHP()*0.21 + 560f;
+        double adj = this.getFinalHP()*0.168 + 448;
+
+        getBattle().playerCallback(idx-1, c -> c.increaseHealth(this, adj));
+        getBattle().playerCallback(idx, c -> c.increaseHealth(this, main));
+        getBattle().playerCallback(idx+1, c -> c.increaseHealth(this, adj));
     }
 
     public void useBasic() {
@@ -60,7 +69,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
     public void onCombatStart() {
         talentCounter = 1;
-        getBattle().registerForPlayers(p -> p.addPower(talentPower));
+        getBattle().registerForPlayers(p -> p.addPower(new HuohuoTalentPower()));
     }
 
     public void onTurnStart() {
@@ -68,7 +77,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         talentCounter--;
         if (talentCounter <= 0) {
             for (AbstractCharacter<?> character : getBattle().getPlayers()) {
-                character.removePower(talentPower);
+                character.removePower(HuohuoTalentPower.NAME);
             }
         }
         tryUltimate();
@@ -80,21 +89,33 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     }
 
     private class HuohuoTalentPower extends AbstractPower {
+
+        public static final String NAME = "Possession: Ethereal Metaflow";
+
         public HuohuoTalentPower() {
-            this.setName(this.getClass().getSimpleName());
+            this.setName(NAME);
             lastsForever = true;
+        }
+
+        private void trigger() {
+            Huohuo.this.increaseEnergy(1, TALENT_ENERGY_GAIN);
+            Huohuo.this.talentProcs.increment();
+            double amount = Huohuo.this.getFinalHP()*0.045+120;
+            ((AbstractCharacter<?>) this.owner).increaseHealth(Huohuo.this, amount);
+
+            getBattle().getPlayers().stream()
+                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.5)
+                    .forEach(p -> p.increaseHealth(Huohuo.this,amount));
         }
 
         @Override
         public void onTurnStart() {
-            Huohuo.this.increaseEnergy(1, TALENT_ENERGY_GAIN);
-            Huohuo.this.talentProcs.increment();
+            this.trigger();
         }
 
         @Override
         public void onUseUltimate() {
-            Huohuo.this.increaseEnergy(1, TALENT_ENERGY_GAIN);
-            Huohuo.this.talentProcs.increment();
+            this.trigger();
         }
     }
 }

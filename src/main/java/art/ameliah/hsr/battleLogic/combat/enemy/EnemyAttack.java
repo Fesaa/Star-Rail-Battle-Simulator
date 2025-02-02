@@ -22,7 +22,7 @@ public class EnemyAttack extends AbstractAttack<AbstractEnemy, AbstractCharacter
 
     @Override
     protected void attack(EnemyDelayAttack dh) {
-        EnemyAttackLogic al = new EnemyAttackLogic(this.source, this.targets, this.types, this::handleHit);
+        EnemyAttackLogic al = new EnemyAttackLogic(this.source, this.targets, this.types, this, this::handleHit);
 
         this.source.emit(l -> l.beforeAttack(al));
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(al)));

@@ -22,6 +22,8 @@ public class EnemyAttackLogic {
     private final Collection<AbstractCharacter<?>> targets;
     @Getter
     private final Collection<DamageType> types;
+    @Getter
+    private final EnemyAttack attack;
 
     private final Function<EnemyHit, EnemyHitResult> callback;
 
@@ -46,7 +48,7 @@ public class EnemyAttackLogic {
             throw new IllegalStateException("Cannot hit target that isn't part of Attack");
         }
 
-        return this.addHit(new EnemyHit(target, energy, dmg));
+        return this.addHit(new EnemyHit(this.source, target, energy, dmg, this));
     }
 
     private EnemyHitResult addHit(EnemyHit hit) {

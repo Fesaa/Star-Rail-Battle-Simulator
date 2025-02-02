@@ -197,9 +197,9 @@
       ],
       "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
       "subStats": [
-        {"stats": "CRIT_CHANCE", "amount": 37},
-        {"stats": "CRIT_DAMAGE", "amount": 60},
-        {"stats": "ATK_PERCENT", "amount": 12}
+        {"stat": "CRIT_CHANCE", "amount": 37},
+        {"stat": "CRIT_DAMAGE", "amount": 60},
+        {"stat": "ATK_PERCENT", "amount": 12}
       ]
     },
     "11": {
@@ -213,9 +213,9 @@
       ],
       "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
       "subStats": [
-        {"stats": "CRIT_CHANCE", "amount": 37},
-        {"stats": "CRIT_DAMAGE", "amount": 60},
-        {"stats": "ATK_PERCENT", "amount": 12}
+        {"stat": "CRIT_CHANCE", "amount": 37},
+        {"stat": "CRIT_DAMAGE", "amount": 60},
+        {"stat": "ATK_PERCENT", "amount": 12}
       ]
     }
   }

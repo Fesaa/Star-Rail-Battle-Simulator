@@ -83,6 +83,8 @@ public interface IBattle {
 
     void enemyCallback(int idx, Consumer<AbstractEnemy> callback);
 
+    void playerCallback(int idx, Consumer<AbstractCharacter<?>> callback);
+
     void removeEnemy(AbstractEnemy enemy);
 
     void addPlayerAt(AbstractCharacter<?> ally, int idx, float initialAA);

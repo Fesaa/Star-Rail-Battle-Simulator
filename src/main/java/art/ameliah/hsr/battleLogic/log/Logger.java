@@ -24,12 +24,14 @@ import art.ameliah.hsr.battleLogic.log.lines.character.AttackEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.AttackStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.Attacked;
 import art.ameliah.hsr.battleLogic.log.lines.character.BreakDamageHitResult;
+import art.ameliah.hsr.battleLogic.log.lines.character.CharacterDeath;
 import art.ameliah.hsr.battleLogic.log.lines.character.ConcertoEnd;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
 import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
+import art.ameliah.hsr.battleLogic.log.lines.character.HealthChange;
 import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.TotalDamage;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
@@ -334,6 +336,14 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(StringLine line) {
         log(line);
+    }
+
+    public void handle(HealthChange line) {
+        log(line);
+    }
+
+    public void handle(CharacterDeath characterDeath) {
+        log(characterDeath);
     }
 
 }

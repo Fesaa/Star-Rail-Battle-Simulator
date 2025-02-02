@@ -1,14 +1,19 @@
 package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
+import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.Attack;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
+import art.ameliah.hsr.battleLogic.log.lines.StringLine;
+import art.ameliah.hsr.battleLogic.log.lines.character.CharacterDeath;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
+import art.ameliah.hsr.battleLogic.log.lines.character.HealthChange;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.characters.goal.AllyTargetGoal;
@@ -109,6 +114,15 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.lightcone = new DefaultLightcone(this);
     }
 
+    /**
+     * Different from the BattleEvents one, as that might be getting overwritten
+     * Should really have made it an actual events system. Rather than this :(
+     */
+    public final void OnCombatStart() {
+        getBattle().addToLog(new StringLine(this.getName() + ": " + this.getFinalHP()));
+        this.currentHp.set(this.getFinalHP());
+    }
+
     public void registerGoal(int priority, AllyTargetGoal<C> allyTargetGoal) {
         if (this.allyTargetGoals.containsKey(priority)) {
             throw new IllegalArgumentException("Priority already exists, " + priority);
@@ -147,6 +161,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     public void clearTurnGoals() {
         turnGoals.clear();
+    }
+
+    protected final int getAllyTargetIdx() {
+        AbstractCharacter<?> target = this.getAllyTarget();
+        return getBattle().getPlayers().indexOf(target);
     }
 
     protected final AbstractCharacter<?> getAllyTarget() {
@@ -292,10 +311,38 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     protected abstract void useUltimate();
 
+    private float reduceHealth(float amount) {
+        float overflow = this.currentHp.decrease(amount, 0f);
+        getBattle().addToLog(new HealthChange(this, -1*(amount-overflow), -1*amount));
+
+        return amount-overflow;
+    }
+
+    public void die(BattleParticipant source) {
+        getBattle().addToLog(new CharacterDeath(this, source, "HP reduced to 0"));
+        getBattle().removeEntity(this);
+    }
+
+    public void increaseHealth(BattleParticipant source, double amount) {
+        this.increaseHealth(source, (float) amount);
+    }
+
+    public void increaseHealth(BattleParticipant source, float amount) {
+        float overflow = this.currentHp.increase(amount, this.getFinalHP());
+        getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
+    }
+
     public EnemyHitResult hit(EnemyHit hit) {
         increaseEnergy(hit.energy(), ATTACKED_ENERGY_GAIN);
-        // TODO: lower HP
-        return new EnemyHitResult(hit.dmg());
+        float overflow = this.reduceHealth(hit.dmg());
+
+        if (this.currentHp.get() == 0) {
+            hit.logic().getAttack().afterAttackHook(() -> {
+                this.die(hit.source());
+            });
+        }
+
+        return new EnemyHitResult(hit.dmg() - overflow);
     }
 
     public float getFinalAttack() {

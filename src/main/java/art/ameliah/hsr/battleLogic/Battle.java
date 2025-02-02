@@ -151,7 +151,19 @@ public class Battle extends RngProvider implements IBattle {
             return;
         }
         AbstractEnemy target = this.enemyTeam.get(idx);
-        if (target != null) {
+        if (target != null && callback != null) {
+            callback.accept(target);
+        }
+    }
+
+    @Override
+    public void playerCallback(int idx, Consumer<AbstractCharacter<?>> callback) {
+        if (idx < 0 || idx >= playerTeam.size()) {
+            return;
+        }
+
+        AbstractCharacter<?> target = this.playerTeam.get(idx);
+        if (target != null && callback != null) {
             callback.accept(target);
         }
     }
@@ -188,6 +200,7 @@ public class Battle extends RngProvider implements IBattle {
 
         this.playerListeners.forEach(listener -> listener.accept(ally));
         ally.emit(BattleEvents::onCombatStart);
+        ally.OnCombatStart();
         this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onPlayerJoinCombat(ally)));
     }
 
@@ -349,6 +362,7 @@ public class Battle extends RngProvider implements IBattle {
         for (AbstractCharacter<?> character : playerTeam) {
             actionValueMap.put(character, character.getBaseAV());
             character.emit(BattleEvents::onCombatStart);
+            character.OnCombatStart();
         }
 
         addToLog(new TriggerTechnique(this.playerTeam
@@ -544,6 +558,10 @@ public class Battle extends RngProvider implements IBattle {
         }
 
         this.actionValueMap.remove(entity);
+
+        if (this.playerTeam.isEmpty()) {
+            throw new ForceBattleEnd("No players left");
+        }
     }
 
     @Override
