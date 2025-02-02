@@ -19,6 +19,6 @@ public class PerfectTiming extends AbstractLightcone {
     @Override
     public void onCombatStart() {
         float boost = Math.min(27, (float) (this.owner.getTotalEffectRes() * 0.45));
-        this.owner.addPower(PermPower.create(PowerStat.HEALING, boost, "Perfect Timing Healing Boost"));
+        this.owner.addPower(PermPower.create(PowerStat.OUTGOING_HEALING, boost, "Perfect Timing Healing Boost"));
     }
 }

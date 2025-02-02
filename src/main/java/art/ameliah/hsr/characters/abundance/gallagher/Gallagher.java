@@ -1,10 +1,12 @@
 package art.ameliah.hsr.characters.abundance.gallagher;
 
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.ally.LowestHpGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
@@ -34,11 +36,13 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
         this.registerGoal(0, new AlwaysBasicGoal<>(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
+        this.registerGoal(0, new LowestHpGoal<>(this));
     }
 
     @Override
     public void useSkill() {
-        // Healing is not implemented
+        var ally = this.getAllyTarget();
+        ally.increaseHealth(this, 1600);
     }
 
     public void useBasic() {
@@ -51,6 +55,13 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
                 atkDebuff.setName("Gallagher Atk Debuff");
                 e.addPower(atkDebuff);
                 isEnhanced = false;
+
+                if (e.hasPower(Besotted.NAME)) {
+                    getBattle().getPlayers().stream()
+                            .filter(p -> !p.equals(this))
+                            .forEach(p -> p.increaseHealth(this, 640));
+                }
+
             } else {
                 al.hit(e, 1.1f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             }
@@ -78,11 +89,19 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
         addPower(e6buff);
     }
 
-    private static class Besotted extends AbstractPower {
+    private class Besotted extends AbstractPower {
+
+        private final static String NAME = "Besotted";
+
         public Besotted() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;
             this.type = PowerType.DEBUFF;
+        }
+
+        @Override
+        public void afterAttacked(AttackLogic attack) {
+            attack.getSource().increaseHealth(Gallagher.this, 640);
         }
 
         @Override

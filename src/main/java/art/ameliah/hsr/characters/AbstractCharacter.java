@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.Attack;
@@ -323,11 +322,34 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         getBattle().removeEntity(this);
     }
 
+    /**
+     * Calls {@link AbstractCharacter#increaseHealth(BattleParticipant, float)}
+     * @param source the source of the hp increase, typically a {@link AbstractCharacter}
+     * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
+     */
     public void increaseHealth(BattleParticipant source, double amount) {
         this.increaseHealth(source, (float) amount);
     }
 
+    /**
+     * Increases the health of this {@link AbstractCharacter<C>} by the amount, multiplied
+     * by the {@link PowerStat#OUTGOING_HEALING} of the source if the source is an {@link AbstractCharacter}
+     * and the {@link PowerStat#INCOMING_HEALING} of this {@link AbstractCharacter<C>}
+     * @param source the source of the hp increase, typically a {@link AbstractCharacter}
+     * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
+     */
     public void increaseHealth(BattleParticipant source, float amount) {
+        float increase = 0;
+        if (source instanceof AbstractCharacter<?> character) {
+            for (var power : character.powerList) {
+                increase += power.getStat(PowerStat.OUTGOING_HEALING);
+            }
+        }
+        for (var power : this.powerList) {
+            increase += power.getStat(PowerStat.INCOMING_HEALING);
+        }
+        amount *= (increase/100);
+
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
         getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
     }

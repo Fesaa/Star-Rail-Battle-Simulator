@@ -48,7 +48,7 @@ public class RelicStats {
         relicBonus.setStat(PowerStat.EFFECT_RES, getTotalBonus(Stats.EFFECT_RES));
         relicBonus.setStat(PowerStat.BREAK_EFFECT, getTotalBonus(Stats.BREAK_EFFECT));
         relicBonus.setStat(PowerStat.FLAT_SPEED, getTotalBonus(Stats.SPEED));
-        relicBonus.setStat(PowerStat.HEALING, getTotalBonus(Stats.HEALING));
+        relicBonus.setStat(PowerStat.OUTGOING_HEALING, getTotalBonus(Stats.HEALING));
         relicBonus.setStat(PowerStat.ENERGY_REGEN, getTotalBonus(Stats.ERR));
 
         // Assuming the ELEMENT_DMG is always correct for the char

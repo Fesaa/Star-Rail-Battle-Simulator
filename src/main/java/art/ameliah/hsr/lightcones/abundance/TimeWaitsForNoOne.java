@@ -17,6 +17,6 @@ public class TimeWaitsForNoOne extends AbstractLightcone {
     @Override
     public void onEquip() {
         this.owner.addPower(PermPower.create(PowerStat.HP_PERCENT, 18, "Time Waits For No One HP Boost"));
-        this.owner.addPower(PermPower.create(PowerStat.HEALING, 12, "Time Waits For No One Healing Boost"));
+        this.owner.addPower(PermPower.create(PowerStat.OUTGOING_HEALING, 12, "Time Waits For No One Healing Boost"));
     }
 }

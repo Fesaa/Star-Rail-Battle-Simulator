@@ -17,7 +17,7 @@ public class PasserbyOfWanderingCloud extends AbstractRelicSetBonus {
 
     @Override
     public void onEquip() {
-        this.owner.addPower(PermPower.create(PowerStat.HEALING, 10, "Passerby of the Wandering Cloud Healing Boost"));
+        this.owner.addPower(PermPower.create(PowerStat.OUTGOING_HEALING, 10, "Passerby of the Wandering Cloud Healing Boost"));
     }
 
     public void onCombatStart() {

@@ -13,7 +13,7 @@ public class SharedFeeling extends AbstractLightcone {
 
     @Override
     public void onEquip() {
-        this.owner.addPower(PermPower.create(PowerStat.HEALING, 20, "Shared Feeling Healing Boost"));
+        this.owner.addPower(PermPower.create(PowerStat.OUTGOING_HEALING, 20, "Shared Feeling Healing Boost"));
     }
 
     @Override

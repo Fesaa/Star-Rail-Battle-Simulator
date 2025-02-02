@@ -7,8 +7,6 @@ import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanLose;
-import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.HitSinceLastHeal;
-import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.ResetTracker;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
@@ -28,25 +26,25 @@ import art.ameliah.hsr.utils.Randf;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+// Vermilion Waft's Outgoing Healing boost
 public class Lingsha extends AbstractSummoner<Lingsha> {
 
     public static final String NAME = "Lingsha";
+    private static final int FUYUAN_MAX_HIT_COUNT = 5;
+    private static final int SKILL_HIT_COUNT_GAIN = 3;
+    private static final int EMERGENCY_HEAL_COOLDOWN = 2;
 
     protected CounterMetric<Integer> fuYuanAttackCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-attacks", "Number of Fu Yuan Attacks"));
     protected CounterMetric<Integer> emergencyHealsCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-emergencyHeals", "Number of Emergency Heals"));
+    protected CounterMetric<Integer> fuYuanHitCount = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-hit-count", "Amount of FY actions left"));
 
-    static final int fuYuanMaxHitCount = 5;
-    static final int skillHitCountGain = 3;
-    private static final int emergencyHealCooldown = 2;
+
+    private int currentEmergencyHealCD = 0;
+
     final FuYuan fuYuan;
     final AbstractPower damageTrackerPower;
-    private final HashMap<AbstractCharacter<?>, Integer> characterTimesDamageTakenMap = new HashMap<>();
-    int fuYuanCurrentHitCount = 0;
-    private int currentEmergencyHealCD = 0;
 
     public Lingsha() {
         super(NAME, 1358, 679, 437, 98, 80, ElementType.FIRE, 110, 100, Path.ABUNDANCE);
@@ -92,71 +90,85 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
     public void useSkill() {
         this.startAttack()
                 .handle(DamageType.SKILL,
-                        dh -> dh.logic(getBattle().getEnemies(), (targets, al) -> al.hit(targets, 0.8f, TOUGHNESS_DAMAGE_SINGLE_UNIT)))
+                        dh -> {
+                            dh.logic(getBattle().getEnemies(), (targets, al) -> al.hit(targets, 0.8f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+
+                            double amount = this.getFinalAttack()*0.14 + 420;
+                            getBattle().getPlayers()
+                                    .forEach(p -> p.increaseHealth(this, amount));
+                        })
                 .afterAttackHook(() -> {
-                    increaseHitCount(skillHitCountGain);
+                    increaseHitCount(SKILL_HIT_COUNT_GAIN);
                     getBattle().AdvanceEntity(fuYuan, 20);
                     fuYuan.speedPriority = 1;
-                    resetDamageTracker();
                 }).execute();
     }
 
     public void useUltimate() {
         this.startAttack()
-                .handle(DamageType.ULTIMATE, dh -> dh.logic(getBattle().getEnemies(), (targets, al) -> {
-                    for (AbstractEnemy target : targets) {
-                        target.addPower(new Befog());
-                        al.hit(target, 1.5f, TOUGHNESS_DAMAGE_TWO_UNITS);
-                    }
-                })).afterAttackHook(() -> getBattle().AdvanceEntity(fuYuan, 100)).execute();
+                .handle(DamageType.ULTIMATE, dh -> {
+                    dh.logic(getBattle().getEnemies(), (targets, al) -> {
+                        for (AbstractEnemy target : targets) {
+                            target.addPower(new Befog());
+                            al.hit(target, 1.5f, TOUGHNESS_DAMAGE_TWO_UNITS);
+                        }
+                    });
+
+                    double amount = this.getFinalAttack()*0.12+360;
+                    getBattle().getPlayers()
+                            .forEach(p -> p.increaseHealth(this, amount));
+                }).afterAttackHook(() -> getBattle().AdvanceEntity(fuYuan, 100)).execute();
     }
 
     public void FuYuanAttack(boolean useHitCount) {
-        this.startAttack().handle(DamageType.FOLLOW_UP, dh -> dh.logic(getBattle().getEnemies(), (targets, al) -> {
-            Collection<AbstractEnemy> nonBroken = al.hit(targets, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
-                    .stream()
-                    .map(HitResult::getEnemy)
-                    .filter(enemy -> !enemy.isWeaknessBroken())
-                    .toList();
+        this.startAttack().handle(DamageType.FOLLOW_UP, dh -> {
+            dh.logic(getBattle().getEnemies(), (targets, al) -> {
+                Collection<AbstractEnemy> nonBroken = al.hit(targets, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                        .stream()
+                        .map(HitResult::getEnemy)
+                        .filter(enemy -> !enemy.isWeaknessBroken())
+                        .toList();
 
-            if (nonBroken.isEmpty()) {
-                al.hit(getBattle().getRandomEnemy(), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
-            } else {
-                var tryFireEnemy = nonBroken.stream().filter(e -> e.hasWeakness(ElementType.FIRE)).findAny();
-                tryFireEnemy.ifPresentOrElse(
-                        e -> al.hit(e, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT),
-                        () -> al.hit(Randf.rand(nonBroken, getBattle().getEnemyTargetRng()), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
-                );
-            }
-        })).afterAttackHook(() -> {
+                if (nonBroken.isEmpty()) {
+                    al.hit(getBattle().getRandomEnemy(), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+                } else {
+                    var tryFireEnemy = nonBroken.stream().filter(e -> e.hasWeakness(ElementType.FIRE)).findAny();
+                    tryFireEnemy.ifPresentOrElse(
+                            e -> al.hit(e, 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT),
+                            () -> al.hit(Randf.rand(nonBroken, getBattle().getEnemyTargetRng()), 0.75f, TOUGHNESS_DAMAGE_SINGLE_UNIT)
+                    );
+                }
+            });
+
+            double amount = this.getFinalAttack()*0.12+360;
+            getBattle().getPlayers()
+                    .forEach(p -> p.increaseHealth(this, amount));
+
+        }).afterAttackHook(() -> {
             this.fuYuanAttackCounter.increment();
             if (useHitCount) {
                 decreaseHitCount(1);
             }
-            resetDamageTracker();
         }).execute();
     }
 
     private void increaseHitCount(int amount) {
-        if (fuYuanMaxHitCount <= 0) {
+        if (this.fuYuanHitCount.get() <= 0) {
             getBattle().getActionValueMap().put(fuYuan, fuYuan.getBaseAV());
         }
-        int initalStack = fuYuanCurrentHitCount;
-        fuYuanCurrentHitCount += amount;
-        if (fuYuanCurrentHitCount > fuYuanMaxHitCount) {
-            fuYuanCurrentHitCount = fuYuanMaxHitCount;
-        }
-        getBattle().addToLog(new FuYuanGain(amount, initalStack, fuYuanCurrentHitCount));
+        int initalStack = this.fuYuanHitCount.get();
+        this.fuYuanHitCount.increase(amount, FUYUAN_MAX_HIT_COUNT);
+        getBattle().addToLog(new FuYuanGain(amount, initalStack, this.fuYuanHitCount.get()));
     }
 
     private void decreaseHitCount(int amount) {
-        int initalStack = fuYuanCurrentHitCount;
-        fuYuanCurrentHitCount -= amount;
-        if (fuYuanCurrentHitCount <= 0) {
-            fuYuanCurrentHitCount = 0;
+        int initalStack = this.fuYuanHitCount.get();
+        this.fuYuanHitCount.decrease(amount, 0);
+
+        if (this.fuYuanHitCount.get() == 0) {
             getBattle().getActionValueMap().remove(fuYuan);
         }
-        getBattle().addToLog(new FuYuanLose(amount, initalStack, fuYuanCurrentHitCount));
+        getBattle().addToLog(new FuYuanLose(amount, initalStack, this.fuYuanHitCount.get()));
     }
 
     public void onTurnStart() {
@@ -167,24 +179,14 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
 
     public void onCombatStart() {
         getBattle().getActionValueMap().put(fuYuan, fuYuan.getBaseAV());
-        increaseHitCount(skillHitCountGain);
-        getBattle().registerForPlayers(p -> {
-            characterTimesDamageTakenMap.put(p, 0);
-            p.addPower(damageTrackerPower);
-        });
+        increaseHitCount(SKILL_HIT_COUNT_GAIN);
+        getBattle().registerForPlayers(p -> p.addPower(damageTrackerPower));
     }
 
     public void useTechnique() {
         for (AbstractEnemy enemy : getBattle().getEnemies()) {
             AbstractPower befog = new Befog();
             enemy.addPower(befog);
-        }
-    }
-
-    public void resetDamageTracker() {
-        getBattle().addToLog(new ResetTracker());
-        for (Map.Entry<AbstractCharacter<?>, Integer> entry : characterTimesDamageTakenMap.entrySet()) {
-            entry.setValue(0);
         }
     }
 
@@ -222,19 +224,17 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
 
         @Override
         public void afterAttacked(EnemyAttackLogic attack) {
-            attack.getTargets().forEach(t -> {
-                int timesHit = characterTimesDamageTakenMap.merge(t, 1, Integer::sum);
-                getBattle().addToLog(new HitSinceLastHeal(t, timesHit));
-            });
+            long eligible = getBattle().getPlayers().stream()
+                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.6)
+                    .count();
 
-            boolean trigger = characterTimesDamageTakenMap.values().stream().anyMatch(v -> v >= 2);
-            if (!trigger || currentEmergencyHealCD > 0) {
+            if (eligible == 0 || currentEmergencyHealCD > 0) {
                 return;
             }
 
             getBattle().addToLog(new EmergencyHeal(Lingsha.this));
             Lingsha.this.emergencyHealsCounter.increment();
-            currentEmergencyHealCD = emergencyHealCooldown;
+            currentEmergencyHealCD = EMERGENCY_HEAL_COOLDOWN;
             Lingsha.this.FuYuanAttack(false);
         }
     }
