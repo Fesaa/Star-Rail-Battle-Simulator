@@ -93,6 +93,7 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
             getBattle().getPlayers().forEach(p -> p.addPower(new TribbieZoneListener()));
             getBattle().getEnemies().forEach(e -> e.addPower(new TribbieZoneDebuff()));
             this.zoneCountdown.set(2);
+            this.fuaTrigger.clear();
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.hit(e, 0.3f, MultiplierStat.HP, 20);
