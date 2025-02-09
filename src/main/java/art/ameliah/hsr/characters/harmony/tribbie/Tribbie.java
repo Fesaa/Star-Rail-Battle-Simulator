@@ -18,7 +18,9 @@ import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterTurnGoal.SkillCounterCharacter {
 
@@ -26,6 +28,8 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
 
     private final CounterMetric<Integer> numinosityCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME+"::numinosityCountdown"));
     private final CounterMetric<Integer> zoneCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME+"::zoneCountdown"));
+
+    private final Set<AbstractCharacter<?>> fuaTrigger = new HashSet<>(3); // 3 other ults
 
     public Tribbie() {
         super(NAME, 1048, 524, 728, 96, 80, ElementType.QUANTUM, 120, 100, Path.HARMONY);
@@ -135,6 +139,15 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
 
         @Override
         public void afterUseUltimate() {
+            if (!(this.getOwner() instanceof AbstractCharacter<?>)) {
+                return;
+            }
+
+            if (!Tribbie.this.fuaTrigger.contains(this.getOwner())) {
+                return;
+            }
+            Tribbie.this.fuaTrigger.add((AbstractCharacter<?>) this.getOwner());
+
             Tribbie.this.doAttack(DamageType.FOLLOW_UP, dl -> {
                 Tribbie.this.addPower(new LambOutsideTheWall());
 
@@ -154,6 +167,8 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
 
         @Override
         public void afterAttack(AttackLogic attack) {
+            Tribbie.this.increaseEnergy(1.5f*attack.getTargets().size(), "Lamb Outside the Wall..");
+
             Tribbie.this.doAttack(DamageType.ADDITIONAL_DAMAGE, dl -> {
                 int count = attack.getTargets().size();
                 for (int i = 0; i < count; i++) {
