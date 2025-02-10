@@ -312,9 +312,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     private float reduceHealth(float amount) {
         float overflow = this.currentHp.decrease(amount, 0f);
-        getBattle().addToLog(new HealthChange(this, -1*(amount-overflow), -1*amount));
+        float lost = amount - overflow;
+        getBattle().addToLog(new HealthChange(this, -1*lost, -1*amount));
 
-        return amount-overflow;
+        this.emit(l -> l.afterHPLost(lost));
+        return lost;
     }
 
     public void die(BattleParticipant source) {
@@ -338,17 +340,31 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * @param source the source of the hp increase, typically a {@link AbstractCharacter}
      * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
      */
-    public void increaseHealth(BattleParticipant source, float amount) {
-        float increase = 0;
-        if (source instanceof AbstractCharacter<?> character) {
-            for (var power : character.powerList) {
-                increase += power.getStat(PowerStat.OUTGOING_HEALING);
+    public void increaseHealth(BattleParticipant source, float amount){
+        this.increaseHealth(source, amount, true);
+    }
+
+    /**
+     * Increases the health of this {@link AbstractCharacter<C>} by the amount, multiplied
+     * by the {@link PowerStat#OUTGOING_HEALING} of the source if the source is an {@link AbstractCharacter}
+     * and the {@link PowerStat#INCOMING_HEALING} of this {@link AbstractCharacter<C>} if powerAffected is true
+     * @param source the source of the hp increase, typically a {@link AbstractCharacter}
+     * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
+     * @param powerAffected toggle
+     */
+    public void increaseHealth(BattleParticipant source, float amount, boolean powerAffected) {
+        if (powerAffected) {
+            float increase = 0;
+            if (source instanceof AbstractCharacter<?> character) {
+                for (var power : character.powerList) {
+                    increase += power.getStat(PowerStat.OUTGOING_HEALING);
+                }
             }
+            for (var power : this.powerList) {
+                increase += power.getStat(PowerStat.INCOMING_HEALING);
+            }
+            amount *= (increase/100);
         }
-        for (var power : this.powerList) {
-            increase += power.getStat(PowerStat.INCOMING_HEALING);
-        }
-        amount *= (increase/100);
 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
         getBattle().addToLog(new HealthChange(this, amount-overflow, amount));

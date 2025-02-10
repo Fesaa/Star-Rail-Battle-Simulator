@@ -49,6 +49,9 @@ public interface BattleEvents {
     default void afterAttacked(EnemyAttackLogic attack) {
     }
 
+    default void afterHPLost(float amount) {
+    }
+
     /**
      * Hook for {@link AbstractEnemy}, after attack ends
      *
