@@ -23,6 +23,7 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Randf;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,12 +33,13 @@ import java.util.List;
 public class Lingsha extends AbstractSummoner<Lingsha> {
 
     public static final String NAME = "Lingsha";
-    private static final int FUYUAN_MAX_HIT_COUNT = 5;
-    private static final int SKILL_HIT_COUNT_GAIN = 3;
-    private static final int EMERGENCY_HEAL_COOLDOWN = 2;
+    public static final int FUYUAN_MAX_HIT_COUNT = 5;
+    public static final int SKILL_HIT_COUNT_GAIN = 3;
+    public static final int EMERGENCY_HEAL_COOLDOWN = 2;
 
     protected CounterMetric<Integer> fuYuanAttackCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-attacks", "Number of Fu Yuan Attacks"));
     protected CounterMetric<Integer> emergencyHealsCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-emergencyHeals", "Number of Emergency Heals"));
+    @Getter
     protected CounterMetric<Integer> fuYuanHitCount = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-hit-count", "Amount of FY actions left"));
 
 
