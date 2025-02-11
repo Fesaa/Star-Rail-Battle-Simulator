@@ -1,0 +1,222 @@
+{
+  "battles": [
+    {
+      "key": "Herta, The Herta (GR), Mei, HuoHuo",
+      "battleType": "PURE_FICTION",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 10,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 8
+        }
+      ]
+    },
+    {
+      "key": "Herta, The Herta (MW), Mei, HuoHuo",
+      "battleType": "PURE_FICTION",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 11,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 8
+        }
+      ]
+    }
+
+  ],
+  "characters": {
+    "1": {
+      "name": "The Herta Izumo",
+      "id": 1401,
+      "isDps": true,
+      "lcId": 23037,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 313}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  50},
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "ATK_PERCENT", "amount":  15}
+
+      ]
+    },
+    "2": {
+      "name": "The Herta Sigonia",
+      "id": 1401,
+      "lcId": 23037,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 314}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  50},
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "ATK_PERCENT", "amount":  15}
+
+      ]
+    },
+    "3": {
+      "name": "Jade",
+      "id": 1314,
+      "lcId": 23028,
+      "relics": [
+        {"id":  108, "fullSet":  true},
+        {"id": 314}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "QUANTUM_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  33.3},
+        {"stat":  "CRIT_DAMAGE", "amount":  99.5}
+      ]
+    },
+    "4": {
+      "name": "Robin",
+      "id": 1309,
+      "lcId": 23026,
+      "relics": [
+        {"id":  116, "fullSet":  false},
+        {"id":  120, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["ATK_PER", "ATK_PER", "ATK_PER", "ERR"],
+      "subStats": [
+        {"stat":  "ATK_PERCENT", "amount":  20.2},
+        {"stats":  "FLAT_ATK", "amount":  97},
+        {"stat":  "SPEED", "amount":  11.8}
+      ]
+    },
+    "5": {
+      "name": "Ruan Mei",
+      "id": 1303,
+      "lcId": 21004,
+      "relics": [
+        {"id":  111, "fullSet":  false},
+        {"id":  118, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["DEF_PER", "ATK_PER", "DEF_PER", "ERR"],
+      "subStats": [
+        {"stat":  "BREAK_EFFECT", "amount":  60.1},
+        {"stat":  "SPEED", "amount":  11.8}
+      ]
+    },
+    "6": {
+      "name": "Herta",
+      "id": 1013,
+      "lcId": 23000,
+      "relics": [
+        {"id":  104, "fullSet":  true},
+        {"id": 308}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat":  "CRIT_CHANCE", "amount":  50},
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "ATK_PERCENT", "amount":  15}
+      ]
+    },
+    "7": {
+      "name": "Sunday",
+      "id": 1313,
+      "lcId": 23034,
+      "relics": [
+        { "id": 121, "fullSet": true },
+        { "id": 317 }
+      ],
+      "mainStats": ["CRIT_DAMAGE", "SPEED", "DEF_PER", "ERR"],
+      "subStats": [
+        {"stat":  "CRIT_DAMAGE", "amount":  100},
+        {"stat":  "FLAT_SPEED", "amount":  20}
+      ]
+    },
+    "8": {
+      "name": "HuoHuo",
+      "id": 1217,
+      "lcId": 21021,
+      "relics": [
+        { "id": 114, "fullSet": false },
+        { "id": 113, "fullSet": false },
+        { "id": 302}
+      ],
+      "mainStats": ["HEALING", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat":  "HP_PER", "amount":  60},
+        {"stat":  "FLAT_SPEED", "amount":  10}
+      ]
+    },
+    "9": {
+      "name": "Ligsha",
+      "id": 1222,
+      "lcId": 21021,
+      "relics": [
+        { "id": 119, "fullSet": true },
+        { "id": 303}
+      ],
+      "mainStats": ["HEALING", "SPEED", "ATK_PER", "ERR"],
+      "subStats": [
+        {"stat":  "BREAK_EFFECT", "amount": 40},
+        {"stat":  "FLAT_SPEED", "amount": 20 }
+      ]
+
+    },
+    "10": {
+      "name": "My Herta (Geniuses' Repose)",
+      "id": 1401,
+      "isDps": true,
+      "lcId": 21020,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 309}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat": "CRIT_CHANCE", "amount": 37},
+        {"stat": "CRIT_DAMAGE", "amount": 60},
+        {"stat": "ATK_PERCENT", "amount": 12}
+      ]
+    },
+    "11": {
+      "name": "My Herta (Night on the Milky Way)",
+      "id": 1401,
+      "isDps": true,
+      "lcId": 23000,
+      "relics": [
+        {"id":  122, "fullSet":  true},
+        {"id": 309}
+      ],
+      "mainStats": ["CRIT_RATE", "ATK_PER", "ICE_DAMAGE", "ATK_PER"],
+      "subStats": [
+        {"stat": "CRIT_CHANCE", "amount": 37},
+        {"stat": "CRIT_DAMAGE", "amount": 60},
+        {"stat": "ATK_PERCENT", "amount": 12}
+      ]
+    }
+  }
+}
