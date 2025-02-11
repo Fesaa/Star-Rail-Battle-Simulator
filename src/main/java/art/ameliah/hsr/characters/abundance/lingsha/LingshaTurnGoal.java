@@ -9,7 +9,7 @@ public class LingshaTurnGoal extends TurnGoal<Lingsha> {
 
     @Override
     public TurnGoalResult determineAction() {
-        boolean fuYuanGood = this.character.fuYuanCurrentHitCount <= Lingsha.fuYuanMaxHitCount - Lingsha.skillHitCountGain;
+        boolean fuYuanGood = this.character.getFuYuanHitCount().get() <= Lingsha.FUYUAN_MAX_HIT_COUNT - Lingsha.SKILL_HIT_COUNT_GAIN;
         if (getBattle().getSkillPoints() > 0 && fuYuanGood) {
             return TurnGoalResult.SKILL;
         }
