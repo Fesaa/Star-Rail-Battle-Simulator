@@ -11,6 +11,7 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
+import art.ameliah.hsr.characters.goal.shared.ult.DontUltWhenClose;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.metrics.CounterMetric;
@@ -18,6 +19,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+import art.ameliah.hsr.utils.Comparators;
 import art.ameliah.hsr.utils.Randf;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +56,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         this.registerGoal(0, new UltAtEndOfBattle<>(this));
         this.registerGoal(10, new Robin0AVUltGoal(this));
         this.registerGoal(20, new DontUltNumby<>(this));
+        this.registerGoal(25, new DontWastedAAUltGoal(this));
         this.registerGoal(30, new RobinBroynaFeixiaoUltGoal(this));
         this.registerGoal(40, new RobinDPSUltGoal(this));
         this.registerGoal(100, new AlwaysUltGoal<>(this));
@@ -78,43 +81,20 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
     }
 
     public void useUltimate() {
-        AbstractEntity slowestAlly = null;
-        float slowestAV = -1;
-        AbstractEntity fastestAlly = null;
-        float fastestAV = -1;
-        AbstractEntity middleAlly = null;
-        for (Map.Entry<AbstractEntity, Float> entry : getBattle().getActionValueMap().entrySet()) {
-            if (entry.getKey() instanceof AbstractCharacter && !(entry.getKey() instanceof Robin)) {
-                if (slowestAlly == null) {
-                    slowestAlly = entry.getKey();
-                    fastestAlly = entry.getKey();
-                    middleAlly = entry.getKey();
-                    slowestAV = entry.getValue();
-                    fastestAV = entry.getValue();
-                } else {
-                    if (entry.getValue() < fastestAV) {
-                        fastestAlly = entry.getKey();
-                        fastestAV = entry.getValue();
-                    } else if (entry.getValue() > slowestAV) {
-                        slowestAlly = entry.getKey();
-                        slowestAV = entry.getValue();
-                    }
-                }
-            }
-        }
-        for (Map.Entry<AbstractEntity, Float> entry : getBattle().getActionValueMap().entrySet()) {
-            if (entry.getKey() instanceof AbstractCharacter && !(entry.getKey() instanceof Robin)) {
-                if (entry.getKey() != fastestAlly && entry.getKey() != slowestAlly) {
-                    middleAlly = entry.getKey();
-                }
-            }
+        var toAdvance = getBattle().getActionValueMap()
+                .entrySet()
+                .stream()
+                .filter(e -> e.getKey() instanceof AbstractCharacter<?>)
+                .filter(e -> !e.getKey().equals(this))
+                .sorted(Comparators::CompareSpd)
+                .map(Map.Entry::getKey)
+                .toList()
+                .reversed();
+
+        for (var character : toAdvance) {
+            getBattle().AdvanceEntity(character, 100);
         }
 
-        // preserves the order in which allies go next based on their original AVs
-        // most recently advanced ally will go first
-        getBattle().AdvanceEntity(slowestAlly, 100);
-        getBattle().AdvanceEntity(middleAlly, 100);
-        getBattle().AdvanceEntity(fastestAlly, 100);
 
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             character.addPower(ultPower);

@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.Battle;
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
+import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
 import java.util.ArrayDeque;
@@ -91,11 +92,13 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
         if (this.currentWave == null) {
             throw new ForceBattleEnd("No waves left");
         }
-        addToLog(new WaveStart(this.currentWave));
         this.talliedPositions.clear();
         this.currentWave.startEnemies().forEach(this::addEnemy);
         this.onWaveChange();
+
+        addToLog(new WaveStart(this.currentWave, this));
         this.getPlayers().forEach(p -> p.emit(BattleEvents::onWaveStart));
+        getPlayers().forEach(AbstractCharacter::tryUltimate);
     }
 
     protected abstract void onWaveChange();
