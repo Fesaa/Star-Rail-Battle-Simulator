@@ -369,7 +369,7 @@ public class Battle extends RngProvider implements IBattle {
                 .stream()
                 .filter(c -> c.useTechnique)
                 .toList()));
-        for (AbstractCharacter<?> character : playerTeam) {
+        for (AbstractCharacter<?> character : new ArrayList<>(playerTeam)) {
             if (character.useTechnique) {
                 character.useTechnique();
             }

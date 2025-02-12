@@ -8,6 +8,7 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.SkillIfNoMemo;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltWhenClose;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
@@ -50,6 +51,7 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.registerGoal(100, new UltAtEndOfBattle<>(this));
         this.registerGoal(10, new DontUltWhenClose<>(this, 0.25f));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new SkillIfNoMemo<>(this));
 
         // Rosy-Fingered is applied before the attacks happens, so Aglaea doesn't have to target for it
         // This is how I'm reading the Talent for now. Feel free to correct me.
@@ -58,6 +60,7 @@ public class Aglaea extends Memomaster<Aglaea> {
 
     @Override
     public void onCombatStart() {
+        this.supremeStanceEntity.setBattle(getBattle());
         if (this.currentEnergy.get() < this.maxEnergy * 0.5f) {
             this.currentEnergy.set(this.maxEnergy * 0.5f);
         }
