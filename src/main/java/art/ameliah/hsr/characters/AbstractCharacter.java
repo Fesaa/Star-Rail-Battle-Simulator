@@ -13,6 +13,7 @@ import art.ameliah.hsr.battleLogic.log.lines.character.CharacterDeath;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.HealthChange;
+import art.ameliah.hsr.battleLogic.log.lines.character.LoseEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.characters.goal.AllyTargetGoal;
@@ -522,8 +523,31 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         return totalWeaknessBreakEff;
     }
 
+    /**
+     * Decrease the energy of the character
+     * @param amount to change the energy by.
+     * @param source the reason
+     */
+    public void decreaseEnergy(final float amount, String source) {
+        if (amount >= 0) {
+            throw new IllegalArgumentException("Amount must be negative");
+        }
+        float initialEnergy = this.currentEnergy.get();
+        this.currentEnergy.decrease(-1*amount, 0f);
+        getBattle().addToLog(new LoseEnergy(this, initialEnergy, this.currentEnergy.get(), amount, source));
+    }
+    /**
+     * Increase the energy of the character
+     * @param amount to change the energy by, a negative amount will decrease the energy
+     * @param source reason
+     */
     public void increaseEnergy(final float amount, boolean ERRAffected, String source) {
         if (!this.usesEnergy) return;
+        if (amount < 0) {
+            this.decreaseEnergy(amount, source);
+            return;
+        }
+
         float initialEnergy = this.currentEnergy.get();
         float totalEnergyRegenBonus = getTotalERR();
         float energyGained = ERRAffected ? amount * (1 + totalEnergyRegenBonus / 100) : amount;
@@ -534,6 +558,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.emit(l -> l.onGainEnergy(energyGained, overflow));
     }
 
+    /**
+     * Increase the energy of the character
+     * @param amount to change the energy by, a negative amount will decrease the energy later in the change
+     * @param source reason
+     */
     public void increaseEnergy(float amount, String source) {
         increaseEnergy(amount, true, source);
     }
