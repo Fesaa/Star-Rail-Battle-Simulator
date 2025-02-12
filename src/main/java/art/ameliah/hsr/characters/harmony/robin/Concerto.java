@@ -1,7 +1,9 @@
-package art.ameliah.hsr.battleLogic;
+package art.ameliah.hsr.characters.harmony.robin;
 
+import art.ameliah.hsr.battleLogic.AbstractEntity;
+import art.ameliah.hsr.battleLogic.BattleEvents;
+import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.lines.character.ConcertoEnd;
-import art.ameliah.hsr.characters.harmony.robin.Robin;
 import art.ameliah.hsr.powers.PermPower;
 
 public class Concerto extends AbstractEntity {

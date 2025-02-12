@@ -22,6 +22,7 @@ public class AGroundedAscent extends AbstractLightcone {
         }
 
         this.owner.increaseEnergy(6, false, "A Grounded Ascent");
+        targets.stream().findFirst().ifPresent(p -> p.addPower(new Hymn()));
 
         if (action.equals(MoveType.ULTIMATE)) {
             if (this.owner.getActionMetric().frequency(MoveType.ULTIMATE) % 2 == 1) {

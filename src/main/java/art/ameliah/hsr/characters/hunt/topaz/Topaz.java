@@ -1,15 +1,14 @@
 package art.ameliah.hsr.characters.hunt.topaz;
 
-import art.ameliah.hsr.battleLogic.AbstractSummon;
+import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.Numby;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.Summoner;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
@@ -23,10 +22,9 @@ import art.ameliah.hsr.powers.TracePower;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked {
+public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked, Summoner {
 
     public static final String NAME = "Topaz";
 
@@ -166,11 +164,6 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
     }
 
     @Override
-    public List<AbstractSummon<Topaz>> getSummons() {
-        return Collections.singletonList(numby);
-    }
-
-    @Override
     public boolean isFirstTurn() {
         return firstMove;
     }
@@ -178,6 +171,11 @@ public class Topaz extends AbstractSummoner<Topaz> implements SkillFirstTurnGoal
     @Override
     public void setFirstTurn(boolean firstTurn) {
         firstMove = firstTurn;
+    }
+
+    @Override
+    public AbstractEntity getSummon() {
+        return this.numby;
     }
 
     private static class FireWeaknessBonusDamage extends AbstractPower {

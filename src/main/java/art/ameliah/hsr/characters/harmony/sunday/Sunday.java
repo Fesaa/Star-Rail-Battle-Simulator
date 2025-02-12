@@ -1,20 +1,25 @@
 package art.ameliah.hsr.characters.harmony.sunday;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.Summoner;
 import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+import art.ameliah.hsr.relics.relics.SacerdosRelivedOrdeal;
 
+/**
+ * Note: If you're planning to use a relic or lc with sunday. Check if it needs a check to also deploy to
+ */
 public class Sunday extends AbstractCharacter<Sunday> {
 
     public static final String NAME = "Sunday";
@@ -42,6 +47,11 @@ public class Sunday extends AbstractCharacter<Sunday> {
     }
 
     @Override
+    public void onCombatStart() {
+        this.increaseEnergy(25, "Exalted Sweep");
+    }
+
+    @Override
     protected void useSkill() {
         var target = this.getAllyTarget();
 
@@ -51,7 +61,19 @@ public class Sunday extends AbstractCharacter<Sunday> {
         }
 
         target.addPower(new SundaySkillPower());
-        // TODO: Dispel debug
+        if (target instanceof Summoner summoner) {
+            var summon = summoner.getSummon();
+            if (summon != null) {
+                summon.addPower(new SacerdosRelivedOrdeal.SacerdosMelodicEarrings());
+            }
+        }
+
+        this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
+        this.lightcone.useOnAlly(target, MoveType.SKILL);
+
+        var debuff = target.powerList.stream().
+                filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF)).findFirst();
+        debuff.ifPresent(target::removePower);
 
         if (target.hasPower(TheBeatified)) {
             getBattle().generateSkillPoint(this, 1);
@@ -62,13 +84,12 @@ public class Sunday extends AbstractCharacter<Sunday> {
         }
 
         getBattle().AdvanceEntity(target, 100);
-        if (target instanceof AbstractSummoner<?> summoner) {
-            summoner.getSummons().forEach(s -> {
-                getBattle().AdvanceEntity(s, 100);
-            });
+        if (target instanceof Summoner summoner) {
+            var summon = summoner.getSummon();
+            if (summon != null) {
+                getBattle().AdvanceEntity(summon, 100);
+            }
         }
-        this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
-        this.lightcone.useOnAlly(target, MoveType.SKILL);
     }
 
     @Override
@@ -113,7 +134,8 @@ public class Sunday extends AbstractCharacter<Sunday> {
         public SundaySkillPower() {
             super(2, SKILL_POWER_NAME);
 
-            float dmgBoost = this.getOwner() instanceof AbstractSummoner<?> ? 80 : 30;
+            // Does the summon have the be present?
+            float dmgBoost = this.getOwner() instanceof Summoner ? 80 : 30;
 
             this.setStat(PowerStat.DAMAGE_BONUS, dmgBoost);
             this.setStat(PowerStat.CRIT_CHANCE, 20);

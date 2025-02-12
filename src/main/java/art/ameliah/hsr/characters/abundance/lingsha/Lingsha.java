@@ -1,18 +1,17 @@
 package art.ameliah.hsr.characters.abundance.lingsha;
 
-import art.ameliah.hsr.battleLogic.AbstractSummon;
-import art.ameliah.hsr.battleLogic.FuYuan;
+import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanLose;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.Summoner;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
@@ -26,11 +25,10 @@ import art.ameliah.hsr.utils.Randf;
 import lombok.Getter;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 // Vermilion Waft's Outgoing Healing boost
-public class Lingsha extends AbstractSummoner<Lingsha> {
+public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
 
     public static final String NAME = "Lingsha";
     public static final int FUYUAN_MAX_HIT_COUNT = 5;
@@ -199,8 +197,8 @@ public class Lingsha extends AbstractSummoner<Lingsha> {
     }
 
     @Override
-    public List<AbstractSummon<Lingsha>> getSummons() {
-        return Collections.singletonList(fuYuan);
+    public AbstractEntity getSummon() {
+        return this.fuYuan;
     }
 
     private static class Befog extends AbstractPower {

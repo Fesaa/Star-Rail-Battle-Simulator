@@ -1,9 +1,8 @@
 package art.ameliah.hsr.characters.harmony.sunday;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.AbstractSummoner;
+import art.ameliah.hsr.characters.Summoner;
 import art.ameliah.hsr.characters.goal.AllyTargetGoal;
-import art.ameliah.hsr.characters.remembrance.Memomaster;
 
 import java.util.Optional;
 
@@ -15,17 +14,19 @@ public class SummonerTargetGoal extends AllyTargetGoal<Sunday> {
 
     @Override
     public Optional<AbstractCharacter<?>> getTarget() {
-        var memo = getBattle().getPlayers()
+        var dpsSummoner = getBattle().getPlayers()
                 .stream()
-                .filter(c -> c instanceof Memomaster<?>)
+                .filter(c -> c instanceof Summoner)
+                .filter(c -> c.isDPS)
                 .findFirst();
-        if (memo.isPresent()) {
-            return memo;
+
+        if (dpsSummoner.isPresent()) {
+            return dpsSummoner;
         }
 
         return getBattle().getPlayers()
                 .stream()
-                .filter(c -> c instanceof AbstractSummoner<?>)
+                .filter(c -> c instanceof Summoner)
                 .findFirst();
     }
 }
