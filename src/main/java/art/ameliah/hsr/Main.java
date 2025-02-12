@@ -11,6 +11,7 @@ import art.ameliah.hsr.builder.ConfigLoader;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
+import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.game.pf.technicalityentrapment.EmptyAir;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
 import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
@@ -49,7 +50,7 @@ public class Main {
 
         for (var battle : battles) {
             System.out.println(battle.getKey());
-            var b = new FirstHalf(battle.getCharacters(), new EmptyAir());
+            var b = new ScalegorgeTidalflow11.FirstHalf(battle.characters);
             b.setLogger(bat -> new WaveTester.WaveTesterLogger(bat, battle.getKey()));
             b.Start(450);
 

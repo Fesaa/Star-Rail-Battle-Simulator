@@ -173,6 +173,7 @@ public class Aglaea extends Memomaster<Aglaea> {
         var majorTracePower = new TheMyopicsDoom(this, this.garmentmaker);
         this.addPower(majorTracePower);
         this.garmentmaker.addPower(majorTracePower);
+        getBattle().AdvanceEntity(this, 100);
     }
 
     public static class TheMyopicsDoom extends PermPower {

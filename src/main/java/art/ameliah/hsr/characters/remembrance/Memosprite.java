@@ -22,6 +22,7 @@ public abstract class Memosprite<C extends Memosprite<C>> extends AbstractCharac
         this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
 
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
+        this.increaseEnergy(10, BASIC_ENERGY_GAIN+" (from memo)");
         this.memoSkill();
     }
 
@@ -35,5 +36,10 @@ public abstract class Memosprite<C extends Memosprite<C>> extends AbstractCharac
 
     @Override
     protected final void useUltimate() {
+    }
+
+    @Override
+    public void increaseEnergy(float amount, boolean ERRAffected, String source) {
+        this.getMaster().increaseEnergy(amount, ERRAffected, source);
     }
 }

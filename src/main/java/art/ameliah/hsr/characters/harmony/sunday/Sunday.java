@@ -56,7 +56,9 @@ public class Sunday extends AbstractCharacter<Sunday> {
 
         if (firstAbilityUse) {
             this.firstAbilityUse = false;
-            target.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 50, 2, TECHNIQUE_POWER_NAME));
+            var power = TempPower.create(PowerStat.DAMAGE_BONUS, 50, 2, TECHNIQUE_POWER_NAME);
+            power.justApplied = true;
+            target.addPower(power);
         }
 
         target.addPower(new SundaySkillPower());
@@ -70,8 +72,10 @@ public class Sunday extends AbstractCharacter<Sunday> {
         this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
         this.lightcone.useOnAlly(target, MoveType.SKILL);
 
-        var debuff = target.powerList.stream().
-                filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF)).findFirst();
+        var debuff = target.powerList.stream()
+                .filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF))
+                .filter(p -> !p.lastsForever)
+                .findFirst();
         debuff.ifPresent(target::removePower);
 
         if (target.hasPower(TheBeatified)) {
@@ -82,13 +86,14 @@ public class Sunday extends AbstractCharacter<Sunday> {
             return;
         }
 
-        getBattle().AdvanceEntity(target, 100);
+        // Character should act first, so advanced second
         if (target instanceof Summoner summoner) {
             var summon = summoner.getSummon();
             if (summon != null) {
                 getBattle().AdvanceEntity(summon, 100);
             }
         }
+        getBattle().AdvanceEntity(target, 100);
     }
 
     @Override
@@ -132,6 +137,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
 
         public SundaySkillPower() {
             super(2, SKILL_POWER_NAME);
+            this.justApplied = true; // Power added with 100%, don't have a tick down directly
 
             // Does the summon have the be present?
             float dmgBoost = this.getOwner() instanceof Summoner ? 80 : 30;

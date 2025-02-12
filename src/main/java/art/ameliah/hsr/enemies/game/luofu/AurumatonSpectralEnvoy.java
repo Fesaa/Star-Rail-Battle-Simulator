@@ -132,12 +132,18 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
     public static class Reverberation extends TempPower {
         public static final String NAME = "Reverberation";
 
+        private boolean duringAttack = true;
+
         public Reverberation() {
             super(2, NAME);
         }
 
         @Override
         public void afterAttacked(EnemyAttackLogic attack) {
+            if (duringAttack) {
+                this.duringAttack = false;
+                return;
+            }
             this.getOwner().removePower(this);
             this.getOwner().addPower(new StrongReverberation());
             getBattle().DelayEntity(this.getOwner(), 70);
