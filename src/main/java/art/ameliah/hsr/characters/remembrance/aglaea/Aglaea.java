@@ -2,12 +2,14 @@ package art.ameliah.hsr.characters.remembrance.aglaea;
 
 import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
+import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillIfNoMemo;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltWhenClose;
@@ -43,6 +45,8 @@ public class Aglaea extends Memomaster<Aglaea> {
     public Aglaea() {
         super(NAME, 1242, 699, 485, 102, 80, ElementType.LIGHTNING, 350, 100, Path.REMEMBRANCE);
 
+        this.isDPS = true;
+
         this.addPower(new TracePower()
                 .setStat(PowerStat.LIGHTNING_DMG_BOOST, 22.4f)
                 .setStat(PowerStat.CRIT_CHANCE, 12f)
@@ -51,7 +55,9 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.registerGoal(100, new UltAtEndOfBattle<>(this));
         this.registerGoal(10, new DontUltWhenClose<>(this, 0.25f));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
-        this.registerGoal(0, new SkillIfNoMemo<>(this));
+        this.registerGoal(10, new SkillIfNoMemo<>(this));
+        this.registerGoal(0, new AlwaysBasicGoal<>(this));
+
 
         // Rosy-Fingered is applied before the attacks happens, so Aglaea doesn't have to target for it
         // This is how I'm reading the Talent for now. Feel free to correct me.
@@ -86,6 +92,8 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.summonMemo();
         this.increaseEnergy(30, "Meteoric Sunder");
 
+        getBattle().getRandomEnemy().addPower(new SeamStitch());
+
         this.doAttack(DamageType.TECHNIQUE_DAMAGE, dl -> {
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.hit(e, 1);
@@ -115,14 +123,15 @@ public class Aglaea extends Memomaster<Aglaea> {
             AbstractEnemy enemy = getBattle().getEnemies().get(idx);
             this.rosyFingered(enemy);
 
-            dl.logic(idx-1, (e, al) -> al.hit(this.garmentmaker, e, 0.9f, 10));
             dl.logic(idx-1, (e, al) -> al.hit(e, 0.9f, 10));
-
-            dl.logic(idx, (e, al) -> al.hit(this.garmentmaker, e, 2, 20));
             dl.logic(idx, (e, al) -> al.hit(e, 2, 20));
-
-            dl.logic(idx+1, (e, al) -> al.hit(this.garmentmaker, e, 0.9f, 10));
             dl.logic(idx+1, (e, al) -> al.hit(e, 0.9f, 10));
+
+            this.garmentmaker.doAttack(DamageType.BASIC, dl2 -> {
+                dl2.logic(idx-1, (e, al) -> al.hit(e, 0.9f));
+                dl2.logic(idx, (e, al) -> al.hit(e, 2));
+                dl2.logic(idx+1, (e, al) -> al.hit(e, 0.9f));
+            });
         });
     }
 
@@ -168,7 +177,7 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.supremeStance.set(true);
 
         var power = (Garmentmaker.ABodyBrewedByTears) this.garmentmaker.getPower(Garmentmaker.ABodyBrewedByTears.NAME);
-        this.addPower(new DanceDestinedWeaveress(power));
+        getBattle().IncreaseSpeed(this, new DanceDestinedWeaveress(power));
 
         var majorTracePower = new TheMyopicsDoom(this, this.garmentmaker);
         this.addPower(majorTracePower);

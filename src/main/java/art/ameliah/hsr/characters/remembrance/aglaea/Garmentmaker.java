@@ -60,7 +60,7 @@ public class Garmentmaker extends Memosprite<Garmentmaker> {
         return this.aglaea;
     }
 
-    public static class ABodyBrewedByTears extends PermPower {
+    public class ABodyBrewedByTears extends PermPower {
 
         public static final String NAME = "A Body Brewed by Tears";
 
@@ -81,8 +81,13 @@ public class Garmentmaker extends Memosprite<Garmentmaker> {
                 return;
             }
 
-            this.stacks = Math.min(this.stacks+1, 6);
             Garmentmaker.hadStacks = true;
+            getBattle().IncreaseSpeed(this.getOwner(), this);
+
+            if (Garmentmaker.this.aglaea.hasPower(Aglaea.DanceDestinedWeaveress.NAME)) {
+                Garmentmaker.this.aglaea.removePower(Aglaea.DanceDestinedWeaveress.NAME);
+                getBattle().IncreaseSpeed(Garmentmaker.this.aglaea, new Aglaea.DanceDestinedWeaveress(this));
+            }
         }
     }
 }

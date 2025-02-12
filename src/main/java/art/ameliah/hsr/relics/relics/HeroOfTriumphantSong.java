@@ -26,6 +26,10 @@ public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
     @Override
     public void onEquip() {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 12, "Hero of Triumphant Song ATK boost"));
+
+        if (isFullSet) {
+            this.owner.addPower(new HeroOfTriumphantSong4PC());
+        }
     }
 
     public static class HeroOfTriumphantSong4PC extends PermPower {
@@ -33,6 +37,11 @@ public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
             super("Hero of Triumphant Song 4PC");
 
             this.setConditionalStat(PowerStat.SPEED_PERCENT, this::speedBoost);
+        }
+
+        @Override
+        public void afterSummon(Memosprite<?> memosprite) {
+            getBattle().IncreaseSpeed(this.owner, this);
         }
 
         @Override

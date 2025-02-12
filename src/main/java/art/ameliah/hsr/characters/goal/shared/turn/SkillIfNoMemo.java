@@ -14,6 +14,6 @@ public class SkillIfNoMemo<C extends Memomaster<C>> extends TurnGoal<C> {
         if (memo == null) {
             return TurnGoalResult.SKILL;
         }
-        return TurnGoalResult.BASIC;
+        return TurnGoalResult.PASS;
     }
 }

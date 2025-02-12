@@ -220,19 +220,19 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         }
     }
 
-    protected Attack startAttack() {
+    public Attack startAttack() {
         return new Attack(this);
     }
 
-    protected void doAttack(DamageType type, MoveType moveType, BiConsumer<AbstractEnemy, AttackLogic> logic) {
+    public void doAttack(DamageType type, MoveType moveType, BiConsumer<AbstractEnemy, AttackLogic> logic) {
         this.startAttack().handle(type, dh -> dh.logic(this.getTarget(moveType), logic)).execute();
     }
 
-    protected void doAttack(DamageType type, Consumer<DelayAttack> consumer) {
+    public void doAttack(DamageType type, Consumer<DelayAttack> consumer) {
         this.startAttack().handle(type, consumer).execute();
     }
 
-    protected void doAttack(Consumer<DelayAttack> consumer) {
+    public void doAttack(Consumer<DelayAttack> consumer) {
         this.startAttack().handle(consumer).execute();
     }
 
@@ -310,7 +310,12 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     protected abstract void useUltimate();
 
-    private float reduceHealth(float amount) {
+    private float reduceHealth(BattleParticipant source, float amount) {
+        if (source instanceof AbstractEnemy enemy) {
+            // Source: Skill DMG page on homdgcat
+            amount *= (200+10*enemy.getLevel())/(200+10*enemy.getLevel()+this.getFinalDefense());
+        }
+
         float overflow = this.currentHp.decrease(amount, 0f);
         float lost = amount - overflow;
         getBattle().addToLog(new HealthChange(this, -1*lost, -1*amount));
@@ -372,7 +377,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     public EnemyHitResult hit(EnemyHit hit) {
         increaseEnergy(hit.energy(), ATTACKED_ENERGY_GAIN);
-        float overflow = this.reduceHealth(hit.dmg());
+        float overflow = this.reduceHealth(hit.source(), hit.dmg());
 
         if (this.currentHp.get() == 0) {
             hit.logic().getAttack().afterAttackHook(() -> {
@@ -579,7 +584,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     private String statsString() {
         String gearString = String.format("Metrics for %s \nLightcone: %s \nRelic Set Bonuses: ", getName(), lightcone);
         gearString += relicSetBonus;
-        gearString += String.format("Powers: %s\n", powerList.stream().map(AbstractPower::getName).collect(Collectors.joining("\n\t")));
+        gearString += String.format("\nPowers: \n\t%s\n", powerList.stream().map(AbstractPower::toString).collect(Collectors.joining("\n\t")));
         return gearString + String.format("\nOut of combat stats \nAtk: %.3f \nDef: %.3f \nHP: %.3f \nSpeed: %.3f \nSame Element Damage Bonus: %.3f \nCrit Chance: %.3f%% \nCrit Damage: %.3f%% \nBreak Effect: %.3f%%", getFinalAttack(), getFinalDefense(), getFinalHP(), getFinalSpeed(), getTotalSameElementDamageBonus(), getTotalCritChance(), getTotalCritDamage(), getTotalBreakEffect());
     }
 
