@@ -47,10 +47,6 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
 
     public void setOwner(AbstractEntity owner) {
         this.owner = owner;
-        // Don't overwrite manual value
-        if (this.justApplied) {
-            return;
-        }
         // The owner received the buff in their own turn
         if (getBattle() != null && getBattle().getCurrentUnit() != null) {
             this.justApplied = getBattle().getCurrentUnit().equals(this.owner);

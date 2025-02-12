@@ -23,6 +23,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
 
     public static final String NAME = "Sunday";
     public static final String SKILL_POWER_NAME = "SundaySkillPower";
+    public static final String TALENT_POWER_NAME = "The Sorrowing Body";
     public static final String TECHNIQUE_POWER_NAME = "SundayTechniquePower";
     public static final String TheBeatified = "The Beatified";
 
@@ -56,16 +57,16 @@ public class Sunday extends AbstractCharacter<Sunday> {
 
         if (firstAbilityUse) {
             this.firstAbilityUse = false;
-            var power = TempPower.create(PowerStat.DAMAGE_BONUS, 50, 2, TECHNIQUE_POWER_NAME);
-            power.justApplied = true;
-            target.addPower(power);
+            target.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 50, 2, TECHNIQUE_POWER_NAME));
         }
 
         target.addPower(new SundaySkillPower());
+        target.addPower(new SundayTalentPower());
         if (target instanceof Summoner summoner) {
             var summon = summoner.getSummon();
             if (summon != null) {
                 summon.addPower(new SundaySkillPower());
+                summon.addPower(new SundayTalentPower());
             }
         }
 
@@ -133,17 +134,22 @@ public class Sunday extends AbstractCharacter<Sunday> {
         }
     }
 
+    public static class SundayTalentPower extends TempPower {
+        public SundayTalentPower() {
+            super(3, TALENT_POWER_NAME);
+            this.setStat(PowerStat.CRIT_CHANCE, 20);
+        }
+    }
+
     public static class SundaySkillPower extends TempPower {
 
         public SundaySkillPower() {
             super(2, SKILL_POWER_NAME);
-            this.justApplied = true; // Power added with 100%, don't have a tick down directly
 
             // Does the summon have the be present?
             float dmgBoost = this.getOwner() instanceof Summoner ? 80 : 30;
 
             this.setStat(PowerStat.DAMAGE_BONUS, dmgBoost);
-            this.setStat(PowerStat.CRIT_CHANCE, 20);
         }
 
     }
