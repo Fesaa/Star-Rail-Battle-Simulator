@@ -15,7 +15,6 @@ import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
-import art.ameliah.hsr.relics.relics.SacerdosRelivedOrdeal;
 
 /**
  * Note: If you're planning to use a relic or lc with sunday. Check if it needs a check to also deploy to
@@ -64,7 +63,7 @@ public class Sunday extends AbstractCharacter<Sunday> {
         if (target instanceof Summoner summoner) {
             var summon = summoner.getSummon();
             if (summon != null) {
-                summon.addPower(new SacerdosRelivedOrdeal.SacerdosMelodicEarrings());
+                summon.addPower(new SundaySkillPower());
             }
         }
 
