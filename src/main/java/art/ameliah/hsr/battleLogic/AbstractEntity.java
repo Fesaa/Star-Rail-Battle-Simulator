@@ -38,12 +38,13 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
     private IBattle battle;
 
     public AbstractEntity() {
-        this.addListener(new BattleEvents() {
-            @Override
-            public void onCombatStart() {
-                AbstractEntity.this.preCombatPowers = new ArrayList<>(AbstractEntity.this.powerList);
-            }
-        });
+    }
+
+    public void SetPreCombatPowers() {
+        if (this.preCombatPowers != null) {
+            throw new IllegalStateException("PreCombat Powers can only be set once");
+        }
+        this.preCombatPowers = new ArrayList<>(this.powerList);
     }
 
     @Override
