@@ -13,8 +13,8 @@ public class Turbulence extends MocTurbulence {
 
     CounterMetric<Integer> hitCounter = metricRegistry.register(CounterMetric.newIntegerCounter("outofhome::turbulence::hitcounter"));
 
-    public Turbulence(String name) {
-        super(name);
+    public Turbulence() {
+        super("Out of Home Turbulence");
     }
 
     @Override

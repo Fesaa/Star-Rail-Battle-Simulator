@@ -30,8 +30,8 @@ public class MocBattle extends WavedBattle<MocWave> {
     @Override
     protected void onWaveChange() {
         this.avLeftOver.set(this.initialBattleLength - this.turbulence.avUsed());
+        this.avUsed.set(this.turbulence.avUsed());
         this.actionValueMap.forEach((k, _) -> this.actionValueMap.put(k, k.getBaseAV()));
-        getPlayers().forEach(AbstractCharacter::tryUltimate);
     }
 
     @Override

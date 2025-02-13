@@ -33,6 +33,7 @@ import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.HealthChange;
 import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
+import art.ameliah.hsr.battleLogic.log.lines.character.LoseEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.character.TotalDamage;
 import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
@@ -168,6 +169,10 @@ public abstract class Logger implements BattleParticipant {
 
     public void handle(GainEnergy gainEnergy) {
         log(gainEnergy);
+    }
+
+    public void handle(LoseEnergy loseEnergy) {
+        log(loseEnergy);
     }
 
     public void handle(EnemyAction enemyAction) {

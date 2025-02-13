@@ -1,24 +1,29 @@
 package art.ameliah.hsr.characters.harmony.sunday;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.Summoner;
 import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 
+/**
+ * Note: If you're planning to use a relic or lc with sunday. Check if it needs a check to also deploy to
+ */
 public class Sunday extends AbstractCharacter<Sunday> {
 
     public static final String NAME = "Sunday";
     public static final String SKILL_POWER_NAME = "SundaySkillPower";
+    public static final String TALENT_POWER_NAME = "The Sorrowing Body";
     public static final String TECHNIQUE_POWER_NAME = "SundayTechniquePower";
     public static final String TheBeatified = "The Beatified";
 
@@ -42,6 +47,11 @@ public class Sunday extends AbstractCharacter<Sunday> {
     }
 
     @Override
+    public void onCombatStart() {
+        this.increaseEnergy(25, "Exalted Sweep");
+    }
+
+    @Override
     protected void useSkill() {
         var target = this.getAllyTarget();
 
@@ -51,7 +61,23 @@ public class Sunday extends AbstractCharacter<Sunday> {
         }
 
         target.addPower(new SundaySkillPower());
-        // TODO: Dispel debug
+        target.addPower(new SundayTalentPower());
+        if (target instanceof Summoner summoner) {
+            var summon = summoner.getSummon();
+            if (summon != null) {
+                summon.addPower(new SundaySkillPower());
+                summon.addPower(new SundayTalentPower());
+            }
+        }
+
+        this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
+        this.lightcone.useOnAlly(target, MoveType.SKILL);
+
+        var debuff = target.powerList.stream()
+                .filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF))
+                .filter(p -> !p.lastsForever)
+                .findFirst();
+        debuff.ifPresent(target::removePower);
 
         if (target.hasPower(TheBeatified)) {
             getBattle().generateSkillPoint(this, 1);
@@ -61,14 +87,14 @@ public class Sunday extends AbstractCharacter<Sunday> {
             return;
         }
 
-        getBattle().AdvanceEntity(target, 100);
-        if (target instanceof AbstractSummoner<?> summoner) {
-            summoner.getSummons().forEach(s -> {
-                getBattle().AdvanceEntity(s, 100);
-            });
+        // Character should act first, so advanced second
+        if (target instanceof Summoner summoner) {
+            var summon = summoner.getSummon();
+            if (summon != null) {
+                getBattle().AdvanceEntity(summon, 100);
+            }
         }
-        this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.SKILL));
-        this.lightcone.useOnAlly(target, MoveType.SKILL);
+        getBattle().AdvanceEntity(target, 100);
     }
 
     @Override
@@ -108,15 +134,22 @@ public class Sunday extends AbstractCharacter<Sunday> {
         }
     }
 
+    public static class SundayTalentPower extends TempPower {
+        public SundayTalentPower() {
+            super(3, TALENT_POWER_NAME);
+            this.setStat(PowerStat.CRIT_CHANCE, 20);
+        }
+    }
+
     public static class SundaySkillPower extends TempPower {
 
         public SundaySkillPower() {
             super(2, SKILL_POWER_NAME);
 
-            float dmgBoost = this.getOwner() instanceof AbstractSummoner<?> ? 80 : 30;
+            // Does the summon have the be present?
+            float dmgBoost = this.getOwner() instanceof Summoner ? 80 : 30;
 
             this.setStat(PowerStat.DAMAGE_BONUS, dmgBoost);
-            this.setStat(PowerStat.CRIT_CHANCE, 20);
         }
 
     }

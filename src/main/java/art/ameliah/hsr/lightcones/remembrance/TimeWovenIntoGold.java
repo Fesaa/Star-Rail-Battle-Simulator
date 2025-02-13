@@ -22,6 +22,11 @@ public class TimeWovenIntoGold extends AbstractLightcone {
         this.owner.baseSpeed += 12;
     }
 
+    @Override
+    public void onCombatStart() {
+        this.owner.addPower(new TimeWovenIntoGoldPower());
+    }
+
     public static class TimeWovenIntoGoldPower extends PermPower {
         public static final String NAME = "TimeWovenIntoGoldPower";
 

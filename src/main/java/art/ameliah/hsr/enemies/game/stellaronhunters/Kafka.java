@@ -21,8 +21,8 @@ public class Kafka extends AbstractEnemy {
 
     private boolean cooldown;
 
-    public Kafka() {
-        super("Kafka", EnemyType.Boss, 1046791, 718, 1000, 157.08f, 150, 92);
+    public Kafka(int baseHp) {
+        super("Kafka", EnemyType.Boss, baseHp, 738, 1000, 157.08f, 150, 95);
 
         this.addWeakness(ElementType.PHYSICAL);
         this.addWeakness(ElementType.WIND);
@@ -57,8 +57,8 @@ public class Kafka extends AbstractEnemy {
     private void MidnightTumult() {
         this.actionMetric.record(EnemyAttackType.SINGLE);
         this.doAttack(da -> da.logic(this.getRandomTarget(), (c, al) -> {
-            al.hit(c, 10, 813);
-            c.addPower(new EnemyShock(this, 244, 3, 1));
+            al.hit(c, 10, 986);
+            c.addPower(new EnemyShock(this, 296, 3, 1));
             getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.SINGLE, "Midnight Tumult"));
         }));
     }
@@ -70,17 +70,17 @@ public class Kafka extends AbstractEnemy {
 
             AtomicBoolean inflictShock = new AtomicBoolean(false);
             da.logic(idx, (c, al) -> {
-                al.hit(c, 10, 976);
+                al.hit(c, 10, 1184);
                 inflictShock.set(c.hasPower(EnemyShock.NAME));
             });
             da.logic(idx-1, (c, al) -> {
-                al.hit(c, 10, 651);
+                al.hit(c, 10, 789);
                 if (inflictShock.get()) {
                     c.addPower(new EnemyShock(this, 244, 3, 1));
                 }
             });
             da.logic(idx+1, (c, al) -> {
-                al.hit(c, 10, 651);
+                al.hit(c, 10, 789);
                 if (inflictShock.get()) {
                     c.addPower(new EnemyShock(this, 244, 3, 1));
                 }
@@ -93,7 +93,7 @@ public class Kafka extends AbstractEnemy {
     private void SilentAndSharpMockery() {
         this.actionMetric.record(EnemyAttackType.AOE);
         this.doAttack(da -> da.logic(getBattle().getPlayers(), (c, al) -> {
-            al.hit(c, 15, 813);
+            al.hit(c, 15, 986);
             getBattle().addToLog(new EnemyAction(this, EnemyAttackType.AOE, "Silent and Sharp Mockery"));
         }));
     }
@@ -141,7 +141,7 @@ public class Kafka extends AbstractEnemy {
 
 
             this.kafka.cooldown = true;
-            this.kafka.doAttack(da -> da.logic(target, al -> al.hit(target, 10, 325)));
+            this.kafka.doAttack(da -> da.logic(target, al -> al.hit(target, 10, 394)));
         }
     }
 

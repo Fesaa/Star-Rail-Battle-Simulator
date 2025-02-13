@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.remembrance;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -23,6 +22,7 @@ public abstract class Memosprite<C extends Memosprite<C>> extends AbstractCharac
         this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
 
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
+        this.increaseEnergy(10, BASIC_ENERGY_GAIN+" (from memo)");
         this.memoSkill();
     }
 
@@ -36,5 +36,10 @@ public abstract class Memosprite<C extends Memosprite<C>> extends AbstractCharac
 
     @Override
     protected final void useUltimate() {
+    }
+
+    @Override
+    public void increaseEnergy(float amount, boolean ERRAffected, String source) {
+        this.getMaster().increaseEnergy(amount, ERRAffected, source);
     }
 }

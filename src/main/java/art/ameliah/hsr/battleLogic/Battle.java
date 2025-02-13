@@ -24,6 +24,7 @@ import art.ameliah.hsr.battleLogic.log.lines.metrics.EnemyMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PostCombatPlayerMetrics;
 import art.ameliah.hsr.battleLogic.log.lines.metrics.PreCombatPlayerMetrics;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.AbstractSummon;
 import art.ameliah.hsr.characters.destruction.yunli.Yunli;
 import art.ameliah.hsr.characters.hunt.march.SwordMarch;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -369,7 +370,7 @@ public class Battle extends RngProvider implements IBattle {
                 .stream()
                 .filter(c -> c.useTechnique)
                 .toList()));
-        for (AbstractCharacter<?> character : playerTeam) {
+        for (AbstractCharacter<?> character : new ArrayList<>(playerTeam)) {
             if (character.useTechnique) {
                 character.useTechnique();
             }

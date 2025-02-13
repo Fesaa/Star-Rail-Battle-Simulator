@@ -1,19 +1,15 @@
 package art.ameliah.hsr;
 
 import art.ameliah.hsr.battleLogic.Battle;
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
-import art.ameliah.hsr.battleLogic.log.VoidLogger;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.builder.ConfigLoader;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
-import art.ameliah.hsr.game.pf.technicalityentrapment.EmptyAir;
-import art.ameliah.hsr.game.pf.technicalityentrapment.FalsePromises;
-import art.ameliah.hsr.game.pf.technicalityentrapment.FirstHalf;
+import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.teams.PlayerTeam;
@@ -22,18 +18,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Main {
 
     public static String commitHash = TestHelper.commitHash();
 
     public static void main(String[] args) {
+        try {
+            Files.createDirectories(Paths.get("./export/"));
+            Files.createDirectories(Paths.get("./export_2/"));
+        } catch (Exception e) {
+            /* Swallow */
+        }
         Locale.setDefault(Locale.UK);
 
         run();
@@ -49,7 +52,7 @@ public class Main {
 
         for (var battle : battles) {
             System.out.println(battle.getKey());
-            var b = new FirstHalf(battle.getCharacters(), new EmptyAir());
+            var b = new ScalegorgeTidalflow11.FirstHalf(battle.characters);
             b.setLogger(bat -> new WaveTester.WaveTesterLogger(bat, battle.getKey()));
             b.Start(450);
 

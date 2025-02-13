@@ -3,6 +3,8 @@ package art.ameliah.hsr.relics.relics;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.MoveType;
+import art.ameliah.hsr.characters.Summoner;
+import art.ameliah.hsr.characters.harmony.sunday.Sunday;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -34,6 +36,12 @@ public class SacerdosRelivedOrdeal extends AbstractRelicSetBonus {
 
         AbstractCharacter<?> target = targets.iterator().next();
         target.addPower(new SacerdosMelodicEarrings());
+        if (this.owner instanceof Sunday && target instanceof Summoner summoner) {
+            var summon = summoner.getSummon();
+            if (summon != null) {
+                summon.addPower(new SacerdosMelodicEarrings());
+            }
+        }
     }
 
     public static class SacerdosMelodicEarrings extends TempPower {

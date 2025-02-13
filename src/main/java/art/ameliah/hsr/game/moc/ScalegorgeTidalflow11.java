@@ -27,7 +27,7 @@ public class ScalegorgeTidalflow11 extends Moc {
             super(new ScalegorgeTidalflowTubalance());
             this.setPlayerTeam(players);
             this.addWave(new MocWave(new AurumatonSpectralEnvoy(), new GuardianShadow()));
-            this.addWave(new MocWave(new GuardianShadow(), new Kafka()));
+            this.addWave(new MocWave(new GuardianShadow(), new Kafka(1084176)));
         }
     }
 

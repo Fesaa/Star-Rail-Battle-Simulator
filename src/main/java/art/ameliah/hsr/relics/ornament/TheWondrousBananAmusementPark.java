@@ -1,9 +1,8 @@
 package art.ameliah.hsr.relics.ornament;
 
-import art.ameliah.hsr.battleLogic.AbstractSummon;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.AbstractSummoner;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.characters.Summoner;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -37,19 +36,11 @@ public class TheWondrousBananAmusementPark extends AbstractRelicSetBonus {
 
         @Override
         public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            if (!(character instanceof AbstractSummoner)) {
+            if (!(character instanceof Summoner summoner)) {
                 return 0;
             }
 
-            List<? extends AbstractSummon<?>> allSummons = ((AbstractSummoner<?>) character).getSummons();
-            boolean activeSummon = getBattle().getActionValueMap()
-                    .keySet()
-                    .stream()
-                    .filter(c -> c instanceof AbstractSummon)
-                    .map(c -> (AbstractSummon<?>) c)
-                    .anyMatch(allSummons::contains);
-
-            if (activeSummon) {
+            if (summoner.getSummon() != null) {
                 return 32;
             }
 

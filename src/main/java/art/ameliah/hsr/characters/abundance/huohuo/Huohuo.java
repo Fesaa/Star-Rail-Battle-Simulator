@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.abundance.huohuo;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -22,6 +21,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     private static final String NAME = "Huohuo";
 
     protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("hh-talent-proc", "Number of Talent Procs"));
+    private int talentProcCooldown = 6;
     private int talentCounter = 0;
 
     public Huohuo() {
@@ -38,8 +38,23 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         this.registerGoal(0, new LowestHpGoal<>(this));
     }
 
+    private void healAlly(AbstractCharacter<?> ally, double amount, boolean removeDebuff) {
+        ally.increaseHealth(this, amount);
+
+        if (!removeDebuff) {
+            return;
+        }
+
+        ally.powerList.stream()
+                .filter(p -> !p.lastsForever)
+                .filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF))
+                .findFirst()
+                .ifPresent(ally::removePower);;
+    }
+
     public void useSkill() {
-        talentCounter = 2;
+        this.talentCounter = 2;
+        this.talentProcCooldown = 6;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             character.addPower(new HuohuoTalentPower());
         }
@@ -48,9 +63,9 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         double main = this.getFinalHP()*0.21 + 560f;
         double adj = this.getFinalHP()*0.168 + 448;
 
-        getBattle().playerCallback(idx-1, c -> c.increaseHealth(this, adj));
-        getBattle().playerCallback(idx, c -> c.increaseHealth(this, main));
-        getBattle().playerCallback(idx+1, c -> c.increaseHealth(this, adj));
+        getBattle().playerCallback(idx-1, c -> this.healAlly(c, adj, false));
+        getBattle().playerCallback(idx, c -> this.healAlly(c, main, true));
+        getBattle().playerCallback(idx+1, c -> this.healAlly(c, adj, false));
     }
 
     public void useBasic() {
@@ -99,13 +114,17 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
         private void trigger() {
             Huohuo.this.increaseEnergy(1, TALENT_ENERGY_GAIN);
+
+            boolean removeDebuff = Huohuo.this.talentProcCooldown > 0;
+
             Huohuo.this.talentProcs.increment();
+            Huohuo.this.talentProcCooldown--;
             double amount = Huohuo.this.getFinalHP()*0.045+120;
-            ((AbstractCharacter<?>) this.owner).increaseHealth(Huohuo.this, amount);
+            Huohuo.this.healAlly((AbstractCharacter<?>) this.owner, amount, removeDebuff);
 
             getBattle().getPlayers().stream()
                     .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.5)
-                    .forEach(p -> p.increaseHealth(Huohuo.this,amount));
+                    .forEach(p -> Huohuo.this.healAlly(p, amount, removeDebuff));
         }
 
         @Override
