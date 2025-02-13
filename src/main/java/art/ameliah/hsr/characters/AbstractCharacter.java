@@ -77,6 +77,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     protected final Path path;
     @Getter
     protected final int baseHP;
+    @Getter
     protected final int baseAtk;
     @Getter
     protected final int baseDef;

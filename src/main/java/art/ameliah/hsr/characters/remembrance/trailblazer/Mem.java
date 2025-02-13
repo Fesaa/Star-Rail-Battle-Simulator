@@ -27,7 +27,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
     protected CounterMetric<Integer> charge = metricRegistry.register(CounterMetric.newIntegerCounter("mem-charge"));
 
     public Mem(Trailblazer trailblazer) {
-        super(NAME,
+        super(trailblazer, NAME,
                 (int)(640 + 0.8*trailblazer.getFinalHP()),
                 130,
                 90,
@@ -36,7 +36,6 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
                 100,
                 Path.REMEMBRANCE);
 
-        this.setMaster(trailblazer);
         this.usesEnergy = false;
 
         this.registerGoal(0, new DpsAllyTargetGoal<>(this));

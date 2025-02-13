@@ -18,7 +18,7 @@ public class Garmentmaker extends Memosprite<Garmentmaker, Aglaea> {
     private static boolean hadStacks = false; // Last Thread of Fate
 
     public Garmentmaker(Aglaea aglaea) {
-        super(NAME,
+        super(aglaea, NAME,
                 (int) (720 + 0.66 * aglaea.getFinalHP()),
                 (int) (0.35 * aglaea.getFinalSpeed() * 1.06),
                 90,
@@ -26,8 +26,6 @@ public class Garmentmaker extends Memosprite<Garmentmaker, Aglaea> {
                 0,
                 100,
                 Path.REMEMBRANCE);
-
-        this.setMaster(aglaea);
 
         this.registerGoal(10, new GarmentmakerTargetGoal(this));
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));

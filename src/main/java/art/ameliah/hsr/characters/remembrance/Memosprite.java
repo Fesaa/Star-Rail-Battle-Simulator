@@ -16,16 +16,14 @@ import java.util.List;
 @Getter
 public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaster<M>> extends AbstractCharacter<C> {
 
-    private M master;
+    private final M master;
 
     @SuppressWarnings("unchecked")
-    public Memosprite(String name, int baseHP, int baseSpeed, int level, ElementType elementType, float maxEnergy, int tauntValue, Path path) {
+    public Memosprite(M master, String name, int baseHP, int baseSpeed, int level, ElementType elementType,
+                      float maxEnergy, int tauntValue, Path path) {
         super(name, baseHP, 0, 0, baseSpeed, level, elementType, maxEnergy, tauntValue, path);
 
         this.registerGoal(0, new AlwaysBasicGoal<>((C)this));
-    }
-
-    public void setMaster(M master) {
         this.master = master;
         this.addPower(this.masterStatsCopy());
     }
@@ -48,6 +46,8 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
 
         statsCopy.increaseStat(PowerStat.FLAT_DEF, this.getMaster().getBaseDef());
         statsCopy.increaseStat(PowerStat.FLAT_DEF, this.getMaster().lightcone.baseDef);
+        statsCopy.increaseStat(PowerStat.FLAT_ATK, this.getMaster().getBaseAtk());
+        statsCopy.increaseStat(PowerStat.FLAT_ATK, this.getMaster().lightcone.baseAtk);
 
         return statsCopy;
     }
