@@ -22,6 +22,6 @@ public class SupremeStanceEntity extends AbstractEntity {
 
         getBattle().removeEntity(this);
         this.aglaea.getSupremeStance().set(false);
-        this.aglaea.removePower(Aglaea.DanceDestinedWeaveress.NAME);
+        getBattle().DecreaseSpeed(this.aglaea, this.aglaea.getPower(Aglaea.DanceDestinedWeaveress.NAME));
     }
 }
