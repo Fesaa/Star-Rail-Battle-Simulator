@@ -25,6 +25,7 @@ import art.ameliah.hsr.characters.destruction.yunli.Yunli;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.abundance.Multiplication;
 import art.ameliah.hsr.lightcones.abundance.PostOpConversation;
+import art.ameliah.hsr.lightcones.abundance.SharedFeeling;
 import art.ameliah.hsr.lightcones.abundance.WhatIsReal;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
 import art.ameliah.hsr.lightcones.erudition.GeniusesRepose;
@@ -46,15 +47,7 @@ import art.ameliah.hsr.lightcones.preservation.DayOneOfMyNewLife;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import art.ameliah.hsr.relics.RelicStats;
 import art.ameliah.hsr.relics.Stats;
-import art.ameliah.hsr.relics.ornament.BrokenKeel;
-import art.ameliah.hsr.relics.ornament.DuranDynastyOfRunningWolves;
-import art.ameliah.hsr.relics.ornament.FirmamentFrontlineGlamoth;
-import art.ameliah.hsr.relics.ornament.InertSalsotto;
-import art.ameliah.hsr.relics.ornament.IzumoGenseiAndTakamaDivineRealm;
-import art.ameliah.hsr.relics.ornament.RutilentArena;
-import art.ameliah.hsr.relics.ornament.SigoniaTheUnclaimedDesolation;
-import art.ameliah.hsr.relics.ornament.SpaceSealingStation;
-import art.ameliah.hsr.relics.ornament.SpringhtlyVonwacq;
+import art.ameliah.hsr.relics.ornament.*;
 import art.ameliah.hsr.relics.relics.EagleOfTwilightLine;
 import art.ameliah.hsr.relics.relics.GeniusOfBrilliantStars;
 import art.ameliah.hsr.relics.relics.KnightOfPurityPalace;
@@ -409,7 +402,7 @@ public class PlayerTeam {
         character.EquipLightcone(new ForTomorrowsJourney(character));
         character.EquipRelicSet(new MusketeerOfWildWheat(character, false));
         character.EquipRelicSet(new TheWindSoaringValorous(character, false));
-        character.EquipRelicSet(new BrokenKeel(character));
+        character.EquipRelicSet(new LushakaTheSunkenSeas(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.ATK_PER).addMainStat(Stats.ATK_PER).
                 addMainStat(Stats.ATK_PER).addMainStat(Stats.ERR);
@@ -421,14 +414,14 @@ public class PlayerTeam {
 
     public static AbstractCharacter<?> getPrebuiltHuohuo() {
         AbstractCharacter<?> character = new Huohuo();
-        character.EquipLightcone(new PostOpConversation(character));
+        character.EquipLightcone(new SharedFeeling(character));
         character.EquipRelicSet(new PasserbyOfWanderingCloud(character));
         character.EquipRelicSet(new BrokenKeel(character));
         RelicStats relicStats = new RelicStats();
         relicStats.addMainStat(Stats.HEALING).addMainStat(Stats.SPEED).
                 addMainStat(Stats.HP_PER).addMainStat(Stats.ERR);
-        relicStats.addSubStat(Stats.HP_PER, 10).addSubStat(Stats.SPEED, 5).
-                addSubStat(Stats.EFFECT_RES, 1).addSubStat(Stats.HP_FLAT, 8);
+        relicStats.addSubStat(Stats.HP_PER, 5).addSubStat(Stats.SPEED, 15).
+                addSubStat(Stats.EFFECT_RES, 1).addSubStat(Stats.HP_FLAT, 3);
         relicStats.equipTo(character);
         return character;
     }

@@ -58,6 +58,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         this.registerGoal(20, new DontUltNumby<>(this));
         this.registerGoal(25, new DontWastedAAUltGoal(this));
         this.registerGoal(30, new RobinBroynaFeixiaoUltGoal(this));
+        this.registerGoal(35, new RobinSundayDPSUltGoal(this));
         this.registerGoal(40, new RobinDPSUltGoal(this));
         this.registerGoal(100, new AlwaysUltGoal<>(this));
 

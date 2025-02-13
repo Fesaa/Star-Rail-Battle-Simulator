@@ -3,6 +3,7 @@ package art.ameliah.hsr.teams;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.harmony.sunday.Sunday;
 import art.ameliah.hsr.characters.remembrance.aglaea.Aglaea;
+import art.ameliah.hsr.lightcones.harmony.AGroundedAscent;
 import art.ameliah.hsr.lightcones.harmony.ButTheBattleIsntOver;
 import art.ameliah.hsr.lightcones.remembrance.TimeWovenIntoGold;
 import art.ameliah.hsr.relics.RelicStats;
@@ -30,7 +31,7 @@ public class AglaeaTeams {
 
     public static AbstractCharacter<?> get134SpeedSunday() {
         AbstractCharacter<?> character = new Sunday();
-        character.EquipLightcone(new ButTheBattleIsntOver(character));
+        character.EquipLightcone(new AGroundedAscent(character));
         character.EquipRelicSet(new SacerdosRelivedOrdeal(character));
         character.EquipRelicSet(new SpringhtlyVonwacq(character));
         RelicStats relicStats = new RelicStats();
@@ -55,8 +56,8 @@ public class AglaeaTeams {
             ArrayList<AbstractCharacter<?>> playerTeam = new ArrayList<>();
             playerTeam.add(get2xSpeedAglaea());
             playerTeam.add(get134SpeedSunday());
-            //playerTeam.add(getPrebuiltRobin());
-            //playerTeam.add(getPrebuiltHuohuo());
+            playerTeam.add(getPrebuiltRobin());
+            playerTeam.add(getPrebuiltHuohuo());
             return playerTeam;
         }
     }

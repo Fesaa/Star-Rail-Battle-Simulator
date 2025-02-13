@@ -11,6 +11,7 @@ import art.ameliah.hsr.builder.ConfigLoader;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.AllWeakEnemy;
+import art.ameliah.hsr.enemies.AllWeakPassiveEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
 import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.game.pf.technicalityentrapment.EmptyAir;
@@ -76,9 +77,9 @@ public class Main {
         Battle battle = new Battle();
         battle.setPlayerTeam(new AglaeaTeams.DoubleSpeedAglaeaTeam().getTeam());
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
-        enemyTeam.add(new AllWeakEnemy(0, 99));
-        //enemyTeam.add(new AllWeakEnemy(1, 2));
-        //enemyTeam.add(new AllWeakEnemy(2, 2));
+        enemyTeam.add(new AllWeakPassiveEnemy(0));
+        //enemyTeam.add(new AllWeakPassiveEnemy(1));
+        //enemyTeam.add(new AllWeakPassiveEnemy(2));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
 

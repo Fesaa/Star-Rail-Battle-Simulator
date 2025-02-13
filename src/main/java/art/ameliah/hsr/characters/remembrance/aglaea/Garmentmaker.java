@@ -24,7 +24,7 @@ public class Garmentmaker extends Memosprite<Garmentmaker> {
                 (int) (720 + 0.66 * aglaea.getFinalHP()),
                 (int) aglaea.getFinalAttack(),
                 (int) aglaea.getFinalDefense(),
-                (int) (0.35 * aglaea.getFinalSpeed()),
+                (int) (0.35 * aglaea.getFinalSpeed() * 1.06),
                 90,
                 ElementType.LIGHTNING,
                 0,
