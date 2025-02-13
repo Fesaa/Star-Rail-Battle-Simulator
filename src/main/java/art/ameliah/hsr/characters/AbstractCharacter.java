@@ -31,6 +31,7 @@ import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
@@ -77,6 +78,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     @Getter
     protected final int baseHP;
     protected final int baseAtk;
+    @Getter
     protected final int baseDef;
     protected final int ultEnergyGain = 5;
 
