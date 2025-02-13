@@ -7,6 +7,7 @@ import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.FailedHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import lombok.Getter;
 
@@ -32,6 +33,10 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         AttackLogic attackLogic = new AttackLogic(this.source, this.targets, this.types, this, this::handleHit);
 
         this.source.emit(l -> l.beforeAttack(attackLogic));
+        if (this.source instanceof Memosprite) {
+            Memosprite<?> memosprite = (Memosprite<?>)source;
+            memosprite.getMaster().emit(l -> l.beforeMemospriteAttack(attackLogic));
+        }
         this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(attackLogic)));
 
         dh.getLogic().accept(attackLogic);

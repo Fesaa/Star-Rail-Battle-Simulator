@@ -7,6 +7,7 @@ import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
+import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -18,13 +19,15 @@ public class TimeWovenIntoGold extends AbstractLightcone {
     }
 
     @Override
-    public void onEquip() {
-        this.owner.baseSpeed += 12;
+    public void onCombatStart() {
+        AbstractPower power = new TimeWovenIntoGoldPower();
+        power.stacks = 0; // starts at 0
+        this.owner.addPower(power);
     }
 
     @Override
-    public void onCombatStart() {
-        this.owner.addPower(new TimeWovenIntoGoldPower());
+    public void onEquip() {
+        this.owner.baseSpeed += 12;
     }
 
     public static class TimeWovenIntoGoldPower extends PermPower {
@@ -32,38 +35,39 @@ public class TimeWovenIntoGold extends AbstractLightcone {
 
         public TimeWovenIntoGoldPower() {
             super(NAME);
-
             this.setConditionalStat(PowerStat.CRIT_DAMAGE, _ -> 9f * this.stacks);
+            this.maxStacks = 6;
         }
 
         @Override
         public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            if (!(damageTypes.contains(DamageType.BASIC))) {
-                return 0;
+            if (damageTypes.contains(DamageType.BASIC) && stacks == maxStacks) {
+                return 9f * this.stacks;
             }
 
-            return 9f * this.stacks;
+            return 0;
         }
 
         @Override
-        public void afterAttack(AttackLogic attack) {
-            if (!(this.owner instanceof Memomaster<?> memomaster)) {
-                return;
+        public void beforeAttack(AttackLogic attack) {
+            this.owner.addPower(new TimeWovenIntoGoldPower());
+            if (owner instanceof Memomaster<?> memomaster) {
+                if (memomaster.getMemo() != null) {
+                    memomaster.getMemo().addPower(new TimeWovenIntoGoldPower());
+                }
             }
-
-            Memosprite<?> memo = memomaster.getMemo();
-            if (memo == null) {
-                return;
+            if (owner instanceof Memosprite<?> memosprite) {
+                if (memosprite.getMaster() != null) {
+                    memosprite.getMaster().addPower(new TimeWovenIntoGoldPower());
+                }
             }
+        }
 
-             boolean wasDualAttack = attack.getAttack().getPastHits().stream()
-                     .anyMatch(hit -> hit.getSource().equals(memo));
-
-            if (!wasDualAttack) {
-                return;
-            }
-
-            this.stacks = Math.min(this.stacks+1, 6);
+        @Override
+        public void afterSummon(Memosprite<?> memosprite) {
+            AbstractPower power = new TimeWovenIntoGoldPower();
+            power.stacks = this.stacks;
+            memosprite.addPower(power);
         }
     }
 }

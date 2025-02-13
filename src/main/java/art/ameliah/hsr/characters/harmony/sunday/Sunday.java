@@ -10,6 +10,7 @@ import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -110,10 +111,15 @@ public class Sunday extends AbstractCharacter<Sunday> {
             target.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 50, 2, TECHNIQUE_POWER_NAME));
         }
 
-        target.increaseEnergy(this.ultimateEnergyCharge(target), "Sunday Ultimate Energy increase");
+        target.increaseEnergy(this.ultimateEnergyCharge(target), false, "Sunday Ultimate Energy increase");
 
         getBattle().getPlayers().forEach(p -> p.removePower(Sunday.TheBeatified));
         target.addPower(new TheBeatified());
+        if (target instanceof Memomaster<?> memomaster) {
+            if (memomaster.getMemo() != null) {
+                memomaster.getMemo().addPower(new TheBeatified());
+            }
+        }
         this.theBeatifiedTurnsRemaining = 3;
         this.relicSetBonus.forEach(rs -> rs.useOnAlly(target, MoveType.ULTIMATE));
         this.lightcone.useOnAlly(target, MoveType.ULTIMATE);

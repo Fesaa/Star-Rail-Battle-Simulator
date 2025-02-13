@@ -25,12 +25,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 
-/**
- * Amelia's notes:
- * Does a Joint ATK (EBASIC,ULT) proc Robin twice? If so, this isn't working;
- * The attack system currently does not support an attack actually being carried out by 2 characters
- * It does allow individual hits to be done by different characters, but the source is always one.
- */
 public class Aglaea extends Memomaster<Aglaea> {
 
     public static final String NAME = "Aglaea";
@@ -177,7 +171,9 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.supremeStance.set(true);
 
         var power = (Garmentmaker.ABodyBrewedByTears) this.garmentmaker.getPower(Garmentmaker.ABodyBrewedByTears.NAME);
-        getBattle().IncreaseSpeed(this, new DanceDestinedWeaveress(power));
+        var dancePower = new DanceDestinedWeaveress();
+        dancePower.stacks = power.stacks;
+        getBattle().IncreaseSpeed(this, dancePower);
 
         var majorTracePower = new TheMyopicsDoom(this, this.garmentmaker);
         this.addPower(majorTracePower);
@@ -195,7 +191,7 @@ public class Aglaea extends Memomaster<Aglaea> {
             this.aglaea = aglaea;
             this.garmentmaker = garmentmaker;
 
-            this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> {
+            this.setConditionalStat(PowerStat.FLAT_ATK, _ -> {
                 return 7.2f * this.aglaea.getFinalSpeed() + 3.6f * this.garmentmaker.getFinalSpeed();
             });
         }
@@ -204,13 +200,10 @@ public class Aglaea extends Memomaster<Aglaea> {
     public static class DanceDestinedWeaveress extends PermPower {
         public static final String NAME = "Dance, Destined Weaveress";
 
-        private final Garmentmaker.ABodyBrewedByTears power;
-
-        public DanceDestinedWeaveress(Garmentmaker.ABodyBrewedByTears power) {
+        public DanceDestinedWeaveress() {
             super(NAME);
-
-            this.power = power;
-            this.setConditionalStat(PowerStat.SPEED_PERCENT, _ -> this.power.stacks * 0.15f);
+            this.maxStacks = 6;
+            this.setConditionalStat(PowerStat.SPEED_PERCENT, _ -> stacks * 15f);
         }
     }
 
@@ -223,7 +216,7 @@ public class Aglaea extends Memomaster<Aglaea> {
 
         @Override
         public void afterAttacked(AttackLogic attack) {
-            if (this.getOwner() instanceof AbstractEnemy enemy) {
+            if (this.getOwner() instanceof AbstractEnemy enemy && attack.getSource() instanceof Aglaea) {
                 attack.additionalDmg(Aglaea.this, enemy, 0.3f, ElementType.LIGHTNING);
             }
         }

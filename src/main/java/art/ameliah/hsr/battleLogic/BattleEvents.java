@@ -67,6 +67,14 @@ public interface BattleEvents {
     }
 
     /**
+     * Hook for {@link AbstractCharacter<>}, before memosprite attack starts
+     *
+     * @param attack the attack
+     */
+    default void beforeMemospriteAttack(AttackLogic attack) {
+    }
+
+    /**
      * Hook for {@link AbstractCharacter<>}, before attack starts
      *
      * @param attack the attack

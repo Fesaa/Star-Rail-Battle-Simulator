@@ -85,8 +85,7 @@ public class Garmentmaker extends Memosprite<Garmentmaker> {
             getBattle().IncreaseSpeed(this.getOwner(), this);
 
             if (Garmentmaker.this.aglaea.hasPower(Aglaea.DanceDestinedWeaveress.NAME)) {
-                Garmentmaker.this.aglaea.removePower(Aglaea.DanceDestinedWeaveress.NAME);
-                getBattle().IncreaseSpeed(Garmentmaker.this.aglaea, new Aglaea.DanceDestinedWeaveress(this));
+                getBattle().IncreaseSpeed(Garmentmaker.this.aglaea, new Aglaea.DanceDestinedWeaveress());
             }
         }
     }

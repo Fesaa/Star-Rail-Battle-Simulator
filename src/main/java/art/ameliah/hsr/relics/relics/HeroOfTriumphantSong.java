@@ -45,10 +45,12 @@ public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
         }
 
         @Override
-        public void beforeAttack(AttackLogic attack) {
-            if (this.getOwner() instanceof Memosprite<?> memosprite) {
-                memosprite.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 30, 2, "Hero of Triumphant Song 4PC CD"));
-                memosprite.getMaster().addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 30, 2, "Hero of Triumphant Song 4PC CD"));
+        public void beforeMemospriteAttack(AttackLogic attack) {
+            if (this.getOwner() instanceof Memomaster<?> memomaster) {
+                if (memomaster.getMemo() != null) {
+                    memomaster.getMemo().addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 30, 2, "Hero of Triumphant Song 4PC CD"));
+                    memomaster.addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 30, 2, "Hero of Triumphant Song 4PC CD"));
+                }
             }
         }
 
