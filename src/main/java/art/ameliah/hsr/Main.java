@@ -68,11 +68,11 @@ public class Main {
 
     public static void darkgladeTestRun() {
         Battle battle = new Battle();
-        battle.setPlayerTeam(new AglaeaTeams.DoubleSpeedAglaeaTeam().getTeam());
+        battle.setPlayerTeam(new AglaeaTeams.DoubleSpeedAglaeaTribbieTeam().getTeam());
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
         enemyTeam.add(new AllWeakPassiveEnemy(0));
-        //enemyTeam.add(new AllWeakPassiveEnemy(1));
-        //enemyTeam.add(new AllWeakPassiveEnemy(2));
+        enemyTeam.add(new AllWeakPassiveEnemy(1));
+        enemyTeam.add(new AllWeakPassiveEnemy(2));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
 
