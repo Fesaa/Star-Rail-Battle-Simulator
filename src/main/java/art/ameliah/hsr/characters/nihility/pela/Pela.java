@@ -13,7 +13,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
-import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -129,7 +129,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         }
 
         @Subscribe(priority = EventPriority.HIGHEST)
-        public void beforeAttack(PreAllyAttack e) {
+        public void afterAttack(PostAllyAttack e) {
             for (AbstractEnemy enemy : e.getAttack().getTargets()) {
                 for (AbstractPower power : enemy.powerList) {
                     if (power.type == PowerType.DEBUFF) {
