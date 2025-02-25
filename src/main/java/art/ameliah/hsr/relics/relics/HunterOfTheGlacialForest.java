@@ -1,8 +1,6 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostUltimate;
 import art.ameliah.hsr.powers.PermPower;

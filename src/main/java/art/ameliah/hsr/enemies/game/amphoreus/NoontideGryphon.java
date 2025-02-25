@@ -1,6 +1,5 @@
 package art.ameliah.hsr.enemies.game.amphoreus;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;

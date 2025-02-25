@@ -1,7 +1,6 @@
 package art.ameliah.hsr.lightcones.remembrance;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.character.PostUseOnAllies;
@@ -9,8 +8,6 @@ import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.Collection;
 
 public class VictoryInABlink extends AbstractLightcone {
 

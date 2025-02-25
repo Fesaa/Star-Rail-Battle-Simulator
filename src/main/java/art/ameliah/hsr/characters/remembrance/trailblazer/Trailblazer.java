@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.remembrance.trailblazer;
 
-import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;

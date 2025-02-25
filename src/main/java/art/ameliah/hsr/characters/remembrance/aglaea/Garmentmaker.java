@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.remembrance.aglaea;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;

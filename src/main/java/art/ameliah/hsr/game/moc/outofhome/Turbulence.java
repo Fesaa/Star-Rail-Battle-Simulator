@@ -1,6 +1,5 @@
 package art.ameliah.hsr.game.moc.outofhome;
 
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.FixedHit;
 import art.ameliah.hsr.battleLogic.wave.moc.MocTurbulence;
 import art.ameliah.hsr.characters.AbstractCharacter;

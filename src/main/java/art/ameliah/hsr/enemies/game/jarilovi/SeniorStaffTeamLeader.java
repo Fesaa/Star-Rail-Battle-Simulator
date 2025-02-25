@@ -1,7 +1,5 @@
 package art.ameliah.hsr.enemies.game.jarilovi;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;

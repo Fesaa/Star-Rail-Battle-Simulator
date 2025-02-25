@@ -1,7 +1,5 @@
 package art.ameliah.hsr.enemies.game.stellaronhunters;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
@@ -13,7 +11,6 @@ import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.events.enemy.PreEnemyAttack;
-import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;

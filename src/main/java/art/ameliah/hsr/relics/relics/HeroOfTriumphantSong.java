@@ -1,9 +1,7 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
-import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.character.PreMemospriteAttack;

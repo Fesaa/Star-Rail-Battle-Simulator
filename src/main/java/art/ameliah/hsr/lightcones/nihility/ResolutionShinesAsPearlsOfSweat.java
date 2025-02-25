@@ -1,6 +1,5 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;

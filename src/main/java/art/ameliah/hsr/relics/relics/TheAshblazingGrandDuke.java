@@ -1,6 +1,5 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;

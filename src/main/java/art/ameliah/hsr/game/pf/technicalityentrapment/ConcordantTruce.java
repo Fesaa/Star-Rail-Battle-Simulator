@@ -1,6 +1,5 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.ConcordantTrucePower;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.events.Subscribe;

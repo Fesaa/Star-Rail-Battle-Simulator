@@ -1,6 +1,5 @@
 package art.ameliah.hsr.lightcones.abundance;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PreAllyAttack;

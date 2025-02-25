@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.remembrance.aglaea;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -16,12 +15,10 @@ import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
-import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.events.character.PostBasic;
 import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.character.PreBasic;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
-import art.ameliah.hsr.events.enemy.PostEnemyAttack;
 import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.powers.PermPower;
