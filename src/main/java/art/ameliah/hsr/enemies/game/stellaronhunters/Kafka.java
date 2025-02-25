@@ -8,6 +8,11 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
+import art.ameliah.hsr.events.enemy.PreEnemyAttack;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -43,14 +48,13 @@ public class Kafka extends AbstractEnemy {
         this.sequence.runNext();
     }
 
-    @Override
-    public void onCombatStart() {
-        super.onCombatStart();
+    @Subscribe
+    public void onCombatStartKafka(CombatStartEvent e) {
         getBattle().registerForPlayers(p -> p.addPower(new Cruelty(this)));
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStartResetCooldown(TurnStartEvent event) {
         this.cooldown = false;
     }
 
@@ -129,9 +133,9 @@ public class Kafka extends AbstractEnemy {
             this.type = PowerType.DEBUFF;
         }
 
-        @Override
-        public void afterAttacked(EnemyAttackLogic attack) {
-            AbstractCharacter<?> target = Randf.rand(attack.getTargets(), getBattle().getEnemyTargetRng());
+        @Subscribe
+        public void afterAttacked(PostAllyAttacked e) {
+            AbstractCharacter<?> target = Randf.rand(e.getAttack().getTargets(), getBattle().getEnemyTargetRng());
             if (target == null) {
                 return;
             }
@@ -149,18 +153,22 @@ public class Kafka extends AbstractEnemy {
         public final String NAME = "ExtraShockDmg";
 
         public ExtraShockDmg() {
-            this.name = name;
+            this.name = NAME;
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            AbstractPower shock = attack.getSource().getPower(EnemyShock.NAME);
-            if (shock == null) {
-                return;
-            }
+        @Subscribe
+        public void beforeAttack(PreEnemyAttack e) {
+            /*e.getAttack().getTargets().forEach(t -> {
+                AbstractPower shock = t.getPower(EnemyShock.NAME);
+                if (shock == null) {
+                    return;
+                }
 
-            EnemyShock enemyShock = (EnemyShock) shock;
-            Kafka.this.doAttack(da -> da.logic(attack.getSource(), (c, al) -> al.hit(c, enemyShock.getDmg())));
+                EnemyShock enemyShock = (EnemyShock) shock;
+                Kafka.this.doAttack(da -> da.logic(al -> {
+                    al.hit(t, enemyShock.getDmg());
+                }));
+            });*/
         }
     }
 

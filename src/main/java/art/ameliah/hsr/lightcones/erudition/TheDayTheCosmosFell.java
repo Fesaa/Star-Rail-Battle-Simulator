@@ -2,6 +2,8 @@ package art.ameliah.hsr.lightcones.erudition;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -18,9 +20,9 @@ public class TheDayTheCosmosFell extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 24, "The Day The Cosmos Fell Attack Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (attack.getTargets().stream()
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        if (event.getAttack().getTargets().stream()
                 .filter(e -> e.hasWeakness(this.owner.elementType))
                 .count() < 2) return;
 

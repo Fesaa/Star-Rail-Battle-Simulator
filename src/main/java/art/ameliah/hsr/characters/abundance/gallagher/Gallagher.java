@@ -11,6 +11,8 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -89,7 +91,7 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
         addPower(e6buff);
     }
 
-    private class Besotted extends AbstractPower {
+    public class Besotted extends AbstractPower {
 
         private final static String NAME = "Besotted";
 
@@ -99,9 +101,9 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
             this.type = PowerType.DEBUFF;
         }
 
-        @Override
-        public void afterAttacked(AttackLogic attack) {
-            attack.getSource().increaseHealth(Gallagher.this, 640);
+        @Subscribe
+        public void afterAttacked(PostEnemyAttacked e) {
+            e.getAttack().getSource().increaseHealth(Gallagher.this, 640);
         }
 
         @Override

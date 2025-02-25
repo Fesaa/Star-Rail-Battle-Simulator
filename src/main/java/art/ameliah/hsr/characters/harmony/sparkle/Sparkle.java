@@ -9,6 +9,9 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -98,8 +101,8 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
             super("SparkleTalentPowerTracker");
         }
 
-        @Override
-        public void onUseSkill() {
+        @Subscribe
+        public void onUseSkill(PreSkill e) {
             getBattle().getPlayers().forEach(c -> c.addPower(new SparkleTalentPower()));
         }
     }
@@ -122,22 +125,22 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         }
     }
 
-    private static class SparkleUltPower extends AbstractPower {
+    public static class SparkleUltPower extends AbstractPower {
         public SparkleUltPower() {
             this.setName(ULT_POWER_NAME);
             this.turnDuration = 2;
         }
     }
 
-    private class SparkleSkillPower extends PermPower {
+    public class SparkleSkillPower extends PermPower {
         public SparkleSkillPower() {
             super(SKILL_POWER_NAME);
             this.justApplied = true;
             this.setStat(PowerStat.CRIT_DAMAGE, (getTotalCritDamage() * 0.24f) + 45);
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             if (justApplied) {
                 justApplied = false;
             } else {

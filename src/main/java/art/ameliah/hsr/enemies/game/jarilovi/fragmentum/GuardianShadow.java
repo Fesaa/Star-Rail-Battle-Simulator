@@ -7,6 +7,11 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostBasic;
+import art.ameliah.hsr.events.character.PostSkill;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
 
@@ -35,9 +40,8 @@ public class GuardianShadow extends AbstractEnemy {
         this.sequence.addAction(this::LightningRecollection, this::ThunderstormCondemnation);
     }
 
-    @Override
-    public void onCombatStart() {
-        super.onCombatStart();
+    @Subscribe
+    public void onCombatStartSetBanType(CombatStartEvent event) {
         this.banTypeRng = new Random(getBattle().getSeed());
     }
 
@@ -110,10 +114,10 @@ public class GuardianShadow extends AbstractEnemy {
             this.guardian = guardian;
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            if (attack.getTargets().stream().anyMatch(e -> e == this.guardian)) {
-                this.guardian.InevitablePunishment(attack.getSource());
+        @Subscribe
+        public void beforeAttack(PreAllyAttack event) {
+            if (event.getAttack().getTargets().stream().anyMatch(e -> e == this.guardian)) {
+                this.guardian.InevitablePunishment(event.getAttack().getSource());
             }
         }
     }
@@ -128,8 +132,8 @@ public class GuardianShadow extends AbstractEnemy {
             this.guardian = guardian;
         }
 
-        @Override
-        public void afterUseBasic() {
+        @Subscribe
+        public void afterUseBasic(PostBasic e) {
             this.guardian.InevitablePunishment((AbstractCharacter<?>) this.getOwner());
         }
     }
@@ -144,8 +148,8 @@ public class GuardianShadow extends AbstractEnemy {
             this.guardian = guardian;
         }
 
-        @Override
-        public void afterUseSkill() {
+        @Subscribe
+        public void afterUseSkill(PostSkill e) {
             this.guardian.InevitablePunishment((AbstractCharacter<?>) this.getOwner());
         }
     }

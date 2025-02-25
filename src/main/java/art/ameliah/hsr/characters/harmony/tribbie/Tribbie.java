@@ -12,6 +12,11 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.characters.goal.shared.ult.UltMetricGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PostUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -47,15 +52,15 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
         this.registerGoal(0, new SkillCounterTurnGoal<>(this));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().registerForPlayers(p -> p.addPower(new TribbieTalentListener()));
         this.addPower(new GlassBallWithWings());
         this.increaseEnergy(30, "Pebble at Crossroads?");
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent event) {
         if (this.numinosityCountdown.decrease(1, 0) == 0) {
             getBattle().getPlayers().forEach(player -> player.removePower(Numinosity.NAME));
         }
@@ -139,8 +144,8 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
 
     public class TribbieTalentListener extends PermPower {
 
-        @Override
-        public void afterUseUltimate() {
+        @Subscribe
+        public void afterUseUltimate(PostUltimate event) {
             if (Tribbie.this.fuaTrigger.contains(getOwner())) {
                 return;
             }
@@ -155,10 +160,10 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
             });
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            if (attack.getSource() != Tribbie.this) {
-                Tribbie.this.increaseEnergy(1.5f*attack.getTargets().size(), "Pebble at Crossroads Attack energy");
+        @Subscribe
+        public void afterAttack(PostAllyAttack e) {
+            if (e.getAttack().getSource() != Tribbie.this) {
+                Tribbie.this.increaseEnergy(1.5f*e.getAttack().getTargets().size(), "Pebble at Crossroads Attack energy");
             }
         }
     }
@@ -170,8 +175,9 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
             super(TribbieZoneListener.NAME);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             if (attack.getSource() != Tribbie.this) {
                 Tribbie.this.doAttack(DamageType.ADDITIONAL_DAMAGE, dl -> {
                     int count = attack.getTargets().size();

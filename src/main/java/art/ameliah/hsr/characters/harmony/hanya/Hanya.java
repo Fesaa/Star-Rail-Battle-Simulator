@@ -10,6 +10,9 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
+import art.ameliah.hsr.events.enemy.PreEnemyAttacked;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -68,7 +71,7 @@ public class Hanya extends AbstractCharacter<Hanya> {
         }
     }
 
-    private class BurdenPower extends AbstractPower {
+    public class BurdenPower extends AbstractPower {
 
         private final int hitsToTrigger = 2;
         private int triggersLeft = 2;
@@ -79,8 +82,9 @@ public class Hanya extends AbstractCharacter<Hanya> {
             this.lastsForever = true;
         }
 
-        @Override
-        public void beforeAttacked(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttacked(PreEnemyAttacked e) {
+            var attack = e.getAttack();
             if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.ULTIMATE)) {
                 TempPower talentPower = TempPower.create(PowerStat.DAMAGE_BONUS, 43, 2, "Hanya Talent Power");
                 talentPower.justApplied = true;
@@ -88,8 +92,9 @@ public class Hanya extends AbstractCharacter<Hanya> {
             }
         }
 
-        @Override
-        public void afterAttacked(AttackLogic attack) {
+        @Subscribe
+        public void afterAttacked(PostEnemyAttacked e) {
+            var attack = e.getAttack();
             if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.ULTIMATE)) {
                 hitCount++;
                 getBattle().addToLog(new BurdenLog(hitCount, hitsToTrigger));

@@ -14,6 +14,8 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PreEnemyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -160,7 +162,7 @@ public class Moze extends AbstractCharacter<Moze> {
         return super.leftOverAV();
     }
 
-    private class MozePreyPower extends AbstractPower {
+    public class MozePreyPower extends AbstractPower {
         public MozePreyPower() {
             this.setName(this.getClass().getSimpleName());
             this.type = PowerType.DEBUFF;
@@ -182,8 +184,9 @@ public class Moze extends AbstractCharacter<Moze> {
             return 0;
         }
 
-        @Override
-        public void beforeAttacked(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttacked(PreEnemyAttacked e) {
+            var attack = e.getAttack();
             AbstractEnemy enemy = (AbstractEnemy) this.getOwner();
 
             boolean trigger = true;

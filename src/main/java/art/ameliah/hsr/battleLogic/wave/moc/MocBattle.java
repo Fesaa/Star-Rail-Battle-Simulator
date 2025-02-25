@@ -1,7 +1,6 @@
 package art.ameliah.hsr.battleLogic.wave.moc;
 
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
-import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
 public class MocBattle extends WavedBattle<MocWave> {

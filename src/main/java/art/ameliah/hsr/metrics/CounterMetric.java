@@ -79,7 +79,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
     abstract public T decrease(T value, T min);
 
 
-    private static class IntCounterMetric extends CounterMetric<Integer> {
+    public static class IntCounterMetric extends CounterMetric<Integer> {
 
         private IntCounterMetric(String key, String desc, Integer startValue) {
             super(key, desc, startValue);
@@ -129,7 +129,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
     }
 
-    private static class FloatCounterMetric extends CounterMetric<Float> {
+    public static class FloatCounterMetric extends CounterMetric<Float> {
 
         private FloatCounterMetric(String key, String desc, Float startValue) {
             super(key, desc, startValue);
@@ -179,7 +179,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
     }
 
-    private static class DoubleCounterMetric extends CounterMetric<Double> {
+    public static class DoubleCounterMetric extends CounterMetric<Double> {
 
         private DoubleCounterMetric(String key, String desc, Double startValue) {
             super(key, desc, startValue);
@@ -229,7 +229,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
     }
 
-    private static class LongCounterMetric extends CounterMetric<Long> {
+    public static class LongCounterMetric extends CounterMetric<Long> {
 
         private LongCounterMetric(String key, String desc, Long startValue) {
             super(key, desc, startValue);

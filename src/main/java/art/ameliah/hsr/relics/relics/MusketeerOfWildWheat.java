@@ -43,7 +43,7 @@ public class MusketeerOfWildWheat extends AbstractRelicSetBonus {
         }
     }
 
-    private static class MusketeerDamagePower extends AbstractPower {
+    public static class MusketeerDamagePower extends AbstractPower {
         public MusketeerDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

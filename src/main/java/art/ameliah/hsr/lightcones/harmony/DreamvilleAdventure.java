@@ -3,6 +3,11 @@ package art.ameliah.hsr.lightcones.harmony;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreBasic;
+import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -18,23 +23,23 @@ public class DreamvilleAdventure extends AbstractLightcone {
         super(953, 423, 397, owner);
     }
 
-    @Override
-    public void onUseSkill() {
+    @Subscribe
+    public void onUseSkill(PreSkill e) {
         currBenefit = DamageType.SKILL;
     }
 
-    @Override
-    public void onUseBasic() {
+    @Subscribe
+    public void onUseBasic(PreBasic e) {
         currBenefit = DamageType.BASIC;
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         currBenefit = DamageType.ULTIMATE;
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().registerForPlayers(c -> c.addPower(childishness));
     }
 

@@ -83,7 +83,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         addPower(new TingyunBonusBasicDamagePower());
     }
 
-    private static class TingyunBonusBasicDamagePower extends AbstractPower {
+    public static class TingyunBonusBasicDamagePower extends AbstractPower {
         public TingyunBonusBasicDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
@@ -100,7 +100,7 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         }
     }
 
-    private class TingyunSkillPower extends TempPower {
+    public class TingyunSkillPower extends TempPower {
         public TingyunSkillPower() {
             super(3);
 

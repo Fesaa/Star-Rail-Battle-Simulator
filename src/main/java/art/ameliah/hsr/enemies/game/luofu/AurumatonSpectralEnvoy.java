@@ -7,6 +7,8 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -138,8 +140,8 @@ public class AurumatonSpectralEnvoy extends AbstractEnemy {
             super(2, NAME);
         }
 
-        @Override
-        public void afterAttacked(EnemyAttackLogic attack) {
+        @Subscribe
+        public void afterAttacked(PostAllyAttacked e) {
             if (duringAttack) {
                 this.duringAttack = false;
                 return;

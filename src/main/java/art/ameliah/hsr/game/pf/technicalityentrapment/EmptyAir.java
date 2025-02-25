@@ -6,6 +6,9 @@ import art.ameliah.hsr.battleLogic.wave.pf.PureFictionBuff;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PostSkill;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -16,10 +19,10 @@ public class EmptyAir implements PureFictionBuff {
     @Override
     public void applyGritMechanic(PfBattle battle) {
         battle.getPlayers().forEach(player -> player.addPower(new PermPower("Empty Air Grit Mechanic") {
-            @Override
-            public void afterAttack(AttackLogic attack) {
-                if (attack.getTypes().contains(DamageType.ULTIMATE)) {
-                    battle.increaseGridAmount(3 * attack.getTargets().size());
+            @Subscribe
+            public void afterAttack(PostAllyAttack event) {
+                if (event.getAttack().getTypes().contains(DamageType.ULTIMATE)) {
+                    battle.increaseGridAmount(3 * event.getAttack().getTargets().size());
                 }
             }
         }));
@@ -42,14 +45,14 @@ public class EmptyAir implements PureFictionBuff {
             super(NAME);
         }
 
-        @Override
-        public void afterUseSkill() {
+        @Subscribe
+        public void afterUseSkill(PostSkill event) {
             getBattle().generateSkillPoint((AbstractCharacter<?>) this.getOwner(), 1);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            attack.getSource().addPower(new FeverishSurge());
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            event.getAttack().getSource().addPower(new FeverishSurge());
         }
     }
 

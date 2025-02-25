@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.remembrance.castorice;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -10,7 +9,13 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
-import art.ameliah.hsr.characters.remembrance.trailblazer.Mem;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.HPLost;
+import art.ameliah.hsr.events.character.HpGain;
+import art.ameliah.hsr.events.character.PostSkill;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -42,8 +47,8 @@ public class Castorice extends Memomaster<Castorice> {
         this.addPower(new DarkTideContainedListener());
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().registerForPlayers(p -> {
             p.addPower(new InvertedTorch());
             p.addPower(new DarkTideContainedListener());
@@ -60,7 +65,7 @@ public class Castorice extends Memomaster<Castorice> {
         int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.pollux, idx+1);
 
-        this.emit(l -> l.afterSummon(this.pollux));
+        this.eventBus.fire(new PostSummon(this.pollux));
         getBattle().getPlayers().forEach(p -> p.addPower(new DesolationBrokenByBellows()));
     }
 
@@ -102,9 +107,9 @@ public class Castorice extends Memomaster<Castorice> {
             this.actionMetric.record(MoveType.ENHANCED_SKILL);
             getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_SKILL));
             getBattle().useSkillPoint(this, 1);
-            this.emit(BattleEvents::onUseSkill);
+            this.eventBus.fire(new PreSkill());
             this.useEnhancedSkill();
-            this.emit(BattleEvents::afterUseSkill);
+            this.eventBus.fire(new PostSkill());
             return;
         }
 
@@ -184,20 +189,20 @@ public class Castorice extends Memomaster<Castorice> {
     }
 
     public class DesolationTraversesHerPalmsListener extends PermPower {
-        @Override
-        public void afterHPLost(float amount) {
+        @Subscribe
+        public void afterHPLost(HPLost e) {
             if (Castorice.this.pollux == null) {
-                Castorice.this.currentEnergy.increase(amount, MAX_STAMEN_NOVA);
+                Castorice.this.currentEnergy.increase(e.getAmount(), MAX_STAMEN_NOVA);
             } else {
-                Castorice.this.pollux.increaseHealth(this, amount, false);
+                Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
             }
         }
     }
 
     public class InvertedTorch extends PermPower {
-        @Override
-        public void afterHpGain(float amount, float overflow) {
-            var increase = Math.min(overflow, 0.15f * MAX_STAMEN_NOVA);
+        @Subscribe
+        public void afterHpGain(HpGain e) {
+            var increase = Math.min(e.getOverflow(), 0.15f * MAX_STAMEN_NOVA);
 
             Pollux pollux = (Pollux) Castorice.this.getMemo();
             if (pollux == null) {
@@ -209,8 +214,8 @@ public class Castorice extends Memomaster<Castorice> {
     }
 
     public static class DarkTideContainedListener extends PermPower {
-        @Override
-        public void afterHpGain(float amount, float overflow) {
+        @Subscribe
+        public void afterHpGain(HpGain e) {
             AbstractCharacter<?> owner = (AbstractCharacter<?>) this.getOwner();
             if (owner.getCurrentHp().get() < owner.getFinalHP() * 0.5f) {
                 return;
@@ -222,8 +227,8 @@ public class Castorice extends Memomaster<Castorice> {
             }
         }
 
-        @Override
-        public void afterHPLost(float amount) {
+        @Subscribe
+        public void afterHPLost(HPLost e) {
             AbstractCharacter<?> owner = (AbstractCharacter<?>) this.getOwner();
 
             if (owner.getCurrentHp().get() >= owner.getFinalHP() * 0.5f) {

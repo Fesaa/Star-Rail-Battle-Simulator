@@ -3,6 +3,8 @@ package art.ameliah.hsr.relics.ornament;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.EnemyLeavesCombat;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -35,8 +37,8 @@ public class SigoniaTheUnclaimedDesolation extends AbstractRelicSetBonus {
             super(NAME);
         }
 
-        @Override
-        public void onEnemyRemove(AbstractEnemy enemy, int idx) {
+        @Subscribe
+        public void onEnemyRemove(EnemyLeavesCombat event) {
             this.stacks = Math.min(this.stacks+1, 10);
         }
 

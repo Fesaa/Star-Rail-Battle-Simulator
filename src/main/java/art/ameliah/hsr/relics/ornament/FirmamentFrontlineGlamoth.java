@@ -3,6 +3,8 @@ package art.ameliah.hsr.relics.ornament;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -23,8 +25,8 @@ public class FirmamentFrontlineGlamoth extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 12, "Firmament Frontline Glamoth ATK bonus"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         this.owner.addPower(new FirmamentFrontlineGlamothDMGBonus());
     }
 

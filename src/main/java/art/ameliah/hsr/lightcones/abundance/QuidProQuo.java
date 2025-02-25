@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.abundance;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 
 import java.util.List;
@@ -11,8 +13,8 @@ public class QuidProQuo extends AbstractLightcone {
         super(953, 423, 397, owner);
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent event) {
         List<AbstractCharacter<?>> characters = getBattle().getPlayers()
                 .stream()
                 .filter(c -> c.getCurrentEnergy().get() < c.maxEnergy / 2)

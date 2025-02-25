@@ -76,7 +76,7 @@ public class Bronya extends AbstractCharacter<Bronya> {
         }
     }
 
-    private static class BronyaBasicCritPower extends AbstractPower {
+    public static class BronyaBasicCritPower extends AbstractPower {
         public BronyaBasicCritPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

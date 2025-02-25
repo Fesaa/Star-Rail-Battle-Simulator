@@ -4,6 +4,8 @@ import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -21,8 +23,9 @@ public class WorrisomeBlissful extends AbstractLightcone {
         this.owner.addPower(new WorrisomeBlissfulPower());
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        var attack = event.getAttack();
         if (attack.getSource() != owner) return;
         if (attack.getTargets().isEmpty()) return;
 

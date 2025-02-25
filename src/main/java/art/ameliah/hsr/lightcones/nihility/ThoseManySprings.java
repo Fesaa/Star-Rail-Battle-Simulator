@@ -4,6 +4,8 @@ import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -20,8 +22,9 @@ public class ThoseManySprings extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.EFFECT_HIT, 60, "Those Many Springs Effect Hit Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        var attack = e.getAttack();
         if (!attack.getTypes().contains(DamageType.BASIC)
                 && !attack.getTypes().contains(DamageType.SKILL)
                 && !attack.getTypes().contains(DamageType.ULTIMATE)) {

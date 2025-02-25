@@ -1,5 +1,6 @@
 package art.ameliah.hsr.characters.remembrance.trailblazer;
 
+import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -12,6 +13,12 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostGainEnergy;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
@@ -48,8 +55,8 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         return this.mem;
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().AdvanceEntity(this, 30);
         getBattle().registerForPlayers(p -> {
             p.addPower(new EidolonsListener());
@@ -57,8 +64,8 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         });
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         this.e2Cooldown = true;
     }
 
@@ -85,7 +92,7 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
             this.mem.increaseCharge(40);
             this.firstSummon = false;
         }
-        this.emit(l -> l.afterSummon(this.mem));
+        this.eventBus.fire(new PostSummon(this.mem));
     }
 
     @Override
@@ -140,9 +147,9 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
             super("Mem EnergyListener");
         }
 
-        @Override
-        public void onGainEnergy(float amount, float overflow) {
-            float trueAmount = amount - overflow;
+        @Subscribe
+        public void onGainEnergy(PostGainEnergy event) {
+            float trueAmount = event.getAmount() - event.getOverflow();
             this.energyTally += trueAmount;
 
             int charge = (int) Math.floor(this.energyTally/10);
@@ -187,23 +194,23 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
             }
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             this.E2();
         }
 
-        @Override
-        public void onEndTurn() {
+        @Subscribe
+        public void onEndTurn(TurnStartEvent e) {
             this.E4();
         }
 
-        @Override
-        public void afterUseUltimate() {
+        @Subscribe
+        public void afterUseUltimate(PreUltimate e) {
             this.E4();
         }
     }
 
-    private static class E6 extends PermPower {
+    public static class E6 extends PermPower {
         public E6() {
             super(NAME + "(E6)");
         }

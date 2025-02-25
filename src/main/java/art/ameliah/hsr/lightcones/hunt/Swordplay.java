@@ -27,7 +27,7 @@ public class Swordplay extends AbstractLightcone {
         owner.addPower(swordPlayDamagePower);
     }
 
-    private static class SwordplayDamagePower extends PermPower {
+    public static class SwordplayDamagePower extends PermPower {
         public SwordplayDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.maxStacks = 5;

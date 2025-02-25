@@ -1,12 +1,13 @@
 package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -49,9 +50,8 @@ public class FrigidProwler extends AbstractEnemy {
         this.sequence.runNext();
     }
 
-    @Override
-    public void onDeath(BattleParticipant source) {
-        super.onDeath(source);
+    @Subscribe
+    public void onDeath(DeathEvent event) {
         this.otherlings.forEach(getBattle()::removeEnemy);
     }
 

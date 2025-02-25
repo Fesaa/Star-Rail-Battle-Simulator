@@ -2,6 +2,8 @@ package art.ameliah.hsr.lightcones.abundance;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreSkill;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -17,8 +19,8 @@ public class SharedFeeling extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.OUTGOING_HEALING, 20, "Shared Feeling Healing Boost"));
     }
 
-    @Override
-    public void onUseSkill() {
+    @Subscribe
+    public void onUseSkill(PreSkill event) {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             if (!(character instanceof Memosprite<?, ?>)) {
                 character.increaseEnergy(4, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);

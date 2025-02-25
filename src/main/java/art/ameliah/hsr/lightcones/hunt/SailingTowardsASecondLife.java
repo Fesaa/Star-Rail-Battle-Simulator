@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.hunt;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -21,8 +23,8 @@ public class SailingTowardsASecondLife extends AbstractLightcone {
         this.owner.addPower(new SailingTowardsASecondLifePower());
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         if (this.owner.getTotalBreakEffect() > 150) {
             this.owner.addPower(PermPower.create(PowerStat.SPEED_PERCENT, 12, "Sailing Towards A Second Life Speed Boost"));
         }

@@ -11,6 +11,8 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -114,7 +116,7 @@ public class Asta extends AbstractCharacter<Asta> {
         getBattle().addToLog(new GainCharge(this, amount, initalStack, talentPower.stacks, "Stack"));
     }
 
-    private class AstaTalentPower extends AbstractPower {
+    public class AstaTalentPower extends AbstractPower {
 
         public AstaTalentPower() {
             this.setName(TALENT_BUFF_NAME);
@@ -124,8 +126,9 @@ public class Asta extends AbstractCharacter<Asta> {
             this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 15.4f * this.stacks);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack e) {
+            var attack = e.getAttack();
             if (attack.getSource() == Asta.this) {
                 int chargeGain = attack.getTargets().size();
                 for (AbstractEnemy enemy : attack.getTargets()) {
@@ -138,7 +141,7 @@ public class Asta extends AbstractCharacter<Asta> {
         }
     }
 
-    private class AstaERRPower extends AbstractPower {
+    public class AstaERRPower extends AbstractPower {
 
         public AstaERRPower() {
             this.setName(this.getClass().getSimpleName());

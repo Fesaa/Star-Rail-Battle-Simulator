@@ -2,6 +2,9 @@ package art.ameliah.hsr.battleLogic;
 
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.LosePower;
+import art.ameliah.hsr.events.EventBus;
+import art.ameliah.hsr.events.EventPriority;
+import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.MetricRegistry;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -12,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 
-public abstract class AbstractEntity implements BattleEvents, BattleParticipant {
+@Subscribe(priority = EventPriority.HIGHEST)
+public abstract class AbstractEntity implements BattleParticipant {
 
     public static final int SPEED_PRIORITY_DEFAULT = 99;
-    private final Collection<BattleEvents> listeners = new ConcurrentLinkedQueue<>();
+    @Getter
+    protected final EventBus eventBus = new EventBus();
 
     @Getter
     protected MetricRegistry metricRegistry = new MetricRegistry(this);
@@ -38,6 +41,7 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
     private IBattle battle;
 
     public AbstractEntity() {
+        this.eventBus.registerListener(this);
     }
 
     public void SetPreCombatPowers() {
@@ -59,21 +63,8 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
         return this.name;
     }
 
-    protected Collection<BattleEvents> getListeners() {
-        return listeners;
-    }
-
-    public void addListener(BattleEvents listener) {
-        listeners.add(listener);
-    }
-
-    public void emit(Consumer<BattleEvents> event) {
-        synchronized (this.listeners) {
-            this.listeners.forEach(event);
-
-            // Character itself should be last to receive the event, as buffs have to be applied first.
-            event.accept(this);
-        }
+    public void addListener(Object listener) {
+        this.eventBus.registerListener(listener);
     }
 
     public float getBaseAV() {
@@ -98,7 +89,7 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
                 getBattle().addToLog(new GainPower(this, power));
             }
         }
-        this.listeners.add(power);
+        this.eventBus.registerListener(power);
     }
 
     public void removePower(AbstractPower power) {
@@ -107,7 +98,7 @@ public abstract class AbstractEntity implements BattleEvents, BattleParticipant 
         if (!getBattle().getLessMetrics()) {
             getBattle().addToLog(new LosePower(this, power));
         }
-        this.listeners.remove(power);
+        this.eventBus.unregisterListener(power);
     }
 
     public void removePower(String name) {

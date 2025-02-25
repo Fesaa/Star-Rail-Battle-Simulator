@@ -2,6 +2,9 @@ package art.ameliah.hsr.lightcones.remembrance;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PostUseOnAllies;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -20,9 +23,9 @@ public class VictoryInABlink extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 24, "Victory In a Blink CD Boost"));
     }
 
-    @Override
-    public void afterSummon(Memosprite<?, ?> memosprite) {
-        memosprite.addPower(new VictoryInABlinkListener());
+    @Subscribe
+    public void afterSummon(PostSummon e) {
+        e.getMemosprite().addPower(new VictoryInABlinkListener());
     }
 
     public static class VictoryInABlinkListener extends PermPower {
@@ -30,10 +33,10 @@ public class VictoryInABlink extends AbstractLightcone {
             super("Victory In a Blink Listener");
         }
 
-        @Override
-        public void afterUseOnAlly(Collection<AbstractCharacter<?>> allies) {
+        @Subscribe
+        public void afterUseOnAlly(PostUseOnAllies e) {
             // Any implies one? Not sure
-            if (allies.size() != 1) {
+            if (e.getAllies().size() != 1) {
                 return;
             }
 

@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.erudition;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -19,8 +21,8 @@ public class TheSeriousnessOfBreakfast extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 24, "The Seriousness of Breakfast Damage Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 8 * 3, "The Seriousness of Breakfast Attack Boost"));
     }
 }

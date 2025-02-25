@@ -1,8 +1,5 @@
 package art.ameliah.hsr.enemies.game.penacony;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -10,6 +7,9 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -42,20 +42,18 @@ public class PastConfinedAndCaged extends AbstractEnemy {
         this.sequence.addAction(this::DesmiosEvangelion);
     }
 
-    @Override
-    public void onWeaknessBreak(BattleParticipant source) {
+    @Subscribe
+    public void onWeaknessBreak(WeaknessBreakEvent event) {
         if (this.charging) {
             getBattle().DelayEntity(this, 50); // TODO: No idea if this number is correct
         }
     }
 
-    @Override
-    public void afterAttacked(AttackLogic attack) {
+    @Subscribe
+    public void afterAttackedAddLock(PostEnemyAttacked event) {
         if (this.charging) {
-            this.lockedOn.add(attack.getSource());
+            this.lockedOn.add(event.getAttack().getSource());
         }
-
-        super.afterAttacked(attack);
     }
 
     @Override

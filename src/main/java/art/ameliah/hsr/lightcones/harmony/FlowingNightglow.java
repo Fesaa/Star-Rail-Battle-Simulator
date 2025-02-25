@@ -2,6 +2,11 @@ package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -19,14 +24,14 @@ public class FlowingNightglow extends AbstractLightcone {
         super(953, 635, 463, owner);
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         AbstractPower power = new FlowingNightglowPower();
         getBattle().registerForPlayers(c -> c.addPower(power));
     }
 
-    @Override
-    public void onEndTurn() {
+    @Subscribe
+    public void onEndTurn(TurnEndEvent e) {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             if (character.hasPower(cadenzaBuff.getName())) {
                 character.removePower(cadenzaBuff);
@@ -34,8 +39,8 @@ public class FlowingNightglow extends AbstractLightcone {
         }
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate event) {
         owner.removePower(ERPowerName);
         this.owner.addPower(TempPower.create(PowerStat.ATK_PERCENT, 48, 1, "Flowing Nightglow ATK Boost"));
         getBattle().getPlayers().forEach(c -> c.addPower(cadenzaBuff));
@@ -55,8 +60,8 @@ public class FlowingNightglow extends AbstractLightcone {
             this.setName(this.getClass().getSimpleName());
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
             FlowingNightglow.this.owner.addPower(new FlowingNightglowERRPower());
         }
     }

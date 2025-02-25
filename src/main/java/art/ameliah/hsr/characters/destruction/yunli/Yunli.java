@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.destruction.yunli;
 
 import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.UseCounter;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseCull;
 import art.ameliah.hsr.battleLogic.log.lines.character.yunli.UseSlash;
@@ -14,6 +13,8 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.lightcones.destruction.DanceAtSunset;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -27,7 +28,10 @@ import art.ameliah.hsr.utils.Randf;
 import java.util.Collection;
 import java.util.List;
 
-import static art.ameliah.hsr.characters.DamageType.*;
+import static art.ameliah.hsr.characters.DamageType.BASIC;
+import static art.ameliah.hsr.characters.DamageType.FOLLOW_UP;
+import static art.ameliah.hsr.characters.DamageType.SKILL;
+import static art.ameliah.hsr.characters.DamageType.ULTIMATE;
 
 public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoal.FirstTurnTracked {
 
@@ -100,8 +104,10 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         }
     }
 
-    @Override
-    public void afterAttacked(EnemyAttackLogic enemyAttack) {
+    @Subscribe
+    public void afterAttacked(PostAllyAttacked event) {
+        var enemyAttack = event.getAttack();
+
         addPower(getTrueSunderPower());
         if (isParrying) {
             useCull(enemyAttack.getSource());
@@ -199,7 +205,7 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
         firstMove = firstTurn;
     }
 
-    private static class CullCritDamageBuff extends AbstractPower {
+    public static class CullCritDamageBuff extends AbstractPower {
         public CullCritDamageBuff() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

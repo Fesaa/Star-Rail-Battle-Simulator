@@ -6,6 +6,8 @@ import art.ameliah.hsr.battleLogic.wave.pf.ISurgingGrit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.powers.PermPower;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +37,9 @@ public class SurgingGrit implements ISurgingGrit {
 
     public static class SurgingGritPlayerPower extends PermPower {
         public static String NAME = "Surging Grit Player Power";
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             if (!attack.getTypes().contains(DamageType.SKILL)) {
                 return;
             }

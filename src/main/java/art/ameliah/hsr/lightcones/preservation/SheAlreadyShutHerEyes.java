@@ -2,6 +2,8 @@ package art.ameliah.hsr.lightcones.preservation;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -20,8 +22,8 @@ public class SheAlreadyShutHerEyes extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ENERGY_REGEN, 12, "She Already Shut Her Eyes Energy Regen Boost"));
     }
 
-    @Override
-    public void afterAttacked(AttackLogic attack) {
+    @Subscribe
+    public void afterAttacked(PostAllyAttacked e) {
         // TODO: Check if owner has shield, and if it has more than the attack
         // if (...) return;
 

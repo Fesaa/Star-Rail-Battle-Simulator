@@ -1,6 +1,8 @@
 package art.ameliah.hsr.relics.ornament;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -19,8 +21,8 @@ public class PanCosmicCommercialEnterprise extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.EFFECT_HIT, 10, "Pan Cosmic Commercial Enterprise effect hit bonus"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         float bonus = Math.min(25, this.owner.getTotalEHR() / 25);
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, bonus, "Pan Cosmic Commercial Enterprise ATK bonus"));
     }

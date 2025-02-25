@@ -42,9 +42,9 @@ public class Main {
         Locale.setDefault(Locale.UK);
 
         //run();
-        darkgladeTestRun();
+        //darkgladeTestRun();
 
-        //ameliasSanityCheck();
+        ameliasSanityCheck();
         //WaveTester.MocTest();
         //WaveTester.MocDivTest();
         //WaveTester.PfTest();

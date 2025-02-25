@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.preservation;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -16,8 +18,8 @@ public class ConcertForTwo extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.DEF_PERCENT, 32, "Concert For Two Defense Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         // just assume full uptime for now
         this.owner.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 32, "Concert For Two Damage Boost"));
     }

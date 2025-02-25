@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.harmony;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -29,8 +31,8 @@ public class ButTheBattleIsntOver extends AbstractLightcone {
         character.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 30, 1, "But The Battle Isn't Over Damage Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         // Metric is incremented before hook is called, so there is an offset.
         if (this.owner.getActionMetric().frequency(MoveType.ULTIMATE) % 2 == 1) {
             getBattle().generateSkillPoint(this.owner, 1);

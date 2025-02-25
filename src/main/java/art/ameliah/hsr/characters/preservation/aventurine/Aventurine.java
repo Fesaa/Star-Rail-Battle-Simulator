@@ -1,7 +1,7 @@
 package art.ameliah.hsr.characters.preservation.aventurine;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.aventurine.UseBlindBet;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -13,6 +13,9 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.enemy.PostEnemyAttack;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -126,7 +129,7 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
     }
 
-    private static class AventurineUltDebuff extends AbstractPower {
+    public static class AventurineUltDebuff extends AbstractPower {
         public AventurineUltDebuff() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;
@@ -139,16 +142,16 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
         }
     }
 
-    private class AventurineTalentPower extends AbstractPower {
+    public class AventurineTalentPower extends AbstractPower {
         public AventurineTalentPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
             this.setStat(PowerStat.EFFECT_RES, 50); //assume 100% shield uptime
         }
 
-        @Override
-        public void afterAttack(EnemyAttackLogic attack) {
-            int count = attack.getTargets().stream().mapToInt(t -> {
+        @Subscribe
+        public void afterAttack(PostEnemyAttack event) {
+            int count = event.getAttack().getTargets().stream().mapToInt(t -> {
                 if (t == Aventurine.this) {
                     return 2;
                 }
@@ -158,9 +161,10 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
             Aventurine.this.increaseBlindBet(count);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            if (attack.getSource() != Aventurine.this && attack.getTypes().contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            if (event.getAttack().getSource() != Aventurine.this
+                    && event.getAttack().getTypes().contains(DamageType.FOLLOW_UP) && blindBetFollowUpCounter > 0) {
                 increaseBlindBet(1);
                 blindBetFollowUpCounter--;
                 Aventurine.this.blindBetGainedFUA.increment();

@@ -7,6 +7,9 @@ import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
 import art.ameliah.hsr.enemies.game.luofu.moonrage.MoonRageAble;
 import art.ameliah.hsr.enemies.game.luofu.moonrage.MoonRageTracker;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.EnemyJoinCombat;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.dot.EnemyBleed;
@@ -30,14 +33,14 @@ public class SableclawWolftrooper extends AbstractEnemy implements MoonRageAble 
         this.addPower(PermPower.create(PowerStat.EFFECT_RES, 20, "Base stat ER"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStartAddLupine(CombatStartEvent event) {
         getBattle().getEnemies().forEach(e -> e.addPower(this.lupineMaw));
     }
 
-    @Override
-    public void onEnemyJoinCombat(AbstractEnemy enemy) {
-        enemy.addPower(this.lupineMaw);
+    @Subscribe
+    public void onEnemyJoinCombat(EnemyJoinCombat event) {
+        event.getEnemy().addPower(this.lupineMaw);
     }
 
     @Override

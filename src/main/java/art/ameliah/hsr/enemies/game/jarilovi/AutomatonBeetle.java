@@ -1,6 +1,5 @@
 package art.ameliah.hsr.enemies.game.jarilovi;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
@@ -9,6 +8,8 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -38,10 +39,10 @@ public class AutomatonBeetle extends AbstractEnemy {
         return super.hit(hit);
     }
 
-    @Override
-    public void afterAttacked(AttackLogic attack) {
+    @Subscribe
+    public void afterAttacked(PostEnemyAttacked event) {
         this.isInvincible = false;
-        super.afterAttacked(attack);
+        super.afterAttacked(event);
     }
 
     @Override

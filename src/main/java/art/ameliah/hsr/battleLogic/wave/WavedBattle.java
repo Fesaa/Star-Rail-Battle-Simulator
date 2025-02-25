@@ -1,11 +1,11 @@
 package art.ameliah.hsr.battleLogic.wave;
 
 import art.ameliah.hsr.battleLogic.Battle;
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveEnd;
 import art.ameliah.hsr.battleLogic.log.lines.battle.WaveStart;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.combat.WaveStartEvent;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
 
         this.currentWave = this.waves.remove();
         this.setEnemyTeam(this.currentWave.startEnemies());
-        this.getPlayers().forEach(p -> p.emit(BattleEvents::onWaveStart));
+        this.getPlayers().forEach(p -> p.getEventBus().fire(new WaveStartEvent()));
     }
 
     @Override
@@ -97,7 +97,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
         this.onWaveChange();
 
         addToLog(new WaveStart(this.currentWave, this));
-        this.getPlayers().forEach(p -> p.emit(BattleEvents::onWaveStart));
+        this.getPlayers().forEach(p -> p.getEventBus().fire(new WaveStartEvent()));
         getPlayers().forEach(AbstractCharacter::tryUltimate);
     }
 

@@ -2,6 +2,8 @@ package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -20,8 +22,8 @@ public class PoisedToBloom extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 32, "Poised To Bloom ATK Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         // Not moving this to register: if two or more **characters**
         getBattle().getPlayers()
                 .stream()

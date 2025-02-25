@@ -16,6 +16,8 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -201,7 +203,7 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
         return this.fuYuan;
     }
 
-    private static class Befog extends AbstractPower {
+    public static class Befog extends AbstractPower {
         public Befog() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
@@ -217,13 +219,13 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
         }
     }
 
-    private class LingshaEmergencyHealTracker extends PermPower {
+    public class LingshaEmergencyHealTracker extends PermPower {
         public LingshaEmergencyHealTracker() {
             this.setName(this.getClass().getSimpleName());
         }
 
-        @Override
-        public void afterAttacked(EnemyAttackLogic attack) {
+        @Subscribe
+        public void afterAttacked(PostAllyAttacked e) {
             long eligible = getBattle().getPlayers().stream()
                     .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.6)
                     .count();

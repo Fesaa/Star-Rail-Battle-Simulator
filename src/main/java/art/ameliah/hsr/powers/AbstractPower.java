@@ -1,26 +1,26 @@
 package art.ameliah.hsr.powers;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
-import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
 import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.EventPriority;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPower implements BattleEvents, BattleParticipant {
+public abstract class AbstractPower implements BattleParticipant {
 
     public final boolean durationBasedOnSelfTurns = true;
 
@@ -191,8 +191,8 @@ public abstract class AbstractPower implements BattleEvents, BattleParticipant {
         return currentCritDmg;
     }
 
-    @Override
-    public void onEndTurn() {
+    @Subscribe(priority = EventPriority.HIGHEST)
+    public void onEndTurn(TurnEndEvent event) {
         if (!lastsForever && durationBasedOnSelfTurns) {
             if (justApplied) {
                 justApplied = false;

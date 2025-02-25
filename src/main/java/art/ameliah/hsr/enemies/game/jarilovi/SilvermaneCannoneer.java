@@ -7,6 +7,9 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.enemy.PostEnemyAttack;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -28,8 +31,8 @@ public class SilvermaneCannoneer extends AbstractEnemy {
         this.sequence.addAction(this::CoveringSupport);
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStartCoverSupport(CombatStartEvent event) {
         this.CoveringSupport();
     }
 
@@ -57,18 +60,18 @@ public class SilvermaneCannoneer extends AbstractEnemy {
         target.addPower(new CoveringSupportPower());
     }
 
-    private class CoveringSupportPower extends TempPower {
+    public class CoveringSupportPower extends TempPower {
 
         public CoveringSupportPower() {
             super(1);
         }
 
-        @Override
-        public void afterAttack(EnemyAttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostEnemyAttack e) {
             this.getOwner().removePower(this);
             SilvermaneCannoneer.this.actionMetric.record(EnemyAttackType.BLAST);
             SilvermaneCannoneer.this.doAttack(da -> {
-                AbstractCharacter<?> target = Randf.rand(attack.getTargets(), getBattle().getEnemyTargetRng());
+                AbstractCharacter<?> target = Randf.rand(e.getAttack().getTargets(), getBattle().getEnemyTargetRng());
                 int idx = getBattle().getPlayers().indexOf(target);
 
                 da.logic(target, (c, al) -> al.hit(c, 12, 479));

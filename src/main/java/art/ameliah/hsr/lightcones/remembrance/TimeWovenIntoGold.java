@@ -6,6 +6,10 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -18,8 +22,8 @@ public class TimeWovenIntoGold extends AbstractLightcone {
         super(1058, 635, 397, owner);
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         AbstractPower power = new TimeWovenIntoGoldPower();
         power.stacks = 0; // starts at 0
         this.owner.addPower(power);
@@ -48,8 +52,8 @@ public class TimeWovenIntoGold extends AbstractLightcone {
             return 0;
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
             this.owner.addPower(new TimeWovenIntoGoldPower());
             if (owner instanceof Memomaster<?> memomaster) {
                 if (memomaster.getMemo() != null) {
@@ -63,11 +67,11 @@ public class TimeWovenIntoGold extends AbstractLightcone {
             }
         }
 
-        @Override
-        public void afterSummon(Memosprite<?, ?> memosprite) {
+        @Subscribe
+        public void afterSummon(PostSummon e) {
             AbstractPower power = new TimeWovenIntoGoldPower();
             power.stacks = this.stacks;
-            memosprite.addPower(power);
+            e.getMemosprite().addPower(power);
         }
     }
 }

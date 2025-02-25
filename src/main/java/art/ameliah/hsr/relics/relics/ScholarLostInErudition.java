@@ -3,6 +3,9 @@ package art.ameliah.hsr.relics.relics;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -19,8 +22,8 @@ public class ScholarLostInErudition extends AbstractRelicSetBonus {
         super(owner, fullSet);
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         if (!this.isFullSet) {
             return;
         }
@@ -42,8 +45,8 @@ public class ScholarLostInErudition extends AbstractRelicSetBonus {
             super(NAME);
         }
 
-        @Override
-        public void afterUseUltimate() {
+        @Subscribe
+        public void afterUseUltimate(PostUltimate event) {
             this.extraBoost = true;
         }
 

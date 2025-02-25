@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.abundance;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -19,8 +21,9 @@ public class ScentAloneStaysTrue extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 60, "Scent Alone Stays True Break Effect Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        var attack = event.getAttack();
         if (!attack.getTypes().contains(DamageType.ULTIMATE)) return;
 
         attack.getTargets().forEach(e -> {

@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.Attack;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
@@ -21,6 +20,16 @@ import art.ameliah.hsr.characters.goal.EnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.TurnGoal;
 import art.ameliah.hsr.characters.goal.UltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.character.HPLost;
+import art.ameliah.hsr.events.character.HpGain;
+import art.ameliah.hsr.events.character.PostBasic;
+import art.ameliah.hsr.events.character.PostGainEnergy;
+import art.ameliah.hsr.events.character.PostSkill;
+import art.ameliah.hsr.events.character.PostUltimate;
+import art.ameliah.hsr.events.character.PreBasic;
+import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.DefaultLightcone;
 import art.ameliah.hsr.metrics.ActionMetric;
@@ -31,7 +40,6 @@ import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
@@ -279,9 +287,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.SKILL));
         getBattle().useSkillPoint(this, 1);
-        this.emit(BattleEvents::onUseSkill);
+        this.eventBus.fire(new PreSkill());
         this.useSkill();
-        this.emit(BattleEvents::afterUseSkill);
+        this.eventBus.fire(new PostSkill());
         increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
     }
 
@@ -290,9 +298,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.BASIC));
         getBattle().generateSkillPoint(this, 1);
-        this.emit(BattleEvents::onUseBasic);
+        this.eventBus.fire(new PreBasic());
         this.useBasic();
-        this.emit(BattleEvents::afterUseBasic);
+        this.eventBus.fire(new PostBasic());
         increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
     }
 
@@ -302,9 +310,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float initialEnergy = this.currentEnergy.get();
         this.currentEnergy.decrease(this.ultCost);
         getBattle().addToLog(new DoMove(this, MoveType.ULTIMATE, initialEnergy, this.currentEnergy.get()));
-        this.emit(BattleEvents::onUseUltimate);
+        this.eventBus.fire(new PreUltimate());
         this.useUltimate();
-        this.emit(BattleEvents::afterUseUltimate);
+        this.eventBus.fire(new PostUltimate());
         increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
     }
 
@@ -331,16 +339,19 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             amount *= (200+10*enemy.getLevel())/(200+10*enemy.getLevel()+this.getFinalDefense());
         }
 
+        var event = new HPLost(amount);
+        this.eventBus.fire(event);
+
+        amount = event.getAmount();
+
         float overflow = this.currentHp.decrease(amount, canKill ? 0f : 1f);
         float lost = amount - overflow;
         getBattle().addToLog(new HealthChange(this, -1*lost, -1*amount));
-
-        this.emit(l -> l.afterHPLost(lost));
         return lost;
     }
 
     public void die(BattleParticipant source) {
-        this.emit(l -> l.onDeath(source));
+        this.eventBus.fire(new DeathEvent(source));
         getBattle().addToLog(new CharacterDeath(this, source, "HP reduced to 0"));
         getBattle().removeEntity(this);
     }
@@ -390,7 +401,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
         getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
         float gained = amount-overflow;
-        this.emit(l -> l.afterHpGain(gained, overflow));
+        this.eventBus.fire(new HpGain(gained, overflow));
     }
 
     public EnemyHitResult hit(EnemyHit hit) {
@@ -572,7 +583,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.currentEnergy.increase(energyGained, this.maxEnergy);
         this.overflowEnergy.increase(overflow);
         getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
-        this.emit(l -> l.onGainEnergy(energyGained, overflow));
+        this.eventBus.fire(new PostGainEnergy(energyGained, overflow));
     }
 
     /**
@@ -591,16 +602,16 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public void EquipLightcone(AbstractLightcone lightcone) {
-        this.getListeners().remove(this.lightcone);
+        this.eventBus.unregisterListener(this.lightcone);
         this.lightcone = lightcone;
         this.lightcone.onEquip();
-        this.getListeners().add(this.lightcone);
+        this.eventBus.registerListener(this.lightcone);
     }
 
     public void EquipRelicSet(AbstractRelicSetBonus relicSetBonus) {
         this.relicSetBonus.add(relicSetBonus);
         relicSetBonus.onEquip();
-        this.getListeners().add(relicSetBonus);
+        this.eventBus.registerListener(relicSetBonus);
     }
 
     public boolean lastMove(MoveType move) {

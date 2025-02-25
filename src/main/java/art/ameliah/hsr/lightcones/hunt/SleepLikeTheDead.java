@@ -3,6 +3,9 @@ package art.ameliah.hsr.lightcones.hunt;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -25,9 +28,9 @@ public class SleepLikeTheDead extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 36, "Sleep Like The Dead Crit Damage Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (this.cooldown <= 0 && (attack.getTypes().contains(DamageType.SKILL) || attack.getTypes().contains(DamageType.BASIC))) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        if (this.cooldown <= 0 && (e.getAttack().getTypes().contains(DamageType.SKILL) || e.getAttack().getTypes().contains(DamageType.BASIC))) {
             AbstractPower critPower = TempPower.create(PowerStat.CRIT_CHANCE, 36, 1, "Sleep Like The Dead Crit Chance Boost");
             critPower.justApplied = true;
             this.owner.addPower(critPower);
@@ -35,8 +38,8 @@ public class SleepLikeTheDead extends AbstractLightcone {
         }
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         if (cooldown > 0) {
             cooldown--;
         }

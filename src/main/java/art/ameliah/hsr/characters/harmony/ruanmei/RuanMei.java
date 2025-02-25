@@ -10,6 +10,8 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -119,15 +121,15 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
-    private class RuanMeiUltPower extends PermPower {
+    public class RuanMeiUltPower extends PermPower {
         public RuanMeiUltPower() {
             super(ULT_POWER_NAME);
             this.setStat(PowerStat.RES_PEN, 25);
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            for (AbstractEnemy enemy : attack.getTargets()) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
+            for (AbstractEnemy enemy : e.getAttack().getTargets()) {
                 if (!enemy.hasPower(ULT_DEBUFF_NAME)) {
                     AbstractPower debuff = new RuanMeiUltDebuff(RuanMei.this);
                     enemy.addPower(debuff);

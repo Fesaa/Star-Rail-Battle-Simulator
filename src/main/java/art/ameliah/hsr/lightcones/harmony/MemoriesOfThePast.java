@@ -2,6 +2,9 @@ package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -19,13 +22,13 @@ public class MemoriesOfThePast extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 56, "Memories of the Past Break Effect Boost"));
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent event) {
         this.canRegen = true;
     }
 
-    @Override
-    public void afterAttack(AttackLogic attack) {
+    @Subscribe
+    public void afterAttack(PostAllyAttack event) {
         if (!this.canRegen) return;
 
         this.owner.increaseEnergy(8, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);

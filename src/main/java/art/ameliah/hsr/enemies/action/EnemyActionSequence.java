@@ -1,16 +1,17 @@
 package art.ameliah.hsr.enemies.action;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 // TODO: Allow this to be a LOT more complex, dunno how...
-public class EnemyActionSequence implements BattleParticipant, BattleEvents {
+public class EnemyActionSequence implements BattleParticipant {
 
     private final AbstractEnemy enemy;
 
@@ -33,8 +34,8 @@ public class EnemyActionSequence implements BattleParticipant, BattleEvents {
         this.idx = (idx + 1) % this.actions.size();
     }
 
-    @Override
-    public void onWeaknessBreak(BattleParticipant source) {
+    @Subscribe
+    public void onWeaknessBreak(WeaknessBreakEvent event) {
         this.idx = 0;
     }
 

@@ -2,6 +2,8 @@ package art.ameliah.hsr.lightcones.preservation;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -20,8 +22,8 @@ public class MomentOfVictory extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.TAUNT_VALUE, 200, "Moment Of Victory Taunt Value Boost"));
     }
 
-    @Override
-    public void afterAttacked(AttackLogic attack) {
+    @Subscribe
+    public void afterAttacked(PostAllyAttacked e) {
         this.owner.addPower(TempPower.create(PowerStat.DEF_PERCENT, 24, 1, "Moment Of Victory Defense Boost"));
     }
 }

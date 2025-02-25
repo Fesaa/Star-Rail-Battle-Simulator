@@ -4,6 +4,8 @@ import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -24,9 +26,9 @@ public class YetHopeIsPriceless extends AbstractLightcone {
         this.owner.addPower(new YetHopeIsPricelessPower());
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (!attack.getTypes().contains(DamageType.BASIC)) return;
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        if (!e.getAttack().getTypes().contains(DamageType.BASIC)) return;
 
         this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 20, 2, "Yet Hope Is Priceless Defense Ignore Debuff"));
     }

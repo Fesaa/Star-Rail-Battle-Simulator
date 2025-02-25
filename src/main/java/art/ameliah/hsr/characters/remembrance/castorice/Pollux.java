@@ -1,12 +1,12 @@
 package art.ameliah.hsr.characters.remembrance.castorice;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
-import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.powers.PermPower;
 
 public class Pollux extends Memosprite<Pollux, Castorice> {
@@ -37,8 +37,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         // TODO
     }
 
-    @Override
-    public void onDeath(BattleParticipant reason) {
+    @Subscribe
+    public void onDeath(DeathEvent event) {
         // Where The West Wind Dwells
         getBattle().getPlayers().forEach(p -> {
             p.increaseHealth(this, 250 + 0.1 * this.getMaster().getFinalHP());

@@ -2,6 +2,9 @@ package art.ameliah.hsr.relics.ornament;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -20,8 +23,8 @@ public class CelestialDifferentiator extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 16, "Celestial Differentiator CD bonus"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         this.owner.addPower(new CelestialDifferentiatorCRBonus());
     }
 
@@ -31,8 +34,8 @@ public class CelestialDifferentiator extends AbstractRelicSetBonus {
             this.setStat(PowerStat.CRIT_CHANCE, 60);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
             this.getOwner().removePower(this);
         }
     }

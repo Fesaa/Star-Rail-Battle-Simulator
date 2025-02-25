@@ -1,6 +1,9 @@
 package art.ameliah.hsr.lightcones.abundance;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -27,14 +30,12 @@ public class NightOfFright extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ENERGY_REGEN, 12, "Night of Fright Energy Regen Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
-        // TODO: Heal ally
-    }
-
-    @Override
-    public void onCombatStart() {
-        getBattle().registerForPlayers(c -> c.addPower(new NightOfFrightPower()));
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
+        getBattle().registerForPlayers(c -> {
+            c.addPower(new NightOfFrightPower());
+            c.addPower(new NightOfFrightListener());
+        });
     }
 
     public class NightOfFrightPower extends PermPower {
@@ -42,6 +43,15 @@ public class NightOfFright extends AbstractLightcone {
             this.setName(this.getClass().getSimpleName());
 
             this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 2.4f * atkStacks);
+        }
+    }
+
+    public class NightOfFrightListener extends PermPower {
+
+        @Subscribe
+        public void onUlt(PreUltimate e) {
+            var owner = ((AbstractCharacter<?>) this.owner);
+            owner.increaseHealth(NightOfFright.this, owner.getFinalHP()*0.1f);
         }
     }
 }

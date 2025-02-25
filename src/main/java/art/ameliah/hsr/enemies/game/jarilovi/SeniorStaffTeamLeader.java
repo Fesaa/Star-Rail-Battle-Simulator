@@ -7,6 +7,10 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.DeathEvent;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.powers.PermPower;
 
@@ -39,8 +43,8 @@ public class SeniorStaffTeamLeader extends AbstractEnemy {
         this.sequence.runNext();
     }
 
-    @Override
-    public void onWeaknessBreak(BattleParticipant source) {
+    @Subscribe
+    public void onWeaknessBreak(WeaknessBreakEvent event) {
         this.chargeState.set(false);
     }
 
@@ -123,24 +127,24 @@ public class SeniorStaffTeamLeader extends AbstractEnemy {
             this.maxStacks = 3;
         }
 
-        @Override
-        public void onDeath(BattleParticipant source) {
-            if (source instanceof AbstractCharacter<?> character) {
+        @Subscribe
+        public void onDeath(DeathEvent e) {
+            if (e.getSource() instanceof AbstractCharacter<?> character) {
                 character.addPower(this);
                 this.owner.removePower(this);
             }
         }
 
-        @Override
-        public void onWeaknessBreak(BattleParticipant source) {
-            if (source instanceof AbstractCharacter<?> character) {
+        @Subscribe
+        public void onWeaknessBreak(WeaknessBreakEvent e) {
+            if (e.getSource() instanceof AbstractCharacter<?> character) {
                 character.addPower(this);
                 this.owner.removePower(this);
             }
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack e) {
             if (this.owner instanceof AbstractCharacter<?> character) {
                 character.removePower(this);
             }

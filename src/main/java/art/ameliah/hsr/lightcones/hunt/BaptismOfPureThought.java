@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.hunt;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -31,8 +33,8 @@ public class BaptismOfPureThought extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 20 + this.enemyDebugs * 8, "Baptism Of Pure Thought Crit Damage Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         this.owner.addPower(new DisputationEffect());
     }
 

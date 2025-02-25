@@ -2,6 +2,9 @@ package art.ameliah.hsr.lightcones.abundance;
 
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -18,14 +21,14 @@ public class EchoesOftheCoffin extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 24, "Echoes of the Coffin ATK Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         getBattle().getPlayers().forEach(c -> getBattle().IncreaseSpeed(c, TempPower.create(PowerStat.FLAT_SPEED, 12, 1, "Echoes of the Coffin Speed Boost")));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        int stacks = Math.min(3, attack.getTargets().size());
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        int stacks = Math.min(3, e.getAttack().getTargets().size());
         this.owner.increaseEnergy(3 * stacks, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);
     }
 }

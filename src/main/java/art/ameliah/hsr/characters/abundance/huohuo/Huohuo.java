@@ -10,6 +10,9 @@ import art.ameliah.hsr.characters.goal.shared.target.ally.LowestHpGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -103,7 +106,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         return talentCounter;
     }
 
-    private class HuohuoTalentPower extends AbstractPower {
+    public class HuohuoTalentPower extends AbstractPower {
 
         public static final String NAME = "Possession: Ethereal Metaflow";
 
@@ -127,13 +130,13 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
                     .forEach(p -> Huohuo.this.healAlly(p, amount, removeDebuff));
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             this.trigger();
         }
 
-        @Override
-        public void onUseUltimate() {
+        @Subscribe
+        public void onUseUltimate(PreUltimate e) {
             this.trigger();
         }
     }

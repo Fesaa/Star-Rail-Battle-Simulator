@@ -11,12 +11,14 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.ally.DpsAllyTargetGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostDoHit;
+import art.ameliah.hsr.events.character.PostUseOnAllies;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
-
-import java.util.List;
 
 /**
  * Mem currently cannot disappear, "No... Regrets" is not implemented. There is no ally dmg
@@ -51,8 +53,8 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
         }
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.increaseCharge(50);
         getBattle().registerForPlayers(p -> {
             float cd = 24f + 0.12f * this.getTotalCritDamage();
@@ -95,7 +97,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
             }
         }
         this.charge.set(0);
-        this.emit(l -> l.afterUseOnAlly(List.of(ally)));
+        this.eventBus.fire(new PostUseOnAllies(ally));
     }
 
     private void baddiesTrouble() {
@@ -125,9 +127,9 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
             this.setStat(PowerStat.CRIT_CHANCE, 10);
         }
 
-        @Override
-        public void afterDoHit(HitResult hit) {
-            float dmg = hit.getHit().finalDmg();
+        @Subscribe
+        public void afterDoHit(PostDoHit event) {
+            float dmg = event.getHit().getHit().finalDmg();
             float mul = 0.28f;
 
             var character = (AbstractCharacter<?>)this.getOwner();
@@ -144,7 +146,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
 
             float trueDmg = dmg * mul;
 
-            hit.getHit().getAttackLogic().hitFixed(Mem.this, hit.getEnemy(), trueDmg);
+            event.getHit().getHit().getAttackLogic().hitFixed(Mem.this, event.getHit().getEnemy(), trueDmg);
         }
     }
 }

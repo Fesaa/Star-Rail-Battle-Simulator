@@ -28,6 +28,12 @@ import art.ameliah.hsr.characters.AbstractSummon;
 import art.ameliah.hsr.characters.destruction.yunli.Yunli;
 import art.ameliah.hsr.characters.hunt.march.SwordMarch;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.combat.AllyJoinCombat;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.EnemyJoinCombat;
+import art.ameliah.hsr.events.combat.EnemyLeavesCombat;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.metrics.MetricRegistry;
@@ -179,8 +185,10 @@ public class Battle extends RngProvider implements IBattle {
         this.actionValueMap.remove(enemy);
 
         this.onEnemyRemove(enemy, idx);
-        this.doOnceForPlayers(p -> p.emit(l -> l.onEnemyRemove(enemy, idx)));
-        this.doOnceForEnemy(e -> e.emit(l -> l.onEnemyRemove(enemy, idx)));
+
+        var event = new EnemyLeavesCombat(enemy, idx);
+        this.doOnceForEnemy(p -> p.getEventBus().fire(event));
+        this.doOnceForEnemy(e -> e.getEventBus().fire(event));
     }
 
     @Override
@@ -200,9 +208,10 @@ public class Battle extends RngProvider implements IBattle {
         addToLog(new EntityJoinedBattle(ally));
 
         this.playerListeners.forEach(listener -> listener.accept(ally));
-        ally.emit(BattleEvents::onCombatStart);
+        ally.getEventBus().fire(new CombatStartEvent());
         ally.OnCombatStart();
-        this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onPlayerJoinCombat(ally)));
+        var event = new AllyJoinCombat(ally);
+        this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
     }
 
     @Override
@@ -222,8 +231,9 @@ public class Battle extends RngProvider implements IBattle {
         addToLog(new EntityJoinedBattle(enemy));
 
         this.enemyListeners.forEach(l -> l.accept(enemy));
-        enemy.emit(BattleEvents::onCombatStart);
-        this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onEnemyJoinCombat(enemy)));
+        enemy.eventBus.fire(new CombatStartEvent());
+        var event = new EnemyJoinCombat(enemy);
+        this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
     }
 
     /**
@@ -358,12 +368,12 @@ public class Battle extends RngProvider implements IBattle {
 
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
-            enemy.emit(BattleEvents::onCombatStart);
+            enemy.eventBus.fire(new CombatStartEvent());
         }
         isInCombat = true;
         for (AbstractCharacter<?> character : playerTeam) {
             actionValueMap.put(character, character.getBaseAV());
-            character.emit(BattleEvents::onCombatStart);
+            character.eventBus.fire(new CombatStartEvent());
             character.OnCombatStart();
         }
 
@@ -434,7 +444,7 @@ public class Battle extends RngProvider implements IBattle {
 
         this.onTurnStart();
         addToLog(new TurnStart(currentUnit, this.getActionValueUsed(), actionValueMap));
-        currentUnit.emit(BattleEvents::onTurnStart);
+        this.currentUnit.eventBus.fire(new TurnStartEvent());
 
         // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
         if (!(currentUnit instanceof AbstractSummon<?>)) {
@@ -452,7 +462,7 @@ public class Battle extends RngProvider implements IBattle {
         }
 
         // Character keep their buffs until the next card is at 0AV
-        currentUnit.emit(BattleEvents::onEndTurn);
+        this.currentUnit.eventBus.fire(new TurnEndEvent());
         this.addToLog(new TurnEnd(this.currentUnit, this.enemyTeam));
         this.onEndTurn();
 

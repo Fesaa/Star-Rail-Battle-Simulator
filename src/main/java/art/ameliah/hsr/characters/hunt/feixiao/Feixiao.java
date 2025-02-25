@@ -17,6 +17,8 @@ import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingDebuffGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -172,7 +174,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         this.gainStackEnergy(1);
     }
 
-    private static class FeiCritDmgPower extends AbstractPower {
+    public static class FeiCritDmgPower extends AbstractPower {
         public FeiCritDmgPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
@@ -189,14 +191,15 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
     }
 
-    private class FeiTalentPower extends AbstractPower {
+    public class FeiTalentPower extends AbstractPower {
         public FeiTalentPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             if (!Feixiao.this.hasPower(ultBreakEffBuff.getName())) {
                 Feixiao.this.increaseStack(1);
             }

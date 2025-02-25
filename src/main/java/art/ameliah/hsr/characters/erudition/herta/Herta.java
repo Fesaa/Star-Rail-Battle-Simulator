@@ -13,6 +13,9 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -44,8 +47,8 @@ public class Herta extends AbstractCharacter<Herta> {
         this.registerGoal(0, new RandomEnemyTargetGoal<>(this));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.addPower(new HertaSkillDMGBoost());
         PermPower p = new HertaFuaListener();
         getBattle().registerForPlayers(player -> player.addPower(p));
@@ -118,8 +121,9 @@ public class Herta extends AbstractCharacter<Herta> {
             return damageTypes.contains(DamageType.FOLLOW_UP) ? 10 : 0;
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             boolean anyAlive = attack.getTargets().stream().anyMatch(e -> !e.isDead());
             List<AbstractEnemy> newFallen = attack.getTargets().stream()
                     .filter(t -> t.getCurrentHp().get() < t.maxHp() * 0.5f)

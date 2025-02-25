@@ -27,7 +27,7 @@ public class InertSalsotto extends AbstractRelicSetBonus {
         owner.addPower(new InertSalsottoDamagePower());
     }
 
-    private static class InertSalsottoDamagePower extends AbstractPower {
+    public static class InertSalsottoDamagePower extends AbstractPower {
         public InertSalsottoDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

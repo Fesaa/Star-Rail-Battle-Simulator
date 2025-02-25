@@ -1,9 +1,10 @@
 package art.ameliah.hsr.characters.harmony.robin;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.lines.character.ConcertoEnd;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 
 public class Concerto extends AbstractEntity {
@@ -26,13 +27,13 @@ public class Concerto extends AbstractEntity {
             super("Concerto Reset Power");
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             getBattle().addToLog(new ConcertoEnd());
             getBattle().getActionValueMap().remove(this.getOwner());
             Concerto.this.owner.onConcertoEnd();
             getBattle().setCurrentUnit(Concerto.this.owner);
-            Concerto.this.owner.emit(BattleEvents::onTurnStart);
+            Concerto.this.owner.getEventBus().fire(new TurnStartEvent());
         }
     }
 }

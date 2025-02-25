@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.remembrance.aglaea;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.DamageType;
@@ -16,6 +15,14 @@ import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
+import art.ameliah.hsr.events.character.PostBasic;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PreBasic;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.enemy.PostEnemyAttack;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -57,8 +64,8 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.supremeStanceEntity.setBattle(getBattle());
         if (this.currentEnergy.get() < this.maxEnergy * 0.5f) {
             this.currentEnergy.set(this.maxEnergy * 0.5f);
@@ -72,7 +79,7 @@ public class Aglaea extends Memomaster<Aglaea> {
         getBattle().addPlayerAt(this.garmentmaker, idx+1);
         getBattle().AdvanceEntity(this.garmentmaker, 100); // The Speeding Summer
 
-        this.emit(l -> l.afterSummon(this.garmentmaker));
+        this.eventBus.fire(new PostSummon(this.garmentmaker));
     }
 
     @Override
@@ -104,9 +111,9 @@ public class Aglaea extends Memomaster<Aglaea> {
         this.actionMetric.record(MoveType.ENHANCED_BASIC);
 
         getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_BASIC));
-        this.emit(BattleEvents::onUseBasic);
+        this.eventBus.fire(new PreBasic());
         this.useEnhancedBasic();
-        this.emit(BattleEvents::afterUseBasic);
+        this.eventBus.fire(new PostBasic());
         increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
     }
 
@@ -213,10 +220,10 @@ public class Aglaea extends Memomaster<Aglaea> {
             super(NAME);
         }
 
-        @Override
-        public void afterAttacked(AttackLogic attack) {
-            if (this.getOwner() instanceof AbstractEnemy enemy && attack.getSource() instanceof Aglaea) {
-                attack.additionalDmg(Aglaea.this, enemy, 0.3f, ElementType.LIGHTNING);
+        @Subscribe
+        public void afterAttacked(PostEnemyAttacked e) {
+            if (this.getOwner() instanceof AbstractEnemy enemy && e.getAttack().getSource() instanceof Aglaea) {
+                e.getAttack().additionalDmg(Aglaea.this, enemy, 0.3f, ElementType.LIGHTNING);
             }
         }
     }

@@ -1,6 +1,9 @@
 package art.ameliah.hsr.enemies.game.luofu.moonrage;
 
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
+import art.ameliah.hsr.events.enemy.PostEnemyAttack;
 import art.ameliah.hsr.powers.PermPower;
 
 public class MoonRageTracker extends PermPower {
@@ -26,16 +29,16 @@ public class MoonRageTracker extends PermPower {
         getBattle().getActionValueMap().put(moonRageEntity, moonRageEntity.getBaseAV());
     }
 
-    @Override
-    public void onEndTurn() {
+    @Subscribe
+    public void onEndTurn(TurnEndEvent e) {
         if (this.noneMoonRageAble()) {
             bloodLustStacks = 0;
             getBattle().getActionValueMap().remove(this.moonRageEntity);
         }
     }
 
-    @Override
-    public void afterAttack(EnemyAttackLogic attack) {
+    @Subscribe
+    public void afterAttack(PostEnemyAttack e) {
         bloodLustStacks++;
 
         for (var enemy : getBattle().getEnemies()) {

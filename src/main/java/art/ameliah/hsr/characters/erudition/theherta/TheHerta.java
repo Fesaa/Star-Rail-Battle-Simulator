@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.erudition.theherta;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -16,6 +15,15 @@ import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PostSkill;
+import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.EnemyJoinCombat;
+import art.ameliah.hsr.events.combat.EnemyLeavesCombat;
+import art.ameliah.hsr.events.combat.WaveStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -61,8 +69,8 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         int erudition = getBattle().getPlayers().stream().filter(p -> p.getPath().equals(Path.ERUDITION)).toList().size();
         if (erudition > 1) {
             this.eruditionGoal = true;
@@ -72,15 +80,17 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
         getBattle().registerForPlayers(p -> p.addPower(new AlooflyHonest()));
     }
 
-    @Override
-    public void onWaveStart() {
+    @Subscribe
+    public void onWaveStart(WaveStartEvent e) {
         AbstractEnemy target = getBattle().getEnemies().stream()
                 .min(Comparator.comparingInt(Comparators::CompareRarity)).orElseThrow();
         target.addPower(new Interpretation(25));
     }
 
-    @Override
-    public void afterAttack(AttackLogic attack) {
+    @Subscribe
+    public void afterAttack(PostAllyAttack event) {
+        AttackLogic attack = event.getAttack();
+
         AbstractEnemy target = attack.getTargets()
                 .stream()
                 .max(Comparator.comparingInt(e -> e.getPowerStacks(Interpretation.NAME)))
@@ -89,19 +99,19 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
         target.addPower(new Interpretation());
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 80, 2, "Told Ya! Magic Happens ATK boost"));
     }
 
-    @Override
-    public void onEnemyJoinCombat(AbstractEnemy enemy) {
-        enemy.addPower(new Interpretation());
+    @Subscribe
+    public void onEnemyJoinCombat(EnemyJoinCombat e) {
+        e.getEnemy().addPower(new Interpretation());
     }
 
-    @Override
-    public void onEnemyRemove(AbstractEnemy enemy, int idx) {
-        int tally = enemy.getPowerStacks(Interpretation.NAME);
+    @Subscribe
+    public void onEnemyRemove(EnemyLeavesCombat event) {
+        int tally = event.getEnemy().getPowerStacks(Interpretation.NAME);
         List<AbstractEnemy> targets = getBattle().getEnemies().stream()
                 .sorted(Comparator.comparingInt(Comparators::CompareRarity)).toList();
 
@@ -119,9 +129,9 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
     @Override
     protected void skillSequence() {
         if (this.inspiration.get() > 0) {
-            this.emit(BattleEvents::onUseSkill);
+            this.eventBus.fire(new PreSkill());
             this.enhancedSkill();
-            this.emit(BattleEvents::afterUseSkill);
+            this.eventBus.fire(new PostSkill());
             return;
         }
 
@@ -276,12 +286,12 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
             super(NAME);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            attack.getTargets().forEach(e -> e.addPower(new Interpretation()));
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            event.getAttack().getTargets().forEach(e -> e.addPower(new Interpretation()));
 
             // Max 5, at least 3
-            int energy = Math.max(Math.min(attack.getTargets().size(), 5), 3) * 3;
+            int energy = Math.max(Math.min(event.getAttack().getTargets().size(), 5), 3) * 3;
             TheHerta.this.increaseEnergy(energy, false, "Aloofly Honest");
 
         }

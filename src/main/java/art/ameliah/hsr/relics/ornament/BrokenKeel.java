@@ -27,7 +27,7 @@ public class BrokenKeel extends AbstractRelicSetBonus {
         getBattle().registerForPlayers(character -> character.addPower(new BrokenKeelStackPower()));
     }
 
-    private class BrokenKeelStackPower extends PermPower {
+    public class BrokenKeelStackPower extends PermPower {
         public BrokenKeelStackPower() {
             // If more than one character has this relic, the relic should not stack. As the CRIT DMG is conditional per wearer
             this.setName(this.getClass().getSimpleName() + "-" + BrokenKeel.this.owner.getName());

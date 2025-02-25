@@ -13,6 +13,8 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -86,7 +88,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         addPower(new Deduction());
     }
 
-    private static class Deduction extends PermPower {
+    public static class Deduction extends PermPower {
         public Deduction() {
             this.setName(this.getClass().getSimpleName());
         }
@@ -101,7 +103,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
     }
 
-    private static class Summation extends PermPower {
+    public static class Summation extends PermPower {
         public Summation() {
             this.setName(this.getClass().getSimpleName());
             this.maxStacks = 6;
@@ -118,7 +120,7 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
         }
     }
 
-    private class WisemanFolly extends PermPower {
+    public class WisemanFolly extends PermPower {
         public static String NAME = "Wiseman Folly";
         private int numCharges = 2;
 
@@ -126,9 +128,9 @@ public class DrRatio extends AbstractCharacter<DrRatio> {
             this.name = name;
         }
 
-        @Override
-        public void afterAttacked(AttackLogic attack) {
-            if (attack.getSource() != DrRatio.this) {
+        @Subscribe
+        public void afterAttacked(PostEnemyAttacked e) {
+            if (e.getAttack().getSource() != DrRatio.this) {
                 if (numCharges > 0) {
                     numCharges--;
                     DrRatio.this.useFollowUp((AbstractEnemy) this.getOwner());

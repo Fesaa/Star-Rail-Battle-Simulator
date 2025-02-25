@@ -1,6 +1,8 @@
 package art.ameliah.hsr.relics.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -24,8 +26,8 @@ public class MessengerTraversingHackerspace extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.SPEED_PERCENT, 6, "Messenger Traversing Hackerspace 2PC"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate event) {
         if (!this.isFullSet) return;
 
         getBattle().getPlayers().forEach(c -> {

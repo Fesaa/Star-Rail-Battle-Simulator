@@ -5,6 +5,9 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -39,8 +42,8 @@ public class NoontideGryphon extends AbstractEnemy {
         this.sequence.runNext();
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStartAquilasMarker(CombatStartEvent event) {
         getBattle().registerForEnemy(e -> e.addPower(new AquilasMarkListener()));
     }
 
@@ -84,15 +87,15 @@ public class NoontideGryphon extends AbstractEnemy {
         return mark;
     }
 
-    private class AquilasMarkListener extends PermPower {
+    public class AquilasMarkListener extends PermPower {
 
-        @Override
-        public void onDeath(BattleParticipant reason) {
+        @Subscribe
+        public void onDeath(DeathEvent e) {
             NoontideGryphon.this.marks.forEach(mark -> mark.lastsForever = false);
         }
     }
 
-    private class AquilasMark extends PermPower {
+    public class AquilasMark extends PermPower {
 
         public AquilasMark() {
             super("Aquilas Mark");

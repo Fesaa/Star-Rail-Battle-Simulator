@@ -4,6 +4,8 @@ import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -22,9 +24,9 @@ public class WhereaboutsShouldDreamsRest extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 60, "Whereabouts Should Dreams Rest Break Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        for (AbstractEnemy enemy : attack.getTargets()) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        for (AbstractEnemy enemy : e.getAttack().getTargets()) {
             enemy.addPower(new Routed(this));
         }
     }
