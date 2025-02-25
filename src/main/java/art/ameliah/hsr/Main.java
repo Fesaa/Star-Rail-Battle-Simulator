@@ -71,8 +71,8 @@ public class Main {
         battle.setPlayerTeam(new AglaeaTeams.DoubleSpeedAglaeaTeam().getTeam());
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
         enemyTeam.add(new AllWeakPassiveEnemy(0));
-        //enemyTeam.add(new AllWeakPassiveEnemy(1));
-        //enemyTeam.add(new AllWeakPassiveEnemy(2));
+        enemyTeam.add(new AllWeakPassiveEnemy(1));
+        enemyTeam.add(new AllWeakPassiveEnemy(2));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
 
