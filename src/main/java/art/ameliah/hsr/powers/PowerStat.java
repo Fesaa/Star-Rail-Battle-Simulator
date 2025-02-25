@@ -28,6 +28,7 @@ public enum PowerStat {
     DEFENSE_REDUCTION,
     DEFENSE_IGNORE,
     RES_PEN,
+    RES_DOWN, // ENEMY ONLY
     CRIT_CHANCE,
     CRIT_DAMAGE,
     ENERGY_REGEN,

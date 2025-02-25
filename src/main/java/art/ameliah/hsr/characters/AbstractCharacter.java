@@ -314,13 +314,24 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     protected abstract void useUltimate();
 
-    private float reduceHealth(BattleParticipant source, float amount) {
+    public float reduceHealth(BattleParticipant source, float amount) {
+        return this.reduceHealth(source, amount, true);
+    }
+
+    /**
+     *
+     * @param source reason of the reduction
+     * @param amount hp to remove
+     * @param canKill reduced to max 1 if set to false
+     * @return the amount of hp lost
+     */
+    public float reduceHealth(BattleParticipant source, float amount, boolean canKill) {
         if (source instanceof AbstractEnemy enemy) {
             // Source: Skill DMG page on homdgcat
             amount *= (200+10*enemy.getLevel())/(200+10*enemy.getLevel()+this.getFinalDefense());
         }
 
-        float overflow = this.currentHp.decrease(amount, 0f);
+        float overflow = this.currentHp.decrease(amount, canKill ? 0f : 1f);
         float lost = amount - overflow;
         getBattle().addToLog(new HealthChange(this, -1*lost, -1*amount));
 
@@ -329,6 +340,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public void die(BattleParticipant source) {
+        this.emit(l -> l.onDeath(source));
         getBattle().addToLog(new CharacterDeath(this, source, "HP reduced to 0"));
         getBattle().removeEntity(this);
     }
@@ -377,6 +389,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
         getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
+        float gained = amount-overflow;
+        this.emit(l -> l.afterHpGain(gained, overflow));
     }
 
     public EnemyHitResult hit(EnemyHit hit) {

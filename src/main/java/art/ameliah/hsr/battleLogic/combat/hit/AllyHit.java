@@ -107,6 +107,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
         for (var power : this.source.powerList) {
             resPen += power.getTotalStat(PowerStat.RES_PEN);
+            resPen += power.getTotalStat(PowerStat.RES_DOWN);
         }
 
         return 1 - (this.target.getRes(this.elementType) - resPen) / 100;
