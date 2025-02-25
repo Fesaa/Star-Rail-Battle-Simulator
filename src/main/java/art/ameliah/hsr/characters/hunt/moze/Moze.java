@@ -15,6 +15,8 @@ import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.events.enemy.PreEnemyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -114,7 +116,8 @@ public class Moze extends AbstractCharacter<Moze> {
         }).execute();
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         skillPointRecovered = false;
     }
 
@@ -143,7 +146,8 @@ public class Moze extends AbstractCharacter<Moze> {
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().AdvanceEntity(this, 30);
         increaseEnergy(20, "from E1");
     }

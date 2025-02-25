@@ -15,6 +15,8 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.events.enemy.PostEnemyAttack;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -107,13 +109,15 @@ public class Aventurine extends AbstractCharacter<Aventurine> {
                 }).execute();
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().registerForPlayers(p -> p.addPower(talentPower));
         getBattle().registerForEnemy(e -> e.addPower(talentPower));
         addPower(PermPower.create(PowerStat.CRIT_CHANCE, 48, "Aventurine Crit Chance Bonus"));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         blindBetFollowUpCounter = blindBetFollowUpPerTurn;
     }
 

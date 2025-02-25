@@ -13,6 +13,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -69,7 +70,8 @@ public class Asta extends AbstractCharacter<Asta> {
         justCastUlt = true;
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().registerForPlayers(p -> {
             p.addPower(talentPower);
             p.addPower(PermPower.create(PowerStat.FIRE_DMG_BOOST, 18, "Asta Fire Damage Bonus"));

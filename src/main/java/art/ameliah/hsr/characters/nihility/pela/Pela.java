@@ -12,8 +12,10 @@ import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -88,7 +90,8 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
 
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         addPower(new PelaTalentPower());
         addPower(new PelaBonusDamageAgainstDebuffPower());
     }
@@ -126,7 +129,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
             this.lastsForever = true;
         }
 
-        @Subscribe
+        @Subscribe(priority = EventPriority.HIGHEST)
         public void beforeAttack(PreAllyAttack e) {
             for (AbstractEnemy enemy : e.getAttack().getTargets()) {
                 for (AbstractPower power : enemy.powerList) {

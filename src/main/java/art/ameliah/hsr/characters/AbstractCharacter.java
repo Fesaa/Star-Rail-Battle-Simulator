@@ -625,10 +625,6 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public void useTechnique() {
     }
 
-    public void onWeaknessBreak(AbstractEnemy enemy) {
-
-    }
-
     public boolean invincible() {
         return false;
     }

@@ -9,6 +9,11 @@ import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -70,7 +75,8 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         }
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         increaseEnergy(5, TRACE_ENERGY_GAIN);
         tryUltimate();
     }
@@ -79,7 +85,8 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
         increaseEnergy(maxEnergy, false, TECHNIQUE_ENERGY_GAIN);
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         addPower(new TingyunBonusBasicDamagePower());
     }
 
@@ -108,13 +115,16 @@ public class Tingyun extends AbstractCharacter<Tingyun> {
             this.setStat(PowerStat.ATK_PERCENT, 55);
         }
 
-        public void beforeAttack(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
+            var attack = e.getAttack();
             Tingyun.this.talentProcs.increment();
             AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
             attack.additionalDmg(attack.getSource(), target, 0.64f, ElementType.LIGHTNING);
         }
 
-        public void onUseUltimate() {
+        @Subscribe
+        public void onUseUltimate(PreUltimate e) {
             if (benefactor != null) {
                 getBattle().IncreaseSpeed(benefactor, TempPower.create(PowerStat.SPEED_PERCENT, 20, 1, "Tingyun E1 Speed Power"));
             }

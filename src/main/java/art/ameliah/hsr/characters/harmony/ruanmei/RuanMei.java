@@ -12,6 +12,9 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -64,7 +67,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent  e) {
         increaseEnergy(5, TRACE_ENERGY_GAIN);
         if (skillCounter > 0) {
             skillCounter--;
@@ -84,7 +88,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().registerForPlayers(p -> {
             p.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 20, "Ruan Mei Break Buff"));
             if (p != this) {
@@ -93,7 +98,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         });
     }
 
-    public void onWeaknessBreak(AbstractEnemy enemy) {
+    @Subscribe
+    public void onWeaknessBreak(WeaknessBreakEvent e) {
         // TODO: ADD BREAK DMG
         //getBattle().getHelper().breakDamageHitEnemy(this, enemy, 1.2f);
     }

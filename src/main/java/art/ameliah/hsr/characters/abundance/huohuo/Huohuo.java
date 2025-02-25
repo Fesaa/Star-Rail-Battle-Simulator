@@ -12,6 +12,7 @@ import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -85,12 +86,14 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         talentCounter = 1;
         getBattle().registerForPlayers(p -> p.addPower(new HuohuoTalentPower()));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
 
         talentCounter--;
         if (talentCounter <= 0) {

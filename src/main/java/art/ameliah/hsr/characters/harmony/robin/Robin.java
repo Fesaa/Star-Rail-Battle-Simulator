@@ -15,6 +15,8 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -107,12 +109,14 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         getBattle().getActionValueMap().put(concerto, concerto.getBaseAV());
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().AdvanceEntity(this, 25);
         getBattle().registerForPlayers(p -> p.addPower(new RobinTalentPower()));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         if (skillCounter > 0) {
             skillCounter--;
             if (skillCounter <= 0) {

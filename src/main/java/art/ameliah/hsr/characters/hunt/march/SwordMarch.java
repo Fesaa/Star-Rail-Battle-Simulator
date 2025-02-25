@@ -22,6 +22,7 @@ import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.events.character.PreBasic;
 import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -182,7 +183,8 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
                         (e, al) -> al.hit(e, 2.59f, TOUGHNESS_DAMAGE_THREE_UNITs)));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         FUAReady = true;
         increaseEnergy(5, "from E4");
         if (this.currentEnergy.get() >= this.ultCost) {

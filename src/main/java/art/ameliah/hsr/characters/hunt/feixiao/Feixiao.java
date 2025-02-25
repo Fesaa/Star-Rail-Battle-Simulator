@@ -19,6 +19,8 @@ import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -146,7 +148,8 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
                 }).afterAttackHook(() -> this.removePower(ultBreakEffBuff)).execute();
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         if (this.currentEnergy.get() >= ultCost) {
             tryUltimate(); // check for ultimate activation at start of turn as well
         }
@@ -156,7 +159,8 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         FUAReady = true;
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.fuaRng = new Random(getBattle().getSeed());
         gainStackEnergy(3);
         getBattle().registerForPlayers(p -> p.addPower(new FeiTalentPower()));

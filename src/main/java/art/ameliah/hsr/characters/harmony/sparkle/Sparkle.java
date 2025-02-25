@@ -11,6 +11,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -63,7 +64,8 @@ public class Sparkle extends AbstractCharacter<Sparkle> {
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().increaseMaxSkillPoints(2);
         int numQuantumAllies = 0;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {

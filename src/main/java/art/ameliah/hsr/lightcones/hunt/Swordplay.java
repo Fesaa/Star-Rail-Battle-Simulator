@@ -4,6 +4,8 @@ import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreDoHit;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -18,11 +20,12 @@ public class Swordplay extends AbstractLightcone {
         super(953, 476, 331, owner);
     }
 
-    public void beforeDoHit(Hit hit) {
+    @Subscribe
+    public void beforeDoHit(PreDoHit e) {
         AbstractPower swordPlayDamagePower = new SwordplayDamagePower();
-        if (this.target != hit.getTarget()) {
+        if (this.target != e.getHit().getTarget()) {
             owner.removePower(swordPlayDamagePower.getName());
-            this.target = hit.getTarget();
+            this.target = e.getHit().getTarget();
         }
         owner.addPower(swordPlayDamagePower);
     }

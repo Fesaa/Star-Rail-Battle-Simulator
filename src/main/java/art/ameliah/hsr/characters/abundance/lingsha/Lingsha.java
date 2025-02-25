@@ -18,6 +18,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttacked;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -179,7 +180,8 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().getActionValueMap().put(fuYuan, fuYuan.getBaseAV());
         increaseHitCount(SKILL_HIT_COUNT_GAIN);
         getBattle().registerForPlayers(p -> p.addPower(damageTrackerPower));

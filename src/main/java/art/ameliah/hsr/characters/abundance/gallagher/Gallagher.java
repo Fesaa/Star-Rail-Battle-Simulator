@@ -12,6 +12,7 @@ import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -83,7 +84,8 @@ public class Gallagher extends AbstractCharacter<Gallagher> {
         }).execute();
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         increaseEnergy(20, "from E1");
         PermPower e6buff = new PermPower("Gallagher E6 Buff");
         e6buff.setStat(PowerStat.BREAK_EFFECT, 20);
