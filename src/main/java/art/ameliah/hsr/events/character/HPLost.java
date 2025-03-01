@@ -1,5 +1,7 @@
 package art.ameliah.hsr.events.character;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
+import art.ameliah.hsr.events.CancelAbleEvent;
 import art.ameliah.hsr.events.Event;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +13,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class HPLost implements Event {
+public class HPLost extends CancelAbleEvent {
 
+    private BattleParticipant source;
     private float amount;
 
 }

@@ -21,7 +21,7 @@ import art.ameliah.hsr.characters.goal.TurnGoal;
 import art.ameliah.hsr.characters.goal.UltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.character.HPLost;
-import art.ameliah.hsr.events.character.HpGain;
+import art.ameliah.hsr.events.character.HPGain;
 import art.ameliah.hsr.events.character.PostBasic;
 import art.ameliah.hsr.events.character.PostGainEnergy;
 import art.ameliah.hsr.events.character.PostSkill;
@@ -252,7 +252,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public final void takeTurn() {
         super.takeTurn();
         this.turnsMetric.increment();
+        this.doAction();
+    }
 
+    protected final void doAction() {
         // TODO: Ulting at the start of the turn makes the dmg higher in some places, but lowers in a few
         // Should investigate why this is happening, and add the needed goals to make it increase at all times
         // Time to read a bunch of logs
@@ -339,9 +342,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             amount *= (200+10*enemy.getLevel())/(200+10*enemy.getLevel()+this.getFinalDefense());
         }
 
-        var event = new HPLost(amount);
-        this.eventBus.fire(event);
-
+        var event = this.eventBus.fire(new HPLost(source, amount));
+        if (event.isCanceled()) {
+            return 0;
+        }
         amount = event.getAmount();
 
         float overflow = this.currentHp.decrease(amount, canKill ? 0f : 1f);
@@ -351,7 +355,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public void die(BattleParticipant source) {
-        this.eventBus.fire(new DeathEvent(source));
+        var event = this.eventBus.fire(new DeathEvent(source));
+        if (event.isCanceled()) {
+            return;
+        }
+
         getBattle().addToLog(new CharacterDeath(this, source, "HP reduced to 0"));
         getBattle().removeEntity(this);
     }
@@ -401,7 +409,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
         getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
         float gained = amount-overflow;
-        this.eventBus.fire(new HpGain(gained, overflow));
+        this.eventBus.fire(new HPGain(gained, overflow));
     }
 
     public EnemyHitResult hit(EnemyHit hit) {
@@ -409,9 +417,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.reduceHealth(hit.source(), hit.dmg());
 
         if (this.currentHp.get() == 0) {
-            hit.logic().getAttack().afterAttackHook(() -> {
+            if (hit.logic() != null) {
+                hit.logic().getAttack().afterAttackHook(() -> this.die(hit.source()));
+            } else {
                 this.die(hit.source());
-            });
+            }
         }
 
         return new EnemyHitResult(hit.dmg() - overflow);

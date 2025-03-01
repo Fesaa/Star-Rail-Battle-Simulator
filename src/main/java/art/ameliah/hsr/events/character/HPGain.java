@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class HpGain implements Event {
+public class HPGain implements Event {
 
     private final float amount;
     private final float overflow;
