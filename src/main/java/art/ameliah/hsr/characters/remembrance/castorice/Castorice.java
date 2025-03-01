@@ -52,6 +52,7 @@ public class Castorice extends Memomaster<Castorice> {
         getBattle().registerForPlayers(p -> {
             p.addPower(new InvertedTorch());
             p.addPower(new DarkTideContainedListener());
+            p.addPower(new DesolationTraversesHerPalmsListener());
         });
 
         getBattle().registerForEnemy(e -> {
@@ -118,16 +119,16 @@ public class Castorice extends Memomaster<Castorice> {
 
     @Override
     protected void useSkill() {
-        this.startAttack().handle(DamageType.SKILL, dl -> {
-          int idx = this.getTargetIdx(MoveType.SKILL);
-          dl.logic(idx-1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
-          dl.logic(idx, (e, al) -> al.hit(e, 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS));
-          dl.logic(idx+1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
-        }).afterAttackHook(() -> {
+        this.doAttack(DamageType.SKILL, dl -> {
             getBattle().getPlayers().forEach(p -> {
                 p.reduceHealth(this, p.getCurrentHp().get() * 0.4f, false);
             });
-        }).execute();
+
+            int idx = this.getTargetIdx(MoveType.SKILL);
+            dl.logic(idx-1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dl.logic(idx, (e, al) -> al.hit(e, 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS));
+            dl.logic(idx+1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+        });
     }
 
     protected void useEnhancedSkill() {
@@ -135,7 +136,10 @@ public class Castorice extends Memomaster<Castorice> {
             throw new IllegalStateException();
         }
 
-        this.startAttack().handle(DamageType.SKILL, dl -> {
+        this.doAttack(DamageType.SKILL, dl -> {
+            getBattle().getPlayers().forEach(p -> {
+                p.reduceHealth(this, p.getCurrentHp().get() * 0.5f, false);
+            });
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.hit(e, 0.24f, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS);
@@ -147,11 +151,7 @@ public class Castorice extends Memomaster<Castorice> {
                 });
             });
 
-        }).afterAttackHook(() -> {
-            getBattle().getPlayers().forEach(p -> {
-                p.reduceHealth(this, p.getCurrentHp().get() * 0.5f, false);
-            });
-        }).execute();
+        });
     }
 
     @Override
@@ -173,7 +173,7 @@ public class Castorice extends Memomaster<Castorice> {
         public LostNetherland() {
             super(NAME);
             this.setConditionalStat(PowerStat.RES_DOWN,
-                    _ -> Castorice.this.LostNetherland.value() ? 25f : 0f);
+                    _ -> Castorice.this.LostNetherland.value() ? 20f : 0f);
         }
     }
 
@@ -184,16 +184,22 @@ public class Castorice extends Memomaster<Castorice> {
             super(NAME);
 
             this.maxStacks = 3;
-            this.setConditionalStat(PowerStat.DAMAGE_BONUS, _ -> this.stacks * 25f);
+            this.setConditionalStat(PowerStat.DAMAGE_BONUS, _ -> this.stacks * 20f);
         }
     }
 
     public class DesolationTraversesHerPalmsListener extends PermPower {
         @Subscribe
         public void afterHPLost(HPLost e) {
+            if (this.getOwner() == Castorice.this.pollux) {
+                return;
+            }
+
+            Castorice.this.addPower(new DesolationThatTraversesHerPalms());
             if (Castorice.this.pollux == null) {
                 Castorice.this.currentEnergy.increase(e.getAmount(), MAX_STAMEN_NOVA);
             } else {
+                Castorice.this.pollux.addPower(new DesolationThatTraversesHerPalms());
                 Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
             }
         }
