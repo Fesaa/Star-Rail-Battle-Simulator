@@ -11,7 +11,8 @@ public record GainEnergy(AbstractCharacter<?> character, float initialEnergy, fl
     @Override
     public String asString() {
         float actual = this.currentEnergy - this.initialEnergy;
-        return String.format("%s gained %.3f(%.3f) Energy (%.3f -> %.3f) %s", this.character.getName(), energyGained, actual, initialEnergy, currentEnergy, source);
+        return String.format("%s gained %.3f(%.3f) Energy (%.3f -> %.3f) [%,.3f%%] %s", this.character.getName(), energyGained, actual, initialEnergy, currentEnergy,
+                currentEnergy / character.maxEnergy * 100, source);
     }
 
     @Override

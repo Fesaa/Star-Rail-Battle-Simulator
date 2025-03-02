@@ -408,7 +408,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         }
 
         if (powerAffected) {
-            float increase = 0;
+            float increase = 100;
             if (source instanceof AbstractCharacter<?> character) {
                 for (var power : character.powerList) {
                     increase += power.getStat(PowerStat.OUTGOING_HEALING);

@@ -90,7 +90,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
             if (this.currentHp.get() > 0) {
                 this.actionCounter++;
                 this.doAction(); // Skill does not end action
+                return;
             }
+
+            this.die(this);
         }).execute();
     }
 

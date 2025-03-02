@@ -4,6 +4,7 @@ import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.log.lines.battle.TurnStart;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
+import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -115,6 +116,21 @@ public class Castorice extends Memomaster<Castorice> {
         getBattle().AdvanceEntity(this.pollux, 100); // Get pollux to 0 AV, the SPD buff is applied first
     }
 
+    protected void increaseStamenNova(float amount) {
+        if (amount <= 0) {
+            return;
+        }
+
+        float overflow = this.currentEnergy.increase(amount, MAX_STAMEN_NOVA);
+        float gained = amount - overflow;
+
+        getBattle().addToLog(new GainEnergy(Castorice.this,
+                this.currentEnergy.get()-gained,
+                this.currentEnergy.get(),
+                gained, "Ally health changes"));
+
+    }
+
     @Override
     protected void useBasic() {
         this.doAttack(DamageType.BASIC, dl -> {
@@ -164,6 +180,9 @@ public class Castorice extends Memomaster<Castorice> {
 
         this.doAttack(DamageType.SKILL, dl -> {
             getBattle().getPlayers().forEach(p -> {
+                if (p == this.pollux) {
+                    return;
+                }
                 p.reduceHealth(this, p.getCurrentHp().get() * 0.5f, false);
             });
 
@@ -226,7 +245,7 @@ public class Castorice extends Memomaster<Castorice> {
 
             Castorice.this.addPower(new DesolationThatTraversesHerPalms());
             if (Castorice.this.pollux == null) {
-                Castorice.this.currentEnergy.increase(e.getAmount(), MAX_STAMEN_NOVA);
+                Castorice.this.increaseStamenNova(e.getAmount());
             } else {
                 Castorice.this.pollux.addPower(new DesolationThatTraversesHerPalms());
                 Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
@@ -240,8 +259,8 @@ public class Castorice extends Memomaster<Castorice> {
             var increase = Math.min(e.getOverflow(), 0.15f * MAX_STAMEN_NOVA);
 
             Pollux pollux = (Pollux) Castorice.this.getMemo();
-            if (pollux == null) {
-                Castorice.this.currentEnergy.increase(increase, MAX_STAMEN_NOVA);
+            if (pollux == null || pollux.getCurrentHp().get() == 0) {
+                Castorice.this.increaseStamenNova(increase);
             } else if (this.getOwner() != pollux){
                 pollux.increaseHealth(this, increase);
             }
@@ -306,7 +325,7 @@ public class Castorice extends Memomaster<Castorice> {
         }
     }
 
-    public static class SanctuaryOfTheLunarCocoon extends PermPower {
+    public class SanctuaryOfTheLunarCocoon extends PermPower {
 
         private static boolean hasTriggered = false;
         private boolean activated = false;
@@ -334,7 +353,7 @@ public class Castorice extends Memomaster<Castorice> {
 
         @Subscribe(priority = EventPriority.HIGHEST)
         public void onDeath(DeathEvent event) {
-            if (hasTriggered) {
+            if (hasTriggered || this.getOwner() == Castorice.this.pollux) {
                 return;
             }
 
