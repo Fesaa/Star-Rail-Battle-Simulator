@@ -1,11 +1,12 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.characters.nihility.pela.Pela;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-public class DontUltMissingDebuffGoal<C extends AbstractCharacter<C>> extends UltGoal<C> {
+public class DontUltMissingDebuffGoal<C extends AbstractCharacter<C>> extends AbstractUltGoal<C> {
 
     private final String other;
     private final String[] debuffNames;

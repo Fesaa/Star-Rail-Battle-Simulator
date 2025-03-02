@@ -1,12 +1,13 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.metrics.CounterMetric;
 
 import java.util.function.Predicate;
 
-public class UltMetricGoal<C extends AbstractCharacter<C>, T> extends UltGoal<C> {
+public class UltMetricGoal<C extends AbstractCharacter<C>, T> extends AbstractUltGoal<C> {
 
     private final CounterMetric<T> counter;
     private final Predicate<CounterMetric<T>> predicate;

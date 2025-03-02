@@ -3,6 +3,7 @@ package art.ameliah.hsr.registry;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import art.ameliah.hsr.relics.ornament.BelobogOfTheArchitects;
+import art.ameliah.hsr.relics.ornament.BoneCollectionsSereneDemesne;
 import art.ameliah.hsr.relics.ornament.BrokenKeel;
 import art.ameliah.hsr.relics.ornament.CelestialDifferentiator;
 import art.ameliah.hsr.relics.ornament.DuranDynastyOfRunningWolves;
@@ -94,6 +95,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
         register(316, ForgeOfTheKalpagniLatern.class);
         register(317, LushakaTheSunkenSeas.class);
         register(318, TheWondrousBananAmusementPark.class);
+        register(319, BoneCollectionsSereneDemesne.class);
     }
 
     public AbstractRelicSetBonus get(int id, AbstractCharacter<?> owner, boolean fullSet) throws Exception {

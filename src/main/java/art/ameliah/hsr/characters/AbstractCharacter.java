@@ -18,7 +18,9 @@ import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.characters.goal.AllyTargetGoal;
 import art.ameliah.hsr.characters.goal.EnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
 import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.character.HPLost;
 import art.ameliah.hsr.events.character.HPGain;
@@ -91,7 +93,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     protected final int baseDef;
     protected final int ultEnergyGain = 5;
 
-    private final SortedMap<Integer, UltGoal<C>> ultGoals = new TreeMap<>();
+    private final SortedMap<Integer, UltGoal> ultGoals = new TreeMap<>();
     private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
     private final SortedMap<Integer, EnemyTargetGoal<C>> enemyTargetGoals = new TreeMap<>();
     private final SortedMap<Integer, AllyTargetGoal<C>> allyTargetGoals = new TreeMap<>();
@@ -152,7 +154,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.enemyTargetGoals.clear();
     }
 
-    public void registerGoal(int priority, UltGoal<C> ultGoal) {
+    public void registerGoal(int priority, UltGoal ultGoal) {
         if (ultGoals.containsKey(priority)) {
             throw new IllegalArgumentException("Priority already exists, " + priority);
         }
@@ -211,8 +213,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             return;
         }
 
-        for (UltGoal<C> ultGoal : this.ultGoals.values()) {
-            UltGoal.UltGoalResult result = ultGoal.determineAction();
+        for (UltGoal ultGoal : this.ultGoals.values()) {
+            UltGoalResult result = ultGoal.determineAction();
             switch (result) {
                 case DO: {
                     getBattle().addToLog(new UltDecision(this, ultGoal.getClass()));
@@ -285,11 +287,19 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         throw new IllegalStateException("No valid turn goal found for: " + this.getName());
     }
 
+    protected boolean skillConsumesSP() {
+        return true;
+    }
+
     protected void skillSequence() {
         this.actionMetric.record(MoveType.SKILL);
 
         getBattle().addToLog(new DoMove(this, MoveType.SKILL));
-        getBattle().useSkillPoint(this, 1);
+
+        if (this.skillConsumesSP()) {
+            getBattle().useSkillPoint(this, 1);
+        }
+
         this.eventBus.fire(new PreSkill());
         this.useSkill();
         this.eventBus.fire(new PostSkill());
@@ -393,6 +403,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * @param powerAffected toggle
      */
     public void increaseHealth(BattleParticipant source, float amount, boolean powerAffected) {
+        if (this.currentHp.get() <= 0) {
+            return; // Don't heal dead characters
+        }
+
         if (powerAffected) {
             float increase = 0;
             if (source instanceof AbstractCharacter<?> character) {

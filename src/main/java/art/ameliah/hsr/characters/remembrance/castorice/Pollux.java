@@ -6,6 +6,7 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
@@ -22,6 +23,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     public final static String NAME = "Pollux";
 
     private int actionCounter = 0;
+    private boolean nextActionDie = false;
 
     public Pollux(Castorice master) {
         super(master, NAME, (int) Castorice.MAX_STAMEN_NOVA, 140, 80, ElementType.QUANTUM,
@@ -32,6 +34,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         // Normal Memosprites always basic, Pollux is different.
         this.clearTurnGoals();
         // TODO: Make Pollux goals
+        this.registerGoal(0, new AlwaysSkillGoal<>(this));
     }
 
     // Pollux is behind(?) the players, and can't be attacked
@@ -75,12 +78,13 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     }
 
     private void DimscorchBreath(float mul) {
-        float dmgMul = 30f + mul * 4;
+        float dmgMul = 0.30f + mul * 0.04f;
         this.startAttack().handle(DamageType.MEMOSPRITE_DAMAGE, dl -> {
-            this.reduceHealth(this, Castorice.MAX_STAMEN_NOVA * 0.25f, this.getCurrentHp().get() != 1);
+            this.reduceHealth(this, Castorice.MAX_STAMEN_NOVA * 0.25f, this.nextActionDie);
+            this.nextActionDie = this.getCurrentHp().get() == 1;
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
-                al.hit(this.getMaster(), e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+                al.hit(this.getMaster(), e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         }).afterAttackHook(() -> {
             if (this.currentHp.get() > 0) {
@@ -105,4 +109,6 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
             }
         });
     }
+
+
 }

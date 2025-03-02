@@ -1,14 +1,15 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.characters.harmony.bronya.Bronya;
 import art.ameliah.hsr.characters.harmony.hanya.Hanya;
 import art.ameliah.hsr.characters.harmony.robin.Robin;
 import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
 import art.ameliah.hsr.characters.harmony.sparkle.Sparkle;
 
-public class DontUltMissingPowerGoal<C extends AbstractCharacter<C>> extends UltGoal<C> {
+public class DontUltMissingPowerGoal<C extends AbstractCharacter<C>> extends AbstractUltGoal<C> {
 
     private final String other;
     private final String[] powerNames;

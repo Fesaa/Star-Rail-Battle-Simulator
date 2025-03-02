@@ -1,8 +1,9 @@
 package art.ameliah.hsr.characters.erudition.theherta;
 
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 
-public class HertaUltGoal extends UltGoal<TheHerta> {
+public class HertaUltGoal extends AbstractUltGoal<TheHerta> {
 
     public HertaUltGoal(TheHerta character) {
         super(character);

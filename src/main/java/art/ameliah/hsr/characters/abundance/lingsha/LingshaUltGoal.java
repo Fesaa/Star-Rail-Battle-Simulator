@@ -1,11 +1,12 @@
 package art.ameliah.hsr.characters.abundance.lingsha;
 
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 
-import static art.ameliah.hsr.characters.goal.UltGoal.UltGoalResult.DO;
-import static art.ameliah.hsr.characters.goal.UltGoal.UltGoalResult.DONT;
+import static art.ameliah.hsr.characters.goal.UltGoalResult.DO;
+import static art.ameliah.hsr.characters.goal.UltGoalResult.DONT;
 
-public class LingshaUltGoal extends UltGoal<Lingsha> {
+public class LingshaUltGoal extends AbstractUltGoal<Lingsha> {
     public LingshaUltGoal(Lingsha character) {
         super(character);
     }

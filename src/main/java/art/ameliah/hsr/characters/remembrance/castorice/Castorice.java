@@ -9,6 +9,10 @@ import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.EventPriority;
@@ -20,6 +24,7 @@ import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.character.PreSkill;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.DeathEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -41,6 +46,7 @@ public class Castorice extends Memomaster<Castorice> {
         super(NAME, 1629, 523, 485, 95, 80, ElementType.QUANTUM,
                 MAX_STAMEN_NOVA, 100, Path.REMEMBRANCE);
 
+        this.isDPS = true;
         this.usesEnergy = false;
         this.currentEnergy.set(0f);
         this.addPower(new TracePower()
@@ -49,13 +55,17 @@ public class Castorice extends Memomaster<Castorice> {
                 .setStat(PowerStat.CRIT_DAMAGE, 13.3f));
 
         this.addPower(new DarkTideContainedListener());
+
+        // Just using the most simply goals for now
+        this.registerGoal(0, new AlwaysSkillGoal<>(this, -1));
+        this.registerGoal(0, () -> this.pollux == null ? UltGoalResult.DO : UltGoalResult.DONT);
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Subscribe
     public void onCombatStart(CombatStartEvent event) {
         getBattle().registerForPlayers(p -> {
             p.addPower(new InvertedTorch());
-            p.addPower(new DarkTideContainedListener());
             p.addPower(new DesolationTraversesHerPalmsListener());
             p.addPower(new SanctuaryOfTheLunarCocoon());
             p.addPower(new MoonShelledVessel());
@@ -64,12 +74,15 @@ public class Castorice extends Memomaster<Castorice> {
         getBattle().registerForEnemy(e -> {
             e.addPower(new LostNetherland());
         });
+
+        this.addPower(new DarkTideContainedListener());
     }
 
     @Override
     protected void summonMemo() {
         this.pollux = new Pollux(this);
         this.pollux.addPower(new DeathListener());
+        this.pollux.addPower(new DarkTideContainedListener());
 
         int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.pollux, idx+1);
@@ -99,6 +112,7 @@ public class Castorice extends Memomaster<Castorice> {
                 p.reduceHealth(this, p.getFinalHP() * 0.4f, false);
         });
         getBattle().AdvanceEntity(this.pollux, 100);
+        getBattle().AdvanceEntity(this.pollux, 100); // Get pollux to 0 AV, the SPD buff is applied first
     }
 
     @Override
@@ -111,11 +125,15 @@ public class Castorice extends Memomaster<Castorice> {
     }
 
     @Override
+    protected boolean skillConsumesSP() {
+        return false;
+    }
+
+    @Override
     protected void skillSequence() {
         if (this.pollux != null) {
             this.actionMetric.record(MoveType.ENHANCED_SKILL);
             getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_SKILL));
-            getBattle().useSkillPoint(this, 1);
             this.eventBus.fire(new PreSkill());
             this.useEnhancedSkill();
             this.eventBus.fire(new PostSkill());
@@ -164,6 +182,9 @@ public class Castorice extends Memomaster<Castorice> {
 
     @Override
     protected void useUltimate() {
+        if (this.pollux != null) {
+            throw new IllegalStateException();
+        }
 
         this.summonMemo();
         if (this.pollux == null) {
@@ -228,6 +249,17 @@ public class Castorice extends Memomaster<Castorice> {
     }
 
     public static class DarkTideContainedListener extends PermPower {
+
+        @Subscribe
+        public void onCombatStart(CombatStartEvent e) {
+            AbstractCharacter<?> owner = (AbstractCharacter<?>) this.getOwner();
+            if (owner.getCurrentHp().get() < owner.getFinalHP() * 0.5f) {
+                return;
+            }
+
+            getBattle().IncreaseSpeed(owner, new DarkTideContained());
+        }
+
         @Subscribe
         public void afterHpGain(HPGain e) {
             AbstractCharacter<?> owner = (AbstractCharacter<?>) this.getOwner();
@@ -281,7 +313,7 @@ public class Castorice extends Memomaster<Castorice> {
         private int actionCooldown = 1;
 
         @Subscribe
-        public void onTurnStart(TurnStart e) {
+        public void onTurnStart(TurnStartEvent e) {
             if (!this.activated) {
                 return;
             }
@@ -327,6 +359,10 @@ public class Castorice extends Memomaster<Castorice> {
         @Subscribe(priority = EventPriority.LOWEST)
         public void onHPLost(HPLost event) {
             if (Castorice.this.pollux == null) {
+                return;
+            }
+
+            if (this.owner == Castorice.this.pollux) {
                 return;
             }
 

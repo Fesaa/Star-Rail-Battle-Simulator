@@ -14,6 +14,7 @@ import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.teams.AglaeaTeams;
+import art.ameliah.hsr.teams.CastoriceTeams;
 import art.ameliah.hsr.teams.PlayerTeam;
 
 import java.io.File;
@@ -43,8 +44,9 @@ public class Main {
 
         //run();
         //darkgladeTestRun();
+        CastoriceTestRun();
 
-        ameliasSanityCheck();
+        //ameliasSanityCheck();
         //WaveTester.MocTest();
         //WaveTester.MocDivTest();
         //WaveTester.PfTest();
@@ -64,6 +66,17 @@ public class Main {
             //System.out.println(metric.representation());
             System.out.println();
         }
+    }
+
+    public static void CastoriceTestRun() {
+        IBattle battle = new Battle();
+        battle.setPlayerTeam(new CastoriceTeams.CastoriceTestTeam().getTeam());
+        ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
+        enemyTeam.add(new AllWeakPassiveEnemy(0));
+        enemyTeam.add(new AllWeakPassiveEnemy(1));
+        enemyTeam.add(new AllWeakPassiveEnemy(2));
+        battle.setEnemyTeam(enemyTeam);
+        battle.Start(300);
     }
 
     public static void darkgladeTestRun() {
@@ -88,6 +101,7 @@ public class Main {
 
         var classes = TestHelper.getStaticClassesExtendingA(PlayerTeam.class, PlayerTeam.class);
         classes.addAll(TestHelper.getStaticClassesExtendingA(AglaeaTeams.class, PlayerTeam.class));
+        classes.addAll(TestHelper.getStaticClassesExtendingA(CastoriceTeams.class, PlayerTeam.class));
 
         List<Pair<String, ArrayList<AbstractCharacter<?>>>> teams = classes
                 .stream()

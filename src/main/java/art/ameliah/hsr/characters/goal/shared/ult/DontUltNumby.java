@@ -2,13 +2,14 @@ package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.characters.hunt.topaz.Numby;
 import art.ameliah.hsr.characters.hunt.topaz.Topaz;
 
 import java.util.Map;
 
-public class DontUltNumby<C extends AbstractCharacter<C>> extends UltGoal<C> {
+public class DontUltNumby<C extends AbstractCharacter<C>> extends AbstractUltGoal<C> {
 
     public DontUltNumby(C character) {
         super(character);

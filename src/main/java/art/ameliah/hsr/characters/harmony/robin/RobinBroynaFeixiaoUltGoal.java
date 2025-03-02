@@ -1,12 +1,13 @@
 package art.ameliah.hsr.characters.harmony.robin;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.characters.harmony.bronya.Bronya;
 import art.ameliah.hsr.characters.hunt.feixiao.Feixiao;
 
 
-public class RobinBroynaFeixiaoUltGoal extends UltGoal<Robin> {
+public class RobinBroynaFeixiaoUltGoal extends AbstractUltGoal<Robin> {
     public RobinBroynaFeixiaoUltGoal(Robin character) {
         super(character);
     }

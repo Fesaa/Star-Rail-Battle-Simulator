@@ -1,15 +1,16 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.characters.harmony.bronya.Bronya;
 import art.ameliah.hsr.characters.harmony.robin.Robin;
 
-import static art.ameliah.hsr.characters.goal.UltGoal.UltGoalResult.DO;
-import static art.ameliah.hsr.characters.goal.UltGoal.UltGoalResult.PASS;
+import static art.ameliah.hsr.characters.goal.UltGoalResult.DO;
+import static art.ameliah.hsr.characters.goal.UltGoalResult.PASS;
 
 
-public class BroynaRobinUltGoal<C extends AbstractCharacter<C>> extends UltGoal<C> {
+public class BroynaRobinUltGoal<C extends AbstractCharacter<C>> extends AbstractUltGoal<C> {
     public BroynaRobinUltGoal(C character) {
         super(character);
     }

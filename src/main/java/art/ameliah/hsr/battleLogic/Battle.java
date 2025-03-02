@@ -499,9 +499,13 @@ public class Battle extends RngProvider implements IBattle {
      * Have all players try their ultimates. Not sure why Yunli is filtered out, ask Darkglade
      */
     protected void tryUlts() {
-        this.playerTeam.stream()
-                .filter(p -> !(p instanceof Yunli))
-                .forEach(AbstractCharacter::tryUltimate);
+        for (var p : new ArrayList<>(this.playerTeam)) {
+            if (p instanceof Yunli) {
+                continue;
+            }
+
+            p.tryUltimate();
+        }
     }
 
     @Override
