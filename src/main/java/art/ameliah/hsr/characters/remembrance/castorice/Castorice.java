@@ -301,7 +301,7 @@ public class Castorice extends Memomaster<Castorice> {
         }
 
         @Subscribe(priority = EventPriority.HIGHEST)
-        public void afterHPLost(DeathEvent event) {
+        public void onDeath(DeathEvent event) {
             if (hasTriggered) {
                 return;
             }
@@ -324,7 +324,7 @@ public class Castorice extends Memomaster<Castorice> {
             super(NAME);
         }
 
-        @Subscribe(priority = EventPriority.HIGHEST)
+        @Subscribe(priority = EventPriority.LOWEST)
         public void onHPLost(HPLost event) {
             if (Castorice.this.pollux == null) {
                 return;
@@ -334,9 +334,19 @@ public class Castorice extends Memomaster<Castorice> {
             if (owner.getCurrentHp().get() > event.getAmount()) {
                 return;
             }
-            var hit = new EnemyHit(event.getSource(), owner, 0, event.getAmount()*5, null);
+
+            var polluxDmg = (event.getAmount() - owner.getCurrentHp().get() + 1)*5;
+            var ownerDmg = owner.getCurrentHp().get() - 1;
+
+            if (Castorice.this.pollux.getCurrentHp().get() < polluxDmg) {
+                ownerDmg += (polluxDmg - Castorice.this.pollux.getCurrentHp().get())/5;
+                polluxDmg = Castorice.this.pollux.getCurrentHp().get();
+            }
+
+
+            var hit = new EnemyHit(event.getSource(), owner, 0, polluxDmg, null);
             Castorice.this.pollux.hit(hit);
-            event.setAmount(owner.getCurrentHp().get()-1);
+            event.setAmount(ownerDmg);
         }
 
     }
