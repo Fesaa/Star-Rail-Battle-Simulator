@@ -9,6 +9,7 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -45,7 +46,11 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
 
         this.registerGoal(0, new SkillFirstTurnGoal<>(this));
         this.registerGoal(10, new AlwaysBasicGoal<>(this));
+
+        //this.registerGoal(100, new UltAtEndOfBattle<>(this));
+        //this.registerGoal(90, new UltWhenMissingChargeOrMem(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 

@@ -47,7 +47,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
         this.charge.increase(amount, 100);
         getBattle().addToLog(new GainCharge(this, amount, initialCharge, this.charge.get()));
 
-        if (this.charge.get() == 100) {
+        if (this.charge.get() == 100 && initialCharge != 100) {
             getBattle().AdvanceEntity(this, 100);
         }
     }

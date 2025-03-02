@@ -2,9 +2,12 @@ package art.ameliah.hsr.teams;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.abundance.gallagher.Gallagher;
+import art.ameliah.hsr.characters.abundance.huohuo.Huohuo;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
 import art.ameliah.hsr.characters.remembrance.castorice.Castorice;
 import art.ameliah.hsr.characters.remembrance.trailblazer.Trailblazer;
+import art.ameliah.hsr.lightcones.abundance.HeyOverHere;
 import art.ameliah.hsr.lightcones.abundance.QuidProQuo;
 import art.ameliah.hsr.lightcones.harmony.MemoriesOfThePast;
 import art.ameliah.hsr.lightcones.remembrance.MakeFarewellsMoreBeautiful;
@@ -16,6 +19,7 @@ import art.ameliah.hsr.relics.ornament.ForgeOfTheKalpagniLatern;
 import art.ameliah.hsr.relics.ornament.SpringhtlyVonwacq;
 import art.ameliah.hsr.relics.relics.HeroOfTriumphantSong;
 import art.ameliah.hsr.relics.relics.MessengerTraversingHackerspace;
+import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.PoetOfMourningCollapse;
 import art.ameliah.hsr.relics.relics.SacerdosRelivedOrdeal;
 import art.ameliah.hsr.relics.relics.ThiefOfShootingMeteor;
@@ -81,6 +85,9 @@ public class CastoriceTeams {
                 .addSubStat(Stats.HP_FLAT, 1)
                 .equipTo(rmc);
 
+        rmc.clearTurnGoals();
+        rmc.registerGoal(0, new AlwaysSkillGoal<>(rmc, 3));
+
         return rmc;
     }
 
@@ -104,6 +111,25 @@ public class CastoriceTeams {
         return gallagher;
     }
 
+    private static AbstractCharacter<?> myHuoHuo() {
+        Huohuo huohuo = new Huohuo();
+        huohuo.EquipLightcone(new HeyOverHere(huohuo));
+        huohuo.EquipRelicSet(new PasserbyOfWanderingCloud(huohuo, true));
+        new RelicStats()
+                .addMainStat(Stats.HEALING)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.HP_PER, 17)
+                .addSubStat(Stats.HP_FLAT, 8)
+                .addSubStat(Stats.SPEED, 5)
+                .equipTo(huohuo);
+
+        huohuo.clearTurnGoals();
+        huohuo.registerGoal(0, new AlwaysSkillGoal<>(huohuo));
+        return huohuo;
+    }
+
     public static class CastoriceTestTeam extends PlayerTeam {
         @Override
         public ArrayList<AbstractCharacter<?>> getTeam() {
@@ -111,7 +137,7 @@ public class CastoriceTeams {
             team.add(myCastorice());
             team.add(myRuanMei());
             team.add(myRMC());
-            team.add(myGallagher());
+            team.add(myHuoHuo());
 
             return team;
         }
