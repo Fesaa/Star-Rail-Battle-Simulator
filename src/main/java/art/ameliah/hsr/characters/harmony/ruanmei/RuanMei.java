@@ -46,6 +46,12 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
+    @Override
+    protected boolean skillConsumesSP() {
+        return this.getTurns() > 0;
+    }
+
+    @Override
     public void useSkill() {
         skillCounter = 3;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
@@ -53,12 +59,14 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
+    @Override
     public void useBasic() {
         this.doAttack(DamageType.BASIC,
                 dh -> dh.logic(this.getTarget(MoveType.BASIC),
                         (enemy, al) -> al.hit(enemy, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
+    @Override
     public void useUltimate() {
         ultCounter = 2;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
@@ -92,7 +100,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         getBattle().registerForPlayers(p -> {
             p.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 20, "Ruan Mei Break Buff"));
             if (p != this) {
-                p.addPower(PermPower.create(PowerStat.SPEED_PERCENT, 10, "Ruan Mei Speed Buff"));
+                getBattle().IncreaseSpeed(p, PermPower.create(PowerStat.SPEED_PERCENT, 10, "Ruan Mei Speed Buff"));
             }
         });
     }
@@ -105,7 +113,6 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
 
     public void useTechnique() {
         this.skillSequence();
-        getBattle().generateSkillPoint(this, 1);
     }
 
     @Override

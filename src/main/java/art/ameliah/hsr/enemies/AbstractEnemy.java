@@ -281,7 +281,9 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
             if (source instanceof AbstractCharacter<?> character) {
                 float extraDelay = character.elementType.getExtraDelay() * (1 + character.getTotalBreakEffect()/100);
-                getBattle().DelayEntity(this, extraDelay);
+                if (extraDelay > 0) {
+                    getBattle().DelayEntity(this, extraDelay);
+                }
 
                 //TODO: Further implement missing weakness break mechanics
                 // https://honkai-star-rail.fandom.com/wiki/Toughness#Weakness_Break
