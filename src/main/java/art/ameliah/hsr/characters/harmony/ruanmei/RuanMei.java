@@ -11,6 +11,7 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.AllyJoinCombat;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
@@ -49,6 +50,13 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
     @Override
     protected boolean skillConsumesSP() {
         return this.getTurns() > 0;
+    }
+
+    @Subscribe
+    public void onAllyJoinCombat(AllyJoinCombat e) {
+        if (this.skillCounter > 0) {
+            e.getAlly().addPower(skillPower);
+        }
     }
 
     @Override

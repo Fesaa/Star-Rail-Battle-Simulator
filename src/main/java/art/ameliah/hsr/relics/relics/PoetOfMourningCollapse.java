@@ -1,9 +1,11 @@
 package art.ameliah.hsr.relics.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.PreCombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -25,14 +27,14 @@ public class PoetOfMourningCollapse extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.QUANTUM_DMG_BOOST, 10, "Poet of Mourning Collapse Quantum Boost"));
     }
 
-    @Subscribe
-    public void onCombatStart(CombatStartEvent event) {
+    @Subscribe(priority = EventPriority.LOWEST)
+    public void onCombatStart(PreCombatStartEvent event) {
         this.owner.addPower(PermPower.create(PowerStat.SPEED_PERCENT, -8, "Poet of Mourning Collapse Speed Reduction"));
         getBattle().getActionValueMap().put(this.owner, this.owner.getBaseAV());
 
-        if (this.owner.getFinalSpeed() < 95) {
+        if (this.owner.getFinalSpeed() <= 95) {
             this.crBoost = 32;
-        } else if (this.owner.getFinalSpeed() < 110) {
+        } else if (this.owner.getFinalSpeed() <= 110) {
             this.crBoost = 20;
         }
 

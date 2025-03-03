@@ -32,6 +32,7 @@ import art.ameliah.hsr.events.combat.AllyJoinCombat;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.EnemyJoinCombat;
 import art.ameliah.hsr.events.combat.EnemyLeavesCombat;
+import art.ameliah.hsr.events.combat.PreCombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
@@ -209,6 +210,7 @@ public class Battle extends RngProvider implements IBattle {
 
         this.playerListeners.forEach(listener -> listener.accept(ally));
         ally.OnCombatStart();
+        ally.getEventBus().fire(new PreCombatStartEvent());
         ally.getEventBus().fire(new CombatStartEvent());
         var event = new AllyJoinCombat(ally);
         this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
@@ -231,6 +233,7 @@ public class Battle extends RngProvider implements IBattle {
         addToLog(new EntityJoinedBattle(enemy));
 
         this.enemyListeners.forEach(l -> l.accept(enemy));
+        enemy.getEventBus().fire(new PreCombatStartEvent());
         enemy.eventBus.fire(new CombatStartEvent());
         var event = new EnemyJoinCombat(enemy);
         this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
@@ -368,12 +371,14 @@ public class Battle extends RngProvider implements IBattle {
 
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
+            enemy.getEventBus().fire(new PreCombatStartEvent());
             enemy.eventBus.fire(new CombatStartEvent());
         }
         isInCombat = true;
         for (AbstractCharacter<?> character : playerTeam) {
             actionValueMap.put(character, character.getBaseAV());
             character.OnCombatStart();
+            character.getEventBus().fire(new PreCombatStartEvent());
             character.eventBus.fire(new CombatStartEvent());
         }
 
