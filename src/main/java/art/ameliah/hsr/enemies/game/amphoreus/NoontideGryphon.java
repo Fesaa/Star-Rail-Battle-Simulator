@@ -72,7 +72,7 @@ public class NoontideGryphon extends AbstractEnemy {
         this.startAttack().handle(dl -> {
             for (var target : this.lockedOn) {
                 int idx = getBattle().getPlayers().indexOf(target);
-                dl.logic(idx-1, (e, al) -> {
+                dl.logic(idx - 1, (e, al) -> {
                     al.hit(e, 20, 1300);
                     e.addPower(this.newMark());
                 });
@@ -121,7 +121,7 @@ public class NoontideGryphon extends AbstractEnemy {
                 dl.logic(character, (al) -> al.hit(character, 700));
             });
             // No idea about the amount :/
-            character.decreaseEnergy(character.maxEnergy*0.1f, "Aquilas Mark Energy Reduction");
+            character.decreaseEnergy(character.maxEnergy * 0.1f, "Aquilas Mark Energy Reduction");
 
         }
     }

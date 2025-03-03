@@ -96,7 +96,8 @@ public abstract class AbstractPower implements BattleParticipant {
 
     /**
      * Set a conditional stat, a stat may only have one conditional function
-     * @param stat the power stat
+     *
+     * @param stat      the power stat
      * @param condition the function returning the conditional value
      */
     public void setConditionalStat(PowerStat stat, Function<AbstractCharacter<?>, Float> condition) {
@@ -124,7 +125,6 @@ public abstract class AbstractPower implements BattleParticipant {
     }
 
     /**
-     *
      * @return the sum of {@link AbstractPower#getConditionalStat(PowerStat, AbstractCharacter)}
      * and {@link AbstractPower#getStat(PowerStat)}
      */
@@ -135,6 +135,7 @@ public abstract class AbstractPower implements BattleParticipant {
     /**
      * Returns the total stat for the power, if the owner of this power is not of type {@link AbstractCharacter},
      * the conditional will not be called
+     *
      * @return the sum of {@link AbstractPower#getConditionalStat(PowerStat, AbstractCharacter)}
      * and {@link AbstractPower#getStat(PowerStat)}
      */

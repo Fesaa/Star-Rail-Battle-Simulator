@@ -1,7 +1,7 @@
 package art.ameliah.hsr.enemies;
 
 public enum EnemyAttackType {
-    AOE(25),BLAST(20), SINGLE(55);
+    AOE(25), BLAST(20), SINGLE(55);
 
     public final int weight;
 

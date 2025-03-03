@@ -34,12 +34,10 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
     public static final String NAME = "Feixiao";
     public static final int STACK_THRESHOLD = 2;
-
+    final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
     protected CounterMetric<Float> gainedStacks = metricRegistry.register(CounterMetric.newFloatCounter("Gained stacks", "Amount of Talent Stacks gained"));
     protected CounterMetric<Float> wastedStacks = metricRegistry.register(CounterMetric.newFloatCounter("Wasted stacks", "Amount of overcapped Stacks"));
     protected CounterMetric<Integer> stacks = metricRegistry.register(CounterMetric.newIntegerCounter("Stacks", "Left over stacks"));
-
-    final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
     private Random fuaRng;
     private boolean FUAReady = true;
 

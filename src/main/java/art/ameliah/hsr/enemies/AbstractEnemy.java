@@ -40,26 +40,20 @@ import java.util.function.Consumer;
 
 public abstract class AbstractEnemy extends AbstractEntity {
     public static final int DEFAULT_RES = 20;
-
-    @Getter
-    private final EnemyType type;
-
     @Getter
     protected final int level;
     protected final int baseHP;
     protected final int baseATK;
     protected final int baseDEF;
     protected final int toughness;
-
-    protected EnemyActionMetric actionMetric = metricRegistry.register(new EnemyActionMetric("enemy-action-metric", "Action metrics"));
-    protected CounterMetric<Integer> weaknessBreakMetric = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-weakness-break-metric", "Times weakness broken"));
-    protected CounterMetric<Integer> timesAttacked = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-times-attack", "Times attacked"));
-
-
-
     protected final Map<ElementType, Integer> resMap = new HashMap<>();
     protected final Set<ElementType> weaknessMap = new HashSet<>();
     protected final EnemyActionSequence sequence;
+    @Getter
+    private final EnemyType type;
+    protected EnemyActionMetric actionMetric = metricRegistry.register(new EnemyActionMetric("enemy-action-metric", "Action metrics"));
+    protected CounterMetric<Integer> weaknessBreakMetric = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-weakness-break-metric", "Times weakness broken"));
+    protected CounterMetric<Integer> timesAttacked = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-times-attack", "Times attacked"));
     // Moc increases hp this way
     @Setter
     protected int HPMultiplier = 1;
@@ -280,7 +274,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
             getBattle().DelayEntity(this, 25);
 
             if (source instanceof AbstractCharacter<?> character) {
-                float extraDelay = character.elementType.getExtraDelay() * (1 + character.getTotalBreakEffect()/100);
+                float extraDelay = character.elementType.getExtraDelay() * (1 + character.getTotalBreakEffect() / 100);
                 if (extraDelay > 0) {
                     getBattle().DelayEntity(this, extraDelay);
                 }

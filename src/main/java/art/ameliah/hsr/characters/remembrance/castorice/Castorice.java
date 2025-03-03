@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public class Castorice extends Memomaster<Castorice> {
 
     public final static String NAME = "Castorice";
-    public final static float MAX_STAMEN_NOVA = 80*4*100f;
+    public final static float MAX_STAMEN_NOVA = 80 * 4 * 100f;
 
     @Nullable
     private Pollux pollux;
@@ -76,7 +76,7 @@ public class Castorice extends Memomaster<Castorice> {
         this.pollux.addPower(new DarkTideContainedListener());
 
         int idx = getBattle().getPlayers().indexOf(this);
-        getBattle().addPlayerAt(this.pollux, idx+1);
+        getBattle().addPlayerAt(this.pollux, idx + 1);
 
         var trueDmg = this.getPower(Mem.TrueDmgPower.NAME);
         if (trueDmg != null) {
@@ -120,7 +120,7 @@ public class Castorice extends Memomaster<Castorice> {
         float gained = amount - overflow;
 
         getBattle().addToLog(new GainEnergy(Castorice.this,
-                this.currentEnergy.get()-gained,
+                this.currentEnergy.get() - gained,
                 this.currentEnergy.get(),
                 gained, "Ally health changes"));
 
@@ -162,9 +162,9 @@ public class Castorice extends Memomaster<Castorice> {
             });
 
             int idx = this.getTargetIdx(MoveType.SKILL);
-            dl.logic(idx-1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dl.logic(idx - 1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
             dl.logic(idx, (e, al) -> al.hit(e, 0.5f, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS));
-            dl.logic(idx+1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dl.logic(idx + 1, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT));
         });
     }
 
@@ -237,37 +237,6 @@ public class Castorice extends Memomaster<Castorice> {
         }
     }
 
-    public class DesolationTraversesHerPalmsListener extends PermPower {
-        @Subscribe
-        public void afterHPLost(HPLost e) {
-            if (this.getOwner() == Castorice.this.pollux) {
-                return;
-            }
-
-            Castorice.this.addPower(new DesolationThatTraversesHerPalms());
-            if (Castorice.this.pollux == null) {
-                Castorice.this.increaseStamenNova(e.getAmount());
-            } else {
-                Castorice.this.pollux.addPower(new DesolationThatTraversesHerPalms());
-                Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
-            }
-        }
-    }
-
-    public class InvertedTorch extends PermPower {
-        @Subscribe
-        public void afterHpGain(HPGain e) {
-            var increase = Math.min(e.getOverflow(), 0.15f * MAX_STAMEN_NOVA);
-
-            Pollux pollux = (Pollux) Castorice.this.getMemo();
-            if (pollux == null || pollux.getCurrentHp().get() == 0) {
-                Castorice.this.increaseStamenNova(increase);
-            } else if (this.getOwner() != pollux){
-                pollux.increaseHealth(this, increase);
-            }
-        }
-    }
-
     public static class DarkTideContainedListener extends PermPower {
 
         @Subscribe
@@ -323,6 +292,37 @@ public class Castorice extends Memomaster<Castorice> {
             super(2, "Desolation Broken By Bellows");
 
             this.setStat(PowerStat.DAMAGE_BONUS, 10);
+        }
+    }
+
+    public class DesolationTraversesHerPalmsListener extends PermPower {
+        @Subscribe
+        public void afterHPLost(HPLost e) {
+            if (this.getOwner() == Castorice.this.pollux) {
+                return;
+            }
+
+            Castorice.this.addPower(new DesolationThatTraversesHerPalms());
+            if (Castorice.this.pollux == null) {
+                Castorice.this.increaseStamenNova(e.getAmount());
+            } else {
+                Castorice.this.pollux.addPower(new DesolationThatTraversesHerPalms());
+                Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
+            }
+        }
+    }
+
+    public class InvertedTorch extends PermPower {
+        @Subscribe
+        public void afterHpGain(HPGain e) {
+            var increase = Math.min(e.getOverflow(), 0.15f * MAX_STAMEN_NOVA);
+
+            Pollux pollux = (Pollux) Castorice.this.getMemo();
+            if (pollux == null || pollux.getCurrentHp().get() == 0) {
+                Castorice.this.increaseStamenNova(increase);
+            } else if (this.getOwner() != pollux) {
+                pollux.increaseHealth(this, increase);
+            }
         }
     }
 
@@ -391,11 +391,11 @@ public class Castorice extends Memomaster<Castorice> {
                 return;
             }
 
-            var polluxDmg = (event.getAmount() - owner.getCurrentHp().get() + 1)*5;
+            var polluxDmg = (event.getAmount() - owner.getCurrentHp().get() + 1) * 5;
             var ownerDmg = owner.getCurrentHp().get() - 1;
 
             if (Castorice.this.pollux.getCurrentHp().get() < polluxDmg) {
-                ownerDmg += (polluxDmg - Castorice.this.pollux.getCurrentHp().get())/5;
+                ownerDmg += (polluxDmg - Castorice.this.pollux.getCurrentHp().get()) / 5;
                 polluxDmg = Castorice.this.pollux.getCurrentHp().get();
             }
 

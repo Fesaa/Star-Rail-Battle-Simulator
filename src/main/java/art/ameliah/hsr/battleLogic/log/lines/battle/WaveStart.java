@@ -12,7 +12,7 @@ public record WaveStart(Wave wave, IBattle battle) implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("Wave %s has started.\n%s", wave.Identifier(),battle.getActionValueMap().entrySet()
+        return String.format("Wave %s has started.\n%s", wave.Identifier(), battle.getActionValueMap().entrySet()
                 .stream()
                 .sorted(Comparators::CompareSpd)
                 .map(e -> e.getKey().getName() + "=" + e.getValue())

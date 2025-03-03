@@ -161,7 +161,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
         }
 
         @Subscribe
-        public void onTurnStart(TurnStartEvent  e) {
+        public void onTurnStart(TurnStartEvent e) {
             Jade.this.increasePawnedAssets(3);
         }
 
@@ -172,7 +172,7 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
             Jade.this.increaseFuaStacks(attack.getTargets().size());
 
             var owner = (AbstractCharacter<?>) this.owner;
-            owner.reduceHealth(Jade.this, owner.getFinalHP()*0.2f);
+            owner.reduceHealth(Jade.this, owner.getFinalHP() * 0.2f);
         }
     }
 

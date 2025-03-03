@@ -72,10 +72,15 @@ public abstract class CounterMetric<T> extends AbstractMetric {
     }
 
     abstract public void increment();
+
     abstract public void decrement();
+
     abstract public void increase(T value);
+
     abstract public T increase(T value, T max);
+
     abstract public void decrease(T value);
+
     abstract public T decrease(T value, T min);
 
 
@@ -278,8 +283,6 @@ public abstract class CounterMetric<T> extends AbstractMetric {
             return String.format("%s: %,d", this.getDescription(), this.value);
         }
     }
-
-
 
 
 }

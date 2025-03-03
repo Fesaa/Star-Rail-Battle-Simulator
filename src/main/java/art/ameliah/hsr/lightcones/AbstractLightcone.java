@@ -40,7 +40,8 @@ public abstract class AbstractLightcone implements BattleParticipant {
         this.useOnAlly(List.of(target), action);
     }
 
-    public void useOnAlly(Collection<AbstractCharacter<?>> targets, MoveType action) {}
+    public void useOnAlly(Collection<AbstractCharacter<?>> targets, MoveType action) {
+    }
 
     public String toString() {
         return this.getClass().getSimpleName();

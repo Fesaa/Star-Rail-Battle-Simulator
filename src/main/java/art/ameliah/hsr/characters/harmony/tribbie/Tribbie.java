@@ -31,8 +31,8 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
 
     public static final String NAME = "Tribbie";
 
-    private final CounterMetric<Integer> numinosityCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME+"::numinosityCountdown"));
-    private final CounterMetric<Integer> zoneCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME+"::zoneCountdown"));
+    private final CounterMetric<Integer> numinosityCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME + "::numinosityCountdown"));
+    private final CounterMetric<Integer> zoneCountdown = metricRegistry.register(CounterMetric.newIntegerCounter(NAME + "::zoneCountdown"));
 
     private final Set<AbstractEntity> fuaTrigger = new HashSet<>(3); // 3 other ults
 
@@ -80,9 +80,9 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
     protected void useBasic() {
         this.doAttack(DamageType.BASIC, dl -> {
             int idx = getBattle().getRandomEnemyIdx();
-            dl.logic(idx-1, (e, al) -> al.hit(e, 0.15f, MultiplierStat.HP, 5));
+            dl.logic(idx - 1, (e, al) -> al.hit(e, 0.15f, MultiplierStat.HP, 5));
             dl.logic(idx, (e, al) -> al.hit(e, 0.3f, MultiplierStat.HP, 10));
-            dl.logic(idx+1, (e, al) -> al.hit(e, 0.15f, MultiplierStat.HP, 5));
+            dl.logic(idx + 1, (e, al) -> al.hit(e, 0.15f, MultiplierStat.HP, 5));
         });
     }
 
@@ -141,6 +141,30 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
         }
     }
 
+    public static class TribbieZoneDebuff extends PermPower {
+        public static final String NAME = "TribbieZoneDebuff";
+
+        public TribbieZoneDebuff() {
+            super(TribbieZoneDebuff.NAME);
+
+            this.type = PowerType.DEBUFF;
+        }
+
+        @Override
+        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
+            return 30;
+        }
+    }
+
+    public static class Numinosity extends PermPower {
+        public static final String NAME = "Numinosity";
+
+        public Numinosity() {
+            super(NAME);
+            this.setStat(PowerStat.RES_PEN, 24);
+        }
+    }
+
     public class TribbieTalentListener extends PermPower {
 
         @Subscribe
@@ -162,7 +186,7 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
         @Subscribe
         public void afterAttack(PostAllyAttack e) {
             if (e.getAttack().getSource() != Tribbie.this) {
-                Tribbie.this.increaseEnergy(1.5f*e.getAttack().getTargets().size(), "Pebble at Crossroads Attack energy");
+                Tribbie.this.increaseEnergy(1.5f * e.getAttack().getTargets().size(), "Pebble at Crossroads Attack energy");
             }
         }
     }
@@ -191,30 +215,6 @@ public class Tribbie extends AbstractCharacter<Tribbie> implements SkillCounterT
                     }
                 });
             }
-        }
-    }
-
-    public static class TribbieZoneDebuff extends PermPower {
-        public static final String NAME = "TribbieZoneDebuff";
-
-        public TribbieZoneDebuff() {
-            super(TribbieZoneDebuff.NAME);
-
-            this.type = PowerType.DEBUFF;
-        }
-
-        @Override
-        public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            return 30;
-        }
-    }
-
-    public static class Numinosity extends PermPower {
-        public static final String NAME = "Numinosity";
-
-        public Numinosity() {
-            super(NAME);
-            this.setStat(PowerStat.RES_PEN, 24);
         }
     }
 }

@@ -34,7 +34,8 @@ public abstract class AbstractRelicSetBonus implements BattleParticipant {
         this.useOnAlly(List.of(target), action);
     }
 
-    public void useOnAlly(Collection<AbstractCharacter<?>> targets, MoveType action) {}
+    public void useOnAlly(Collection<AbstractCharacter<?>> targets, MoveType action) {
+    }
 
     public boolean isFullSet() {
         return isFullSet;

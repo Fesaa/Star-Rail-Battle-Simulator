@@ -39,12 +39,12 @@ public class SigoniaTheUnclaimedDesolation extends AbstractRelicSetBonus {
 
         @Subscribe
         public void onEnemyRemove(EnemyLeavesCombat event) {
-            this.stacks = Math.min(this.stacks+1, 10);
+            this.stacks = Math.min(this.stacks + 1, 10);
         }
 
         @Override
         public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            return this.stacks*10;
+            return this.stacks * 10;
         }
     }
 }

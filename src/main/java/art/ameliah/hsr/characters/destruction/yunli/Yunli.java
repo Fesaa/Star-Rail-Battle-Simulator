@@ -40,16 +40,11 @@ public class Yunli extends AbstractCharacter<Yunli> implements SkillFirstTurnGoa
     private final AbstractPower cullPower = new CullCritDamageBuff();
     private final AbstractPower techniqueDamageBonus = PermPower.create(PowerStat.DAMAGE_BONUS, 80, "Technique Damage Bonus");
     private final AbstractPower tauntPower = new TauntPower(this);
-
-    protected CounterMetric<Integer> normalCount = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-normal-counters", "Normal counter"));
-
-    protected CounterMetric<Integer> num1StackCulls = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-1-stack-culls", "Number of Culls (1 S1 stack)"));
-
-    protected CounterMetric<Integer> num2StackCulls = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-2-stack-culls", "Number of Culls (2 S1 stacks)"));
-
-    protected CounterMetric<Integer> numSlashesMetric = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-slashes", "Number of Slashes"));
-
     public boolean isParrying;
+    protected CounterMetric<Integer> normalCount = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-normal-counters", "Normal counter"));
+    protected CounterMetric<Integer> num1StackCulls = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-1-stack-culls", "Number of Culls (1 S1 stack)"));
+    protected CounterMetric<Integer> num2StackCulls = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-2-stack-culls", "Number of Culls (2 S1 stacks)"));
+    protected CounterMetric<Integer> numSlashesMetric = metricRegistry.register(CounterMetric.newIntegerCounter("yunli-num-slashes", "Number of Slashes"));
 
 
     public Yunli() {

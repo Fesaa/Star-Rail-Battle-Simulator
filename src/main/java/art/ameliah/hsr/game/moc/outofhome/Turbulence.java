@@ -55,7 +55,7 @@ public class Turbulence extends MocTurbulence {
                 return;
             }
 
-            character.increaseHealth(this, character.getFinalHP()*0.1f, false);
+            character.increaseHealth(this, character.getFinalHP() * 0.1f, false);
             Turbulence.this.hitCounter.increase(2, 20);
         }
 
@@ -67,7 +67,7 @@ public class Turbulence extends MocTurbulence {
 
 
             event.getAttack().getTargets().forEach(c -> {
-                c.increaseHealth(this, c.getFinalHP()*0.05f, false);
+                c.increaseHealth(this, c.getFinalHP() * 0.05f, false);
             });
             Turbulence.this.hitCounter.increase(1, 20);
         }

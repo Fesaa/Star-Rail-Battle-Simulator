@@ -22,7 +22,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, AttackLogic,DelayAttack> {
+public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, AttackLogic, DelayAttack> {
 
     @Getter
     private final Collection<Hit> pastHits = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
 
         this.source.getEventBus().fire(new PreAllyAttack(attackLogic));
         if (this.source instanceof Memosprite) {
-            Memosprite<?, ?> memosprite = (Memosprite<?, ?>)source;
+            Memosprite<?, ?> memosprite = (Memosprite<?, ?>) source;
             memosprite.getMaster().getEventBus().fire(new PreMemospriteAttack(attackLogic));
         }
         this.targets.forEach(t -> t.getEventBus().fire(new PreEnemyAttacked(attackLogic)));
@@ -81,7 +81,6 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         this.pastHits.add(hit);
         return res;
     }
-
 
 
 }

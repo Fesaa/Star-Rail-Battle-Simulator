@@ -27,7 +27,7 @@ public class TheWondrousBananAmusementPark extends AbstractRelicSetBonus {
     }
 
     @Subscribe
-    public void onCombatStart(CombatStartEvent event){
+    public void onCombatStart(CombatStartEvent event) {
         this.owner.addPower(new TheWondrousBananAmusementParkCD());
     }
 

@@ -14,8 +14,9 @@ public class UltMetricGoal<C extends AbstractCharacter<C>, T> extends AbstractUl
 
     /**
      * Ult goal that returns UltGoalResult.DONT if the predicate fails
+     *
      * @param character character
-     * @param metric metric counter
+     * @param metric    metric counter
      * @param predicate predicate to test against
      */
     public UltMetricGoal(C character, CounterMetric<T> metric, Predicate<CounterMetric<T>> predicate) {
@@ -27,9 +28,10 @@ public class UltMetricGoal<C extends AbstractCharacter<C>, T> extends AbstractUl
 
     /**
      * Ult goal, that returns UltGoalResult.DONT if the metric counter is not equal to the value
+     *
      * @param character character
-     * @param metric metric counter
-     * @param value value to equal
+     * @param metric    metric counter
+     * @param value     value to equal
      */
     public UltMetricGoal(C character, CounterMetric<T> metric, T value) {
         super(character);

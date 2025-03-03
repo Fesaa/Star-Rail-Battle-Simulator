@@ -32,12 +32,10 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     public static final String NAME = "Robin";
     public static final String ULT_POWER_NAME = "RobinUltPower";
-
+    public final Concerto concerto = new Concerto(this);
     private final PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
     private final RobinUltPower ultPower = new RobinUltPower();
     private final RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
-    public final Concerto concerto = new Concerto(this);
-
     protected CounterMetric<Integer> allyAttacks = metricRegistry.register(CounterMetric.newIntegerCounter("robin-ally-attacks", "Number of Ally Attacks"));
     protected CounterMetric<Integer> concertoHits = metricRegistry.register(CounterMetric.newIntegerCounter("robin-concerto-hits", "Number of Concerto Hits"));
 

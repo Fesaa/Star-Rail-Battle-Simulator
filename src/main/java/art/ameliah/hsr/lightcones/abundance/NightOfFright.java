@@ -51,7 +51,7 @@ public class NightOfFright extends AbstractLightcone {
         @Subscribe
         public void onUlt(PreUltimate e) {
             var owner = ((AbstractCharacter<?>) this.owner);
-            owner.increaseHealth(NightOfFright.this, owner.getFinalHP()*0.1f);
+            owner.increaseHealth(NightOfFright.this, owner.getFinalHP() * 0.1f);
         }
     }
 }

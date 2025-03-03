@@ -7,9 +7,8 @@ import art.ameliah.hsr.powers.PermPower;
 
 public class MoonRageTracker extends PermPower {
     public final static String NAME = "Lupine Maw";
-
-    private final MoonRageEntity moonRageEntity = new MoonRageEntity();
     private static int bloodLustStacks = 0;
+    private final MoonRageEntity moonRageEntity = new MoonRageEntity();
 
     private boolean noneMoonRageAble() {
         return getBattle().getEnemies()
@@ -21,7 +20,7 @@ public class MoonRageTracker extends PermPower {
         getBattle().getEnemies()
                 .stream()
                 .filter(e -> e instanceof MoonRageAble)
-                .map(e -> (MoonRageAble)e)
+                .map(e -> (MoonRageAble) e)
                 .forEach(MoonRageAble::enterMoonRage);
 
         moonRageEntity.setBattle(getBattle());

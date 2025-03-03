@@ -73,7 +73,7 @@ public class Aglaea extends Memomaster<Aglaea> {
     protected void summonMemo() {
         this.garmentmaker = new Garmentmaker(this);
         int idx = getBattle().getPlayers().indexOf(this);
-        getBattle().addPlayerAt(this.garmentmaker, idx+1);
+        getBattle().addPlayerAt(this.garmentmaker, idx + 1);
         getBattle().AdvanceEntity(this.garmentmaker, 100); // The Speeding Summer
 
         this.eventBus.fire(new PostSummon(this.garmentmaker));
@@ -120,14 +120,14 @@ public class Aglaea extends Memomaster<Aglaea> {
             AbstractEnemy enemy = getBattle().getEnemies().get(idx);
             this.rosyFingered(enemy);
 
-            dl.logic(idx-1, (e, al) -> al.hit(e, 0.9f, 10));
+            dl.logic(idx - 1, (e, al) -> al.hit(e, 0.9f, 10));
             dl.logic(idx, (e, al) -> al.hit(e, 2, 20));
-            dl.logic(idx+1, (e, al) -> al.hit(e, 0.9f, 10));
+            dl.logic(idx + 1, (e, al) -> al.hit(e, 0.9f, 10));
 
             this.garmentmaker.doAttack(DamageType.BASIC, dl2 -> {
-                dl2.logic(idx-1, (e, al) -> al.hit(e, 0.9f));
+                dl2.logic(idx - 1, (e, al) -> al.hit(e, 0.9f));
                 dl2.logic(idx, (e, al) -> al.hit(e, 2));
-                dl2.logic(idx+1, (e, al) -> al.hit(e, 0.9f));
+                dl2.logic(idx + 1, (e, al) -> al.hit(e, 0.9f));
             });
         });
     }

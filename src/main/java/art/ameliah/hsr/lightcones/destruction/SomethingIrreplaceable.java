@@ -24,6 +24,6 @@ public class SomethingIrreplaceable extends AbstractLightcone {
         // TODO: Restore HP
         TempPower power = TempPower.create(PowerStat.DAMAGE_BONUS, 24, 1, "Something Irreplaceable Damage Bonus");
         this.owner.addPower(power);
-        this.owner.increaseHealth(this, this.owner.getFinalAttack()*0.08f);
+        this.owner.increaseHealth(this, this.owner.getFinalAttack() * 0.08f);
     }
 }

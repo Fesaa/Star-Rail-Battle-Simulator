@@ -15,7 +15,7 @@ public class Turbulence extends MocTurbulence {
     @Override
     protected void trigger() {
         getBattle().getPlayers().forEach(p -> {
-            p.getCurrentEnergy().set(p.getCurrentEnergy().get() +  p.maxEnergy * 0.2f);
+            p.getCurrentEnergy().set(p.getCurrentEnergy().get() + p.maxEnergy * 0.2f);
 
             if (p instanceof Memosprite<?, ?> memosprite) {
                 memosprite.addPower(new DoubleTurn());

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public abstract class CancelAbleEvent implements Event{
+public abstract class CancelAbleEvent implements Event {
 
     private boolean canceled = false;
 

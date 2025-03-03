@@ -56,8 +56,15 @@ import java.util.stream.Collectors;
 public class Battle extends RngProvider implements IBattle {
 
     private static final int INITIAL_SKILL_POINTS = 3;
+    protected final Deque<IAttack> queue = new LinkedList<>();
     public int MAX_SKILL_POINTS = 5;
-
+    public float initialBattleLength;
+    public AbstractEntity currentUnit;
+    public boolean usedEntryTechnique = false;
+    public boolean isInCombat = false;
+    public boolean lessMetrics = false;
+    public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
+    public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
     @Getter
     protected MetricRegistry metricRegistry = new MetricRegistry(this);
     protected CounterMetric<Float> totalPlayerDamage = metricRegistry.register(CounterMetric.newFloatCounter("battle-total-player-dmg", "Total player dmg"));
@@ -67,19 +74,6 @@ public class Battle extends RngProvider implements IBattle {
     protected CounterMetric<Float> avLeftOver = metricRegistry.register(CounterMetric.newFloatCounter("battle-av-left-over", "AV left over"));
     protected CounterMetric<Float> avUsed = metricRegistry.register(CounterMetric.newFloatCounter("battle-av-used", "AV used"));
     protected DmgContributionMetric dmgContributionMetric = metricRegistry.register(new DmgContributionMetric(this, "battle-dmg-contribution", "Dmg Contributions"));
-
-    protected final Deque<IAttack> queue = new LinkedList<>();
-
-
-    public float initialBattleLength;
-    public AbstractEntity currentUnit;
-    public boolean usedEntryTechnique = false;
-    public boolean isInCombat = false;
-    public boolean lessMetrics = false;
-    public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
-
-    public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
-
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
     protected Map<String, AbstractCharacter<?>> fallen = new HashMap<>();
     protected Set<Consumer<AbstractCharacter<?>>> playerListeners = new HashSet<>();
@@ -279,7 +273,6 @@ public class Battle extends RngProvider implements IBattle {
                 .get(index)
                 .getKey();
     }
-
 
 
     @Override
@@ -711,7 +704,7 @@ public class Battle extends RngProvider implements IBattle {
     @Override
     public int getTotalPlayerDmg() {
         Float dmg = this.totalPlayerDamage.get();
-        return dmg == null ? 0 : (int)(float)dmg;
+        return dmg == null ? 0 : (int) (float) dmg;
     }
 
     @Override
@@ -797,7 +790,6 @@ public class Battle extends RngProvider implements IBattle {
 
         addToLog(new SpeedDelayEntity(entity, currAV, newCurrAV));
     }
-
 
 
     public static class ForceBattleEnd extends RuntimeException {

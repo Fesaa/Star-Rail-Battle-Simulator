@@ -29,7 +29,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
 
     public Mem(Trailblazer trailblazer) {
         super(trailblazer, NAME,
-                (int)(640 + 0.8*trailblazer.getFinalHP()),
+                (int) (640 + 0.8 * trailblazer.getFinalHP()),
                 130,
                 90,
                 ElementType.ICE,
@@ -101,7 +101,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
 
     private void baddiesTrouble() {
         this.startAttack()
-                .handle(DamageType.MEMOSPRITE_DAMAGE,al -> {
+                .handle(DamageType.MEMOSPRITE_DAMAGE, al -> {
 
                     for (int i = 0; i < 4; i++) {
                         al.logic(getBattle().getRandomEnemy(), (e, dl) ->
@@ -133,11 +133,11 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
             float dmg = event.getHit().getHit().finalDmg();
             float mul = 0.28f;
 
-            var character = (AbstractCharacter<?>)this.getOwner();
+            var character = (AbstractCharacter<?>) this.getOwner();
 
             if (character.usesEnergy && character.maxEnergy > 100) {
                 float excess = character.maxEnergy - 100;
-                double increase = Math.floor(excess/10);
+                double increase = Math.floor(excess / 10);
                 mul += (float) Math.min(increase * 0.02f, 0.2f);
             }
 

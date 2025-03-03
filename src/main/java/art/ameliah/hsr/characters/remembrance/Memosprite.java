@@ -25,7 +25,7 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
                       float maxEnergy, int tauntValue, Path path) {
         super(name, baseHP, 0, 0, baseSpeed, level, elementType, maxEnergy, tauntValue, path);
 
-        this.registerGoal(0, new AlwaysBasicGoal<>((C)this));
+        this.registerGoal(0, new AlwaysBasicGoal<>((C) this));
         this.master = master;
         this.addPower(this.masterStatsCopy());
     }
@@ -67,7 +67,7 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
         this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
 
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
-        this.increaseEnergy(10, BASIC_ENERGY_GAIN+" (from memo)");
+        this.increaseEnergy(10, BASIC_ENERGY_GAIN + " (from memo)");
         this.memoSkill();
     }
 

@@ -38,14 +38,12 @@ import java.util.Random;
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Sword March";
     public static final int CHARGE_THRESHOLD = 7;
-
+    public AbstractCharacter<?> master;
     protected CounterMetric<Integer> ultEnhancedEBA = this.metricRegistry.register(CounterMetric.newIntegerCounter("EHB boosted by ult"));
     protected CounterMetric<Integer> extraHits = this.metricRegistry.register(CounterMetric.newIntegerCounter("Extra hits during EHB"));
     @Getter
     protected CounterMetric<Integer> chargeCount = this.metricRegistry.register(CounterMetric.newIntegerCounter("Charge count"));
     protected BoolMetric hasUltEnhancement = this.metricRegistry.register("Has ult enchantment", BoolMetric.class);
-
-    public AbstractCharacter<?> master;
     private Random fuaRng;
     private boolean isEnhanced;
     private boolean FUAReady = true;

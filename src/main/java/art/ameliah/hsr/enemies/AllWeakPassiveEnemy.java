@@ -10,7 +10,7 @@ public class AllWeakPassiveEnemy extends PassiveEnemy {
 
     public AllWeakPassiveEnemy(int index, boolean middle) {
         // The middle ensure the HighestHpEnemy goal targets the middle enemy
-        super("AllWeakPassiveEnemy" + index, EnemyType.Elite, 301193 + (middle?1:0), 718, 1150, 150, 100);
+        super("AllWeakPassiveEnemy" + index, EnemyType.Elite, 301193 + (middle ? 1 : 0), 718, 1150, 150, 100);
         setRes(ElementType.FIRE, 0);
         setRes(ElementType.WIND, 0);
         setRes(ElementType.IMAGINARY, 0);

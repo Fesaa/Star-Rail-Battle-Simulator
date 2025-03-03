@@ -24,9 +24,6 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
     private final AttackLogic attackLogic;
     @Getter
     private final AbstractCharacter<?> source;
-    @Setter
-    @Nullable
-    private AbstractCharacter<?> multiSource = null;
     @Getter
     private final AbstractEnemy target;
     private final float multiplier;
@@ -37,7 +34,9 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
     @Getter
     private final ElementType elementType;
     private final boolean ignoreWeakness;
-
+    @Setter
+    @Nullable
+    private AbstractCharacter<?> multiSource = null;
     private Float computedDmg = null;
     private Float computedToughness = null;
 

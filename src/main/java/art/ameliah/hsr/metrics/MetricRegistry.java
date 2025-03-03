@@ -25,9 +25,10 @@ public class MetricRegistry {
 
     /**
      * Register a new metric
+     *
      * @param metric the metric
+     * @param <T>    type
      * @return the metric
-     * @param <T> type
      */
     public <T extends Metric> T register(T metric) {
         this.metrics.put(metric.getKey(), metric);
@@ -36,10 +37,11 @@ public class MetricRegistry {
 
     /**
      * Construct, and register a new metric of the passed class, will throw if no constructor with key is found
-     * @param key key to sue for the new metric, description will be empty
+     *
+     * @param key   key to sue for the new metric, description will be empty
      * @param clazz the class of the metric
+     * @param <T>   type
      * @return the new metric
-     * @param <T> type
      */
     public <T extends Metric> T register(String key, Class<T> clazz) {
         return this.register(key, "", clazz);
@@ -47,16 +49,18 @@ public class MetricRegistry {
 
     /**
      * Construct, and register a new metric of the passed class, will throw if no constructor with key is found
-     * @param key key to use for the new metric
-     * @param desc the description to use for the new metric
+     *
+     * @param key   key to use for the new metric
+     * @param desc  the description to use for the new metric
      * @param clazz the class of the metric
+     * @param <T>   type
      * @return the new metric
-     * @param <T> type
      */
     public <T extends Metric> T register(String key, String desc, Class<T> clazz) {
         try {
             return this.register(clazz.getConstructor(String.class, String.class).newInstance(key, desc));
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

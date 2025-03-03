@@ -28,13 +28,6 @@ public class CharacterConfig {
 
     public List<SubStat> subStats;
 
-
-    public record RelicConfig(int id, boolean fullSet) {
-    }
-
-    public record SubStat(PowerStat stat, float amount) {
-    }
-
     @SneakyThrows
     public AbstractCharacter<?> toCharacter() {
         AbstractCharacter<?> character = PlayerRegistry.INSTANCE.get(id);
@@ -60,6 +53,12 @@ public class CharacterConfig {
 
         character.addPower(statsPower);
         return character;
+    }
+
+    public record RelicConfig(int id, boolean fullSet) {
+    }
+
+    public record SubStat(PowerStat stat, float amount) {
     }
 
 }

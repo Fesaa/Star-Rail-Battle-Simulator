@@ -36,6 +36,7 @@ public class SurgingGrit implements ISurgingGrit {
 
     public static class SurgingGritPlayerPower extends PermPower {
         public static String NAME = "Surging Grit Player Power";
+
         @Subscribe
         public void afterAttack(PostAllyAttack event) {
             var attack = event.getAttack();

@@ -21,9 +21,9 @@ public class GuardInTheWutheringSnow extends AbstractRelicSetBonus {
 
     @Subscribe
     public void onTurnStart(TurnStartEvent event) {
-        if (this.owner.getCurrentHp().get() < this.owner.getFinalHP()*0.5f ) {
+        if (this.owner.getCurrentHp().get() < this.owner.getFinalHP() * 0.5f) {
             this.owner.increaseEnergy(5, "Guard of Wuthering Snow");
-            this.owner.increaseHealth(this, this.owner.getFinalHP()*0.08f);
+            this.owner.increaseHealth(this, this.owner.getFinalHP() * 0.08f);
         }
     }
 }

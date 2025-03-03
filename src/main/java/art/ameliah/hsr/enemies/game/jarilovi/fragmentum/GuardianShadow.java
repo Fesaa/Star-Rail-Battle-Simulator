@@ -63,9 +63,9 @@ public class GuardianShadow extends AbstractEnemy {
             int idx = this.getRandomTargetPosition();
             AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
 
-            da.logic(idx-1, (c, al) -> al.hit(c, 5, 488));
+            da.logic(idx - 1, (c, al) -> al.hit(c, 5, 488));
             da.logic(idx, (c, al) -> al.hit(c, 10, 976));
-            da.logic(idx+1, (c, al) -> al.hit(c, 5, 488));
+            da.logic(idx + 1, (c, al) -> al.hit(c, 5, 488));
 
             getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
         });

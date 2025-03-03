@@ -116,10 +116,10 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
                 .sorted(Comparator.comparingInt(Comparators::CompareRarity)).toList();
 
         for (var target : targets) {
-            int copy = Math.min(42-target.getPowerStacks(Interpretation.NAME), tally);
+            int copy = Math.min(42 - target.getPowerStacks(Interpretation.NAME), tally);
             target.addPower(new Interpretation(copy));
 
-            tally = Math.max(tally-copy, 0);
+            tally = Math.max(tally - copy, 0);
             if (tally == 0) {
                 break;
             }
@@ -156,21 +156,21 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
                 e.addPower(new Interpretation());
             });
 
-            da.logic(idx-1, (e, al) -> al.hit(e, 0.7f));
+            da.logic(idx - 1, (e, al) -> al.hit(e, 0.7f));
             da.logic(idx, (e, al) -> al.hit(e, 0.7f));
-            da.logic(idx+1, (e, al) -> al.hit(e, 0.7f));
+            da.logic(idx + 1, (e, al) -> al.hit(e, 0.7f));
 
             // Copy list so we don't get concurrency error
             for (var t : new ArrayList<>(da.getTargets())) {
                 idx = getBattle().getEnemies().indexOf(t); // Not 100% sure if this is correct
-                da.logic(idx-1, (e, al) -> al.hit(e, 0.7f));
+                da.logic(idx - 1, (e, al) -> al.hit(e, 0.7f));
                 da.logic(idx, (e, al) -> al.hit(e, 0.7f));
-                da.logic(idx+1, (e, al) -> al.hit(e, 0.7f));
+                da.logic(idx + 1, (e, al) -> al.hit(e, 0.7f));
             }
         });
     }
 
-    protected void enhancedSkill()  {
+    protected void enhancedSkill() {
         this.inspiration.decrement();
         this.actionMetric.record(MoveType.ENHANCED_SKILL);
         getBattle().addToLog(new DoMove(this, MoveType.ENHANCED_SKILL));
@@ -193,16 +193,16 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
                 target.addPower(new Interpretation());
             });
 
-            da.logic(idx-1, (e, al) -> al.hit(e, 0.8f + adjMul));
+            da.logic(idx - 1, (e, al) -> al.hit(e, 0.8f + adjMul));
             da.logic(idx, (e, al) -> al.hit(e, 0.8f + primMul));
-            da.logic(idx+1, (e, al) -> al.hit(e, 0.8f + adjMul));
+            da.logic(idx + 1, (e, al) -> al.hit(e, 0.8f + adjMul));
 
             // Copy list so we don't get concurrency error
             for (var t : new ArrayList<>(da.getTargets())) {
                 idx = getBattle().getEnemies().indexOf(t); // Not 100% sure if this is correct
-                da.logic(idx-1, (e, al) -> al.hit(e, 0.8f + adjMul));
-                da.logic(idx, (e, al) -> al.hit(e, 0.8f+ primMul));
-                da.logic(idx+1, (e, al) -> al.hit(e, 0.8f + adjMul));
+                da.logic(idx - 1, (e, al) -> al.hit(e, 0.8f + adjMul));
+                da.logic(idx, (e, al) -> al.hit(e, 0.8f + primMul));
+                da.logic(idx + 1, (e, al) -> al.hit(e, 0.8f + adjMul));
             }
 
             da.logic(getBattle().getEnemies().stream().filter(e -> !e.equals(target)).toList(), (e, al) -> {
@@ -249,7 +249,7 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
             if (enemyList.isEmpty()) continue;
 
             int tally = Math.min(interpretationTally, enemyList.size() * 42);
-            interpretationTally = Math.max(interpretationTally-tally, 0);
+            interpretationTally = Math.max(interpretationTally - tally, 0);
             tallyMap.put(type, tally);
         }
 
@@ -278,6 +278,22 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
         }).execute();
     }
 
+    public static class Interpretation extends PermPower {
+
+        public static final String NAME = "Interpretation";
+
+        public Interpretation(int stacks) {
+            this();
+            this.stacks = stacks;
+        }
+
+        public Interpretation() {
+            super(NAME);
+            this.maxStacks = 42;
+        }
+
+    }
+
     public class AlooflyHonest extends PermPower {
 
         public static final String NAME = "Aloofly Honest";
@@ -295,21 +311,5 @@ public class TheHerta extends AbstractCharacter<TheHerta> {
             TheHerta.this.increaseEnergy(energy, false, "Aloofly Honest");
 
         }
-    }
-
-    public static class Interpretation extends PermPower {
-
-        public static final String NAME = "Interpretation";
-
-        public Interpretation(int stacks) {
-            this();
-            this.stacks = stacks;
-        }
-
-        public Interpretation() {
-            super(NAME);
-            this.maxStacks = 42;
-        }
-
     }
 }

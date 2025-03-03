@@ -45,8 +45,8 @@ public class SilvermaneCannoneer extends AbstractEnemy {
         this.doAttack(da -> {
             int idx = this.getRandomTargetPosition();
 
-            da.logic(idx-1, (c, al) -> al.hit(c, 10, 217));
-            da.logic(idx+1, (c, al) -> al.hit(c, 10, 217));
+            da.logic(idx - 1, (c, al) -> al.hit(c, 10, 217));
+            da.logic(idx + 1, (c, al) -> al.hit(c, 10, 217));
             da.logic(idx, (c, al) -> {
                 al.hit(c, 10, 217);
                 getBattle().addToLog(new EnemyAction(this, c, EnemyAttackType.BLAST));
@@ -74,8 +74,8 @@ public class SilvermaneCannoneer extends AbstractEnemy {
                 int idx = getBattle().getPlayers().indexOf(target);
 
                 da.logic(target, (c, al) -> al.hit(c, 12, 479));
-                da.logic(idx+1, (c, al) -> al.hit(c, 12, 326));
-                da.logic(idx-1, (c, al) -> al.hit(c, 12, 326));
+                da.logic(idx + 1, (c, al) -> al.hit(c, 12, 326));
+                da.logic(idx - 1, (c, al) -> al.hit(c, 12, 326));
                 getBattle().addToLog(new EnemyAction(SilvermaneCannoneer.this, target, EnemyAttackType.BLAST));
             });
         }

@@ -15,7 +15,7 @@ public class UltWhenMissingChargeOrMem extends AbstractUltGoal<Trailblazer> {
             return UltGoalResult.DO;
         }
 
-        if (((Mem)character.getMemo()).charge.get() > 60) {
+        if (((Mem) character.getMemo()).charge.get() > 60) {
             return UltGoalResult.DONT;
         }
 

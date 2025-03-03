@@ -74,13 +74,13 @@ public class Kafka extends AbstractEnemy {
                 al.hit(c, 10, 1184);
                 inflictShock.set(c.hasPower(EnemyShock.NAME));
             });
-            da.logic(idx-1, (c, al) -> {
+            da.logic(idx - 1, (c, al) -> {
                 al.hit(c, 10, 789);
                 if (inflictShock.get()) {
                     c.addPower(new EnemyShock(this, 244, 3, 1));
                 }
             });
-            da.logic(idx+1, (c, al) -> {
+            da.logic(idx + 1, (c, al) -> {
                 al.hit(c, 10, 789);
                 if (inflictShock.get()) {
                     c.addPower(new EnemyShock(this, 244, 3, 1));

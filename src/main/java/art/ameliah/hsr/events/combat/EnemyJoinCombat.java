@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class EnemyJoinCombat  implements Event {
+public class EnemyJoinCombat implements Event {
 
     private final AbstractEnemy enemy;
 

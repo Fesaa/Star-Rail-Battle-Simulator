@@ -51,12 +51,6 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends AbstractEntity {
 
-    protected static final String ENERGY_KEY = "energy";
-    protected static final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
-    protected static final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
-    protected static final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
-    protected static final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
-
     public static final String ULT_ENERGY_GAIN = "from using Ultimate";
     public static final String SKILL_ENERGY_GAIN = "from using Skill";
     public static final String BASIC_ENERGY_GAIN = "from using Basic";
@@ -67,13 +61,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public static final String LIGHTCONE_ENERGY_GAIN = "from Lightcone effect";
     public static final String ATTACKED_ENERGY_GAIN = "from being attacked";
     public static final String TECHNIQUE_ENERGY_GAIN = "from Technique effect";
-
-    @Getter
-    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("character::actions", "Action made"));
-    @Getter
-    protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
-    protected CounterMetric<Float> overflowEnergy = metricRegistry.register(CounterMetric.newFloatCounter("overflow"+ENERGY_KEY, "Overflow energy"));
-
+    protected static final String ENERGY_KEY = "energy";
+    protected static final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
+    protected static final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
+    protected static final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
+    protected static final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
     public final int level;
     public final float baseCritChance = 5.0f;
     public final float baseCritDamage = 50.0f;
@@ -91,7 +83,6 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     @Getter
     protected final int baseDef;
     protected final int ultEnergyGain = 5;
-
     private final SortedMap<Integer, UltGoal> ultGoals = new TreeMap<>();
     private final SortedMap<Integer, TurnGoal> turnGoals = new TreeMap<>();
     private final SortedMap<Integer, EnemyTargetGoal<C>> enemyTargetGoals = new TreeMap<>();
@@ -102,6 +93,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public boolean isDPS = false;
     public boolean firstMove = true;
     public boolean hasAttackingUltimate;
+    @Getter
+    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("character::actions", "Action made"));
+    @Getter
+    protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
+    protected CounterMetric<Float> overflowEnergy = metricRegistry.register(CounterMetric.newFloatCounter("overflow" + ENERGY_KEY, "Overflow energy"));
     protected int basicEnergyGain = 20;
     protected int skillEnergyGain = 30;
 
@@ -338,16 +334,15 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     /**
-     *
-     * @param source reason of the reduction
-     * @param amount hp to remove
+     * @param source  reason of the reduction
+     * @param amount  hp to remove
      * @param canKill reduced to max 1 if set to false
      * @return the amount of hp lost
      */
     public float reduceHealth(BattleParticipant source, float amount, boolean canKill) {
         if (source instanceof AbstractEnemy enemy) {
             // Source: Skill DMG page on homdgcat
-            amount *= (200+10*enemy.getLevel())/(200+10*enemy.getLevel()+this.getFinalDefense());
+            amount *= (200 + 10 * enemy.getLevel()) / (200 + 10 * enemy.getLevel() + this.getFinalDefense());
         }
 
         var event = this.eventBus.fire(new HPLost(source, amount));
@@ -358,7 +353,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         float overflow = this.currentHp.decrease(amount, canKill ? 0f : 1f);
         float lost = amount - overflow;
-        getBattle().addToLog(new HealthChange(this, -1*lost, -1*amount));
+        getBattle().addToLog(new HealthChange(this, -1 * lost, -1 * amount));
         return lost;
     }
 
@@ -374,6 +369,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     /**
      * Calls {@link AbstractCharacter#increaseHealth(BattleParticipant, float)}
+     *
      * @param source the source of the hp increase, typically a {@link AbstractCharacter}
      * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
      */
@@ -385,10 +381,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * Increases the health of this {@link AbstractCharacter<C>} by the amount, multiplied
      * by the {@link PowerStat#OUTGOING_HEALING} of the source if the source is an {@link AbstractCharacter}
      * and the {@link PowerStat#INCOMING_HEALING} of this {@link AbstractCharacter<C>}
+     *
      * @param source the source of the hp increase, typically a {@link AbstractCharacter}
      * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
      */
-    public void increaseHealth(BattleParticipant source, float amount){
+    public void increaseHealth(BattleParticipant source, float amount) {
         this.increaseHealth(source, amount, true);
     }
 
@@ -396,8 +393,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * Increases the health of this {@link AbstractCharacter<C>} by the amount, multiplied
      * by the {@link PowerStat#OUTGOING_HEALING} of the source if the source is an {@link AbstractCharacter}
      * and the {@link PowerStat#INCOMING_HEALING} of this {@link AbstractCharacter<C>} if powerAffected is true
-     * @param source the source of the hp increase, typically a {@link AbstractCharacter}
-     * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
+     *
+     * @param source        the source of the hp increase, typically a {@link AbstractCharacter}
+     * @param amount        the amount to heal by, unaffected by powers. These will be calculated here.
      * @param powerAffected toggle
      */
     public void increaseHealth(BattleParticipant source, float amount, boolean powerAffected) {
@@ -419,12 +417,12 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             for (var power : this.powerList) {
                 increase += power.getStat(PowerStat.INCOMING_HEALING);
             }
-            amount *= (increase/100);
+            amount *= (increase / 100);
         }
 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
-        getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
-        float gained = amount-overflow;
+        getBattle().addToLog(new HealthChange(this, amount - overflow, amount));
+        float gained = amount - overflow;
         this.eventBus.fire(new HPGain(gained, overflow));
     }
 
@@ -579,6 +577,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     /**
      * Decrease the energy of the character
+     *
      * @param amount to change the energy by.
      * @param source the reason
      */
@@ -587,11 +586,13 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             throw new IllegalArgumentException("Amount must be negative");
         }
         float initialEnergy = this.currentEnergy.get();
-        this.currentEnergy.decrease(-1*amount, 0f);
+        this.currentEnergy.decrease(-1 * amount, 0f);
         getBattle().addToLog(new LoseEnergy(this, initialEnergy, this.currentEnergy.get(), amount, source));
     }
+
     /**
      * Increase the energy of the character
+     *
      * @param amount to change the energy by, a negative amount will decrease the energy
      * @param source reason
      */
@@ -614,6 +615,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     /**
      * Increase the energy of the character
+     *
      * @param amount to change the energy by, a negative amount will decrease the energy later in the change
      * @param source reason
      */

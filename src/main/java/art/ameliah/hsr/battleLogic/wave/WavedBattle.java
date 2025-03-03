@@ -102,6 +102,7 @@ public abstract class WavedBattle<T extends Wave> extends Battle {
     }
 
     protected abstract void onWaveChange();
+
     protected abstract void afterEnemyAdd(AbstractEnemy enemy, int idx);
 
 }

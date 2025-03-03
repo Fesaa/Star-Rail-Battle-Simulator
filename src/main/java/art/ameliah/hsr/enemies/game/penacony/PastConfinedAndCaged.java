@@ -75,9 +75,9 @@ public class PastConfinedAndCaged extends AbstractEnemy {
             int idx = this.getRandomTargetPosition();
             BiConsumer<AbstractCharacter<?>, EnemyAttackLogic> l = (c, al) -> al.hit(c, 10, 653);
 
-            da.logic(idx-1, l);
+            da.logic(idx - 1, l);
             da.logic(idx, l);
-            da.logic(idx+1, l);
+            da.logic(idx + 1, l);
             getBattle().addToLog(new EnemyAction(this, getBattle().getPlayers().get(idx), EnemyAttackType.BLAST));
         });
     }

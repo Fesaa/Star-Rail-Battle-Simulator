@@ -28,15 +28,13 @@ import java.util.List;
 public class Aventurine extends AbstractCharacter<Aventurine> {
     public static final String NAME = "Aventurine";
     private static final int BLIND_BET_CAP = 10;
-
-    protected CounterMetric<Integer> blindBetGained = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-gained", "Blind bet gained"));
-    protected CounterMetric<Integer> blindBetGainedFUA = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-fua-gained", "Blind bet gained from FUA"));
-    protected CounterMetric<Integer> blindBetCounter = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-counter", "Left over blind bet"));
-
     final AventurineTalentPower talentPower = new AventurineTalentPower();
     final boolean SPNeutral;
     private final int BLIND_BET_THRESHOLD = 7;
     private final int blindBetFollowUpPerTurn = 3;
+    protected CounterMetric<Integer> blindBetGained = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-gained", "Blind bet gained"));
+    protected CounterMetric<Integer> blindBetGainedFUA = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-fua-gained", "Blind bet gained from FUA"));
+    protected CounterMetric<Integer> blindBetCounter = metricRegistry.register(CounterMetric.newIntegerCounter("blind-bet-counter", "Left over blind bet"));
     private int blindBetFollowUpCounter = blindBetFollowUpPerTurn;
 
     public Aventurine(boolean SPNeutral) {

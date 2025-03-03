@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class EnemyLeavesCombat  implements Event {
+public class EnemyLeavesCombat implements Event {
 
     private final AbstractEnemy enemy;
     private final int idx;

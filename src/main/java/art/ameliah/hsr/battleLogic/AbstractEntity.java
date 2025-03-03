@@ -23,21 +23,17 @@ public abstract class AbstractEntity implements BattleParticipant {
     public static final int SPEED_PRIORITY_DEFAULT = 99;
     @Getter
     protected final EventBus eventBus = new EventBus();
-
+    public List<AbstractPower> powerList = new ArrayList<>();
+    public float baseSpeed;
+    public int speedPriority = SPEED_PRIORITY_DEFAULT;
     @Getter
     protected MetricRegistry metricRegistry = new MetricRegistry(this);
     protected CounterMetric<Integer> turnsMetric = metricRegistry.register(CounterMetric.newIntegerCounter("Turns taken", "Amount of taken turns"));
     @Getter
     protected CounterMetric<Float> currentHp = metricRegistry.register(CounterMetric.newFloatCounter("enemy-hp", "Left over HP"));
-
+    protected String name;
     @Getter
     private Collection<AbstractPower> preCombatPowers;
-
-    public List<AbstractPower> powerList = new ArrayList<>();
-    public float baseSpeed;
-    public int speedPriority = SPEED_PRIORITY_DEFAULT;
-
-    protected String name;
     @Setter
     private IBattle battle;
 

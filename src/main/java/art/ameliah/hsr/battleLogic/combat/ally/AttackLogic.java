@@ -26,12 +26,6 @@ public class AttackLogic {
 
     @Getter
     private final AbstractCharacter<?> source;
-    /**
-     * Has to be set BEFORE calling any hit methods
-     */
-    @Setter
-    @Nullable
-    private AbstractCharacter<?> multiSource = null;
     @Getter
     private final Collection<AbstractEnemy> targets;
     @Getter
@@ -39,6 +33,12 @@ public class AttackLogic {
     @Getter
     private final Attack attack;
     private final Function<Hit, HitResult> callback;
+    /**
+     * Has to be set BEFORE calling any hit methods
+     */
+    @Setter
+    @Nullable
+    private AbstractCharacter<?> multiSource = null;
 
     public Collection<HitResult> additionalDmg(AbstractCharacter<?> source, Collection<AbstractEnemy> targets, float mul, ElementType type) {
         List<HitResult> results = new ArrayList<>();
@@ -145,9 +145,10 @@ public class AttackLogic {
 
     /**
      * Used for buffs, etc
+     *
      * @param source The buff (should be a power most likely)
      * @param target The target
-     * @param dmg Dmg to deal
+     * @param dmg    Dmg to deal
      * @return The result of the hit
      */
     public HitResult hitFixed(BattleParticipant source, AbstractEnemy target, float dmg) {

@@ -56,11 +56,11 @@ public class SeniorStaffTeamLeader extends AbstractEnemy {
 
     private void TeamBuilding() {
         int size = getBattle().maxEnemiesOnField() - getBattle().enemiesSize();
-        if (size == 0 ) {
+        if (size == 0) {
             return;
         }
 
-        Function<Integer, AbstractEnemy> sup = i -> i%2==0
+        Function<Integer, AbstractEnemy> sup = i -> i % 2 == 0
                 ? new GruntSecurityPersonnel(60239, 718, 1150, 132)
                 : new GruntFieldPersonnel(43810, 718, 1150, 155.76f);
 
@@ -117,6 +117,9 @@ public class SeniorStaffTeamLeader extends AbstractEnemy {
         });
     }
 
+    public interface Grunt {
+    }
+
     public static class PerformancePoint extends PermPower {
         public static final String NAME = "Performance Point";
 
@@ -153,6 +156,4 @@ public class SeniorStaffTeamLeader extends AbstractEnemy {
             return 0.5f * this.stacks;
         }
     }
-
-    public interface Grunt {}
 }

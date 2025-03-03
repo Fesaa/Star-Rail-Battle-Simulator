@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- *
  * @param <S> Source type
  * @param <T> Target type
  * @param <A> AttackLogic type
@@ -119,6 +118,7 @@ public abstract class AbstractAttack<S extends AbstractEntity, T extends BattleP
 
     /**
      * This should include the logic right after AttackStart is logged, until before afterHook are called
+     *
      * @param dh the DelayAttack from {@link AbstractAttack#newDelayAttack(AbstractEntity)}
      */
     protected abstract void attack(D dh);

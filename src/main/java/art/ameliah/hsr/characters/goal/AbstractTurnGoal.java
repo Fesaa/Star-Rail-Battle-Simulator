@@ -4,7 +4,7 @@ import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public abstract class AbstractTurnGoal<C extends AbstractCharacter<C>> implements BattleParticipant,TurnGoal {
+public abstract class AbstractTurnGoal<C extends AbstractCharacter<C>> implements BattleParticipant, TurnGoal {
 
     protected final C character;
 

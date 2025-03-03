@@ -4,7 +4,7 @@ import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.characters.AbstractCharacter;
 
-public abstract class AbstractUltGoal<C extends AbstractCharacter<C>> implements BattleParticipant,UltGoal {
+public abstract class AbstractUltGoal<C extends AbstractCharacter<C>> implements BattleParticipant, UltGoal {
 
     protected final C character;
 

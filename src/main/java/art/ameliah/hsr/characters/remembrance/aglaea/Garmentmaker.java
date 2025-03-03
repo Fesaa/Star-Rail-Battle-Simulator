@@ -39,9 +39,9 @@ public class Garmentmaker extends Memosprite<Garmentmaker, Aglaea> {
         this.doAttack(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             int idx = this.getTargetIdx(MoveType.MEMOSPRITE_SKILL);
 
-            dl.logic(idx-1, (e, al) -> al.hit(e, 0.66f, 5));
+            dl.logic(idx - 1, (e, al) -> al.hit(e, 0.66f, 5));
             dl.logic(idx, (e, al) -> al.hit(e, 1.1f, 10));
-            dl.logic(idx+1, (e, al) -> al.hit(e, 0.66f, 5));
+            dl.logic(idx + 1, (e, al) -> al.hit(e, 0.66f, 5));
         });
     }
 

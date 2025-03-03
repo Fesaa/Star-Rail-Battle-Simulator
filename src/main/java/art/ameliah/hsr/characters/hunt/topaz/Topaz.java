@@ -29,10 +29,8 @@ import java.util.List;
 public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked, Summoner {
 
     public static final String NAME = "Topaz";
-
-    private final AbstractPower proofOfDebt = new ProofOfDebt();
     final Numby numby;
-
+    private final AbstractPower proofOfDebt = new ProofOfDebt();
     @Getter
     protected CounterMetric<Integer> numbyAttacks = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-numby-attacks", "Numby Attacks"));
     @Getter

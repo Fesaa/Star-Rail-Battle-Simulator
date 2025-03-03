@@ -53,7 +53,8 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
                 .filter(p -> !p.lastsForever)
                 .filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF))
                 .findFirst()
-                .ifPresent(ally::removePower);;
+                .ifPresent(ally::removePower);
+        ;
     }
 
     public void useSkill() {
@@ -64,12 +65,12 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         }
         int idx = this.getAllyTargetIdx();
 
-        double main = this.getFinalHP()*0.21 + 560f;
-        double adj = this.getFinalHP()*0.168 + 448;
+        double main = this.getFinalHP() * 0.21 + 560f;
+        double adj = this.getFinalHP() * 0.168 + 448;
 
-        getBattle().playerCallback(idx-1, c -> this.healAlly(c, adj, false));
+        getBattle().playerCallback(idx - 1, c -> this.healAlly(c, adj, false));
         getBattle().playerCallback(idx, c -> this.healAlly(c, main, true));
-        getBattle().playerCallback(idx+1, c -> this.healAlly(c, adj, false));
+        getBattle().playerCallback(idx + 1, c -> this.healAlly(c, adj, false));
     }
 
     public void useBasic() {
@@ -125,11 +126,11 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
             Huohuo.this.talentProcs.increment();
             Huohuo.this.talentProcCooldown--;
-            double amount = Huohuo.this.getFinalHP()*0.045+120;
+            double amount = Huohuo.this.getFinalHP() * 0.045 + 120;
             Huohuo.this.healAlly((AbstractCharacter<?>) this.owner, amount, removeDebuff);
 
             getBattle().getPlayers().stream()
-                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.5)
+                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP() * 0.5)
                     .forEach(p -> Huohuo.this.healAlly(p, amount, removeDebuff));
         }
 

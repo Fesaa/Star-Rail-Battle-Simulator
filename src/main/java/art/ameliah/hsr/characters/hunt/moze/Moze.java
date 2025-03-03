@@ -30,13 +30,10 @@ public class Moze extends AbstractCharacter<Moze> {
     public static final String NAME = "Moze";
     private static final int MAX_CHARGE = 9;
     private static final int CHARGE_ATTACK_THRESHOLD = 3;
-
+    private final MozePreyPower preyPower;
+    public boolean isDeparted = false;
     protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("moze-talent-procs", "Number of Follow Up Attacks Used"));
     protected CounterMetric<Integer> chargeCount = metricRegistry.register(CounterMetric.newIntegerCounter("moze-charge-count", "Left over charges"));
-
-    private final MozePreyPower preyPower;
-
-    public boolean isDeparted = false;
     private int chargeLost = 0;
     private boolean skillPointRecovered = false;
 
