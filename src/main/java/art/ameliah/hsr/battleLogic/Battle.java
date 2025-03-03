@@ -43,6 +43,8 @@ import art.ameliah.hsr.utils.Comparators;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,6 +52,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -81,6 +84,7 @@ public class Battle extends RngProvider implements IBattle {
     public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
 
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+    protected Map<String, AbstractCharacter<?>> fallen = new HashMap<>();
     protected Set<Consumer<AbstractCharacter<?>>> playerListeners = new HashSet<>();
 
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -530,6 +534,7 @@ public class Battle extends RngProvider implements IBattle {
 
     private void generateMetrics() {
         this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p)));
+        this.fallen.values().forEach(p -> addToLog(new PostCombatPlayerMetrics(p)));
         if (!lessMetrics) {
             this.enemyTeam.forEach(e -> addToLog(new EnemyMetrics(e)));
         }
@@ -573,6 +578,7 @@ public class Battle extends RngProvider implements IBattle {
     public void removeEntity(AbstractEntity entity) {
         if (entity instanceof AbstractCharacter<?> character) {
             this.playerTeam.remove(character);
+            this.fallen.put(character.getName(), character);
         }
         if (entity instanceof AbstractEnemy enemy) {
             this.enemyTeam.remove(enemy);
