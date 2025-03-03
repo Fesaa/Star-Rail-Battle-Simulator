@@ -56,7 +56,7 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
     public void onCombatStart(CombatStartEvent e) {
         this.increaseCharge(50);
         getBattle().registerForPlayers(p -> {
-            float cd = 24f + 0.12f * this.getTotalCritDamage();
+            float cd = 26.4f + 0.132f * this.getTotalCritDamage();
             p.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, cd, "Friends! Together!"));
         });
     }
