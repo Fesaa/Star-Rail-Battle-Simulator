@@ -17,6 +17,7 @@ import art.ameliah.hsr.relics.Stats;
 import art.ameliah.hsr.relics.ornament.BoneCollectionsSereneDemesne;
 import art.ameliah.hsr.relics.ornament.ForgeOfTheKalpagniLatern;
 import art.ameliah.hsr.relics.ornament.SpringhtlyVonwacq;
+import art.ameliah.hsr.relics.relics.GiantTreeOfRaptBrooding;
 import art.ameliah.hsr.relics.relics.HeroOfTriumphantSong;
 import art.ameliah.hsr.relics.relics.MessengerTraversingHackerspace;
 import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
@@ -114,6 +115,7 @@ public class CastoriceTeams {
         Huohuo huohuo = new Huohuo();
         huohuo.EquipLightcone(new HeyOverHere(huohuo));
         huohuo.EquipRelicSet(new PasserbyOfWanderingCloud(huohuo, true));
+        huohuo.EquipRelicSet(new GiantTreeOfRaptBrooding(huohuo));
         new RelicStats()
                 .addMainStat(Stats.HEALING)
                 .addMainStat(Stats.SPEED)
@@ -121,7 +123,7 @@ public class CastoriceTeams {
                 .addMainStat(Stats.ERR)
                 .addSubStat(Stats.HP_PER, 17)
                 .addSubStat(Stats.HP_FLAT, 8)
-                .addSubStat(Stats.SPEED, 5)
+                .addSubStat(Stats.SPEED, 1)
                 .equipTo(huohuo);
 
         huohuo.clearTurnGoals();

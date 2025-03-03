@@ -26,6 +26,7 @@ import art.ameliah.hsr.relics.relics.ChampionOfStreetwiseBoxing;
 import art.ameliah.hsr.relics.relics.EagleOfTwilightLine;
 import art.ameliah.hsr.relics.relics.FiresmithOfLavaForging;
 import art.ameliah.hsr.relics.relics.GeniusOfBrilliantStars;
+import art.ameliah.hsr.relics.relics.GiantTreeOfRaptBrooding;
 import art.ameliah.hsr.relics.relics.GuardInTheWutheringSnow;
 import art.ameliah.hsr.relics.relics.HeroOfTriumphantSong;
 import art.ameliah.hsr.relics.relics.HunterOfTheGlacialForest;
@@ -96,6 +97,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
         register(317, LushakaTheSunkenSeas.class);
         register(318, TheWondrousBananAmusementPark.class);
         register(319, BoneCollectionsSereneDemesne.class);
+        register(320, GiantTreeOfRaptBrooding.class);
     }
 
     public AbstractRelicSetBonus get(int id, AbstractCharacter<?> owner, boolean fullSet) throws Exception {

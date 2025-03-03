@@ -1,5 +1,9 @@
 package art.ameliah.hsr.powers;
 
+import art.ameliah.hsr.characters.AbstractCharacter;
+
+import java.util.function.Function;
+
 public class PermPower extends AbstractPower {
 
     public PermPower() {
@@ -24,6 +28,13 @@ public class PermPower extends AbstractPower {
         PermPower power = new PermPower();
         power.setName(name);
         power.setStat(stat, value);
+        return power;
+    }
+
+    public static PermPower create(PowerStat stat, Function<AbstractCharacter<?>, Float> f, String name) {
+        PermPower power = new PermPower();
+        power.setName(name);
+        power.setConditionalStat(stat, f);
         return power;
     }
 }
