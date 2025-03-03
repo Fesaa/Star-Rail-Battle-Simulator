@@ -208,8 +208,8 @@ public class Battle extends RngProvider implements IBattle {
         addToLog(new EntityJoinedBattle(ally));
 
         this.playerListeners.forEach(listener -> listener.accept(ally));
-        ally.getEventBus().fire(new CombatStartEvent());
         ally.OnCombatStart();
+        ally.getEventBus().fire(new CombatStartEvent());
         var event = new AllyJoinCombat(ally);
         this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
     }
@@ -373,8 +373,8 @@ public class Battle extends RngProvider implements IBattle {
         isInCombat = true;
         for (AbstractCharacter<?> character : playerTeam) {
             actionValueMap.put(character, character.getBaseAV());
-            character.eventBus.fire(new CombatStartEvent());
             character.OnCombatStart();
+            character.eventBus.fire(new CombatStartEvent());
         }
 
         addToLog(new TriggerTechnique(this.playerTeam

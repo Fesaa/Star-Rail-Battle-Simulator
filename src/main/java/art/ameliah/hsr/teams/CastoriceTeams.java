@@ -39,7 +39,6 @@ public class CastoriceTeams {
                 .addMainStat(Stats.HP_PER)
                 .addMainStat(Stats.HP_PER)
                 .addMainStat(Stats.HP_PER)
-                .addMainStat(Stats.HP_PER)
                 .addSubStat(Stats.CRIT_RATE, 14)
                 .addSubStat(Stats.CRIT_DAMAGE, 18)
                 .addSubStat(Stats.HP_PER, 3)

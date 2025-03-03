@@ -132,7 +132,6 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * Should really have made it an actual events system. Rather than this :(
      */
     public final void OnCombatStart() {
-        getBattle().addToLog(new StringLine(this.getName() + ": " + this.getFinalHP()));
         this.currentHp.set(this.getFinalHP());
     }
 

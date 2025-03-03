@@ -21,8 +21,9 @@ public final class HealthChange implements Loggable {
 
     @Override
     public String asString() {
-        return String.format("%s(%,.3f -> %,.3f) health %s by %,.3f(%,.3f)", character.getName(),
-                character.getCurrentHp().get() - amount, character.getCurrentHp().get(), amount < 0 ? "reduced" : "increased", amount, full);
+        return String.format("%s(%,.3f -> %,.3f) health %s by %,.3f(%,.3f) [%,.3f%%]", character.getName(),
+                character.getCurrentHp().get() - amount, character.getCurrentHp().get(),
+                amount < 0 ? "reduced" : "increased", amount, full, character.getCurrentHp().get()/character.getFinalHP()*100);
     }
 
     @Override

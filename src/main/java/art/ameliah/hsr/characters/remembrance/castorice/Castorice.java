@@ -75,8 +75,6 @@ public class Castorice extends Memomaster<Castorice> {
         getBattle().registerForEnemy(e -> {
             e.addPower(new LostNetherland());
         });
-
-        this.addPower(new DarkTideContainedListener());
     }
 
     @Override
