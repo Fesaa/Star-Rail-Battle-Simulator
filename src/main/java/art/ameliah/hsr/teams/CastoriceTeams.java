@@ -85,7 +85,7 @@ public class CastoriceTeams {
                 .equipTo(rmc);
 
         rmc.clearTurnGoals();
-        rmc.registerGoal(0, new AlwaysSkillGoal<>(rmc, 3));
+        rmc.registerGoal(0, new AlwaysSkillGoal<>(rmc));
 
         return rmc;
     }
