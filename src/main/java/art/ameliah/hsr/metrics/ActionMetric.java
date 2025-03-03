@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ActionMetric extends AbstractMetric {
 
-    private static final List<MoveType> turnActionTypes = List.of(MoveType.BASIC, MoveType.SKILL, MoveType.ENHANCED_BASIC);
+    private static final List<MoveType> turnActionTypes = List.of(MoveType.BASIC, MoveType.SKILL, MoveType.ENHANCED_BASIC, MoveType.ENHANCED_SKILL, MoveType.MEMOSPRITE_BASIC ,MoveType.MEMOSPRITE_SKILL);
 
     private final List<MoveType> actions = new ArrayList<>();
     private final List<MoveType> turnActions = new ArrayList<>();

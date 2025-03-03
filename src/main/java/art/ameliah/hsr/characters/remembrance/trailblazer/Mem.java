@@ -120,8 +120,10 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
 
     public class TrueDmgPower extends TempPower {
 
+        public static final String NAME = "TrueDmgPower";
+
         public TrueDmgPower() {
-            super(3, "TrueDmgPower");
+            super(3, NAME);
 
             this.setStat(PowerStat.CRIT_CHANCE, 10);
         }

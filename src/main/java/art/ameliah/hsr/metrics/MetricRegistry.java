@@ -2,22 +2,28 @@ package art.ameliah.hsr.metrics;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class MetricRegistry {
 
     private final Object owner;
-    private final List<Metric> metrics = new ArrayList<>();
+    private final Map<String, Metric> metrics = new HashMap<>();
 
     public MetricRegistry(Object owner) {
         this.owner = owner;
     }
 
+    public Collection<Metric> AllMetrics() {
+        return this.metrics.values();
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends Metric> T getMetric(String key) {
-        Optional<Metric> m = metrics.stream().filter(metric -> metric.getKey().equals(key)).findFirst();
-        return (T) m.orElse(null);
+        return (T) this.metrics.getOrDefault(key, null);
     }
 
     /**
@@ -27,7 +33,7 @@ public class MetricRegistry {
      * @param <T> type
      */
     public <T extends Metric> T register(T metric) {
-        this.metrics.addLast(metric);
+        this.metrics.put(metric.getKey(), metric);
         return metric;
     }
 
@@ -62,7 +68,7 @@ public class MetricRegistry {
         StringBuilder sb = new StringBuilder();
 
         //sb.append("Metrics for: ").append(owner.getClass().getSimpleName());
-        for (Metric metric : this.metrics) {
+        for (Metric metric : this.metrics.values()) {
             if (metric.needHeader()) {
                 sb.append(metric.getName()).append("\n");
             }

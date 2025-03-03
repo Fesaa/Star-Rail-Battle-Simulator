@@ -1,9 +1,10 @@
 package art.ameliah.hsr.characters.hunt.feixiao;
 
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 import art.ameliah.hsr.characters.harmony.bronya.Bronya;
 
-public class FeixiaoBronyaTurnGoal extends TurnGoal<Feixiao> {
+public class FeixiaoBronyaTurnGoal extends AbstractTurnGoal<Feixiao> {
     public FeixiaoBronyaTurnGoal(Feixiao character) {
         super(character);
     }

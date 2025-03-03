@@ -1,8 +1,9 @@
 package art.ameliah.hsr.characters.hunt.topaz;
 
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
-public class TopazTurnGoal extends TurnGoal<Topaz> {
+public class TopazTurnGoal extends AbstractTurnGoal<Topaz> {
     public TopazTurnGoal(Topaz character) {
         super(character);
     }

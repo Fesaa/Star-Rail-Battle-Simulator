@@ -7,7 +7,6 @@ import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
-import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.CharacterDeath;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
@@ -17,8 +16,9 @@ import art.ameliah.hsr.battleLogic.log.lines.character.TurnDecision;
 import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.characters.goal.AllyTargetGoal;
 import art.ameliah.hsr.characters.goal.EnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
 import art.ameliah.hsr.characters.goal.TurnGoal;
-import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 import art.ameliah.hsr.characters.goal.UltGoal;
 import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -70,7 +70,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public static final String TECHNIQUE_ENERGY_GAIN = "from Technique effect";
 
     @Getter
-    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("Actions", "Action made"));
+    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("character::actions", "Action made"));
     @Getter
     protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
     protected CounterMetric<Float> overflowEnergy = metricRegistry.register(CounterMetric.newFloatCounter("overflow"+ENERGY_KEY, "Overflow energy"));
@@ -94,7 +94,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     protected final int ultEnergyGain = 5;
 
     private final SortedMap<Integer, UltGoal> ultGoals = new TreeMap<>();
-    private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
+    private final SortedMap<Integer, TurnGoal> turnGoals = new TreeMap<>();
     private final SortedMap<Integer, EnemyTargetGoal<C>> enemyTargetGoals = new TreeMap<>();
     private final SortedMap<Integer, AllyTargetGoal<C>> allyTargetGoals = new TreeMap<>();
     public boolean usesEnergy = true;
@@ -164,7 +164,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         ultGoals.clear();
     }
 
-    public void registerGoal(int priority, TurnGoal<C> turnGoal) {
+    public void registerGoal(int priority, TurnGoal turnGoal) {
         if (turnGoals.containsKey(priority)) {
             throw new IllegalArgumentException("Priority already exists, " + priority);
         }
@@ -261,8 +261,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         // Should investigate why this is happening, and add the needed goals to make it increase at all times
         // Time to read a bunch of logs
         //tryUltimate();
-        for (TurnGoal<C> turnGoal : this.turnGoals.values()) {
-            TurnGoal.TurnGoalResult result = turnGoal.determineAction();
+        for (TurnGoal turnGoal : this.turnGoals.values()) {
+            TurnGoalResult result = turnGoal.determineAction();
             switch (result) {
                 case BASIC: {
                     getBattle().addToLog(new TurnDecision(this, turnGoal.getClass(), result));

@@ -11,6 +11,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -119,6 +120,7 @@ public abstract class AbstractEntity implements BattleParticipant {
         return false;
     }
 
+    @Nullable
     public AbstractPower getPower(String powerName) {
         for (AbstractPower power : powerList) {
             if (power.getName().equals(powerName)) {

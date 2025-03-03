@@ -1,9 +1,10 @@
 package art.ameliah.hsr.characters.goal.shared.turn;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
-public class AlwaysSkillGoal<C extends AbstractCharacter<C>> extends TurnGoal<C> {
+public class AlwaysSkillGoal<C extends AbstractCharacter<C>> extends AbstractTurnGoal<C> {
 
     private final int threshold;
 

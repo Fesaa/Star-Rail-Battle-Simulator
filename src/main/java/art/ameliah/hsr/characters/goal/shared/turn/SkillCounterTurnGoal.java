@@ -1,12 +1,13 @@
 package art.ameliah.hsr.characters.goal.shared.turn;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
 /**
  * A turn goal that will use a skill if the skill counter is <b>below or equal to</b> a certain threshold.
  */
-public class SkillCounterTurnGoal<C extends AbstractCharacter<C> & SkillCounterTurnGoal.SkillCounterCharacter> extends TurnGoal<C> {
+public class SkillCounterTurnGoal<C extends AbstractCharacter<C> & SkillCounterTurnGoal.SkillCounterCharacter> extends AbstractTurnGoal<C> {
 
     private final int threshold;
 

@@ -1,11 +1,13 @@
 package art.ameliah.hsr.characters.remembrance.castorice;
 
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.EventPriority;
@@ -16,11 +18,21 @@ import art.ameliah.hsr.events.character.PreSkill;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.events.combat.TurnEndEvent;
+import art.ameliah.hsr.metrics.ActionMetric;
+import art.ameliah.hsr.metrics.CounterMetric;
+import art.ameliah.hsr.metrics.Metric;
 import art.ameliah.hsr.powers.PermPower;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class Pollux extends Memosprite<Pollux, Castorice> {
 
     public final static String NAME = "Pollux";
+
+    private static ActionMetric actionMetricTracker = null;
+    private static CounterMetric<Integer> turnsMetricTracker = null;
 
     private int actionCounter = 0;
     private boolean nextActionDie = false;
@@ -31,10 +43,24 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
 
         this.usesEnergy = false;
 
+        if (Pollux.actionMetricTracker != null) {
+            this.metricRegistry.register(Pollux.actionMetricTracker);
+            this.actionMetric = Pollux.actionMetricTracker;
+        }
+        if (Pollux.turnsMetricTracker != null) {
+            this.metricRegistry.register(Pollux.turnsMetricTracker);
+            this.turnsMetric = Pollux.turnsMetricTracker;
+        }
+
+
         // Normal Memosprites always basic, Pollux is different.
         this.clearTurnGoals();
         // TODO: Make Pollux goals
-        this.registerGoal(0, new AlwaysSkillGoal<>(this));
+        this.registerGoal(100, new SkillOnBattleEnd(this));
+        this.registerGoal(90,
+                () -> getBattle().getActionValueUsed() == 0 ? TurnGoalResult.SKILL : TurnGoalResult.PASS);
+        this.registerGoal(0, new PolluxSkillGoal(this));
+        //this.registerGoal(0, new AlwaysSkillGoal<>(this));
     }
 
     // Pollux is behind(?) the players, and can't be attacked
@@ -45,15 +71,15 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
 
     @Override
     protected void basicSequence() {
-        this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
-        getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
+        this.actionMetric.record(MoveType.MEMOSPRITE_BASIC);
+        getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_BASIC));
 
         this.RendTheRealmBeneath();
     }
 
     @Override
     protected void skillSequence() {
-        this.actionMetric.record(MoveType.SKILL);
+        this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
 
         this.DimscorchBreath(this.actionCounter);
@@ -62,6 +88,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     @Subscribe(priority = EventPriority.HIGHEST)
     public void onTurnEnd(TurnEndEvent e) {
         this.actionCounter = 0;
+        this.nextActionDie = false;
+        if (this.getTurns() % 3 == 0) {
+            this.die(this);
+        }
     }
 
     @Override
@@ -111,6 +141,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
                                 0.5f, MultiplierStat.HP, 4));
             }
         });
+        Pollux.actionMetricTracker = this.actionMetric;
+        Pollux.turnsMetricTracker = this.turnsMetric;
     }
 
 

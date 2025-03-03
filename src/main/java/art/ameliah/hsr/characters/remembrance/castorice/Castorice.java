@@ -16,10 +16,12 @@ import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.characters.remembrance.trailblazer.Mem;
 import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.HPLost;
 import art.ameliah.hsr.events.character.HPGain;
+import art.ameliah.hsr.events.character.MemospriteDeath;
 import art.ameliah.hsr.events.character.PostSkill;
 import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.character.PreSkill;
@@ -37,8 +39,6 @@ public class Castorice extends Memomaster<Castorice> {
 
     public final static String NAME = "Castorice";
     public final static float MAX_STAMEN_NOVA = 80*4*100f;
-
-    public final BoolMetric LostNetherland = metricRegistry.register("castorice::lost-netherland", BoolMetric.class);
 
     @Nullable
     private Pollux pollux;
@@ -71,20 +71,20 @@ public class Castorice extends Memomaster<Castorice> {
             p.addPower(new SanctuaryOfTheLunarCocoon());
             p.addPower(new MoonShelledVessel());
         });
-
-        getBattle().registerForEnemy(e -> {
-            e.addPower(new LostNetherland());
-        });
     }
 
     @Override
     protected void summonMemo() {
         this.pollux = new Pollux(this);
-        this.pollux.addPower(new DeathListener());
         this.pollux.addPower(new DarkTideContainedListener());
 
         int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.pollux, idx+1);
+
+        var trueDmg = this.getPower(Mem.TrueDmgPower.NAME);
+        if (trueDmg != null) {
+            this.pollux.addPower(trueDmg);
+        }
 
         this.eventBus.fire(new PostSummon(this.pollux));
         getBattle().getPlayers().forEach(p -> p.addPower(new DesolationBrokenByBellows()));
@@ -209,17 +209,22 @@ public class Castorice extends Memomaster<Castorice> {
         }
 
         getBattle().AdvanceEntity(this.pollux, 100);
-        this.LostNetherland.set(true);
+        getBattle().getEnemies().forEach(e -> e.addPower(new LostNetherland()));
     }
 
-    public class LostNetherland extends PermPower {
+    @Subscribe
+    public void onPolluxDeath(MemospriteDeath event) {
+        this.pollux = null;
+        getBattle().getEnemies().forEach(e -> e.removePower(LostNetherland.NAME));
+    }
+
+    public static class LostNetherland extends PermPower {
 
         public final static String NAME = "Lost Netherland";
 
         public LostNetherland() {
             super(NAME);
-            this.setConditionalStat(PowerStat.RES_DOWN,
-                    _ -> Castorice.this.LostNetherland.value() ? 20f : 0f);
+            this.setStat(PowerStat.RES_DOWN, 20f);
         }
     }
 
@@ -402,15 +407,5 @@ public class Castorice extends Memomaster<Castorice> {
             event.setAmount(ownerDmg);
         }
 
-    }
-
-    public class DeathListener extends PermPower {
-        @Subscribe(priority = EventPriority.HIGHEST)
-        public void onDeath(DeathEvent e) {
-            if (e.isCanceled()) {
-                return;
-            }
-            Castorice.this.pollux = null;
-        }
     }
 }

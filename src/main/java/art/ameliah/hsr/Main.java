@@ -71,9 +71,9 @@ public class Main {
     public static void CastoriceTestRun() {
         IBattle battle = new Battle();
         battle.setPlayerTeam(new CastoriceTeams.CastoriceTestTeam().getTeam());
-        ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
+        List<AbstractEnemy> enemyTeam = new ArrayList<>();
         enemyTeam.add(new AllWeakPassiveEnemy(0));
-        enemyTeam.add(new AllWeakPassiveEnemy(1));
+        enemyTeam.add(new AllWeakPassiveEnemy(1, true));
         enemyTeam.add(new AllWeakPassiveEnemy(2));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
@@ -84,7 +84,7 @@ public class Main {
         battle.setPlayerTeam(new AglaeaTeams.DoubleSpeedAglaeaTeam().getTeam());
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
         enemyTeam.add(new AllWeakPassiveEnemy(0));
-        enemyTeam.add(new AllWeakPassiveEnemy(1));
+        enemyTeam.add(new AllWeakPassiveEnemy(1, true));
         enemyTeam.add(new AllWeakPassiveEnemy(2));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
