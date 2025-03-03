@@ -5,16 +5,19 @@ import art.ameliah.hsr.characters.abundance.gallagher.Gallagher;
 import art.ameliah.hsr.characters.abundance.huohuo.Huohuo;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
+import art.ameliah.hsr.characters.harmony.sunday.Sunday;
 import art.ameliah.hsr.characters.remembrance.castorice.Castorice;
 import art.ameliah.hsr.characters.remembrance.trailblazer.Trailblazer;
 import art.ameliah.hsr.lightcones.abundance.HeyOverHere;
 import art.ameliah.hsr.lightcones.abundance.QuidProQuo;
 import art.ameliah.hsr.lightcones.harmony.MemoriesOfThePast;
+import art.ameliah.hsr.lightcones.harmony.PastAndFuture;
 import art.ameliah.hsr.lightcones.remembrance.MakeFarewellsMoreBeautiful;
 import art.ameliah.hsr.lightcones.remembrance.VictoryInABlink;
 import art.ameliah.hsr.relics.RelicStats;
 import art.ameliah.hsr.relics.Stats;
 import art.ameliah.hsr.relics.ornament.BoneCollectionsSereneDemesne;
+import art.ameliah.hsr.relics.ornament.BrokenKeel;
 import art.ameliah.hsr.relics.ornament.ForgeOfTheKalpagniLatern;
 import art.ameliah.hsr.relics.ornament.SpringhtlyVonwacq;
 import art.ameliah.hsr.relics.relics.GiantTreeOfRaptBrooding;
@@ -47,6 +50,23 @@ public class CastoriceTeams {
                 .equipTo(castorice);
 
         return castorice;
+    }
+
+    private static AbstractCharacter<?> mySunday() {
+        Sunday sunday = new Sunday();
+        sunday.EquipLightcone(new PastAndFuture(sunday));
+        sunday.EquipRelicSet(new SacerdosRelivedOrdeal(sunday, true));
+        sunday.EquipRelicSet(new BrokenKeel(sunday));
+        new RelicStats()
+                .addMainStat(Stats.CRIT_DAMAGE)
+                .addMainStat(Stats.SPEED)
+                .addMainStat(Stats.HP_PER)
+                .addMainStat(Stats.ERR)
+                .addSubStat(Stats.CRIT_DAMAGE, 18)
+                .addSubStat(Stats.SPEED, 3)
+                .equipTo(sunday);
+
+        return sunday;
     }
 
     private static AbstractCharacter<?> myRuanMei() {
@@ -86,7 +106,7 @@ public class CastoriceTeams {
                 .equipTo(rmc);
 
         rmc.clearTurnGoals();
-        rmc.registerGoal(0, new AlwaysSkillGoal<>(rmc));
+        rmc.registerGoal(0, new AlwaysSkillGoal<>(rmc, 1));
 
         return rmc;
     }
@@ -137,6 +157,7 @@ public class CastoriceTeams {
             ArrayList<AbstractCharacter<?>> team = new ArrayList<>();
             team.add(myCastorice());
             team.add(myRuanMei());
+            //team.add(mySunday());
             team.add(myRMC());
             team.add(myHuoHuo());
 

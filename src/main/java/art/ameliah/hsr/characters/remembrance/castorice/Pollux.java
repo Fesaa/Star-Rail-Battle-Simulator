@@ -89,7 +89,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     public void onTurnEnd(TurnEndEvent e) {
         this.actionCounter = 0;
         this.nextActionDie = false;
-        if (this.getTurns() % 3 == 0) {
+        if (this.getTurns() % 3 == 0 && this.currentHp.get() > 0) {
             this.die(this);
         }
     }
