@@ -2,7 +2,6 @@ package art.ameliah.hsr.events.character;
 
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.events.CancelAbleEvent;
-import art.ameliah.hsr.events.Event;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

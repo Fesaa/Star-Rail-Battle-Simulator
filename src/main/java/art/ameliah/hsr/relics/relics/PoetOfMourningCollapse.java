@@ -4,7 +4,6 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostSummon;
-import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.PreCombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;

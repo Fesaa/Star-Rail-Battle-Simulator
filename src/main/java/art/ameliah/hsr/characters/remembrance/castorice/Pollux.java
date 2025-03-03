@@ -1,31 +1,19 @@
 package art.ameliah.hsr.characters.remembrance.castorice;
 
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
-import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.TurnGoalResult;
-import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.EventPriority;
 import art.ameliah.hsr.events.Subscribe;
-import art.ameliah.hsr.events.character.HPLost;
-import art.ameliah.hsr.events.character.PostSkill;
-import art.ameliah.hsr.events.character.PreSkill;
-import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.metrics.ActionMetric;
 import art.ameliah.hsr.metrics.CounterMetric;
-import art.ameliah.hsr.metrics.Metric;
-import art.ameliah.hsr.powers.PermPower;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 
 public class Pollux extends Memosprite<Pollux, Castorice> {
 

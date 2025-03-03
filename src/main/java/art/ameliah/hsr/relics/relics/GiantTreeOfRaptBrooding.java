@@ -1,6 +1,5 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostSummon;

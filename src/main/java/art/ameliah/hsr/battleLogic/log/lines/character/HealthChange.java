@@ -5,8 +5,6 @@ import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import lombok.Getter;
 
-import java.util.Objects;
-
 @Getter
 public final class HealthChange implements Loggable {
     private final AbstractCharacter<?> character;
