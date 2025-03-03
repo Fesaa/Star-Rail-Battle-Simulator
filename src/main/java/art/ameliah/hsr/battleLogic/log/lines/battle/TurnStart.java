@@ -28,6 +28,11 @@ public record TurnStart(AbstractEntity next, float atAV,
     }
 
     @Override
+    public String prefix() {
+        return "\n";
+    }
+
+    @Override
     public void handle(Logger logger) {
         logger.handle(this);
     }

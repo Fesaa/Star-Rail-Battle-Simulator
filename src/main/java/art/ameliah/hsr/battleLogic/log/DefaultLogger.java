@@ -27,6 +27,6 @@ public class DefaultLogger extends Logger {
 
     @Override
     protected void log(Loggable loggable) {
-        this.out.println(prefix() + loggable.asString());
+        this.out.println(loggable.prefix() + prefix() + loggable.asString());
     }
 }
