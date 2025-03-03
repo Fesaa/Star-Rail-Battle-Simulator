@@ -15,7 +15,7 @@ import java.util.TreeSet;
 public class EventBus {
 
     private static final SortedSet<Method> EMPTY =
-            new TreeSet<>(Comparator.comparingInt(EventBus::getPriority));
+            new TreeSet<>(EventBus::methodComparator);
 
     private final Map<Object, Map<Class<Event>, SortedSet<Method>>> listeners = new HashMap<>();
 
@@ -63,7 +63,7 @@ public class EventBus {
 
             listeners.computeIfAbsent(listener, k -> new HashMap<>())
                     .computeIfAbsent((Class<Event>) eventClass,
-                            k -> new TreeSet<>(Comparator.comparingInt(EventBus::getPriority)))
+                            k -> new TreeSet<>(EventBus::methodComparator))
                     .add(method);
         }
     }
@@ -81,7 +81,17 @@ public class EventBus {
         return eventClass;
     }
 
-    private static int getPriority(Method method){
+    private static int methodComparator(Method method, Method method1) {
+        int ordinal = getOrdinal(method);
+        int ordinal1 = getOrdinal(method1);
+        if (ordinal != ordinal1) {
+            return Integer.compare(ordinal, ordinal1);
+        }
+
+        return method.getName().compareTo(method1.getName());
+    }
+
+    private static int getOrdinal(Method method){
         Subscribe methodSubscribe = method.getAnnotation(Subscribe.class);
         Subscribe classSubscribe = method.getDeclaringClass().getAnnotation(Subscribe.class);
 

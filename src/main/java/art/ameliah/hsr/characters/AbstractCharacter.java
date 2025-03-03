@@ -406,6 +406,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             return; // Don't heal dead characters
         }
 
+        if (amount == 0) {
+            return;
+        }
+
         if (powerAffected) {
             float increase = 100;
             if (source instanceof AbstractCharacter<?> character) {
