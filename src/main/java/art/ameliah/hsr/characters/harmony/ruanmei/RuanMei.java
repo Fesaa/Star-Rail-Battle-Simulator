@@ -54,7 +54,7 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
 
     @Subscribe
     public void onAllyJoinCombat(AllyJoinCombat e) {
-        if (this.skillCounter > 0) {
+        if (this.skillCounter > 0 || !e.getAlly().hasPower(SKILL_POWER_NAME)) {
             e.getAlly().addPower(skillPower);
         }
     }
