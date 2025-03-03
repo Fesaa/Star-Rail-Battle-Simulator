@@ -12,6 +12,8 @@ import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +26,12 @@ public class AttackLogic {
 
     @Getter
     private final AbstractCharacter<?> source;
+    /**
+     * Has to be set BEFORE calling any hit methods
+     */
+    @Setter
+    @Nullable
+    private AbstractCharacter<?> multiSource = null;
     @Getter
     private final Collection<AbstractEnemy> targets;
     @Getter
@@ -128,7 +136,11 @@ public class AttackLogic {
             throw new IllegalStateException("Cannot hit target that isn't part of Attack");
         }
 
-        return this.addHit(new AllyHit(this, source, target, mul, stat, types, toughness, elementType, ignoreWeakness));
+        var hit = new AllyHit(this, source, target, mul, stat, types, toughness, elementType, ignoreWeakness);
+        if (this.multiSource != null) {
+            hit.setMultiSource(this.multiSource);
+        }
+        return this.addHit(hit);
     }
 
     /**

@@ -102,7 +102,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     private void RendTheRealmBeneath() {
         this.doAttack(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             dl.logic(getBattle().getEnemies(), (e, al) -> {
-                al.hit(this.getMaster(), e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+                al.setMultiSource(this.getMaster());
+                al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         });
     }
@@ -114,7 +115,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
             this.nextActionDie = this.getCurrentHp().get() == 1;
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
-                al.hit(this.getMaster(), e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+                al.setMultiSource(this.getMaster());
+                al.hit(e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         }).afterAttackHook(() -> {
             if (this.currentHp.get() > 0) {
@@ -137,8 +139,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         this.doAttack(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             for (int i = 0; i < 6; i++) {
                 dl.logic(getBattle().getRandomEnemy(),
-                        (e, al) -> al.hit(this.getMaster(), e,
-                                0.5f, MultiplierStat.HP, 4));
+                        (e, al) -> {
+                            al.setMultiSource(this.getMaster());
+                            al.hit(e, 0.5f, MultiplierStat.HP, 4);
+                        });
             }
         });
         Pollux.actionMetricTracker = this.actionMetric;

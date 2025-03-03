@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class DmgContributionMetric extends AbstractMetric{
+public class DmgContributionMetric extends AbstractMetric {
 
     private final Map<BattleParticipant, Float> map = new ConcurrentHashMap<>();
     private final Map<BattleParticipant, TreeMap<DamageType, Float>> dmgPerType = new ConcurrentHashMap<>();
@@ -46,25 +46,33 @@ public class DmgContributionMetric extends AbstractMetric{
     }
 
     public String overflow() {
-        return overFlowMap.entrySet()
-                .stream()
-                .sorted(Map.Entry.<BattleParticipant, Float>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(entry -> entry.getKey().getName()))
+        return overFlowMap.entrySet().stream()
+                .collect(Collectors.groupingBy(entry -> entry.getKey().getName(),
+                        Collectors.summingDouble(Map.Entry::getValue)))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> {
-                    float percent = entry.getValue() / this.map.get(entry.getKey()) * 100;
-                    return String.format("%s: %,.0f DMG (%.3f%%)", entry.getKey().getName(), entry.getValue(), percent);
+                    double totalDmg = map.entrySet().stream()
+                            .filter(e -> e.getKey().getName().equals(entry.getKey()))
+                            .mapToDouble(Map.Entry::getValue)
+                            .sum();
+                    double percent = entry.getValue() / totalDmg * 100;
+                    return String.format("%s: %,.0f DMG (%.3f%%)", entry.getKey(), entry.getValue(), percent);
                 })
                 .collect(Collectors.joining(" | "));
     }
 
     public String contribution() {
-        return map.entrySet()
-                .stream()
-                .sorted(Map.Entry.<BattleParticipant, Float>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(entry -> entry.getKey().getName()))
+        return map.entrySet().stream()
+                .collect(Collectors.groupingBy(entry -> entry.getKey().getName(),
+                        Collectors.summingDouble(Map.Entry::getValue)))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> {
-                    float percent = entry.getValue() / this.battle.getTotalPlayerDmg() * 100;
-                    return String.format("%s: %,.3f DPAV (%.3f%%)", entry.getKey().getName(), entry.getValue() / this.battle.getActionValueUsed(), percent);
+                    double totalBattleDmg = battle.getTotalPlayerDmg();
+                    double percent = entry.getValue() / totalBattleDmg * 100;
+                    double totalActionValueUsed = battle.getActionValueUsed();
+                    return String.format("%s: %,.3f DPAV (%.3f%%)", entry.getKey(), entry.getValue() / totalActionValueUsed, percent);
                 })
                 .collect(Collectors.joining(" | "));
     }
@@ -72,10 +80,18 @@ public class DmgContributionMetric extends AbstractMetric{
     private String characterBreakDown() {
         return this.dmgPerType.entrySet().stream()
                 .filter(e -> e.getKey() instanceof AbstractCharacter<?>)
-                .sorted(Map.Entry.comparingByKey(Comparator.comparing(BattleParticipant::getName)))
+                .collect(Collectors.groupingBy(entry -> entry.getKey().getName(),
+                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> {
+                            TreeMap<DamageType, Float> merged = new TreeMap<>(a);
+                            b.forEach((type, dmg) -> merged.merge(type, dmg, Float::sum));
+                            return merged;
+                        }, TreeMap::new)))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
                 .map(e -> {
                     String d = e.getValue().entrySet().stream()
-                            .map(inner -> String.format("%s: %,.3f", inner.getKey(), inner.getValue()))
+                            .flatMap(entry -> entry.getValue().entrySet().stream()
+                                    .map(inner -> String.format("%s: %,.3f", inner.getKey(), inner.getValue())))
                             .collect(Collectors.joining("\n\t"));
                     return String.format("%s:\n\t%s", e.getKey(), d);
                 })
