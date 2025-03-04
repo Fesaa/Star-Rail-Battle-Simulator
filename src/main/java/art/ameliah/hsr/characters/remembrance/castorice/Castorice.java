@@ -35,14 +35,14 @@ import org.jetbrains.annotations.Nullable;
 public class Castorice extends Memomaster<Castorice> {
 
     public final static String NAME = "Castorice";
-    public final static float MAX_STAMEN_NOVA = 80 * 4 * 100f;
+    public final static float MAX_NEWBUD = 80 * 4 * 100f;
 
     @Nullable
     private Pollux pollux;
 
     public Castorice() {
         super(NAME, 1629, 523, 485, 95, 80, ElementType.QUANTUM,
-                MAX_STAMEN_NOVA, 100, Path.REMEMBRANCE);
+                MAX_NEWBUD, 100, Path.REMEMBRANCE);
 
         this.isDPS = true;
         this.usesEnergy = false;
@@ -65,7 +65,7 @@ public class Castorice extends Memomaster<Castorice> {
         getBattle().registerForPlayers(p -> {
             p.addPower(new InvertedTorch());
             p.addPower(new DesolationTraversesHerPalmsListener());
-            p.addPower(new SanctuaryOfTheLunarCocoon());
+            p.addPower(new SanctuaryOfMooncocoon());
             p.addPower(new MoonShelledVessel());
         });
     }
@@ -95,7 +95,7 @@ public class Castorice extends Memomaster<Castorice> {
     @Override
     public void useTechnique() {
         getBattle().setUsedEntryTechnique(true);
-        this.currentEnergy.set(0.3f * MAX_STAMEN_NOVA);
+        this.currentEnergy.set(0.3f * MAX_NEWBUD);
 
         this.summonMemo();
         if (this.pollux == null) {
@@ -111,12 +111,12 @@ public class Castorice extends Memomaster<Castorice> {
         getBattle().AdvanceEntity(this.pollux, 100); // Get pollux to 0 AV, the SPD buff is applied first
     }
 
-    protected void increaseStamenNova(float amount) {
+    protected void increaseNewbud(float amount) {
         if (amount <= 0) {
             return;
         }
 
-        float overflow = this.currentEnergy.increase(amount, MAX_STAMEN_NOVA);
+        float overflow = this.currentEnergy.increase(amount, MAX_NEWBUD);
         float gained = amount - overflow;
 
         getBattle().addToLog(new GainEnergy(Castorice.this,
@@ -304,7 +304,7 @@ public class Castorice extends Memomaster<Castorice> {
 
             Castorice.this.addPower(new DesolationThatTraversesHerPalms());
             if (Castorice.this.pollux == null) {
-                Castorice.this.increaseStamenNova(e.getAmount());
+                Castorice.this.increaseNewbud(e.getAmount());
             } else {
                 Castorice.this.pollux.addPower(new DesolationThatTraversesHerPalms());
                 Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
@@ -315,18 +315,18 @@ public class Castorice extends Memomaster<Castorice> {
     public class InvertedTorch extends PermPower {
         @Subscribe
         public void afterHpGain(HPGain e) {
-            var increase = Math.min(e.getOverflow(), 0.15f * MAX_STAMEN_NOVA);
+            var increase = Math.min(e.getOverflow(), 0.15f * MAX_NEWBUD);
 
             Pollux pollux = (Pollux) Castorice.this.getMemo();
             if (pollux == null || pollux.getCurrentHp().get() == 0) {
-                Castorice.this.increaseStamenNova(increase);
+                Castorice.this.increaseNewbud(increase);
             } else if (this.getOwner() != pollux) {
                 pollux.increaseHealth(this, increase);
             }
         }
     }
 
-    public class SanctuaryOfTheLunarCocoon extends PermPower {
+    public class SanctuaryOfMooncocoon extends PermPower {
 
         private static boolean hasTriggered = false;
         private boolean activated = false;

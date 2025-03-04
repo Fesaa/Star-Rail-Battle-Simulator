@@ -26,7 +26,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     private boolean nextActionDie = false;
 
     public Pollux(Castorice master) {
-        super(master, NAME, (int) Castorice.MAX_STAMEN_NOVA, 140, 80, ElementType.QUANTUM,
+        super(master, NAME, (int) Castorice.MAX_NEWBUD, 140, 80, ElementType.QUANTUM,
                 0, 100, Path.REMEMBRANCE);
 
         this.usesEnergy = false;
@@ -70,7 +70,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
 
-        this.DimscorchBreath(this.actionCounter);
+        this.BreathScorchesTheShadow(this.actionCounter);
     }
 
     @Subscribe(priority = EventPriority.HIGHEST)
@@ -96,10 +96,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         });
     }
 
-    private void DimscorchBreath(float mul) {
+    private void BreathScorchesTheShadow(float mul) {
         float dmgMul = 0.30f + mul * 0.04f;
         this.startAttack().handle(DamageType.MEMOSPRITE_DAMAGE, dl -> {
-            this.reduceHealth(this, Castorice.MAX_STAMEN_NOVA * 0.25f, this.nextActionDie);
+            this.reduceHealth(this, Castorice.MAX_NEWBUD * 0.25f, this.nextActionDie);
             this.nextActionDie = this.getCurrentHp().get() == 1;
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
