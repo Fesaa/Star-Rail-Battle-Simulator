@@ -23,7 +23,6 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     private static CounterMetric<Integer> turnsMetricTracker = null;
 
     private int actionCounter = 0;
-    private boolean nextActionDie = false;
 
     public Pollux(Castorice master) {
         super(master, NAME, (int) Castorice.MAX_NEWBUD, 140, 80, ElementType.QUANTUM,
@@ -59,8 +58,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
 
     @Override
     protected void basicSequence() {
-        this.actionMetric.record(MoveType.MEMOSPRITE_BASIC);
-        getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_BASIC));
+        this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
+        getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
 
         this.RendTheRealmBeneath();
     }
@@ -75,8 +74,6 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
 
     @Subscribe(priority = EventPriority.HIGHEST)
     public void onTurnEnd(TurnEndEvent e) {
-        this.actionCounter = 0;
-        this.nextActionDie = false;
         if (this.getTurns() % 3 == 0 && this.currentHp.get() > 0) {
             this.die(this);
         }
@@ -99,16 +96,15 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     private void BreathScorchesTheShadow(float mul) {
         float dmgMul = 0.30f + mul * 0.04f;
         this.startAttack().handle(DamageType.MEMOSPRITE_DAMAGE, dl -> {
-            this.reduceHealth(this, Castorice.MAX_NEWBUD * 0.25f, this.nextActionDie);
-            this.nextActionDie = this.getCurrentHp().get() == 1;
+            this.reduceHealth(this, Castorice.MAX_NEWBUD * 0.25f, false);
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.setMultiSource(this.getMaster());
                 al.hit(e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         }).afterAttackHook(() -> {
-            if (this.currentHp.get() > 0) {
-                this.actionCounter++;
+            if (this.currentHp.get() > 1) {
+                this.actionCounter = Math.min(this.actionCounter+1, 3);
                 this.doAction(); // Skill does not end action
                 return;
             }

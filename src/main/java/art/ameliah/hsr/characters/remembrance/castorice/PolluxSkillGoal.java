@@ -15,7 +15,7 @@ public class PolluxSkillGoal extends AbstractTurnGoal<Pollux> {
             return TurnGoalResult.SKILL;
         }
 
-        if (this.character.getCurrentHp().get() > 1) {
+        if (this.character.getCurrentHp().get() > this.character.getFinalHP()*0.25f) {
             return TurnGoalResult.SKILL;
         }
 
