@@ -22,6 +22,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     private static ActionMetric actionMetricTracker = null;
     private static CounterMetric<Integer> turnsMetricTracker = null;
 
+    private boolean shouldDie = false;
     private int actionCounter = 0;
 
     public Pollux(Castorice master) {
@@ -74,9 +75,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
 
     @Subscribe(priority = EventPriority.HIGHEST)
     public void onTurnEnd(TurnEndEvent e) {
-        if (this.getTurns() % 3 == 0 && this.currentHp.get() > 0) {
+        if (this.getTurns() % 3 == 0 && this.currentHp.get() > 0 && !this.shouldDie) {
             this.die(this);
         }
+        this.shouldDie = false;
     }
 
     @Override
@@ -97,13 +99,14 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         float dmgMul = 0.30f + mul * 0.04f;
         this.startAttack().handle(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             this.reduceHealth(this, Castorice.MAX_NEWBUD * 0.25f, false);
+            this.shouldDie = this.currentHp.get() == 1;
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.setMultiSource(this.getMaster());
                 al.hit(e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         }).afterAttackHook(() -> {
-            if (this.currentHp.get() > 1) {
+            if (this.currentHp.get() > 1 && !this.shouldDie) {
                 this.actionCounter = Math.min(this.actionCounter+1, 3);
                 this.doAction(); // Skill does not end action
                 return;
