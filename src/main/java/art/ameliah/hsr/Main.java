@@ -46,7 +46,8 @@ public class Main {
 
         //run();
         //darkgladeTestRun();
-        CastoriceTestRun();
+        //CastoriceTestRun();
+        CastoriceSim.run();
 
         //ameliasSanityCheck();
         //WaveTester.MocTest();

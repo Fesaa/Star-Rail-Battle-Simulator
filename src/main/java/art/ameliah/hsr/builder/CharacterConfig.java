@@ -48,6 +48,9 @@ public class CharacterConfig {
 
         var statsPower = new PermPower("Stats Power, auto generated");
         for (var ss : subStats) {
+            if (ss == null) {
+                throw new IllegalStateException("Invalid substats");
+            }
             statsPower.setStat(ss.stat, ss.amount);
         }
 

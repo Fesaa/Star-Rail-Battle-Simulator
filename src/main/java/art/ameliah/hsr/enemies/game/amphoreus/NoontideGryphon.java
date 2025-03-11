@@ -69,10 +69,13 @@ public class NoontideGryphon extends AbstractEnemy {
     }
 
     private void PraiseAquila() {
+        if (this.lockedOn.isEmpty()) {
+            return;
+        }
         this.startAttack().handle(dl -> {
             for (var target : this.lockedOn) {
                 int idx = getBattle().getPlayers().indexOf(target);
-                dl.logic(idx - 1, (e, al) -> {
+                dl.logic(idx, (e, al) -> {
                     al.hit(e, 20, 1300);
                     e.addPower(this.newMark());
                 });

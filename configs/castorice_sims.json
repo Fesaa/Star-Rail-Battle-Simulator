@@ -1,0 +1,294 @@
+{
+  "battles": [
+    {
+      "key": "Castorice (Sig), Sunday, Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Sig), RMC, Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Sig), RMC, Ruan Mei, Gallagher",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Sig), Sunday(160), Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Victory In a Blink), Sunday, Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Victory In a Blink), RMC, Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Victory In a Blink), RMC, Ruan Mei, Gallagher",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Victory In a Blink), Sunday(160), Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    }
+  ],
+  "characters": {
+    "1": {
+      "name": "Castorice",
+      "id": 1407,
+      "lcId": 23040,
+      "relics": [
+        {"id":  124, "fullSet":  true},
+        {"id": 319}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "HP_PER", "HP_PER", "HP_PER"],
+      "subStats": [
+        {"stat": "CRIT_CHANCE", "amount": 37.1},
+        {"stat": "CRIT_DAMAGE", "amount": 104.7},
+        {"stat": "HP_PERCENT", "amount": 12},
+        {"stat":  "FLAT_HP", "amount": 117}
+      ]
+    },
+    "2": {
+      "name": "Sunday",
+      "id": 1313,
+      "lcId": 21046,
+      "relics": [
+        {"id":  121, "fullSet":  true},
+        {"id": 310}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "CRIT_DAMAGE", "amount": 107.3},
+        {"stat": "SPEED", "amount": 7.2},
+        {"stat": "EFFECT_RES", "amount": 30}
+      ]
+    },
+    "3": {
+      "name": "Ruan Mei",
+      "id": 1303,
+      "lcId": 21004,
+      "relics": [
+        {"id":  111, "fullSet":  false},
+        {"id":  118, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["HP_PER", "HP_PER", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "BREAK_EFFECT", "amount": 70.5},
+        {"stat": "FLAT_SPEED", "amount": 11.8},
+        {"stat": "HP_PERCENT", "amount": 12},
+        {"stat": "HP_FLAT", "amount": 405}
+      ]
+    },
+    "4":{
+      "name": "HuoHuo",
+      "id": 1217,
+      "lcId": 22001,
+      "relics": [
+        { "id": 114, "fullSet": false },
+        { "id": 113, "fullSet": false },
+        { "id": 302}
+      ],
+      "mainStats": ["HEALING", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat":  "HP_PER", "amount":  60},
+        {"stat":  "FLAT_SPEED", "amount":  10}
+      ]
+    },
+    "5": {
+      "name": "Remembrance Trailblazer",
+      "id": 8008,
+      "lcId": 21050,
+      "relics": [
+        {"id":  123, "fullSet":  true},
+        {"id": 302}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "CRIT_DAMAGE", "amount": 35.4},
+        {"stat": "FLAT_SPEED", "amount": 25}
+      ]
+    },
+    "6": {
+      "name": "Gallagher",
+      "id": 1301,
+      "lcId": 22001,
+      "relics": [
+        {"id":  121, "fullSet":  false},
+        {"id":  114, "fullSet":  false},
+        {"id": 316}
+      ],
+      "mainStats": ["HEALING", "SPEED", "HP_PER", "BREAK_EFFECT"],
+      "subStats": [
+        {"stat": "BREAK_EFFECT", "amount": 24.6},
+        {"stat": "FLAT_SPEED", "amount": 14.4},
+        {"stat": "HP_PERCENT", "amount": 41.3}
+      ]
+    },
+    "7": {
+      "name": "Sunday",
+      "id": 1313,
+      "lcId": 21046,
+      "relics": [
+        {"id":  121, "fullSet":  true},
+        {"id": 310}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "CRIT_DAMAGE", "amount": 107.3},
+        {"stat": "SPEED", "amount": 33.3},
+        {"stat": "EFFECT_RES", "amount": 30}
+      ]
+    }
+  }
+}

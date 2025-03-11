@@ -198,7 +198,7 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         if (registry.containsKey(id)) {
             return registry.get(id).getConstructor(AbstractCharacter.class).newInstance(owner);
         }
-        throw new RuntimeException("Element with id" + id + " not found");
+        throw new RuntimeException("Element with id: " + id + " not found");
     }
 
 }

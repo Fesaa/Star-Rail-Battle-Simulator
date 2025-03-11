@@ -39,6 +39,10 @@ public class DmgContributionMetric extends AbstractMetric {
         this.overFlowMap.put(participant, this.overFlowMap.getOrDefault(participant, 0.0f) + overflow);
     }
 
+    public float total() {
+        return this.map.values().stream().reduce(0f, Float::sum);
+    }
+
     @Override
     public String representation() {
         return String.format("Damage Contribution: %s \nOverflow damage %s\n%s",
