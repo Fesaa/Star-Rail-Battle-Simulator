@@ -72,8 +72,8 @@ public class CastoriceTeams {
     private static AbstractCharacter<?> myRuanMei() {
         RuanMei ruanMei = new RuanMei();
         ruanMei.EquipLightcone(new MemoriesOfThePast(ruanMei));
-        ruanMei.EquipRelicSet(new ThiefOfShootingMeteor(ruanMei));
-        ruanMei.EquipRelicSet(new WatchMakerMasterOfDreamMachinations(ruanMei));
+        ruanMei.EquipRelicSet(new ThiefOfShootingMeteor(ruanMei, false));
+        ruanMei.EquipRelicSet(new WatchMakerMasterOfDreamMachinations(ruanMei, false));
         ruanMei.EquipRelicSet(new SpringhtlyVonwacq(ruanMei));
         new RelicStats()
                 .addMainStat(Stats.HP_PER)
@@ -160,6 +160,7 @@ public class CastoriceTeams {
             //team.add(mySunday());
             team.add(myRMC());
             team.add(myHuoHuo());
+            //team.add(myGallagher());
 
             return team;
         }

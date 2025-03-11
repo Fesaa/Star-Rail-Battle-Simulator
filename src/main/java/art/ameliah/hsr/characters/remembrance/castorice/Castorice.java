@@ -52,8 +52,6 @@ public class Castorice extends Memomaster<Castorice> {
                 .setStat(PowerStat.QUANTUM_DMG_BOOST, 14.4f)
                 .setStat(PowerStat.CRIT_DAMAGE, 13.3f));
 
-        this.addPower(new DarkTideContainedListener());
-
         // Just using the most simply goals for now
         this.registerGoal(0, new AlwaysSkillGoal<>(this, -1));
         this.registerGoal(0, () -> this.pollux == null ? UltGoalResult.DO : UltGoalResult.DONT);
@@ -62,8 +60,12 @@ public class Castorice extends Memomaster<Castorice> {
 
     @Subscribe
     public void onCombatStart(CombatStartEvent event) {
+
+        this.addPower(new InvertedTorch());
+        this.addPower(new InvertedTorchListener());
+
         getBattle().registerForPlayers(p -> {
-            p.addPower(new InvertedTorch());
+            p.addPower(new DarkTideContained());
             p.addPower(new DesolationTraversesHerPalmsListener());
             p.addPower(new SanctuaryOfMooncocoon());
             p.addPower(new MoonShelledVessel());
@@ -73,7 +75,6 @@ public class Castorice extends Memomaster<Castorice> {
     @Override
     protected void summonMemo() {
         this.pollux = new Pollux(this);
-        this.pollux.addPower(new DarkTideContainedListener());
 
         int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.pollux, idx + 1);
@@ -158,7 +159,7 @@ public class Castorice extends Memomaster<Castorice> {
     protected void useSkill() {
         this.doAttack(DamageType.SKILL, dl -> {
             getBattle().getPlayers().forEach(p -> {
-                p.reduceHealth(this, p.getCurrentHp().get() * 0.4f, false);
+                p.reduceHealth(this, p.getCurrentHp().get() * 0.3f, false);
             });
 
             int idx = this.getTargetIdx(MoveType.SKILL);
@@ -178,7 +179,7 @@ public class Castorice extends Memomaster<Castorice> {
                 if (p == this.pollux) {
                     return;
                 }
-                p.reduceHealth(this, p.getCurrentHp().get() * 0.5f, false);
+                p.reduceHealth(this, p.getCurrentHp().get() * 0.4f, false);
             });
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
@@ -230,14 +231,14 @@ public class Castorice extends Memomaster<Castorice> {
         public final static String NAME = "Desolation That Traverses Her Palms";
 
         public DesolationThatTraversesHerPalms() {
-            super(NAME);
+            super(3, NAME);
 
             this.maxStacks = 3;
             this.setConditionalStat(PowerStat.DAMAGE_BONUS, _ -> this.stacks * 20f);
         }
     }
 
-    public static class DarkTideContainedListener extends PermPower {
+    public static class InvertedTorchListener extends PermPower {
 
         @Subscribe
         public void onCombatStart(CombatStartEvent e) {
@@ -246,7 +247,7 @@ public class Castorice extends Memomaster<Castorice> {
                 return;
             }
 
-            getBattle().IncreaseSpeed(owner, new DarkTideContained());
+            getBattle().IncreaseSpeed(owner, new InvertedTorch());
         }
 
         @Subscribe
@@ -256,9 +257,9 @@ public class Castorice extends Memomaster<Castorice> {
                 return;
             }
 
-            var power = owner.getPower(DarkTideContained.NAME);
+            var power = owner.getPower(InvertedTorch.NAME);
             if (power == null) {
-                getBattle().IncreaseSpeed(owner, new DarkTideContained());
+                getBattle().IncreaseSpeed(owner, new InvertedTorch());
             }
         }
 
@@ -270,18 +271,18 @@ public class Castorice extends Memomaster<Castorice> {
                 return;
             }
 
-            var power = owner.getPower(DarkTideContained.NAME);
+            var power = owner.getPower(InvertedTorch.NAME);
             if (power != null) {
                 getBattle().DecreaseSpeed(owner, power);
             }
         }
     }
 
-    public static class DarkTideContained extends PermPower {
+    public static class InvertedTorch extends PermPower {
 
         public final static String NAME = "Dark Tide Contained";
 
-        public DarkTideContained() {
+        public InvertedTorch() {
             super(NAME);
             this.setStat(PowerStat.SPEED_PERCENT, 40);
         }
@@ -289,7 +290,7 @@ public class Castorice extends Memomaster<Castorice> {
 
     public static class DesolationBrokenByBellows extends TempPower {
         private DesolationBrokenByBellows() {
-            super(2, "Desolation Broken By Bellows");
+            super(3, "Desolation Broken By Bellows");
 
             this.setStat(PowerStat.DAMAGE_BONUS, 10);
         }
@@ -312,15 +313,43 @@ public class Castorice extends Memomaster<Castorice> {
         }
     }
 
-    public class InvertedTorch extends PermPower {
+    public class DarkTideContained extends PermPower {
+
+        private static final float MAX = 0.12f * MAX_NEWBUD;
+
+        private float cumulative;
+
+        private float getIncrease(float amount) {
+            if (cumulative >= MAX) {
+                return 0;
+            }
+
+            float maxIncrease = MAX - cumulative;
+            float actualIncrease = Math.min(maxIncrease, amount);
+            this.cumulative += actualIncrease;
+            return actualIncrease;
+        }
+
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
+            this.cumulative = 0;
+        }
+
         @Subscribe
         public void afterHpGain(HPGain e) {
-            var increase = Math.min(e.getOverflow(), 0.15f * MAX_NEWBUD);
+            if (this.getOwner() == Castorice.this.pollux) {
+                return;
+            }
+
+            var increase = this.getIncrease(e.getAmount()+e.getOverflow());
 
             Pollux pollux = (Pollux) Castorice.this.getMemo();
-            if (pollux == null || pollux.getCurrentHp().get() == 0) {
+            if (pollux == null || pollux.getCurrentHp().get() <= 1) {
                 Castorice.this.increaseNewbud(increase);
-            } else if (this.getOwner() != pollux) {
+                return;
+            }
+
+            if (!pollux.shouldDie) {
                 pollux.increaseHealth(this, increase);
             }
         }
