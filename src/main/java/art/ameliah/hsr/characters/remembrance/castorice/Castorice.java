@@ -1,5 +1,6 @@
 package art.ameliah.hsr.characters.remembrance.castorice;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
@@ -31,6 +32,9 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Castorice extends Memomaster<Castorice> {
 
@@ -317,22 +321,23 @@ public class Castorice extends Memomaster<Castorice> {
 
         private static final float MAX = 0.12f * MAX_NEWBUD;
 
-        private float cumulative;
+        private static final Map<String, Float> cumulatives = new HashMap<>(8);
 
-        private float getIncrease(float amount) {
+        private float getIncrease(BattleParticipant source, float amount) {
+            var cumulative = cumulatives.getOrDefault(source.getName(), 0f);
             if (cumulative >= MAX) {
                 return 0;
             }
 
             float maxIncrease = MAX - cumulative;
             float actualIncrease = Math.min(maxIncrease, amount);
-            this.cumulative += actualIncrease;
+            cumulatives.put(source.getName(), cumulative+actualIncrease);
             return actualIncrease;
         }
 
         @Subscribe
         public void onTurnStart(TurnStartEvent e) {
-            this.cumulative = 0;
+            cumulatives.clear();
         }
 
         @Subscribe
@@ -341,7 +346,7 @@ public class Castorice extends Memomaster<Castorice> {
                 return;
             }
 
-            var increase = this.getIncrease(e.getAmount()+e.getOverflow());
+            var increase = this.getIncrease(this.getOwner(), e.getAmount()+e.getOverflow());
 
             Pollux pollux = (Pollux) Castorice.this.getMemo();
             if (pollux == null || pollux.getCurrentHp().get() <= 1) {
