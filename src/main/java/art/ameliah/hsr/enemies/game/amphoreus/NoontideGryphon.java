@@ -57,7 +57,7 @@ public class NoontideGryphon extends AbstractEnemy {
             int size = getBattle().playerSize();
             for (int i = 0; i < 3; i++) {
                 getBattle().characterCallback(size - i, c -> {
-                    dl.logic(al -> al.hit(c, 10, 700));
+                    dl.logic(c, al -> al.hit(c, 10, 700));
                     c.addPower(this.newMark());
                 });
             }

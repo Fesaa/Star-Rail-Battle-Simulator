@@ -50,10 +50,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         // Normal Memosprites always basic, Pollux is different.
         this.clearTurnGoals();
         // TODO: Make Pollux goals
-        this.registerGoal(100, new SkillOnBattleEnd(this));
-        this.registerGoal(90,
-                () -> getBattle().getActionValueUsed() == 0 ? TurnGoalResult.SKILL : TurnGoalResult.PASS);
-        this.registerGoal(0, new PolluxSkillGoal(this));
+        this.registerGoal(0, new SkillOnBattleEnd(this));
+        this.registerGoal(100, new PolluxSkillGoal(this));
         //this.registerGoal(0, new AlwaysSkillGoal<>(this));
     }
 

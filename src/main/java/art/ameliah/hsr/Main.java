@@ -10,6 +10,8 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.AllWeakPassiveEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
+import art.ameliah.hsr.enemies.game.amphoreus.NoontideGryphon;
+import art.ameliah.hsr.enemies.game.stellaronhunters.Kafka;
 import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
@@ -72,9 +74,12 @@ public class Main {
         IBattle battle = new Battle();
         battle.setPlayerTeam(new CastoriceTeams.CastoriceTestTeam().getTeam());
         List<AbstractEnemy> enemyTeam = new ArrayList<>();
-        enemyTeam.add(new AllWeakPassiveEnemy(0));
-        enemyTeam.add(new AllWeakPassiveEnemy(1, true));
-        enemyTeam.add(new AllWeakPassiveEnemy(2));
+        //enemyTeam.add(new AllWeakPassiveEnemy(0));
+        //enemyTeam.add(new AllWeakPassiveEnemy(1, true));
+        //enemyTeam.add(new AllWeakPassiveEnemy(2));
+        enemyTeam.add(new NoontideGryphon(1_000_000));
+        enemyTeam.add(new Kafka(2_000_000));
+        enemyTeam.add(new NoontideGryphon(1_000_000));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
     }
