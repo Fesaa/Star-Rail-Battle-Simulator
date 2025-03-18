@@ -12,6 +12,7 @@ import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostDoHit;
+import art.ameliah.hsr.events.character.PostSummon;
 import art.ameliah.hsr.events.character.PostUseOnAllies;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
@@ -126,6 +127,11 @@ public class Mem extends Memosprite<Mem, Trailblazer> {
             super(3, NAME);
 
             this.setStat(PowerStat.CRIT_CHANCE, 10);
+        }
+
+        @Subscribe
+        public void afterSummonMemo(PostSummon e) {
+            e.getMemosprite().addPower(this);
         }
 
         @Subscribe

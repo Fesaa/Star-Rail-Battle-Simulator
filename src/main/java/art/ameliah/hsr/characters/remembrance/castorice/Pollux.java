@@ -18,6 +18,7 @@ import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.metrics.ActionMetric;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
+import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.List;
 
@@ -55,11 +56,6 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         //this.registerGoal(0, new AlwaysSkillGoal<>(this));
     }
 
-    @Subscribe
-    public void onCombatEnter(CombatStartEvent e) {
-        this.addPower(new WhereTheWestWindDwells());
-    }
-
     // Pollux is behind(?) the players, and can't be attacked
     @Override
     public boolean invincible() {
@@ -79,7 +75,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
 
-        this.BreathScorchesTheShadow(this.actionCounter);
+        this.BreathScorchesTheShadow();
     }
 
     @Subscribe(priority = EventPriority.HIGHEST)
@@ -99,13 +95,15 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         this.doAttack(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             dl.logic(getBattle().getEnemies(), (e, al) -> {
                 al.setMultiSource(this.getMaster());
-                al.hit(e, 0.24f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
+                al.hit(e, 0.4f, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         });
     }
 
-    private void BreathScorchesTheShadow(float mul) {
-        float dmgMul = 0.24f + mul * 0.04f;
+    private void BreathScorchesTheShadow() {
+        var whereTheWestWindDwells = PermPower.create(PowerStat.QUANTUM_DMG_BOOST, Math.min(6, this.actionCounter), "Where The West Wind Dwells");
+        this.addPower(whereTheWestWindDwells);
+        float dmgMul = 0.24f + Math.min(this.actionCounter, 3) * 0.04f;
         this.startAttack().handle(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             this.reduceHealth(this, Castorice.MAX_NEWBUD * 0.25f, false);
             this.shouldDie = this.currentHp.get() == 1;
@@ -115,8 +113,9 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
                 al.hit(e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         }).afterAttackHook(() -> {
+            this.removePower(whereTheWestWindDwells);
             if (this.currentHp.get() > 1 && !this.shouldDie) {
-                this.actionCounter = Math.min(this.actionCounter+1, 3);
+                this.actionCounter++;
                 this.doAction(); // Skill does not end action
                 return;
             }
@@ -145,22 +144,6 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         });
         Pollux.actionMetricTracker = this.actionMetric;
         Pollux.turnsMetricTracker = this.turnsMetric;
-    }
-
-    public static class WhereTheWestWindDwells extends PermPower {
-        private static final String NAME = "Where The West Wind Dwells";
-
-        WhereTheWestWindDwells() {
-            super(NAME);
-
-        }
-
-        @Override
-        public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
-            float hpRel = enemy.getCurrentHp().get() / enemy.maxHp() * 100;
-            return (1 - (hpRel-30) / 70) * 40;
-        }
-
     }
 
 

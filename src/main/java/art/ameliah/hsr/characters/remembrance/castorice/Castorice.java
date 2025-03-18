@@ -39,7 +39,7 @@ import java.util.Map;
 public class Castorice extends Memomaster<Castorice> {
 
     public final static String NAME = "Castorice";
-    public final static float MAX_NEWBUD = 36000;
+    public final static float MAX_NEWBUD = 32000;
 
     @Nullable
     private Pollux pollux;
@@ -82,11 +82,6 @@ public class Castorice extends Memomaster<Castorice> {
 
         int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.pollux, idx + 1);
-
-        var trueDmg = this.getPower(Mem.TrueDmgPower.NAME);
-        if (trueDmg != null) {
-            this.pollux.addPower(trueDmg);
-        }
 
         this.eventBus.fire(new PostSummon(this.pollux));
         getBattle().getPlayers().forEach(p -> p.addPower(new DesolationBrokenByBellows()));
@@ -314,6 +309,11 @@ public class Castorice extends Memomaster<Castorice> {
                 Castorice.this.pollux.addPower(new DesolationThatTraversesHerPalms());
                 Castorice.this.pollux.increaseHealth(this, e.getAmount(), false);
             }
+        }
+
+        @Subscribe
+        public void onSummon(PostSummon e) {
+            e.getMemosprite().addPower(new DesolationThatTraversesHerPalms());
         }
     }
 
