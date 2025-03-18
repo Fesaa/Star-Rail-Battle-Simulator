@@ -23,6 +23,51 @@
       ]
     },
     {
+      "key": "Castorice (Sig), Sunday, Tribbie, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 8
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Sig), Sunday(160), Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+
+    {
       "key": "Castorice (Sig), RMC, Ruan Mei, HouHou",
       "team": [
         {
@@ -67,7 +112,7 @@
       ]
     },
     {
-      "key": "Castorice (Sig), Sunday(160), Ruan Mei, HouHou",
+      "key": "Castorice (Sig), RMC, Tribbie, HouHou",
       "team": [
         {
           "type": "REFERENCE",
@@ -76,11 +121,11 @@
         },
         {
           "type": "REFERENCE",
-          "referenceId": 7
+          "referenceId": 5
         },
         {
           "type": "REFERENCE",
-          "referenceId": 3
+          "referenceId": 8
         },
         {
           "type": "REFERENCE",
@@ -88,6 +133,30 @@
         }
       ]
     },
+    {
+      "key": "Castorice (Sig), RMC, Tribbie, Gallagher",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 8
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        }
+      ]
+    },
+
+
     {
       "key": "Castorice (Victory In a Blink), Sunday, Ruan Mei, HouHou",
       "team": [
@@ -111,6 +180,53 @@
         }
       ]
     },
+    {
+      "key": "Castorice (Victory In a Blink), Sunday, Tribbie, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 8
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Victory In a Blink), Sunday(160), Ruan Mei, HouHou",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        }
+      ]
+    },
+
     {
       "key": "Castorice (Victory In a Blink), RMC, Ruan Mei, HouHou",
       "team": [
@@ -158,7 +274,7 @@
       ]
     },
     {
-      "key": "Castorice (Victory In a Blink), Sunday(160), Ruan Mei, HouHou",
+      "key": "Castorice (Victory In a Blink), RMC, Tribbie, HouHou",
       "team": [
         {
           "type": "REFERENCE",
@@ -168,15 +284,38 @@
         },
         {
           "type": "REFERENCE",
-          "referenceId": 7
+          "referenceId": 5
         },
         {
           "type": "REFERENCE",
-          "referenceId": 3
+          "referenceId": 8
         },
         {
           "type": "REFERENCE",
           "referenceId": 4
+        }
+      ]
+    },
+    {
+      "key": "Castorice (Victory In a Blink), RMC, Tribbie, Gallagher",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true,
+          "lcOverwriteId": 21050
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 8
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
         }
       ]
     }
@@ -237,7 +376,7 @@
       "relics": [
         { "id": 114, "fullSet": false },
         { "id": 113, "fullSet": false },
-        { "id": 302}
+        { "id": 320}
       ],
       "mainStats": ["HEALING", "SPEED", "HP_PER", "ERR"],
       "subStats": [
@@ -288,6 +427,21 @@
         {"stat": "CRIT_DAMAGE", "amount": 107.3},
         {"stat": "SPEED", "amount": 33.3},
         {"stat": "EFFECT_RES", "amount": 30}
+      ]
+    },
+    "8": {
+      "name": "Tribbie",
+      "id": 1403,
+      "lcId": 23038,
+      "relics": [
+        {"id":  124, "fullSet":  true},
+        {"id": 319}
+      ],
+      "mainStats": ["CRIT_RATE", "HP_PER", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "CRIT_CHANCE", "amount": 20},
+        {"stat": "CRIT_DAMAGE", "amount": 100},
+        {"stat": "HP_PERCENT", "amount": 30}
       ]
     }
   }

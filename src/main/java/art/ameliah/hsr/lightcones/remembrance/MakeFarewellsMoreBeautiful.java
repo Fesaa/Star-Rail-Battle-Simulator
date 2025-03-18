@@ -1,6 +1,7 @@
 package art.ameliah.hsr.lightcones.remembrance;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.HPLost;
 import art.ameliah.hsr.events.character.MemospriteDeath;
@@ -27,6 +28,12 @@ public class MakeFarewellsMoreBeautiful extends AbstractLightcone {
     public void onHPLoss(HPLost event) {
         if (getBattle().getCurrentUnit() == this.owner) {
             this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 24, 2, "Make Farewells More Beautiful Def Ignore"));
+            if (this.owner instanceof Memomaster<?> memomaster) {
+                var memo = memomaster.getMemo();
+                if (memo != null) {
+                    memo.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 24, 2, "Make Farewells More Beautiful Def Ignore"));
+                }
+            }
         }
     }
 

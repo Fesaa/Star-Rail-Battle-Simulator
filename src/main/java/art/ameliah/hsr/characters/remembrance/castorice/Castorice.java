@@ -39,7 +39,7 @@ import java.util.Map;
 public class Castorice extends Memomaster<Castorice> {
 
     public final static String NAME = "Castorice";
-    public final static float MAX_NEWBUD = 80 * 4 * 100f;
+    public final static float MAX_NEWBUD = 36000;
 
     @Nullable
     private Pollux pollux;

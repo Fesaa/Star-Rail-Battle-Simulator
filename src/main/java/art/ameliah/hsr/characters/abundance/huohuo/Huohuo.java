@@ -8,6 +8,7 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.ally.LowestHpGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.events.Subscribe;
@@ -37,7 +38,8 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
                 .setStat(PowerStat.EFFECT_RES, 18));
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
-        this.registerGoal(0, new SkillCounterTurnGoal<>(this));
+        //this.registerGoal(0, new SkillCounterTurnGoal<>(this));
+        this.registerGoal(0, new AlwaysSkillGoal<>(this));
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
         this.registerGoal(0, new LowestHpGoal<>(this));
     }
