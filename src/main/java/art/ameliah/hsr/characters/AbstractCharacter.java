@@ -421,7 +421,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         }
 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
-        getBattle().addToLog(new HealthChange(this, amount - overflow, amount));
+        float actual = amount == overflow ? 0 : amount - overflow;
+        getBattle().addToLog(new HealthChange(this, actual, amount));
         float gained = amount - overflow;
         this.eventBus.fire(new HPGain(gained, overflow));
     }

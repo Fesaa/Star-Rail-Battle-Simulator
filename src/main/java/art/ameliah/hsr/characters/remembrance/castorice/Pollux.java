@@ -17,34 +17,32 @@ import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.metrics.ActionMetric;
 import art.ameliah.hsr.metrics.CounterMetric;
+import art.ameliah.hsr.metrics.Metric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
 import java.util.List;
 
+
 public class Pollux extends Memosprite<Pollux, Castorice> {
 
     public final static String NAME = "Pollux";
 
-    private static ActionMetric actionMetricTracker = null;
-    private static CounterMetric<Integer> turnsMetricTracker = null;
-
     public boolean shouldDie = false;
     private int actionCounter = 0;
+    private int breathScorchesTheShadowCounter = 0;
 
-    public Pollux(Castorice master) {
+    public Pollux(Castorice master, ActionMetric actionMetric, CounterMetric<Integer> turnsMetric) {
         super(master, NAME, (int) Castorice.MAX_NEWBUD, 165, 80, ElementType.QUANTUM,
                 0, 100, Path.REMEMBRANCE);
 
         this.usesEnergy = false;
 
-        if (Pollux.actionMetricTracker != null) {
-            this.metricRegistry.register(Pollux.actionMetricTracker);
-            this.actionMetric = Pollux.actionMetricTracker;
+        if (actionMetric != null) {
+            this.actionMetric = this.metricRegistry.register(actionMetric);
         }
-        if (Pollux.turnsMetricTracker != null) {
-            this.metricRegistry.register(Pollux.turnsMetricTracker);
-            this.turnsMetric = Pollux.turnsMetricTracker;
+        if (turnsMetric != null) {
+            this.turnsMetric = this.metricRegistry.register(turnsMetric);
         }
 
 
@@ -54,6 +52,11 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         this.registerGoal(0, new SkillOnBattleEnd(this));
         this.registerGoal(100, new PolluxSkillGoal(this));
         //this.registerGoal(0, new AlwaysSkillGoal<>(this));
+    }
+
+    @Override
+    public float getFinalHP() {
+        return Castorice.MAX_NEWBUD;
     }
 
     // Pollux is behind(?) the players, and can't be attacked
@@ -84,6 +87,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
             this.die(this);
         }
         this.shouldDie = false;
+        this.actionCounter = 0;
     }
 
     @Override
@@ -101,9 +105,9 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
     }
 
     private void BreathScorchesTheShadow() {
-        var whereTheWestWindDwells = PermPower.create(PowerStat.QUANTUM_DMG_BOOST, Math.min(6, this.actionCounter), "Where The West Wind Dwells");
+        var whereTheWestWindDwells = PermPower.create(PowerStat.QUANTUM_DMG_BOOST, 0.3f*Math.min(6, this.actionCounter), "Where The West Wind Dwells");
         this.addPower(whereTheWestWindDwells);
-        float dmgMul = 0.24f + Math.min(this.actionCounter, 3) * 0.04f;
+        float dmgMul = 0.24f + Math.min(this.breathScorchesTheShadowCounter, 3) * 0.04f;
         this.startAttack().handle(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             this.reduceHealth(this, Castorice.MAX_NEWBUD * 0.25f, false);
             this.shouldDie = this.currentHp.get() == 1;
@@ -116,6 +120,7 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
             this.removePower(whereTheWestWindDwells);
             if (this.currentHp.get() > 1 && !this.shouldDie) {
                 this.actionCounter++;
+                this.breathScorchesTheShadowCounter++;
                 this.doAction(); // Skill does not end action
                 return;
             }
@@ -142,8 +147,8 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
             }
             p.increaseHealth(this, 800 + 0.06 * this.getMaster().getFinalHP());
         });
-        Pollux.actionMetricTracker = this.actionMetric;
-        Pollux.turnsMetricTracker = this.turnsMetric;
+        this.getMaster().setPolluxActionMetric(this.actionMetric);
+        this.getMaster().setPolluxTurnsMetric(this.turnsMetric);
     }
 
 

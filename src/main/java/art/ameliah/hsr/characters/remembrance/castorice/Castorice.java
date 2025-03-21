@@ -27,10 +27,15 @@ import art.ameliah.hsr.events.character.PreSkill;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
+import art.ameliah.hsr.metrics.ActionMetric;
+import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -43,6 +48,12 @@ public class Castorice extends Memomaster<Castorice> {
 
     @Nullable
     private Pollux pollux;
+    @Getter
+    @Setter
+    private ActionMetric polluxActionMetric;
+    @Getter
+    @Setter
+    private CounterMetric<Integer> polluxTurnsMetric;
 
     public Castorice() {
         super(NAME, 1629, 523, 485, 95, 80, ElementType.QUANTUM,
@@ -78,7 +89,7 @@ public class Castorice extends Memomaster<Castorice> {
 
     @Override
     protected void summonMemo() {
-        this.pollux = new Pollux(this);
+        this.pollux = new Pollux(this, this.polluxActionMetric, this.polluxTurnsMetric);
 
         int idx = getBattle().getPlayers().indexOf(this);
         getBattle().addPlayerAt(this.pollux, idx + 1);
@@ -279,7 +290,7 @@ public class Castorice extends Memomaster<Castorice> {
 
     public static class InvertedTorch extends PermPower {
 
-        public final static String NAME = "Dark Tide Contained";
+        public final static String NAME = "Inverted Torch";
 
         public InvertedTorch() {
             super(NAME);

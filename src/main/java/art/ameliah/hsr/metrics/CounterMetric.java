@@ -162,6 +162,9 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         public Float increase(Float value, Float max) {
             this.lastValue = this.value;
             this.value = Math.min(this.value + value, max);
+            if (this.value.equals(this.lastValue)) {
+                return value;
+            }
             return Math.abs(this.lastValue + value - this.value);
         }
 

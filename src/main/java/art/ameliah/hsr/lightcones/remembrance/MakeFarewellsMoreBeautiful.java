@@ -27,11 +27,11 @@ public class MakeFarewellsMoreBeautiful extends AbstractLightcone {
     @Subscribe
     public void onHPLoss(HPLost event) {
         if (getBattle().getCurrentUnit() == this.owner) {
-            this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 24, 2, "Make Farewells More Beautiful Def Ignore"));
+            this.owner.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 30, 2, "Make Farewells More Beautiful Def Ignore"));
             if (this.owner instanceof Memomaster<?> memomaster) {
                 var memo = memomaster.getMemo();
                 if (memo != null) {
-                    memo.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 24, 2, "Make Farewells More Beautiful Def Ignore"));
+                    memo.addPower(TempPower.create(PowerStat.DEFENSE_IGNORE, 30, 2, "Make Farewells More Beautiful Def Ignore"));
                 }
             }
         }
