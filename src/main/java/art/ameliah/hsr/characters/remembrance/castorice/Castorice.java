@@ -193,13 +193,13 @@ public class Castorice extends Memomaster<Castorice> {
             });
 
             dl.logic(getBattle().getEnemies(), (e, al) -> {
-                al.hit(e, 0.24f, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS);
+                al.hit(e, 0.3f, MultiplierStat.HP, TOUGHNESS_DAMAGE_TWO_UNITS);
             });
 
             this.pollux.doAttack(DamageType.MEMOSPRITE_DAMAGE, dl2 -> {
                 dl2.logic(getBattle().getEnemies(), (e, al) -> {
                     al.setMultiSource(this);
-                    al.hit(e, 0.42f, MultiplierStat.HP, 0);
+                    al.hit(e, 0.5f, MultiplierStat.HP, 0);
                 });
             });
 
