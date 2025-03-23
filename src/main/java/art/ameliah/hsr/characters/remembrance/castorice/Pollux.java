@@ -20,6 +20,7 @@ import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.Metric;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
+import art.ameliah.hsr.powers.TempPower;
 
 import java.util.List;
 
@@ -117,6 +118,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
                 al.hit(e, dmgMul, MultiplierStat.HP, TOUGHNESS_DAMAGE_SINGLE_UNIT);
             });
         }).afterAttackHook(() -> {
+            if (getBattle().enemiesSize() == 0) {
+                getBattle().IncreaseSpeed(this, TempPower.create(PowerStat.SPEED_PERCENT, 100, 1, "Inverted Torch"));
+            }
+
             this.removePower(whereTheWestWindDwells);
             if (this.currentHp.get() > 1 && !this.shouldDie) {
                 this.actionCounter++;
