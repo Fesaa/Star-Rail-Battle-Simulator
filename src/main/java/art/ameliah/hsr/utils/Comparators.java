@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class Comparators {
 
+    public static int CompareHealth(AbstractEnemy e1, AbstractEnemy e2) {
+        return Float.compare(e1.getCurrentHp().get(), e2.getCurrentHp().get());
+    }
+
     public static int CompareRarity(AbstractEnemy e) {
         if (e.getType().equals(EnemyType.Boss)) return -2;
         if (e.getType().equals(EnemyType.Elite)) return -1;

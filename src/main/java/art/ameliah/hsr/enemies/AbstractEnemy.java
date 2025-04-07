@@ -216,9 +216,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
     }
 
     protected boolean successfulHit(AbstractCharacter<?> target, double chance) {
-        double extraEHR = this.powerList.stream()
-                .mapToDouble(p -> p.getStat(PowerStat.EFFECT_HIT))
-                .sum();
+        double extraEHR = this.getTotalStat(PowerStat.EFFECT_HIT);
 
         double effectRes = target.getTotalEffectRes();
         double realChance = chance / 100 * (1 + extraEHR / 100) * (1 - effectRes / 100);

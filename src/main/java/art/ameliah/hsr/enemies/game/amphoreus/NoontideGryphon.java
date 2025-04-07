@@ -29,7 +29,7 @@ public class NoontideGryphon extends AbstractEnemy {
         this.addWeakness(ElementType.IMAGINARY);
 
         this.addPower(PermPower.create(PowerStat.EFFECT_HIT, 36.0f, "Noontide Gryphon EHR Boost"));
-        this.addPower(PermPower.create(PowerStat.EFFECT_HIT, 30.0f, "Noontide Gryphon ER Boost"));
+        this.addPower(PermPower.create(PowerStat.EFFECT_RES, 30.0f, "Noontide Gryphon ER Boost"));
 
         this.sequence.addAction(this::ThroughTheDarkness, this::HeraldingTheDawn);
         this.sequence.addAction(this::LightTheFuture);

@@ -20,11 +20,13 @@ public enum PowerStat {
 
     EFFECT_HIT,
     EFFECT_RES,
+    DEBUFF_RES, // Not really used
     BREAK_EFFECT,
     OUTGOING_HEALING,
     INCOMING_HEALING,
     DAMAGE_BONUS,
     DAMAGE_TAKEN,
+    DAMAGE_DOWN,
     DEFENSE_REDUCTION,
     DEFENSE_IGNORE,
     RES_PEN,

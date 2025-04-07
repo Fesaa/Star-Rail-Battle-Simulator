@@ -39,6 +39,7 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,6 +102,10 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     protected int basicEnergyGain = 20;
     protected int skillEnergyGain = 30;
 
+    @Getter
+    @Setter
+    protected Eidolon eidolon;
+
     public AbstractCharacter(String name, int baseHP, int baseAtk, int baseDef, int baseSpeed, int level, ElementType elementType, float maxEnergy, int tauntValue, Path path) {
         super();
         this.name = name;
@@ -115,6 +120,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.currentEnergy.set(maxEnergy / 2);
         this.tauntValue = tauntValue;
         this.path = path;
+        this.eidolon = Eidolon.E0;
 
         this.powerList = new ArrayList<>();
         this.relicSetBonus = new ArrayList<>();
@@ -622,6 +628,15 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      */
     public void increaseEnergy(float amount, String source) {
         increaseEnergy(amount, true, source);
+    }
+
+    public boolean successFullHit(double baseChance, AbstractEnemy enemy) {
+        var realChance = (baseChance/100) *
+                (1 + this.getTotalEHR()/100) *
+                (1 - enemy.getTotalStat(PowerStat.EFFECT_RES)/100) *
+                (1 - enemy.getTotalStat(PowerStat.DEBUFF_RES)/100);
+
+        return getBattle().getCharacterEHRRng().nextDouble() < realChance;
     }
 
     @Override

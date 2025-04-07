@@ -8,6 +8,7 @@ import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.MetricRegistry;
 import art.ameliah.hsr.powers.AbstractPower;
+import art.ameliah.hsr.powers.PowerStat;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -129,6 +130,12 @@ public abstract class AbstractEntity implements BattleParticipant {
     public int getPowerStacks(String powerName) {
         var power = this.getPower(powerName);
         return power == null ? 0 : power.stacks;
+    }
+
+    public double getTotalStat(PowerStat stat) {
+        return powerList.stream()
+                .mapToDouble(p -> p.getTotalStat(stat))
+                .sum();
     }
 
     public String toString() {

@@ -187,5 +187,7 @@ public interface IBattle {
 
     Random getEnemyEHRRng();
 
+    Random getCharacterEHRRng();
+
 
 }

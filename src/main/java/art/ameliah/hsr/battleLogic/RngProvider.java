@@ -20,6 +20,7 @@ public abstract class RngProvider {
     public final Random weaveEffectRng = new Random(seed);
     public final Random aetherRng = new Random(seed);
     public final Random enemyEHRRng = new Random(seed);
+    public final Random characterEHRRng = new Random(seed);
 
 
     public long getSeed() {

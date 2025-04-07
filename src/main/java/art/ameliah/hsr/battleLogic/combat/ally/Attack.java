@@ -21,11 +21,13 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
+@Getter
 public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, AttackLogic, DelayAttack> {
 
-    @Getter
     private final Collection<Hit> pastHits = new ArrayList<>();
+    private final Collection<HitResult> hitResults = new HashSet<>();
 
     public Attack(AbstractCharacter<?> source) {
         super(source);
@@ -79,6 +81,7 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         }
 
         this.pastHits.add(hit);
+        this.hitResults.add(res);
         return res;
     }
 
