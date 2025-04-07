@@ -1,7 +1,8 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -18,10 +19,10 @@ public class PatienceIsAllYouNeed extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.DAMAGE_BONUS, 24, "Patience Is All You Need DMG Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (attack.getSource() == null) return;
-        attack.getSource().addPower(new PatienceIsAllYouNeedSpeedBoost());
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        if (e.getAttack().getSource() == null) return;
+        e.getAttack().getSource().addPower(new PatienceIsAllYouNeedSpeedBoost());
     }
 
     public static class PatienceIsAllYouNeedSpeedBoost extends PermPower {

@@ -7,11 +7,18 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostGainEnergy;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
@@ -37,9 +44,14 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         );
         this.addPower(new E6());
 
-        this.registerGoal(0, new SkillFirstTurnGoal<>(this));
-        this.registerGoal(10, new AlwaysBasicGoal<>(this));
+        this.registerGoal(0, new AlwaysSkillGoal<>(this, 1));
+        //this.registerGoal(0, new SkillFirstTurnGoal<>(this));
+        //this.registerGoal(10, new AlwaysBasicGoal<>(this));
+
+        //this.registerGoal(100, new UltAtEndOfBattle<>(this));
+        //this.registerGoal(90, new UltWhenMissingChargeOrMem(this));
         this.registerGoal(0, new AlwaysUltGoal<>(this));
+
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
@@ -48,8 +60,8 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         return this.mem;
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().AdvanceEntity(this, 30);
         getBattle().registerForPlayers(p -> {
             p.addPower(new EidolonsListener());
@@ -57,8 +69,8 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         });
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         this.e2Cooldown = true;
     }
 
@@ -79,13 +91,13 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
     protected void summonMemo() {
         this.mem = new Mem(this);
         int idx = getBattle().getPlayers().indexOf(this);
-        getBattle().addPlayerAt(this.mem, idx+1);
+        getBattle().addPlayerAt(this.mem, idx + 1);
 
         if (this.firstSummon) {
             this.mem.increaseCharge(40);
             this.firstSummon = false;
         }
-        this.emit(l -> l.afterSummon(this.mem));
+        this.eventBus.fire(new PostSummon(this.mem));
     }
 
     @Override
@@ -96,7 +108,7 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         }
 
         this.mem.increaseCharge(10);
-        this.mem.getCurrentHp().increase(0.6f*this.mem.getCurrentHp().get());
+        this.mem.getCurrentHp().increase(0.6f * this.mem.getCurrentHp().get());
     }
 
     @Override
@@ -115,7 +127,7 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         }
 
         this.mem.increaseCharge(40);
-        this.doAttack(DamageType.ULTIMATE ,al -> {
+        this.doAttack(DamageType.ULTIMATE, al -> {
             al.logic(getBattle().getEnemies(), (e, dl) -> {
                 dl.hit(this.mem, e, 2.4f, 20);
             });
@@ -132,6 +144,20 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
         this.firstTurn = firstTurn;
     }
 
+    public static class E6 extends PermPower {
+        public E6() {
+            super(NAME + "(E6)");
+        }
+
+        @Override
+        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
+            if (damageTypes.contains(DamageType.ULTIMATE)) {
+                return 100;
+            }
+            return currentCrit;
+        }
+    }
+
     public class EnergyListener extends PermPower {
 
         private float energyTally = 0;
@@ -140,12 +166,12 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
             super("Mem EnergyListener");
         }
 
-        @Override
-        public void onGainEnergy(float amount, float overflow) {
-            float trueAmount = amount - overflow;
+        @Subscribe
+        public void onGainEnergy(PostGainEnergy event) {
+            float trueAmount = event.getAmount() - event.getOverflow();
             this.energyTally += trueAmount;
 
-            int charge = (int) Math.floor(this.energyTally/10);
+            int charge = (int) Math.floor(this.energyTally / 10);
             if (charge > 0) {
                 this.energyTally %= 10;
             }
@@ -159,11 +185,11 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
     public class EidolonsListener extends PermPower {
 
         public EidolonsListener() {
-            super(NAME+"(EidolonsListener)");
+            super(NAME + "(EidolonsListener)");
         }
 
         private void E4() {
-            if (((AbstractCharacter<?>)this.getOwner()).usesEnergy) {
+            if (((AbstractCharacter<?>) this.getOwner()).usesEnergy) {
                 return;
             }
 
@@ -182,38 +208,24 @@ public class Trailblazer extends Memomaster<Trailblazer> implements SkillFirstTu
 
             if (this.getOwner() instanceof Memosprite<?, ?> memosprite) {
                 if (Trailblazer.this.mem != null && Trailblazer.this.mem != memosprite) {
-                 Trailblazer.this.increaseEnergy(9, "E4");
+                    Trailblazer.this.increaseEnergy(9, "E4");
                 }
             }
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             this.E2();
         }
 
-        @Override
-        public void onEndTurn() {
+        @Subscribe
+        public void onEndTurn(TurnStartEvent e) {
             this.E4();
         }
 
-        @Override
-        public void afterUseUltimate() {
+        @Subscribe
+        public void afterUseUltimate(PreUltimate e) {
             this.E4();
-        }
-    }
-
-    private static class E6 extends PermPower {
-        public E6() {
-            super(NAME + "(E6)");
-        }
-
-        @Override
-        public float setFixedCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes, float currentCrit) {
-            if (damageTypes.contains(DamageType.ULTIMATE)) {
-                return 100;
-            }
-            return currentCrit;
         }
     }
 }

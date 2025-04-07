@@ -1,9 +1,10 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -21,9 +22,9 @@ public class AlongThePassingShore extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 36, "Along The Passing Shore Crit Damage Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        for (AbstractEnemy enemy : attack.getTargets()) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        for (AbstractEnemy enemy : e.getAttack().getTargets()) {
             enemy.addPower(new MirageFizzle(this));
         }
     }

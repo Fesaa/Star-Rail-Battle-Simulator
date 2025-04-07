@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.destruction;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -16,8 +18,8 @@ public class IndeliblePromise extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 56, "Indelible Promise Break Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         this.owner.addPower(TempPower.create(PowerStat.CRIT_CHANCE, 30, 2, "Indelible Promise Crit Boost"));
     }
 }

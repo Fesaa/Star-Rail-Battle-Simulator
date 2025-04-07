@@ -1,7 +1,6 @@
 package art.ameliah.hsr.characters.abundance.lingsha;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.character.EmergencyHeal;
 import art.ameliah.hsr.battleLogic.log.lines.character.lingsha.FuYuanGain;
@@ -16,6 +15,9 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -34,17 +36,13 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
     public static final int FUYUAN_MAX_HIT_COUNT = 5;
     public static final int SKILL_HIT_COUNT_GAIN = 3;
     public static final int EMERGENCY_HEAL_COOLDOWN = 2;
-
+    final FuYuan fuYuan;
+    final AbstractPower damageTrackerPower;
     protected CounterMetric<Integer> fuYuanAttackCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-attacks", "Number of Fu Yuan Attacks"));
     protected CounterMetric<Integer> emergencyHealsCounter = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-emergencyHeals", "Number of Emergency Heals"));
     @Getter
     protected CounterMetric<Integer> fuYuanHitCount = metricRegistry.register(CounterMetric.newIntegerCounter("lingsha-fy-hit-count", "Amount of FY actions left"));
-
-
     private int currentEmergencyHealCD = 0;
-
-    final FuYuan fuYuan;
-    final AbstractPower damageTrackerPower;
 
     public Lingsha() {
         super(NAME, 1358, 679, 437, 98, 80, ElementType.FIRE, 110, 100, Path.ABUNDANCE);
@@ -93,7 +91,7 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
                         dh -> {
                             dh.logic(getBattle().getEnemies(), (targets, al) -> al.hit(targets, 0.8f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
 
-                            double amount = this.getFinalAttack()*0.14 + 420;
+                            double amount = this.getFinalAttack() * 0.14 + 420;
                             getBattle().getPlayers()
                                     .forEach(p -> p.increaseHealth(this, amount));
                         })
@@ -114,7 +112,7 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
                         }
                     });
 
-                    double amount = this.getFinalAttack()*0.12+360;
+                    double amount = this.getFinalAttack() * 0.12 + 360;
                     getBattle().getPlayers()
                             .forEach(p -> p.increaseHealth(this, amount));
                 }).afterAttackHook(() -> getBattle().AdvanceEntity(fuYuan, 100)).execute();
@@ -140,7 +138,7 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
                 }
             });
 
-            double amount = this.getFinalAttack()*0.12+360;
+            double amount = this.getFinalAttack() * 0.12 + 360;
             getBattle().getPlayers()
                     .forEach(p -> p.increaseHealth(this, amount));
 
@@ -177,7 +175,8 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().getActionValueMap().put(fuYuan, fuYuan.getBaseAV());
         increaseHitCount(SKILL_HIT_COUNT_GAIN);
         getBattle().registerForPlayers(p -> p.addPower(damageTrackerPower));
@@ -201,7 +200,7 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
         return this.fuYuan;
     }
 
-    private static class Befog extends AbstractPower {
+    public static class Befog extends AbstractPower {
         public Befog() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 2;
@@ -217,15 +216,15 @@ public class Lingsha extends AbstractCharacter<Lingsha> implements Summoner {
         }
     }
 
-    private class LingshaEmergencyHealTracker extends PermPower {
+    public class LingshaEmergencyHealTracker extends PermPower {
         public LingshaEmergencyHealTracker() {
             this.setName(this.getClass().getSimpleName());
         }
 
-        @Override
-        public void afterAttacked(EnemyAttackLogic attack) {
+        @Subscribe
+        public void afterAttacked(PostAllyAttacked e) {
             long eligible = getBattle().getPlayers().stream()
-                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.6)
+                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP() * 0.6)
                     .count();
 
             if (eligible == 0 || currentEmergencyHealCD > 0) {

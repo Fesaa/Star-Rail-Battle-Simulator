@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- *
  * @param <S> Source type
  * @param <T> Target type
  * @param <A> AttackLogic type
@@ -101,8 +100,6 @@ public abstract class AbstractAttack<S extends AbstractEntity, T extends BattleP
 
         this.attack(dh);
 
-        this.afterAttackHooks.forEach(Runnable::run);
-
         getBattle().addToLog(new Attacked(
                 this.source,
                 // Why is this needed? How come List<A extends B> instead good for List<B>?
@@ -113,12 +110,15 @@ public abstract class AbstractAttack<S extends AbstractEntity, T extends BattleP
         this.hasCompleted = true;
         getBattle().addToLog(new AttackEnd(this));
         getBattle().setAttacking(false);
+
+        this.afterAttackHooks.forEach(Runnable::run);
     }
 
     protected abstract D newDelayAttack(S source);
 
     /**
      * This should include the logic right after AttackStart is logged, until before afterHook are called
+     *
      * @param dh the DelayAttack from {@link AbstractAttack#newDelayAttack(AbstractEntity)}
      */
     protected abstract void attack(D dh);

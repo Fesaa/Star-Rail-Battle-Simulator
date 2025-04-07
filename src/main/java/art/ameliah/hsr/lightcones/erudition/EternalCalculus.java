@@ -1,7 +1,8 @@
 package art.ameliah.hsr.lightcones.erudition;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -29,9 +30,9 @@ public class EternalCalculus extends AbstractLightcone {
             this.setConditionalStat(PowerStat.ATK_PERCENT, _ -> 8f * this.stacks);
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            this.stacks = Math.min(5, attack.getTargets().size());
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
+            this.stacks = Math.min(5, e.getAttack().getTargets().size());
             if (this.stacks > 3) {
                 getBattle().IncreaseSpeed(this.getOwner(), TempPower.create(PowerStat.SPEED_PERCENT, 16, 1, "Eternal Calculus Speed Boost"));
             }

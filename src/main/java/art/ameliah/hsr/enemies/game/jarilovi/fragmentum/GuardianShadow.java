@@ -1,12 +1,16 @@
 package art.ameliah.hsr.enemies.game.jarilovi.fragmentum;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostBasic;
+import art.ameliah.hsr.events.character.PostSkill;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.dot.EnemyShock;
 
@@ -35,9 +39,8 @@ public class GuardianShadow extends AbstractEnemy {
         this.sequence.addAction(this::LightningRecollection, this::ThunderstormCondemnation);
     }
 
-    @Override
-    public void onCombatStart() {
-        super.onCombatStart();
+    @Subscribe
+    public void onCombatStartSetBanType(CombatStartEvent event) {
         this.banTypeRng = new Random(getBattle().getSeed());
     }
 
@@ -60,9 +63,9 @@ public class GuardianShadow extends AbstractEnemy {
             int idx = this.getRandomTargetPosition();
             AbstractCharacter<?> target = getBattle().getPlayers().get(idx);
 
-            da.logic(idx-1, (c, al) -> al.hit(c, 5, 488));
+            da.logic(idx - 1, (c, al) -> al.hit(c, 5, 488));
             da.logic(idx, (c, al) -> al.hit(c, 10, 976));
-            da.logic(idx+1, (c, al) -> al.hit(c, 5, 488));
+            da.logic(idx + 1, (c, al) -> al.hit(c, 5, 488));
 
             getBattle().addToLog(new EnemyAction(this, target, EnemyAttackType.BLAST, "Lightning Condemnation"));
         });
@@ -110,10 +113,10 @@ public class GuardianShadow extends AbstractEnemy {
             this.guardian = guardian;
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            if (attack.getTargets().stream().anyMatch(e -> e == this.guardian)) {
-                this.guardian.InevitablePunishment(attack.getSource());
+        @Subscribe
+        public void beforeAttack(PreAllyAttack event) {
+            if (event.getAttack().getTargets().stream().anyMatch(e -> e == this.guardian)) {
+                this.guardian.InevitablePunishment(event.getAttack().getSource());
             }
         }
     }
@@ -128,8 +131,8 @@ public class GuardianShadow extends AbstractEnemy {
             this.guardian = guardian;
         }
 
-        @Override
-        public void afterUseBasic() {
+        @Subscribe
+        public void afterUseBasic(PostBasic e) {
             this.guardian.InevitablePunishment((AbstractCharacter<?>) this.getOwner());
         }
     }
@@ -144,8 +147,8 @@ public class GuardianShadow extends AbstractEnemy {
             this.guardian = guardian;
         }
 
-        @Override
-        public void afterUseSkill() {
+        @Subscribe
+        public void afterUseSkill(PostSkill e) {
             this.guardian.InevitablePunishment((AbstractCharacter<?>) this.getOwner());
         }
     }

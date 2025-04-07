@@ -1,11 +1,12 @@
 package art.ameliah.hsr.game.pf.technicalityentrapment;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.wave.pf.PfBattle;
 import art.ameliah.hsr.battleLogic.wave.pf.PureFictionBuff;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 
@@ -18,10 +19,10 @@ public class FalsePromises implements PureFictionBuff {
     @Override
     public void applyGritMechanic(PfBattle battle) {
         battle.getPlayers().forEach(player -> player.addPower(new PermPower("False Promises grit mechanic") {
-            @Override
-            public void afterAttack(AttackLogic attack) {
-                if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
-                    battle.increaseGridAmount(2 * attack.getTargets().size());
+            @Subscribe
+            public void afterAttack(PostAllyAttack event) {
+                if (event.getAttack().getTypes().contains(DamageType.FOLLOW_UP)) {
+                    battle.increaseGridAmount(2 * event.getAttack().getTargets().size());
                 }
             }
         }));
@@ -52,8 +53,9 @@ public class FalsePromises implements PureFictionBuff {
             return 0;
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             if (!attack.getTypes().contains(DamageType.FOLLOW_UP)) {
                 return;
             }

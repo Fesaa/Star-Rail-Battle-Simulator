@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.harmony.ruanmei;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -10,6 +9,12 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.AllyJoinCombat;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -42,6 +47,19 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
+    @Override
+    protected boolean skillConsumesSP() {
+        return this.getTurns() > 0;
+    }
+
+    @Subscribe
+    public void onAllyJoinCombat(AllyJoinCombat e) {
+        if (this.skillCounter > 0 || !e.getAlly().hasPower(SKILL_POWER_NAME)) {
+            e.getAlly().addPower(skillPower);
+        }
+    }
+
+    @Override
     public void useSkill() {
         skillCounter = 3;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
@@ -49,12 +67,14 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
+    @Override
     public void useBasic() {
         this.doAttack(DamageType.BASIC,
                 dh -> dh.logic(this.getTarget(MoveType.BASIC),
                         (enemy, al) -> al.hit(enemy, 1, TOUGHNESS_DAMAGE_SINGLE_UNIT)));
     }
 
+    @Override
     public void useUltimate() {
         ultCounter = 2;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
@@ -62,7 +82,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         increaseEnergy(5, TRACE_ENERGY_GAIN);
         if (skillCounter > 0) {
             skillCounter--;
@@ -82,23 +103,24 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().registerForPlayers(p -> {
             p.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 20, "Ruan Mei Break Buff"));
             if (p != this) {
-                p.addPower(PermPower.create(PowerStat.SPEED_PERCENT, 10, "Ruan Mei Speed Buff"));
+                getBattle().IncreaseSpeed(p, PermPower.create(PowerStat.SPEED_PERCENT, 10, "Ruan Mei Speed Buff"));
             }
         });
     }
 
-    public void onWeaknessBreak(AbstractEnemy enemy) {
+    @Subscribe
+    public void onWeaknessBreak(WeaknessBreakEvent e) {
         // TODO: ADD BREAK DMG
         //getBattle().getHelper().breakDamageHitEnemy(this, enemy, 1.2f);
     }
 
     public void useTechnique() {
         this.skillSequence();
-        getBattle().generateSkillPoint(this, 1);
     }
 
     @Override
@@ -119,15 +141,15 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         }
     }
 
-    private class RuanMeiUltPower extends PermPower {
+    public class RuanMeiUltPower extends PermPower {
         public RuanMeiUltPower() {
             super(ULT_POWER_NAME);
             this.setStat(PowerStat.RES_PEN, 25);
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            for (AbstractEnemy enemy : attack.getTargets()) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
+            for (AbstractEnemy enemy : e.getAttack().getTargets()) {
                 if (!enemy.hasPower(ULT_DEBUFF_NAME)) {
                     AbstractPower debuff = new RuanMeiUltDebuff(RuanMei.this);
                     enemy.addPower(debuff);

@@ -1,7 +1,9 @@
 package art.ameliah.hsr.builder;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.registry.LightconeRegistry;
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,8 +15,13 @@ public class ConfigLoader {
     public static final Gson gson = new Gson();
 
     public static List<BattleConfig> loadTeams() {
+        return loadTeams("teams");
+    }
+
+    @SneakyThrows
+    public static List<BattleConfig> loadTeams(String name) {
         Config config;
-        try (FileReader reader = new FileReader("configs/teams.json")) {
+        try (FileReader reader = new FileReader("configs/"+name+".json")) {
             config = gson.fromJson(reader, Config.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -33,6 +40,10 @@ public class ConfigLoader {
                 }
 
                 character.isDPS = tc.isDps;
+                if (tc.lcOverwriteId != null && tc.lcOverwriteId != 0) {
+                    var lc = LightconeRegistry.INSTANCE.getLightCone(tc.lcOverwriteId, character);
+                    character.EquipLightcone(lc);
+                }
 
                 characters.add(character);
             }

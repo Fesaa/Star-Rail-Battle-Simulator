@@ -22,6 +22,11 @@ public class AttackStart implements Loggable {
     }
 
     @Override
+    public String prefix() {
+        return "\n";
+    }
+
+    @Override
     public void handle(Logger logger) {
         logger.handle(this);
     }

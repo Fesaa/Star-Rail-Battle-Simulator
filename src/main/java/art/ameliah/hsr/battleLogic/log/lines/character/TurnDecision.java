@@ -3,15 +3,15 @@ package art.ameliah.hsr.battleLogic.log.lines.character;
 import art.ameliah.hsr.battleLogic.log.Loggable;
 import art.ameliah.hsr.battleLogic.log.Logger;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
 public class TurnDecision implements Loggable {
 
     private final AbstractCharacter<?> character;
     private final Class<?> turnGoal;
-    private final TurnGoal.TurnGoalResult result;
+    private final TurnGoalResult result;
 
-    public TurnDecision(AbstractCharacter<?> character, Class<?> turnGoal, TurnGoal.TurnGoalResult result) {
+    public TurnDecision(AbstractCharacter<?> character, Class<?> turnGoal, TurnGoalResult result) {
         this.character = character;
         this.turnGoal = turnGoal;
         this.result = result;

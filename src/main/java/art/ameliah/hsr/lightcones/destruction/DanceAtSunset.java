@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.destruction;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -25,7 +27,8 @@ public class DanceAtSunset extends AbstractLightcone {
         owner.addPower(statBonus);
     }
 
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         owner.addPower(new DanceAtSunsetDamagePower());
     }
 

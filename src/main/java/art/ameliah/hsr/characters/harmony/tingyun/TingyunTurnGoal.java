@@ -1,9 +1,10 @@
 package art.ameliah.hsr.characters.harmony.tingyun;
 
 import art.ameliah.hsr.characters.MoveType;
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
-public class TingyunTurnGoal extends TurnGoal<Tingyun> {
+public class TingyunTurnGoal extends AbstractTurnGoal<Tingyun> {
 
     public TingyunTurnGoal(Tingyun character) {
         super(character);

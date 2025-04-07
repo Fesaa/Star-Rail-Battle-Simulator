@@ -1,6 +1,8 @@
 package art.ameliah.hsr.relics.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -20,7 +22,8 @@ public class PasserbyOfWanderingCloud extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.OUTGOING_HEALING, 10, "Passerby of the Wandering Cloud Healing Boost"));
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         if (this.isFullSet) {
             getBattle().generateSkillPoint(owner, 1);
         }

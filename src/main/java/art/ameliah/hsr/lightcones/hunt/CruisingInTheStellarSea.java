@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.hunt;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -26,8 +28,8 @@ public class CruisingInTheStellarSea extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_CHANCE, 16, "Cruising In The Stellar Sea Crit Chance Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 40 * upTime, "Cruising In The Stellar Sea Attack Boost"));
     }
 }

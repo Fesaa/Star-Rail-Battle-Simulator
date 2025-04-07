@@ -3,6 +3,8 @@ package art.ameliah.hsr.relics.ornament;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -19,11 +21,12 @@ public class RutilentArena extends AbstractRelicSetBonus {
         owner.addPower(PermPower.create(PowerStat.CRIT_CHANCE, 8, "Rutilent Arena Crit Chance Bonus"));
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         owner.addPower(new RutilentArenaDamageBonus());
     }
 
-    private static class RutilentArenaDamageBonus extends AbstractPower {
+    public static class RutilentArenaDamageBonus extends AbstractPower {
         public RutilentArenaDamageBonus() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

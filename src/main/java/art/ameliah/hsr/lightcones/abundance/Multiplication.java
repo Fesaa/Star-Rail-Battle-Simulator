@@ -1,8 +1,9 @@
 package art.ameliah.hsr.lightcones.abundance;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 
 public class Multiplication extends AbstractLightcone {
@@ -11,9 +12,10 @@ public class Multiplication extends AbstractLightcone {
         super(953, 318, 198, owner);
     }
 
-    public void beforeAttack(AttackLogic attack) {
-        if (attack.getTypes().contains(DamageType.BASIC)) {
-            getBattle().AdvanceEntity(attack.getSource(), 20);
+    @Subscribe
+    public void afterAttack(PostAllyAttack e) {
+        if (e.getAttack().getTypes().contains(DamageType.BASIC)) {
+            getBattle().AdvanceEntity(e.getAttack().getSource(), 20);
         }
     }
 

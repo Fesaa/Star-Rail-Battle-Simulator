@@ -28,6 +28,13 @@ import art.ameliah.hsr.characters.AbstractSummon;
 import art.ameliah.hsr.characters.destruction.yunli.Yunli;
 import art.ameliah.hsr.characters.hunt.march.SwordMarch;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.combat.AllyJoinCombat;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.EnemyJoinCombat;
+import art.ameliah.hsr.events.combat.EnemyLeavesCombat;
+import art.ameliah.hsr.events.combat.PreCombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.metrics.MetricRegistry;
@@ -49,8 +56,15 @@ import java.util.stream.Collectors;
 public class Battle extends RngProvider implements IBattle {
 
     private static final int INITIAL_SKILL_POINTS = 3;
+    protected final Deque<IAttack> queue = new LinkedList<>();
     public int MAX_SKILL_POINTS = 5;
-
+    public float initialBattleLength;
+    public AbstractEntity currentUnit;
+    public boolean usedEntryTechnique = false;
+    public boolean isInCombat = false;
+    public boolean lessMetrics = false;
+    public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
+    public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
     @Getter
     protected MetricRegistry metricRegistry = new MetricRegistry(this);
     protected CounterMetric<Float> totalPlayerDamage = metricRegistry.register(CounterMetric.newFloatCounter("battle-total-player-dmg", "Total player dmg"));
@@ -60,20 +74,8 @@ public class Battle extends RngProvider implements IBattle {
     protected CounterMetric<Float> avLeftOver = metricRegistry.register(CounterMetric.newFloatCounter("battle-av-left-over", "AV left over"));
     protected CounterMetric<Float> avUsed = metricRegistry.register(CounterMetric.newFloatCounter("battle-av-used", "AV used"));
     protected DmgContributionMetric dmgContributionMetric = metricRegistry.register(new DmgContributionMetric(this, "battle-dmg-contribution", "Dmg Contributions"));
-
-    protected final Deque<IAttack> queue = new LinkedList<>();
-
-
-    public float initialBattleLength;
-    public AbstractEntity currentUnit;
-    public boolean usedEntryTechnique = false;
-    public boolean isInCombat = false;
-    public boolean lessMetrics = false;
-    public int actionForwardPriorityCounter = AbstractEntity.SPEED_PRIORITY_DEFAULT;
-
-    public HashMap<AbstractEntity, Float> actionValueMap = new HashMap<>();
-
     protected List<AbstractCharacter<?>> playerTeam = new ArrayList<>();
+    protected Map<String, AbstractCharacter<?>> fallen = new HashMap<>();
     protected Set<Consumer<AbstractCharacter<?>>> playerListeners = new HashSet<>();
 
     protected List<AbstractEnemy> enemyTeam = new ArrayList<>();
@@ -179,8 +181,10 @@ public class Battle extends RngProvider implements IBattle {
         this.actionValueMap.remove(enemy);
 
         this.onEnemyRemove(enemy, idx);
-        this.doOnceForPlayers(p -> p.emit(l -> l.onEnemyRemove(enemy, idx)));
-        this.doOnceForEnemy(e -> e.emit(l -> l.onEnemyRemove(enemy, idx)));
+
+        var event = new EnemyLeavesCombat(enemy, idx);
+        this.doOnceForEnemy(p -> p.getEventBus().fire(event));
+        this.doOnceForEnemy(e -> e.getEventBus().fire(event));
     }
 
     @Override
@@ -200,9 +204,11 @@ public class Battle extends RngProvider implements IBattle {
         addToLog(new EntityJoinedBattle(ally));
 
         this.playerListeners.forEach(listener -> listener.accept(ally));
-        ally.emit(BattleEvents::onCombatStart);
         ally.OnCombatStart();
-        this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onPlayerJoinCombat(ally)));
+        ally.getEventBus().fire(new PreCombatStartEvent());
+        ally.getEventBus().fire(new CombatStartEvent());
+        var event = new AllyJoinCombat(ally);
+        this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
     }
 
     @Override
@@ -222,8 +228,10 @@ public class Battle extends RngProvider implements IBattle {
         addToLog(new EntityJoinedBattle(enemy));
 
         this.enemyListeners.forEach(l -> l.accept(enemy));
-        enemy.emit(BattleEvents::onCombatStart);
-        this.actionValueMap.keySet().forEach(e -> e.emit(l -> l.onEnemyJoinCombat(enemy)));
+        enemy.getEventBus().fire(new PreCombatStartEvent());
+        enemy.eventBus.fire(new CombatStartEvent());
+        var event = new EnemyJoinCombat(enemy);
+        this.actionValueMap.keySet().forEach(e -> e.eventBus.fire(event));
     }
 
     /**
@@ -265,7 +273,6 @@ public class Battle extends RngProvider implements IBattle {
                 .get(index)
                 .getKey();
     }
-
 
 
     @Override
@@ -358,13 +365,15 @@ public class Battle extends RngProvider implements IBattle {
 
         for (AbstractEnemy enemy : enemyTeam) {
             actionValueMap.put(enemy, enemy.getBaseAV());
-            enemy.emit(BattleEvents::onCombatStart);
+            enemy.getEventBus().fire(new PreCombatStartEvent());
+            enemy.eventBus.fire(new CombatStartEvent());
         }
         isInCombat = true;
         for (AbstractCharacter<?> character : playerTeam) {
             actionValueMap.put(character, character.getBaseAV());
-            character.emit(BattleEvents::onCombatStart);
             character.OnCombatStart();
+            character.getEventBus().fire(new PreCombatStartEvent());
+            character.eventBus.fire(new CombatStartEvent());
         }
 
         addToLog(new TriggerTechnique(this.playerTeam
@@ -434,7 +443,7 @@ public class Battle extends RngProvider implements IBattle {
 
         this.onTurnStart();
         addToLog(new TurnStart(currentUnit, this.getActionValueUsed(), actionValueMap));
-        currentUnit.emit(BattleEvents::onTurnStart);
+        this.currentUnit.eventBus.fire(new TurnStartEvent());
 
         // need the AV reset to be after onTurnStart is emitted so Robin's AV is set properly after Concerto ends
         if (!(currentUnit instanceof AbstractSummon<?>)) {
@@ -452,7 +461,7 @@ public class Battle extends RngProvider implements IBattle {
         }
 
         // Character keep their buffs until the next card is at 0AV
-        currentUnit.emit(BattleEvents::onEndTurn);
+        this.currentUnit.eventBus.fire(new TurnEndEvent());
         this.addToLog(new TurnEnd(this.currentUnit, this.enemyTeam));
         this.onEndTurn();
 
@@ -489,9 +498,13 @@ public class Battle extends RngProvider implements IBattle {
      * Have all players try their ultimates. Not sure why Yunli is filtered out, ask Darkglade
      */
     protected void tryUlts() {
-        this.playerTeam.stream()
-                .filter(p -> !(p instanceof Yunli))
-                .forEach(AbstractCharacter::tryUltimate);
+        for (var p : new ArrayList<>(this.playerTeam)) {
+            if (p instanceof Yunli) {
+                continue;
+            }
+
+            p.tryUltimate();
+        }
     }
 
     @Override
@@ -511,6 +524,7 @@ public class Battle extends RngProvider implements IBattle {
 
     private void generateMetrics() {
         this.playerTeam.forEach(p -> addToLog(new PostCombatPlayerMetrics(p)));
+        this.fallen.values().forEach(p -> addToLog(new PostCombatPlayerMetrics(p)));
         if (!lessMetrics) {
             this.enemyTeam.forEach(e -> addToLog(new EnemyMetrics(e)));
         }
@@ -554,6 +568,7 @@ public class Battle extends RngProvider implements IBattle {
     public void removeEntity(AbstractEntity entity) {
         if (entity instanceof AbstractCharacter<?> character) {
             this.playerTeam.remove(character);
+            this.fallen.put(character.getName(), character);
         }
         if (entity instanceof AbstractEnemy enemy) {
             this.enemyTeam.remove(enemy);
@@ -689,7 +704,7 @@ public class Battle extends RngProvider implements IBattle {
     @Override
     public int getTotalPlayerDmg() {
         Float dmg = this.totalPlayerDamage.get();
-        return dmg == null ? 0 : (int)(float)dmg;
+        return dmg == null ? 0 : (int) (float) dmg;
     }
 
     @Override
@@ -775,7 +790,6 @@ public class Battle extends RngProvider implements IBattle {
 
         addToLog(new SpeedDelayEntity(entity, currAV, newCurrAV));
     }
-
 
 
     public static class ForceBattleEnd extends RuntimeException {

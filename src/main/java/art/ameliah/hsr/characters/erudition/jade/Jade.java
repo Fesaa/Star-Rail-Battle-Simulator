@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.erudition.jade;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.battleLogic.log.lines.entity.LoseCharge;
@@ -16,6 +15,11 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.EnemyJoinCombat;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
@@ -66,8 +70,8 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
         }
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.addPower(new PawnedAsset());
 
         getBattle().AdvanceEntity(this, 50);
@@ -79,22 +83,22 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
         this.doAttack(dh -> dh.logic(getBattle().getEnemies(), (e, al) -> al.hit(e, 0.5f)));
     }
 
-    @Override
-    public void onEnemyJoinCombat(AbstractEnemy enemy) {
+    @Subscribe
+    public void onEnemyJoinCombat(EnemyJoinCombat e) {
         this.increasePawnedAssets(1);
     }
 
-    @Override
-    public void afterAttack(AttackLogic attack) {
-        if (attack.getTypes().contains(DamageType.FOLLOW_UP) || attack.getTypes().isEmpty()) {
+    @Subscribe
+    public void afterAttack(PostAllyAttack e) {
+        if (e.getAttack().getTypes().contains(DamageType.FOLLOW_UP) || e.getAttack().getTypes().isEmpty()) {
             return;
         }
 
-        this.increaseFuaStacks(attack.getTargets().size());
+        this.increaseFuaStacks(e.getAttack().getTargets().size());
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         this.skillCounter--;
 
         if (this.skillCounter == 0) {
@@ -156,16 +160,19 @@ public class Jade extends AbstractCharacter<Jade> implements SkillCounterTurnGoa
             this.setStat(PowerStat.FLAT_SPEED, 30);
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             Jade.this.increasePawnedAssets(3);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack e) {
+            var attack = e.getAttack();
             attack.additionalDmg(Jade.this, attack.getTargets(), 0.25f);
             Jade.this.increaseFuaStacks(attack.getTargets().size());
-            // TODO: Lower HP of ally
+
+            var owner = (AbstractCharacter<?>) this.owner;
+            owner.reduceHealth(Jade.this, owner.getFinalHP() * 0.2f);
         }
     }
 

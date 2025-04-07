@@ -1,17 +1,14 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
-import art.ameliah.hsr.characters.remembrance.Memosprite;
-import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PreMemospriteAttack;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
-
-import java.util.List;
 
 public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
 
@@ -39,13 +36,13 @@ public class HeroOfTriumphantSong extends AbstractRelicSetBonus {
             this.setConditionalStat(PowerStat.SPEED_PERCENT, this::speedBoost);
         }
 
-        @Override
-        public void afterSummon(Memosprite<?, ?> memosprite) {
+        @Subscribe
+        public void afterSummon(PostSummon event) {
             getBattle().IncreaseSpeed(this.owner, this);
         }
 
-        @Override
-        public void beforeMemospriteAttack(AttackLogic attack) {
+        @Subscribe
+        public void beforeMemospriteAttack(PreMemospriteAttack event) {
             if (this.getOwner() instanceof Memomaster<?> memomaster) {
                 if (memomaster.getMemo() != null) {
                     memomaster.getMemo().addPower(TempPower.create(PowerStat.CRIT_DAMAGE, 30, 2, "Hero of Triumphant Song 4PC CD"));

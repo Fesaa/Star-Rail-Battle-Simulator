@@ -1,10 +1,12 @@
 package art.ameliah.hsr.enemies.game.amphoreus;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -39,8 +41,8 @@ public class NoontideGryphon extends AbstractEnemy {
         this.sequence.runNext();
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStartAquilasMarker(CombatStartEvent event) {
         getBattle().registerForEnemy(e -> e.addPower(new AquilasMarkListener()));
     }
 
@@ -55,7 +57,7 @@ public class NoontideGryphon extends AbstractEnemy {
             int size = getBattle().playerSize();
             for (int i = 0; i < 3; i++) {
                 getBattle().characterCallback(size - i, c -> {
-                    dl.logic(al -> al.hit(c, 10, 700));
+                    dl.logic(c, al -> al.hit(c, 10, 700));
                     c.addPower(this.newMark());
                 });
             }
@@ -67,10 +69,13 @@ public class NoontideGryphon extends AbstractEnemy {
     }
 
     private void PraiseAquila() {
+        if (this.lockedOn.isEmpty()) {
+            return;
+        }
         this.startAttack().handle(dl -> {
             for (var target : this.lockedOn) {
                 int idx = getBattle().getPlayers().indexOf(target);
-                dl.logic(idx-1, (e, al) -> {
+                dl.logic(idx, (e, al) -> {
                     al.hit(e, 20, 1300);
                     e.addPower(this.newMark());
                 });
@@ -84,15 +89,15 @@ public class NoontideGryphon extends AbstractEnemy {
         return mark;
     }
 
-    private class AquilasMarkListener extends PermPower {
+    public class AquilasMarkListener extends PermPower {
 
-        @Override
-        public void onDeath(BattleParticipant reason) {
+        @Subscribe
+        public void onDeath(DeathEvent e) {
             NoontideGryphon.this.marks.forEach(mark -> mark.lastsForever = false);
         }
     }
 
-    private class AquilasMark extends PermPower {
+    public class AquilasMark extends PermPower {
 
         public AquilasMark() {
             super("Aquilas Mark");
@@ -119,7 +124,7 @@ public class NoontideGryphon extends AbstractEnemy {
                 dl.logic(character, (al) -> al.hit(character, 700));
             });
             // No idea about the amount :/
-            character.decreaseEnergy(character.maxEnergy*0.1f, "Aquilas Mark Energy Reduction");
+            character.decreaseEnergy(character.maxEnergy * 0.1f, "Aquilas Mark Energy Reduction");
 
         }
     }

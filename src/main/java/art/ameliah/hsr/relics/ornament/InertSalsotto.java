@@ -3,6 +3,8 @@ package art.ameliah.hsr.relics.ornament;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -23,11 +25,12 @@ public class InertSalsotto extends AbstractRelicSetBonus {
         owner.addPower(PermPower.create(PowerStat.CRIT_CHANCE, 8, "Inert Salsotto Crit Chance Bonus"));
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         owner.addPower(new InertSalsottoDamagePower());
     }
 
-    private static class InertSalsottoDamagePower extends AbstractPower {
+    public static class InertSalsottoDamagePower extends AbstractPower {
         public InertSalsottoDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;

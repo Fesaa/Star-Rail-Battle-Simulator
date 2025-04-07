@@ -1,7 +1,8 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -17,9 +18,9 @@ public class BeforeTheTutorialMissionStarts extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.EFFECT_HIT, 40, "Before The Tutorial Mission Starts Boost"));
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (attack.getTargets().stream()
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        if (event.getAttack().getTargets().stream()
                 .anyMatch(e -> e.powerList
                         .stream()
                         .anyMatch(p -> p.getStat(PowerStat.DEFENSE_REDUCTION) != 0))) {

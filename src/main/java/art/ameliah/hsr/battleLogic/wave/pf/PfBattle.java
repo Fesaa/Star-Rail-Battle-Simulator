@@ -8,6 +8,8 @@ import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyDied;
 import art.ameliah.hsr.battleLogic.wave.WavedBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.EnemyJoinCombat;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
 import org.jetbrains.annotations.Nullable;
@@ -16,13 +18,11 @@ import java.util.stream.Collectors;
 
 public class PfBattle extends WavedBattle<PfWave> {
 
-    protected CounterMetric<Integer> enemiesKilled = metricRegistry.register(CounterMetric.newIntegerCounter("pf-enemies-killed", "Enemies killed"));
-
     private final ConcordantTrucePower concordantTruce;
     private final PureFictionBuff pfBuff;
     private final ISurgingGrit surgingGrit;
     private final SurgingGritEntity entity;
-
+    protected CounterMetric<Integer> enemiesKilled = metricRegistry.register(CounterMetric.newIntegerCounter("pf-enemies-killed", "Enemies killed"));
     private boolean surgingGridActive = false;
     private int gridAmount;
     private int gridOverflow;
@@ -155,10 +155,10 @@ public class PfBattle extends WavedBattle<PfWave> {
             this.setBattle(pf);
         }
 
-        @Override
-        public void onEnemyJoinCombat(AbstractEnemy enemy) {
+        @Subscribe
+        public void onEnemyJoinCombat(EnemyJoinCombat event) {
             if (this.enemyBuff != null) {
-                enemy.addPower(this.enemyBuff);
+                event.getEnemy().addPower(this.enemyBuff);
             }
         }
 

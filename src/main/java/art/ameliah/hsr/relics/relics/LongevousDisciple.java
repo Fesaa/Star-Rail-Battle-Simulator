@@ -1,9 +1,10 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttacked;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -25,8 +26,8 @@ public class LongevousDisciple extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.HP_PERCENT, 12, "Longevous Disciple 2PC"));
     }
 
-    @Override
-    public void afterAttacked(AttackLogic attack) {
+    @Subscribe
+    public void afterAttacked(PostAllyAttacked event) {
         if (!this.isFullSet) return;
 
         // Assuming stuff like eating your own/allys HP, would be implemented as attacking them

@@ -1,13 +1,14 @@
 package art.ameliah.hsr.enemies.game.luofu.moonrage;
 
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
+import art.ameliah.hsr.events.enemy.PostEnemyAttack;
 import art.ameliah.hsr.powers.PermPower;
 
 public class MoonRageTracker extends PermPower {
     public final static String NAME = "Lupine Maw";
-
-    private final MoonRageEntity moonRageEntity = new MoonRageEntity();
     private static int bloodLustStacks = 0;
+    private final MoonRageEntity moonRageEntity = new MoonRageEntity();
 
     private boolean noneMoonRageAble() {
         return getBattle().getEnemies()
@@ -19,23 +20,23 @@ public class MoonRageTracker extends PermPower {
         getBattle().getEnemies()
                 .stream()
                 .filter(e -> e instanceof MoonRageAble)
-                .map(e -> (MoonRageAble)e)
+                .map(e -> (MoonRageAble) e)
                 .forEach(MoonRageAble::enterMoonRage);
 
         moonRageEntity.setBattle(getBattle());
         getBattle().getActionValueMap().put(moonRageEntity, moonRageEntity.getBaseAV());
     }
 
-    @Override
-    public void onEndTurn() {
+    @Subscribe
+    public void onEndTurn(TurnEndEvent e) {
         if (this.noneMoonRageAble()) {
             bloodLustStacks = 0;
             getBattle().getActionValueMap().remove(this.moonRageEntity);
         }
     }
 
-    @Override
-    public void afterAttack(EnemyAttackLogic attack) {
+    @Subscribe
+    public void afterAttack(PostEnemyAttack e) {
         bloodLustStacks++;
 
         for (var enemy : getBattle().getEnemies()) {

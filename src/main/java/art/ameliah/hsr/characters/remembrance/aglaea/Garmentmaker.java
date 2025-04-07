@@ -1,13 +1,14 @@
 package art.ameliah.hsr.characters.remembrance.aglaea;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -38,14 +39,14 @@ public class Garmentmaker extends Memosprite<Garmentmaker, Aglaea> {
         this.doAttack(DamageType.MEMOSPRITE_DAMAGE, dl -> {
             int idx = this.getTargetIdx(MoveType.MEMOSPRITE_SKILL);
 
-            dl.logic(idx-1, (e, al) -> al.hit(e, 0.66f, 5));
+            dl.logic(idx - 1, (e, al) -> al.hit(e, 0.66f, 5));
             dl.logic(idx, (e, al) -> al.hit(e, 1.1f, 10));
-            dl.logic(idx+1, (e, al) -> al.hit(e, 0.66f, 5));
+            dl.logic(idx + 1, (e, al) -> al.hit(e, 0.66f, 5));
         });
     }
 
-    @Override
-    public void onDeath(BattleParticipant source) {
+    @Subscribe
+    public void onDeath(DeathEvent event) {
         this.getMaster().increaseEnergy(20, "Bloom of Drying Grass");
     }
 
@@ -61,9 +62,9 @@ public class Garmentmaker extends Memosprite<Garmentmaker, Aglaea> {
             this.setConditionalStat(PowerStat.FLAT_SPEED, _ -> 55f * this.stacks);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            boolean shouldTrigger = attack.getTargets()
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            boolean shouldTrigger = event.getAttack().getTargets()
                     .stream().anyMatch(e -> e.hasPower(Aglaea.SeamStitch.NAME));
 
             if (!shouldTrigger) {

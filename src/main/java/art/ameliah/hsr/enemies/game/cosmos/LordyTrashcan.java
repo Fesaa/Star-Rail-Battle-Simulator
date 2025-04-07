@@ -1,12 +1,13 @@
 package art.ameliah.hsr.enemies.game.cosmos;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
 import art.ameliah.hsr.battleLogic.log.lines.enemy.GainedWeakness;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.EnemyAttackType;
 import art.ameliah.hsr.enemies.EnemyType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.enemy.PreHit;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 
@@ -24,19 +25,19 @@ public class LordyTrashcan extends AbstractEnemy {
         this.boostedATK = this.baseATK;
     }
 
-    @Override
-    public void beforeReceiveHit(Hit hit) {
+    @Subscribe
+    public void beforeReceiveHit(PreHit event) {
         if (this.weaknessMap.size() >= 2) {
             return;
         }
 
-        if (hit.getElementType() != null && this.addWeakness(hit.getElementType())) {
-            getBattle().addToLog(new GainedWeakness(this, hit.getElementType()));
+        if (event.getHit().getElementType() != null && this.addWeakness(event.getHit().getElementType())) {
+            getBattle().addToLog(new GainedWeakness(this, event.getHit().getElementType()));
         }
     }
 
-    @Override
-    public void onWeaknessBreak(BattleParticipant source) {
+    @Subscribe
+    public void onWeaknessBreak(WeaknessBreakEvent event) {
         if (this.isDead()) {
             return;
         }

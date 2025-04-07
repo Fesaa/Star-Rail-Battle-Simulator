@@ -1,9 +1,11 @@
 package art.ameliah.hsr.relics.ornament;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 
@@ -18,19 +20,19 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         super(owner, isFullSet);
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().registerForPlayers(c -> c.addPower(new DuranTrackerPower()));
     }
 
-    private static class DuranTrackerPower extends PermPower {
+    public static class DuranTrackerPower extends PermPower {
         public DuranTrackerPower() {
             this.setName(this.getClass().getSimpleName());
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack event) {
+            if (event.getAttack().getTypes().contains(DamageType.FOLLOW_UP)) {
                 for (AbstractCharacter<?> character : getBattle().getPlayers()) {
                     for (AbstractRelicSetBonus relicSetBonus : character.relicSetBonus) {
                         if (relicSetBonus instanceof DuranDynastyOfRunningWolves) {
@@ -42,7 +44,7 @@ public class DuranDynastyOfRunningWolves extends AbstractRelicSetBonus {
         }
     }
 
-    private static class DuranStackPower extends PermPower {
+    public static class DuranStackPower extends PermPower {
         public DuranStackPower() {
             this.setName(this.getClass().getSimpleName());
             this.maxStacks = 5;

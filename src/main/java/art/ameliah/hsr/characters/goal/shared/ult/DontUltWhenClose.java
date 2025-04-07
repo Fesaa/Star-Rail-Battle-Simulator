@@ -1,9 +1,10 @@
 package art.ameliah.hsr.characters.goal.shared.ult;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 
-public class DontUltWhenClose<C extends AbstractCharacter<C>> extends UltGoal<C> {
+public class DontUltWhenClose<C extends AbstractCharacter<C>> extends AbstractUltGoal<C> {
 
     private final float per;
 

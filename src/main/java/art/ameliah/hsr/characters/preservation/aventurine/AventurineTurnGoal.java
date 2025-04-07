@@ -1,9 +1,10 @@
 package art.ameliah.hsr.characters.preservation.aventurine;
 
 import art.ameliah.hsr.characters.MoveType;
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
-public class AventurineTurnGoal extends TurnGoal<Aventurine> {
+public class AventurineTurnGoal extends AbstractTurnGoal<Aventurine> {
     public AventurineTurnGoal(Aventurine character) {
         super(character);
     }

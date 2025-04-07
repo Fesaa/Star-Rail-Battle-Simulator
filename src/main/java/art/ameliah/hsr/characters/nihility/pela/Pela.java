@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.nihility.pela;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -12,6 +11,10 @@ import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.UseExcessSkillPointsGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.EventPriority;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -86,7 +89,8 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
 
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         addPower(new PelaTalentPower());
         addPower(new PelaBonusDamageAgainstDebuffPower());
     }
@@ -101,7 +105,7 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         this.firstMove = firstTurn;
     }
 
-    private static class PelaBonusDamageAgainstDebuffPower extends AbstractPower {
+    public static class PelaBonusDamageAgainstDebuffPower extends AbstractPower {
         public PelaBonusDamageAgainstDebuffPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
@@ -118,15 +122,15 @@ public class Pela extends AbstractCharacter<Pela> implements SkillFirstTurnGoal.
         }
     }
 
-    private class PelaTalentPower extends AbstractPower {
+    public class PelaTalentPower extends AbstractPower {
         public PelaTalentPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            for (AbstractEnemy enemy : attack.getTargets()) {
+        @Subscribe(priority = EventPriority.HIGHEST)
+        public void afterAttack(PostAllyAttack e) {
+            for (AbstractEnemy enemy : e.getAttack().getTargets()) {
                 for (AbstractPower power : enemy.powerList) {
                     if (power.type == PowerType.DEBUFF) {
                         increaseEnergy(11, TALENT_ENERGY_GAIN);

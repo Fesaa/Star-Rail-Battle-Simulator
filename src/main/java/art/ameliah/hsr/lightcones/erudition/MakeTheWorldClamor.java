@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.erudition;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 
@@ -19,8 +21,8 @@ public class MakeTheWorldClamor extends AbstractLightcone {
         this.owner.addPower(new MakeTheWorldClamorPower());
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         if (this.owner.usesEnergy)
             this.owner.increaseEnergy(32, AbstractCharacter.LIGHTCONE_ENERGY_GAIN);
     }

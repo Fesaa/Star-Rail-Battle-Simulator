@@ -1,6 +1,7 @@
 package art.ameliah.hsr.characters.remembrance.aglaea;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
+import art.ameliah.hsr.events.combat.DeathEvent;
 
 public class SupremeStanceEntity extends AbstractEntity {
 
@@ -17,7 +18,7 @@ public class SupremeStanceEntity extends AbstractEntity {
 
         if (garmentmaker != null) {
             getBattle().removeEntity(garmentmaker);
-            garmentmaker.onDeath(this);
+            garmentmaker.onDeath(new DeathEvent(this));
         }
 
         getBattle().removeEntity(this);

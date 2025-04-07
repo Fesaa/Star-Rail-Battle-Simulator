@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -26,8 +28,8 @@ public class EarthlyEscapade extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 32, "Earthly Escapade Crit Damage Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().registerForPlayers(p -> p.addPower(new Mask(mask)));
     }
 

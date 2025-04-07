@@ -91,6 +91,7 @@ import art.ameliah.hsr.lightcones.preservation.TextureOfMemories;
 import art.ameliah.hsr.lightcones.preservation.ThisIsMe;
 import art.ameliah.hsr.lightcones.preservation.TrendOfTheUniversalMarket;
 import art.ameliah.hsr.lightcones.preservation.WeAreWildfire;
+import art.ameliah.hsr.lightcones.remembrance.MakeFarewellsMoreBeautiful;
 import art.ameliah.hsr.lightcones.remembrance.TimeWovenIntoGold;
 import art.ameliah.hsr.lightcones.remembrance.VictoryInABlink;
 
@@ -190,13 +191,14 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         register(23037, IntoTheUnreachableVeil.class);
         register(23038, IfTimeWereAFlower.class);
         register(21050, VictoryInABlink.class);
+        register(23040, MakeFarewellsMoreBeautiful.class);
     }
 
     public AbstractLightcone getLightCone(int id, AbstractCharacter<?> owner) throws Exception {
         if (registry.containsKey(id)) {
             return registry.get(id).getConstructor(AbstractCharacter.class).newInstance(owner);
         }
-        throw new RuntimeException("Element with id" + id + " not found");
+        throw new RuntimeException("Element with id: " + id + " not found");
     }
 
 }

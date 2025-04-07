@@ -1,11 +1,13 @@
 package art.ameliah.hsr.characters.remembrance;
 
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
+import art.ameliah.hsr.events.character.MemospriteDeath;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -23,7 +25,7 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
                       float maxEnergy, int tauntValue, Path path) {
         super(name, baseHP, 0, 0, baseSpeed, level, elementType, maxEnergy, tauntValue, path);
 
-        this.registerGoal(0, new AlwaysBasicGoal<>((C)this));
+        this.registerGoal(0, new AlwaysBasicGoal<>((C) this));
         this.master = master;
         this.addPower(this.masterStatsCopy());
     }
@@ -52,6 +54,12 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
         return statsCopy;
     }
 
+    @Override
+    public void die(BattleParticipant source) {
+        super.die(source);
+        this.master.getEventBus().fire(new MemospriteDeath());
+    }
+
     protected abstract void memoSkill();
 
     @Override
@@ -59,7 +67,7 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
         this.actionMetric.record(MoveType.MEMOSPRITE_SKILL);
 
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
-        this.increaseEnergy(10, BASIC_ENERGY_GAIN+" (from memo)");
+        this.increaseEnergy(10, BASIC_ENERGY_GAIN + " (from memo)");
         this.memoSkill();
     }
 

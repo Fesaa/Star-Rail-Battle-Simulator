@@ -1,7 +1,5 @@
 package art.ameliah.hsr.characters.harmony.robin;
 
-import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -11,9 +9,13 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltNumby;
-import art.ameliah.hsr.characters.goal.shared.ult.DontUltWhenClose;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -30,12 +32,10 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
 
     public static final String NAME = "Robin";
     public static final String ULT_POWER_NAME = "RobinUltPower";
-
+    public final Concerto concerto = new Concerto(this);
     private final PermPower skillPower = PermPower.create(PowerStat.DAMAGE_BONUS, 50, "Robin Skill Power");
     private final RobinUltPower ultPower = new RobinUltPower();
     private final RobinFixedCritPower fixedCritPower = new RobinFixedCritPower();
-    public final Concerto concerto = new Concerto(this);
-
     protected CounterMetric<Integer> allyAttacks = metricRegistry.register(CounterMetric.newIntegerCounter("robin-ally-attacks", "Number of Ally Attacks"));
     protected CounterMetric<Integer> concertoHits = metricRegistry.register(CounterMetric.newIntegerCounter("robin-concerto-hits", "Number of Concerto Hits"));
 
@@ -106,12 +106,14 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         getBattle().getActionValueMap().put(concerto, concerto.getBaseAV());
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().AdvanceEntity(this, 25);
         getBattle().registerForPlayers(p -> p.addPower(new RobinTalentPower()));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         if (skillCounter > 0) {
             skillCounter--;
             if (skillCounter <= 0) {
@@ -152,7 +154,7 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         return skillCounter;
     }
 
-    private static class RobinFixedCritPower extends AbstractPower {
+    public static class RobinFixedCritPower extends AbstractPower {
         public RobinFixedCritPower() {
             this.setName(this.getClass().getSimpleName());
             lastsForever = true;
@@ -169,20 +171,20 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
         }
     }
 
-    private class RobinTalentPower extends PermPower {
+    public class RobinTalentPower extends PermPower {
         public RobinTalentPower() {
             this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.CRIT_DAMAGE, 20);
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
             Robin.this.increaseEnergy(2, TALENT_ENERGY_GAIN);
             Robin.this.allyAttacks.increment();
         }
     }
 
-    private class RobinUltPower extends AbstractPower {
+    public class RobinUltPower extends AbstractPower {
         public RobinUltPower() {
             this.setName(ULT_POWER_NAME);
             lastsForever = true;
@@ -197,14 +199,14 @@ public class Robin extends AbstractCharacter<Robin> implements SkillCounterTurnG
             return Robin.this.getFinalAttack() - this.getStat(PowerStat.FLAT_ATK);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            AbstractEnemy target = Randf.rand(attack.getTargets(), getBattle().getGetRandomEnemyRng());
+        @Subscribe
+        public void afterAttack(PostAllyAttack e) {
+            AbstractEnemy target = Randf.rand(e.getAttack().getTargets(), getBattle().getGetRandomEnemyRng());
             if (target == null) {
                 return;
             }
 
-            attack.additionalDmg(Robin.this, target, 1.2f);
+            e.getAttack().additionalDmg(Robin.this, target, 1.2f);
             Robin.this.concertoHits.increment();
         }
 

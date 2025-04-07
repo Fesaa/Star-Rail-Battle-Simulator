@@ -1,9 +1,7 @@
 package art.ameliah.hsr.enemies;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttack;
 import art.ameliah.hsr.battleLogic.combat.enemy.EnemyDelayAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
@@ -17,6 +15,12 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.harmony.ruanmei.RuanMei;
 import art.ameliah.hsr.enemies.action.EnemyActionSequence;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.DeathEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.EnemyActionMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -36,26 +40,20 @@ import java.util.function.Consumer;
 
 public abstract class AbstractEnemy extends AbstractEntity {
     public static final int DEFAULT_RES = 20;
-
-    @Getter
-    private final EnemyType type;
-
     @Getter
     protected final int level;
     protected final int baseHP;
     protected final int baseATK;
     protected final int baseDEF;
     protected final int toughness;
-
-    protected EnemyActionMetric actionMetric = metricRegistry.register(new EnemyActionMetric("enemy-action-metric", "Action metrics"));
-    protected CounterMetric<Integer> weaknessBreakMetric = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-weakness-break-metric", "Times weakness broken"));
-    protected CounterMetric<Integer> timesAttacked = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-times-attack", "Times attacked"));
-
-
-
     protected final Map<ElementType, Integer> resMap = new HashMap<>();
     protected final Set<ElementType> weaknessMap = new HashSet<>();
     protected final EnemyActionSequence sequence;
+    @Getter
+    private final EnemyType type;
+    protected EnemyActionMetric actionMetric = metricRegistry.register(new EnemyActionMetric("enemy-action-metric", "Action metrics"));
+    protected CounterMetric<Integer> weaknessBreakMetric = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-weakness-break-metric", "Times weakness broken"));
+    protected CounterMetric<Integer> timesAttacked = metricRegistry.register(CounterMetric.newIntegerCounter("enemy-times-attack", "Times attacked"));
     // Moc increases hp this way
     @Setter
     protected int HPMultiplier = 1;
@@ -257,7 +255,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
 
         getBattle().addToLog(new EnemyDied(this, "after a direct hit by " + hit.getSource()));
         getBattle().removeEnemy(this);
-        this.emit(l -> l.onDeath(hit.getSource()));
+        this.eventBus.fire(new DeathEvent(hit.getSource()));
         return res;
     }
 
@@ -276,15 +274,18 @@ public abstract class AbstractEnemy extends AbstractEntity {
             getBattle().DelayEntity(this, 25);
 
             if (source instanceof AbstractCharacter<?> character) {
-                float extraDelay = character.elementType.getExtraDelay() * (1 + character.getTotalBreakEffect()/100);
-                getBattle().DelayEntity(this, extraDelay);
+                float extraDelay = character.elementType.getExtraDelay() * (1 + character.getTotalBreakEffect() / 100);
+                if (extraDelay > 0) {
+                    getBattle().DelayEntity(this, extraDelay);
+                }
 
                 //TODO: Further implement missing weakness break mechanics
                 // https://honkai-star-rail.fandom.com/wiki/Toughness#Weakness_Break
             }
 
-            getBattle().getPlayers().forEach(p -> p.onWeaknessBreak(this));
-            this.emit(l -> l.onWeaknessBreak(source));
+            var event = new WeaknessBreakEvent(source);
+            getBattle().getPlayers().forEach(p -> p.getEventBus().fire(event));
+            this.eventBus.fire(event);
         }
 
         return toughnessToDeal;
@@ -294,8 +295,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
         return this.currentHp.get() <= 0;
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         this.currentHp.set((float) (this.baseHP * this.HPMultiplier));
         this.currentToughness = this.toughness;
     }
@@ -303,8 +304,8 @@ public abstract class AbstractEnemy extends AbstractEntity {
     /**
      * Weakness bar logic
      */
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent event) {
         if (!this.isWeaknessBroken()) {
             return;
         }
@@ -334,16 +335,16 @@ public abstract class AbstractEnemy extends AbstractEntity {
         this.turnsMetric.increment();
     }
 
-    @Override
-    public void afterAttacked(AttackLogic attack) {
+    @Subscribe
+    public void afterAttacked(PostEnemyAttacked event) {
         this.timesAttacked.increment();
         if (this.currentHp.get() > 0) {
             return;
         }
 
-        getBattle().addToLog(new EnemyDied(this, attack.getSource()));
+        getBattle().addToLog(new EnemyDied(this, event.getAttack().getSource()));
         getBattle().removeEnemy(this);
-        this.emit(l -> l.onDeath(attack.getSource()));
+        this.eventBus.fire(new DeathEvent(event.getAttack().getSource()));
     }
 
     public String getMetrics() {

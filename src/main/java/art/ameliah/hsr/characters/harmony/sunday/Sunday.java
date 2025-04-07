@@ -11,6 +11,9 @@ import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoa
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -47,8 +50,8 @@ public class Sunday extends AbstractCharacter<Sunday> {
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.increaseEnergy(25, "Exalted Sweep");
     }
 
@@ -131,8 +134,8 @@ public class Sunday extends AbstractCharacter<Sunday> {
         return Math.max(per, 40);
     }
 
-    @Override
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent event) {
         this.theBeatifiedTurnsRemaining--;
 
         if (this.theBeatifiedTurnsRemaining <= 0) {

@@ -10,10 +10,13 @@ import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.AllWeakPassiveEnemy;
 import art.ameliah.hsr.enemies.FireWindImgLightningWeakEnemy;
+import art.ameliah.hsr.enemies.game.amphoreus.NoontideGryphon;
+import art.ameliah.hsr.enemies.game.stellaronhunters.Kafka;
 import art.ameliah.hsr.game.moc.ScalegorgeTidalflow11;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
 import art.ameliah.hsr.teams.AglaeaTeams;
+import art.ameliah.hsr.teams.CastoriceTeams;
 import art.ameliah.hsr.teams.PlayerTeam;
 
 import java.io.File;
@@ -42,7 +45,9 @@ public class Main {
         Locale.setDefault(Locale.UK);
 
         //run();
-        darkgladeTestRun();
+        //darkgladeTestRun();
+        //CastoriceTestRun();
+        CastoriceSim.run();
 
         //ameliasSanityCheck();
         //WaveTester.MocTest();
@@ -66,12 +71,26 @@ public class Main {
         }
     }
 
+    public static void CastoriceTestRun() {
+        IBattle battle = new Battle();
+        battle.setPlayerTeam(new CastoriceTeams.CastoriceTestTeam().getTeam());
+        List<AbstractEnemy> enemyTeam = new ArrayList<>();
+        //enemyTeam.add(new AllWeakPassiveEnemy(0));
+        //enemyTeam.add(new AllWeakPassiveEnemy(1, true));
+        //enemyTeam.add(new AllWeakPassiveEnemy(2));
+        enemyTeam.add(new NoontideGryphon(1_000_000));
+        enemyTeam.add(new Kafka(2_000_000));
+        enemyTeam.add(new NoontideGryphon(1_000_000));
+        battle.setEnemyTeam(enemyTeam);
+        battle.Start(300);
+    }
+
     public static void darkgladeTestRun() {
         Battle battle = new Battle();
         battle.setPlayerTeam(new AglaeaTeams.DoubleSpeedAglaeaTeam().getTeam());
         ArrayList<AbstractEnemy> enemyTeam = new ArrayList<>();
         enemyTeam.add(new AllWeakPassiveEnemy(0));
-        enemyTeam.add(new AllWeakPassiveEnemy(1));
+        enemyTeam.add(new AllWeakPassiveEnemy(1, true));
         enemyTeam.add(new AllWeakPassiveEnemy(2));
         battle.setEnemyTeam(enemyTeam);
         battle.Start(300);
@@ -88,6 +107,7 @@ public class Main {
 
         var classes = TestHelper.getStaticClassesExtendingA(PlayerTeam.class, PlayerTeam.class);
         classes.addAll(TestHelper.getStaticClassesExtendingA(AglaeaTeams.class, PlayerTeam.class));
+        classes.addAll(TestHelper.getStaticClassesExtendingA(CastoriceTeams.class, PlayerTeam.class));
 
         List<Pair<String, ArrayList<AbstractCharacter<?>>>> teams = classes
                 .stream()

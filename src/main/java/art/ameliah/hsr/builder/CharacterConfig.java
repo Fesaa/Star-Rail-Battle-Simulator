@@ -28,13 +28,6 @@ public class CharacterConfig {
 
     public List<SubStat> subStats;
 
-
-    public record RelicConfig(int id, boolean fullSet) {
-    }
-
-    public record SubStat(PowerStat stat, float amount) {
-    }
-
     @SneakyThrows
     public AbstractCharacter<?> toCharacter() {
         AbstractCharacter<?> character = PlayerRegistry.INSTANCE.get(id);
@@ -55,11 +48,20 @@ public class CharacterConfig {
 
         var statsPower = new PermPower("Stats Power, auto generated");
         for (var ss : subStats) {
+            if (ss == null) {
+                throw new IllegalStateException("Invalid substats");
+            }
             statsPower.setStat(ss.stat, ss.amount);
         }
 
         character.addPower(statsPower);
         return character;
+    }
+
+    public record RelicConfig(int id, boolean fullSet) {
+    }
+
+    public record SubStat(PowerStat stat, float amount) {
     }
 
 }

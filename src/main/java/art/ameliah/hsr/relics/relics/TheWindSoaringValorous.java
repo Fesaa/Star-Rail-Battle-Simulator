@@ -1,9 +1,10 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -30,9 +31,9 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
         owner.addPower(statBonus);
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (attack.getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        if (event.getAttack().getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(new ValorousDamagePower());
         }
     }
@@ -45,7 +46,7 @@ public class TheWindSoaringValorous extends AbstractRelicSetBonus {
         }
     }
 
-    private static class ValorousDamagePower extends AbstractPower {
+    public static class ValorousDamagePower extends AbstractPower {
         public ValorousDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 1;

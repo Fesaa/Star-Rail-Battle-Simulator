@@ -9,12 +9,20 @@ import art.ameliah.hsr.battleLogic.log.lines.character.HitResultLine;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PostDoHit;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PreDoHit;
+import art.ameliah.hsr.events.character.PreMemospriteAttack;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
+import art.ameliah.hsr.events.enemy.PreEnemyAttacked;
+import art.ameliah.hsr.events.enemy.PreHit;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, AttackLogic,DelayAttack> {
+public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, AttackLogic, DelayAttack> {
 
     @Getter
     private final Collection<Hit> pastHits = new ArrayList<>();
@@ -32,27 +40,27 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
     protected void attack(DelayAttack dh) {
         AttackLogic attackLogic = new AttackLogic(this.source, this.targets, this.types, this, this::handleHit);
 
-        this.source.emit(l -> l.beforeAttack(attackLogic));
+        this.source.getEventBus().fire(new PreAllyAttack(attackLogic));
         if (this.source instanceof Memosprite) {
-            Memosprite<?, ?> memosprite = (Memosprite<?, ?>)source;
-            memosprite.getMaster().emit(l -> l.beforeMemospriteAttack(attackLogic));
+            Memosprite<?, ?> memosprite = (Memosprite<?, ?>) source;
+            memosprite.getMaster().getEventBus().fire(new PreMemospriteAttack(attackLogic));
         }
-        this.targets.forEach(t -> t.emit(l -> l.beforeAttacked(attackLogic)));
+        this.targets.forEach(t -> t.getEventBus().fire(new PreEnemyAttacked(attackLogic)));
 
         dh.getLogic().accept(attackLogic);
 
-        this.source.emit(l -> l.afterAttack(attackLogic));
+        this.source.getEventBus().fire(new PostAllyAttack(attackLogic));
         this.targets.addAll(attackLogic.getTargets());
 
-        this.targets.forEach(t -> t.emit(l -> l.afterAttacked(attackLogic)));
+        this.targets.forEach(t -> t.getEventBus().fire(new PostEnemyAttacked(attackLogic)));
     }
 
     private HitResult handleHit(Hit hit) {
         BattleParticipant source = hit.getSource();
         if (source instanceof AbstractCharacter<?> e) {
-            e.emit(l -> l.beforeDoHit(hit));
+            e.getEventBus().fire(new PreDoHit(hit));
         }
-        hit.getTarget().emit(l -> l.beforeReceiveHit(hit));
+        hit.getTarget().getEventBus().fire(new PreHit(hit));
 
         HitResult res = hit.getTarget().hit(hit);
 
@@ -67,13 +75,12 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         }
 
         if (source instanceof AbstractCharacter<?> e) {
-            e.emit(l -> l.afterDoHit(res));
+            e.getEventBus().fire(new PostDoHit(res));
         }
 
         this.pastHits.add(hit);
         return res;
     }
-
 
 
 }

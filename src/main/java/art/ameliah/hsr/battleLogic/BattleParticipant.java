@@ -1,6 +1,6 @@
 package art.ameliah.hsr.battleLogic;
 
-public interface BattleParticipant {
+public interface BattleParticipant extends Comparable<BattleParticipant> {
 
     IBattle getBattle();
 
@@ -10,6 +10,11 @@ public interface BattleParticipant {
 
     default boolean inBattle() {
         return getBattle() != null && getBattle().inCombat();
+    }
+
+    @Override
+    default int compareTo(BattleParticipant other) {
+        return getName().compareTo(other.getName());
     }
 
 }

@@ -3,6 +3,8 @@ package art.ameliah.hsr.lightcones.nihility;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -24,8 +26,8 @@ public class SolitaryHealing extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 40, "Solitary Healing Break Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         this.owner.addPower(new SolitaryHealingBoost());
     }
 

@@ -12,6 +12,8 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.powers.PowerStat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,7 +34,9 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
     @Getter
     private final ElementType elementType;
     private final boolean ignoreWeakness;
-
+    @Setter
+    @Nullable
+    private AbstractCharacter<?> multiSource = null;
     private Float computedDmg = null;
     private Float computedToughness = null;
 
@@ -107,6 +111,10 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
         for (var power : this.source.powerList) {
             resPen += power.getTotalStat(PowerStat.RES_PEN);
+        }
+
+        for (var power : this.target.powerList) {
+            resPen += power.getTotalStat(PowerStat.RES_DOWN);
         }
 
         return 1 - (this.target.getRes(this.elementType) - resPen) / 100;
@@ -186,10 +194,11 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
     }
 
     private float baseDamage() {
+        AbstractCharacter<?> source = this.multiSource == null ? this.source : this.multiSource;
         return switch (this.stat) {
-            case ATK -> this.source.getFinalAttack();
-            case HP -> this.source.getFinalHP();
-            case DEF -> this.source.getFinalDefense();
+            case ATK -> source.getFinalAttack();
+            case HP -> source.getFinalHP();
+            case DEF -> source.getFinalDefense();
         } * this.multiplier;
     }
 

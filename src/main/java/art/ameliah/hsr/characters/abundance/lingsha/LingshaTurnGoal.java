@@ -1,8 +1,9 @@
 package art.ameliah.hsr.characters.abundance.lingsha;
 
-import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.AbstractTurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 
-public class LingshaTurnGoal extends TurnGoal<Lingsha> {
+public class LingshaTurnGoal extends AbstractTurnGoal<Lingsha> {
     public LingshaTurnGoal(Lingsha character) {
         super(character);
     }

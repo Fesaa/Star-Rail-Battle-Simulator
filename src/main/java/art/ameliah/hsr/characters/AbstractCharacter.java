@@ -1,14 +1,12 @@
 package art.ameliah.hsr.characters;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleEvents;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.Attack;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.ally.DelayAttack;
 import art.ameliah.hsr.battleLogic.combat.hit.EnemyHit;
 import art.ameliah.hsr.battleLogic.combat.result.EnemyHitResult;
-import art.ameliah.hsr.battleLogic.log.lines.StringLine;
 import art.ameliah.hsr.battleLogic.log.lines.character.CharacterDeath;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
@@ -19,8 +17,20 @@ import art.ameliah.hsr.battleLogic.log.lines.character.UltDecision;
 import art.ameliah.hsr.characters.goal.AllyTargetGoal;
 import art.ameliah.hsr.characters.goal.EnemyTargetGoal;
 import art.ameliah.hsr.characters.goal.TurnGoal;
+import art.ameliah.hsr.characters.goal.TurnGoalResult;
 import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.character.HPGain;
+import art.ameliah.hsr.events.character.HPLost;
+import art.ameliah.hsr.events.character.PostBasic;
+import art.ameliah.hsr.events.character.PostGainEnergy;
+import art.ameliah.hsr.events.character.PostSkill;
+import art.ameliah.hsr.events.character.PostUltimate;
+import art.ameliah.hsr.events.character.PreBasic;
+import art.ameliah.hsr.events.character.PreSkill;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.DeathEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.lightcones.DefaultLightcone;
 import art.ameliah.hsr.metrics.ActionMetric;
@@ -31,7 +41,6 @@ import art.ameliah.hsr.relics.AbstractRelicSetBonus;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
@@ -41,12 +50,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends AbstractEntity {
-
-    protected static final String ENERGY_KEY = "energy";
-    protected static final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
-    protected static final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
-    protected static final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
-    protected static final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
 
     public static final String ULT_ENERGY_GAIN = "from using Ultimate";
     public static final String SKILL_ENERGY_GAIN = "from using Skill";
@@ -58,13 +61,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public static final String LIGHTCONE_ENERGY_GAIN = "from Lightcone effect";
     public static final String ATTACKED_ENERGY_GAIN = "from being attacked";
     public static final String TECHNIQUE_ENERGY_GAIN = "from Technique effect";
-
-    @Getter
-    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("Actions", "Action made"));
-    @Getter
-    protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
-    protected CounterMetric<Float> overflowEnergy = metricRegistry.register(CounterMetric.newFloatCounter("overflow"+ENERGY_KEY, "Overflow energy"));
-
+    protected static final String ENERGY_KEY = "energy";
+    protected static final float TOUGHNESS_DAMAGE_HALF_UNIT = 5;
+    protected static final float TOUGHNESS_DAMAGE_SINGLE_UNIT = 10;
+    protected static final float TOUGHNESS_DAMAGE_TWO_UNITS = 20;
+    protected static final float TOUGHNESS_DAMAGE_THREE_UNITs = 30;
     public final int level;
     public final float baseCritChance = 5.0f;
     public final float baseCritDamage = 50.0f;
@@ -82,9 +83,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     @Getter
     protected final int baseDef;
     protected final int ultEnergyGain = 5;
-
-    private final SortedMap<Integer, UltGoal<C>> ultGoals = new TreeMap<>();
-    private final SortedMap<Integer, TurnGoal<C>> turnGoals = new TreeMap<>();
+    private final SortedMap<Integer, UltGoal> ultGoals = new TreeMap<>();
+    private final SortedMap<Integer, TurnGoal> turnGoals = new TreeMap<>();
     private final SortedMap<Integer, EnemyTargetGoal<C>> enemyTargetGoals = new TreeMap<>();
     private final SortedMap<Integer, AllyTargetGoal<C>> allyTargetGoals = new TreeMap<>();
     public boolean usesEnergy = true;
@@ -93,6 +93,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public boolean isDPS = false;
     public boolean firstMove = true;
     public boolean hasAttackingUltimate;
+    @Getter
+    protected ActionMetric actionMetric = metricRegistry.register(new ActionMetric("character::actions", "Action made"));
+    @Getter
+    protected CounterMetric<Float> currentEnergy = metricRegistry.register(CounterMetric.newFloatCounter(ENERGY_KEY, "Left over energy"));
+    protected CounterMetric<Float> overflowEnergy = metricRegistry.register(CounterMetric.newFloatCounter("overflow" + ENERGY_KEY, "Overflow energy"));
     protected int basicEnergyGain = 20;
     protected int skillEnergyGain = 30;
 
@@ -122,7 +127,6 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * Should really have made it an actual events system. Rather than this :(
      */
     public final void OnCombatStart() {
-        getBattle().addToLog(new StringLine(this.getName() + ": " + this.getFinalHP()));
         this.currentHp.set(this.getFinalHP());
     }
 
@@ -144,7 +148,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         this.enemyTargetGoals.clear();
     }
 
-    public void registerGoal(int priority, UltGoal<C> ultGoal) {
+    public void registerGoal(int priority, UltGoal ultGoal) {
         if (ultGoals.containsKey(priority)) {
             throw new IllegalArgumentException("Priority already exists, " + priority);
         }
@@ -155,7 +159,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         ultGoals.clear();
     }
 
-    public void registerGoal(int priority, TurnGoal<C> turnGoal) {
+    public void registerGoal(int priority, TurnGoal turnGoal) {
         if (turnGoals.containsKey(priority)) {
             throw new IllegalArgumentException("Priority already exists, " + priority);
         }
@@ -203,8 +207,8 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             return;
         }
 
-        for (UltGoal<C> ultGoal : this.ultGoals.values()) {
-            UltGoal.UltGoalResult result = ultGoal.determineAction();
+        for (UltGoal ultGoal : this.ultGoals.values()) {
+            UltGoalResult result = ultGoal.determineAction();
             switch (result) {
                 case DO: {
                     getBattle().addToLog(new UltDecision(this, ultGoal.getClass()));
@@ -244,13 +248,16 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     public final void takeTurn() {
         super.takeTurn();
         this.turnsMetric.increment();
+        this.doAction();
+    }
 
+    protected final void doAction() {
         // TODO: Ulting at the start of the turn makes the dmg higher in some places, but lowers in a few
         // Should investigate why this is happening, and add the needed goals to make it increase at all times
         // Time to read a bunch of logs
         //tryUltimate();
-        for (TurnGoal<C> turnGoal : this.turnGoals.values()) {
-            TurnGoal.TurnGoalResult result = turnGoal.determineAction();
+        for (TurnGoal turnGoal : this.turnGoals.values()) {
+            TurnGoalResult result = turnGoal.determineAction();
             switch (result) {
                 case BASIC: {
                     getBattle().addToLog(new TurnDecision(this, turnGoal.getClass(), result));
@@ -274,14 +281,22 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         throw new IllegalStateException("No valid turn goal found for: " + this.getName());
     }
 
+    protected boolean skillConsumesSP() {
+        return true;
+    }
+
     protected void skillSequence() {
         this.actionMetric.record(MoveType.SKILL);
 
         getBattle().addToLog(new DoMove(this, MoveType.SKILL));
-        getBattle().useSkillPoint(this, 1);
-        this.emit(BattleEvents::onUseSkill);
+
+        if (this.skillConsumesSP()) {
+            getBattle().useSkillPoint(this, 1);
+        }
+
+        this.eventBus.fire(new PreSkill());
         this.useSkill();
-        this.emit(BattleEvents::afterUseSkill);
+        this.eventBus.fire(new PostSkill());
         increaseEnergy(skillEnergyGain, SKILL_ENERGY_GAIN);
     }
 
@@ -290,9 +305,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
         getBattle().addToLog(new DoMove(this, MoveType.BASIC));
         getBattle().generateSkillPoint(this, 1);
-        this.emit(BattleEvents::onUseBasic);
+        this.eventBus.fire(new PreBasic());
         this.useBasic();
-        this.emit(BattleEvents::afterUseBasic);
+        this.eventBus.fire(new PostBasic());
         increaseEnergy(basicEnergyGain, BASIC_ENERGY_GAIN);
     }
 
@@ -302,9 +317,9 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float initialEnergy = this.currentEnergy.get();
         this.currentEnergy.decrease(this.ultCost);
         getBattle().addToLog(new DoMove(this, MoveType.ULTIMATE, initialEnergy, this.currentEnergy.get()));
-        this.emit(BattleEvents::onUseUltimate);
+        this.eventBus.fire(new PreUltimate());
         this.useUltimate();
-        this.emit(BattleEvents::afterUseUltimate);
+        this.eventBus.fire(new PostUltimate());
         increaseEnergy(ultEnergyGain, ULT_ENERGY_GAIN);
     }
 
@@ -314,27 +329,47 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     protected abstract void useUltimate();
 
-    private float reduceHealth(BattleParticipant source, float amount) {
+    public float reduceHealth(BattleParticipant source, float amount) {
+        return this.reduceHealth(source, amount, true);
+    }
+
+    /**
+     * @param source  reason of the reduction
+     * @param amount  hp to remove
+     * @param canKill reduced to max 1 if set to false
+     * @return the amount of hp lost
+     */
+    public float reduceHealth(BattleParticipant source, float amount, boolean canKill) {
         if (source instanceof AbstractEnemy enemy) {
             // Source: Skill DMG page on homdgcat
-            amount *= (200+10*enemy.getLevel())/(200+10*enemy.getLevel()+this.getFinalDefense());
+            amount *= (200 + 10 * enemy.getLevel()) / (200 + 10 * enemy.getLevel() + this.getFinalDefense());
         }
 
-        float overflow = this.currentHp.decrease(amount, 0f);
-        float lost = amount - overflow;
-        getBattle().addToLog(new HealthChange(this, -1*lost, -1*amount));
+        var event = this.eventBus.fire(new HPLost(source, amount));
+        if (event.isCanceled()) {
+            return 0;
+        }
+        amount = event.getAmount();
 
-        this.emit(l -> l.afterHPLost(lost));
+        float overflow = this.currentHp.decrease(amount, canKill ? 0f : 1f);
+        float lost = amount - overflow;
+        getBattle().addToLog(new HealthChange(this, -1 * lost, -1 * amount));
         return lost;
     }
 
     public void die(BattleParticipant source) {
+        var event = this.eventBus.fire(new DeathEvent(source));
+        if (event.isCanceled()) {
+            return;
+        }
+
         getBattle().addToLog(new CharacterDeath(this, source, "HP reduced to 0"));
         getBattle().removeEntity(this);
     }
 
     /**
      * Calls {@link AbstractCharacter#increaseHealth(BattleParticipant, float)}
+     *
      * @param source the source of the hp increase, typically a {@link AbstractCharacter}
      * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
      */
@@ -346,10 +381,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * Increases the health of this {@link AbstractCharacter<C>} by the amount, multiplied
      * by the {@link PowerStat#OUTGOING_HEALING} of the source if the source is an {@link AbstractCharacter}
      * and the {@link PowerStat#INCOMING_HEALING} of this {@link AbstractCharacter<C>}
+     *
      * @param source the source of the hp increase, typically a {@link AbstractCharacter}
      * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
      */
-    public void increaseHealth(BattleParticipant source, float amount){
+    public void increaseHealth(BattleParticipant source, float amount) {
         this.increaseHealth(source, amount, true);
     }
 
@@ -357,13 +393,22 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
      * Increases the health of this {@link AbstractCharacter<C>} by the amount, multiplied
      * by the {@link PowerStat#OUTGOING_HEALING} of the source if the source is an {@link AbstractCharacter}
      * and the {@link PowerStat#INCOMING_HEALING} of this {@link AbstractCharacter<C>} if powerAffected is true
-     * @param source the source of the hp increase, typically a {@link AbstractCharacter}
-     * @param amount the amount to heal by, unaffected by powers. These will be calculated here.
+     *
+     * @param source        the source of the hp increase, typically a {@link AbstractCharacter}
+     * @param amount        the amount to heal by, unaffected by powers. These will be calculated here.
      * @param powerAffected toggle
      */
     public void increaseHealth(BattleParticipant source, float amount, boolean powerAffected) {
+        if (this.currentHp.get() <= 0) {
+            return; // Don't heal dead characters
+        }
+
+        if (amount == 0) {
+            return;
+        }
+
         if (powerAffected) {
-            float increase = 0;
+            float increase = 100;
             if (source instanceof AbstractCharacter<?> character) {
                 for (var power : character.powerList) {
                     increase += power.getStat(PowerStat.OUTGOING_HEALING);
@@ -372,11 +417,14 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             for (var power : this.powerList) {
                 increase += power.getStat(PowerStat.INCOMING_HEALING);
             }
-            amount *= (increase/100);
+            amount *= (increase / 100);
         }
 
         float overflow = this.currentHp.increase(amount, this.getFinalHP());
-        getBattle().addToLog(new HealthChange(this, amount-overflow, amount));
+        float actual = amount == overflow ? 0 : amount - overflow;
+        getBattle().addToLog(new HealthChange(this, actual, amount));
+        float gained = amount - overflow;
+        this.eventBus.fire(new HPGain(gained, overflow));
     }
 
     public EnemyHitResult hit(EnemyHit hit) {
@@ -384,9 +432,11 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.reduceHealth(hit.source(), hit.dmg());
 
         if (this.currentHp.get() == 0) {
-            hit.logic().getAttack().afterAttackHook(() -> {
+            if (hit.logic() != null) {
+                hit.logic().getAttack().afterAttackHook(() -> this.die(hit.source()));
+            } else {
                 this.die(hit.source());
-            });
+            }
         }
 
         return new EnemyHitResult(hit.dmg() - overflow);
@@ -528,6 +578,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
 
     /**
      * Decrease the energy of the character
+     *
      * @param amount to change the energy by.
      * @param source the reason
      */
@@ -536,11 +587,13 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
             throw new IllegalArgumentException("Amount must be negative");
         }
         float initialEnergy = this.currentEnergy.get();
-        this.currentEnergy.decrease(-1*amount, 0f);
+        this.currentEnergy.decrease(-1 * amount, 0f);
         getBattle().addToLog(new LoseEnergy(this, initialEnergy, this.currentEnergy.get(), amount, source));
     }
+
     /**
      * Increase the energy of the character
+     *
      * @param amount to change the energy by, a negative amount will decrease the energy
      * @param source reason
      */
@@ -558,11 +611,12 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float overflow = this.currentEnergy.increase(energyGained, this.maxEnergy);
         this.overflowEnergy.increase(overflow);
         getBattle().addToLog(new GainEnergy(this, initialEnergy, this.currentEnergy.get(), energyGained, source));
-        this.emit(l -> l.onGainEnergy(energyGained, overflow));
+        this.eventBus.fire(new PostGainEnergy(energyGained, overflow));
     }
 
     /**
      * Increase the energy of the character
+     *
      * @param amount to change the energy by, a negative amount will decrease the energy later in the change
      * @param source reason
      */
@@ -577,16 +631,16 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public void EquipLightcone(AbstractLightcone lightcone) {
-        this.getListeners().remove(this.lightcone);
+        this.eventBus.unregisterListener(this.lightcone);
         this.lightcone = lightcone;
         this.lightcone.onEquip();
-        this.getListeners().add(this.lightcone);
+        this.eventBus.registerListener(this.lightcone);
     }
 
     public void EquipRelicSet(AbstractRelicSetBonus relicSetBonus) {
         this.relicSetBonus.add(relicSetBonus);
         relicSetBonus.onEquip();
-        this.getListeners().add(relicSetBonus);
+        this.eventBus.registerListener(relicSetBonus);
     }
 
     public boolean lastMove(MoveType move) {
@@ -598,10 +652,6 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
     }
 
     public void useTechnique() {
-    }
-
-    public void onWeaknessBreak(AbstractEnemy enemy) {
-
     }
 
     public boolean invincible() {

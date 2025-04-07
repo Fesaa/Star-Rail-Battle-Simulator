@@ -1,7 +1,9 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.enemy.WeaknessBreakEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -27,8 +29,19 @@ public class ThiefOfShootingMeteor extends AbstractRelicSetBonus {
         this.owner.addPower(breakBoost);
     }
 
-    @Override
-    public void afterAttack(AttackLogic attack) {
-        // TODO: Generate 3 energy after weakness breaking, don't see a way to check if an enemy was broken this turn
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
+        getBattle().registerForEnemy(e -> e.addPower(new ThiefOfShootingMeteorBreakListener()));
+    }
+
+    public class ThiefOfShootingMeteorBreakListener extends PermPower {
+
+        @Subscribe
+        public void onWeaknessBreak(WeaknessBreakEvent event) {
+            if (ThiefOfShootingMeteor.this.owner.equals(event.getSource())) {
+                ThiefOfShootingMeteor.this.owner.increaseEnergy(3, "Thief Of Shooting Meteor");
+            }
+        }
+
     }
 }

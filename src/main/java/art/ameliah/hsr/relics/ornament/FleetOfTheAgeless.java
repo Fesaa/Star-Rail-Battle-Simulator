@@ -1,6 +1,8 @@
 package art.ameliah.hsr.relics.ornament;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -19,10 +21,10 @@ public class FleetOfTheAgeless extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.HP_PERCENT, 12, "Fleet of the Ageless HP bonus"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         // Doesn't give to memosprites
-        getBattle().getPlayers().forEach(c -> c.addPower(new FleetOfTheAgelessPower()));
+        getBattle().registerForPlayers(p -> p.addPower(new FleetOfTheAgelessPower()));
     }
 
     public class FleetOfTheAgelessPower extends PermPower {

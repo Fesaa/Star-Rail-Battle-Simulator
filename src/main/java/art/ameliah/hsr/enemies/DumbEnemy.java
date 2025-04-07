@@ -47,9 +47,9 @@ public class DumbEnemy extends AbstractEnemy {
 
                 BiConsumer<AbstractCharacter<?>, EnemyAttackLogic> hitLogic = (c, al) -> al.hit(c, 10, dmgToDeal);
 
-                da.logic(targetPos-1, hitLogic);
+                da.logic(targetPos - 1, hitLogic);
                 da.logic(targetPos, hitLogic);
-                da.logic(targetPos+1, hitLogic);
+                da.logic(targetPos + 1, hitLogic);
             });
         }
     }

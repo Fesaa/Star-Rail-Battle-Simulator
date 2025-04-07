@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.hunt.moze;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -14,6 +13,10 @@ import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
+import art.ameliah.hsr.events.enemy.PreEnemyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -27,13 +30,10 @@ public class Moze extends AbstractCharacter<Moze> {
     public static final String NAME = "Moze";
     private static final int MAX_CHARGE = 9;
     private static final int CHARGE_ATTACK_THRESHOLD = 3;
-
+    private final MozePreyPower preyPower;
+    public boolean isDeparted = false;
     protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("moze-talent-procs", "Number of Follow Up Attacks Used"));
     protected CounterMetric<Integer> chargeCount = metricRegistry.register(CounterMetric.newIntegerCounter("moze-charge-count", "Left over charges"));
-
-    private final MozePreyPower preyPower;
-
-    public boolean isDeparted = false;
     private int chargeLost = 0;
     private boolean skillPointRecovered = false;
 
@@ -112,7 +112,8 @@ public class Moze extends AbstractCharacter<Moze> {
         }).execute();
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         skillPointRecovered = false;
     }
 
@@ -141,7 +142,8 @@ public class Moze extends AbstractCharacter<Moze> {
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         getBattle().AdvanceEntity(this, 30);
         increaseEnergy(20, "from E1");
     }
@@ -160,7 +162,7 @@ public class Moze extends AbstractCharacter<Moze> {
         return super.leftOverAV();
     }
 
-    private class MozePreyPower extends AbstractPower {
+    public class MozePreyPower extends AbstractPower {
         public MozePreyPower() {
             this.setName(this.getClass().getSimpleName());
             this.type = PowerType.DEBUFF;
@@ -182,8 +184,9 @@ public class Moze extends AbstractCharacter<Moze> {
             return 0;
         }
 
-        @Override
-        public void beforeAttacked(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttacked(PreEnemyAttacked e) {
+            var attack = e.getAttack();
             AbstractEnemy enemy = (AbstractEnemy) this.getOwner();
 
             boolean trigger = true;

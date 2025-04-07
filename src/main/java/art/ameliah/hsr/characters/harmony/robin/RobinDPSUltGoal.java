@@ -1,10 +1,11 @@
 package art.ameliah.hsr.characters.harmony.robin;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 
 
-public class RobinDPSUltGoal extends UltGoal<Robin> {
+public class RobinDPSUltGoal extends AbstractUltGoal<Robin> {
     public RobinDPSUltGoal(Robin character) {
         super(character);
     }

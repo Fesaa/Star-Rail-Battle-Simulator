@@ -1,10 +1,11 @@
 package art.ameliah.hsr.relics.relics;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
-import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PreDoHit;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.relics.AbstractRelicSetBonus;
@@ -27,17 +28,17 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
         owner.addPower(new DukeDamagePower());
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (attack.getTypes().contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        if (event.getAttack().getTypes().contains(DamageType.FOLLOW_UP) && atkBonus != null && isFullSet) {
             owner.removePower(atkBonus.getName());
         }
     }
 
-    @Override
-    public void beforeDoHit(Hit hit) {
+    @Subscribe
+    public void beforeDoHit(PreDoHit e) {
         atkBonus = new DukeAtkBonus();
-        if (hit.getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
+        if (e.getHit().getTypes().contains(DamageType.FOLLOW_UP) && isFullSet) {
             owner.addPower(atkBonus);
         }
     }
@@ -50,7 +51,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
         }
     }
 
-    private static class DukeDamagePower extends AbstractPower {
+    public static class DukeDamagePower extends AbstractPower {
         public DukeDamagePower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
@@ -67,7 +68,7 @@ public class TheAshblazingGrandDuke extends AbstractRelicSetBonus {
         }
     }
 
-    private static class DukeAtkBonus extends AbstractPower {
+    public static class DukeAtkBonus extends AbstractPower {
         public DukeAtkBonus() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 3;

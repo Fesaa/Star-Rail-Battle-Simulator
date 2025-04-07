@@ -1,9 +1,11 @@
 package art.ameliah.hsr.lightcones.hunt;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -33,8 +35,8 @@ public class IVentureForthToHunt extends AbstractLightcone {
             this.lastsForever = true;
         }
 
-        @Override
-        public void onEndTurn() {
+        @Subscribe
+        public void onEndTurn(TurnEndEvent e) {
             this.stacks = Math.max(0, this.stacks - 1);
         }
 
@@ -46,9 +48,9 @@ public class IVentureForthToHunt extends AbstractLightcone {
             return 0;
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
-            if (attack.getTypes().contains(DamageType.FOLLOW_UP)) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack e) {
+            if (e.getAttack().getTypes().contains(DamageType.FOLLOW_UP)) {
                 this.stacks = Math.min(2, this.stacks + 1);
             }
         }

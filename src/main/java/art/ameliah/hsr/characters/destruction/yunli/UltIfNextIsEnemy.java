@@ -1,10 +1,11 @@
 package art.ameliah.hsr.characters.destruction.yunli;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 
-public class UltIfNextIsEnemy extends UltGoal<Yunli> {
+public class UltIfNextIsEnemy extends AbstractUltGoal<Yunli> {
     public UltIfNextIsEnemy(Yunli character) {
         super(character);
     }

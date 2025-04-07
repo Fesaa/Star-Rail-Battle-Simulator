@@ -72,14 +72,19 @@ public abstract class CounterMetric<T> extends AbstractMetric {
     }
 
     abstract public void increment();
+
     abstract public void decrement();
+
     abstract public void increase(T value);
+
     abstract public T increase(T value, T max);
+
     abstract public void decrease(T value);
+
     abstract public T decrease(T value, T min);
 
 
-    private static class IntCounterMetric extends CounterMetric<Integer> {
+    public static class IntCounterMetric extends CounterMetric<Integer> {
 
         private IntCounterMetric(String key, String desc, Integer startValue) {
             super(key, desc, startValue);
@@ -129,7 +134,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
     }
 
-    private static class FloatCounterMetric extends CounterMetric<Float> {
+    public static class FloatCounterMetric extends CounterMetric<Float> {
 
         private FloatCounterMetric(String key, String desc, Float startValue) {
             super(key, desc, startValue);
@@ -157,6 +162,9 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         public Float increase(Float value, Float max) {
             this.lastValue = this.value;
             this.value = Math.min(this.value + value, max);
+            if (this.value.equals(this.lastValue)) {
+                return value;
+            }
             return Math.abs(this.lastValue + value - this.value);
         }
 
@@ -179,7 +187,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
     }
 
-    private static class DoubleCounterMetric extends CounterMetric<Double> {
+    public static class DoubleCounterMetric extends CounterMetric<Double> {
 
         private DoubleCounterMetric(String key, String desc, Double startValue) {
             super(key, desc, startValue);
@@ -229,7 +237,7 @@ public abstract class CounterMetric<T> extends AbstractMetric {
         }
     }
 
-    private static class LongCounterMetric extends CounterMetric<Long> {
+    public static class LongCounterMetric extends CounterMetric<Long> {
 
         private LongCounterMetric(String key, String desc, Long startValue) {
             super(key, desc, startValue);
@@ -278,8 +286,6 @@ public abstract class CounterMetric<T> extends AbstractMetric {
             return String.format("%s: %,d", this.getDescription(), this.value);
         }
     }
-
-
 
 
 }

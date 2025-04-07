@@ -10,7 +10,7 @@ import java.util.List;
 public record TurnEnd(AbstractEntity entity, List<AbstractEnemy> enemies) implements Loggable {
     @Override
     public String asString() {
-        return String.format("%s's turn has ended %s", this.entity.getName(), this.enemies);
+        return String.format("%s's turn has ended %s\n", this.entity.getName(), this.enemies);
     }
 
     @Override

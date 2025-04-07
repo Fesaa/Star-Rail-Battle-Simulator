@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -17,8 +19,8 @@ public class ForTomorrowsJourney extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 32, "For Tomorrow's Journey ATK Boost"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         this.owner.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 30, 1, "For Tomorrow's Journey Damage Boost"));
     }
 }

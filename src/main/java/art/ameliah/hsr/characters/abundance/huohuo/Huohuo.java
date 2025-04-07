@@ -8,8 +8,13 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.target.ally.LowestHpGoal;
 import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillCounterTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -33,7 +38,8 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
                 .setStat(PowerStat.EFFECT_RES, 18));
 
         this.registerGoal(0, new AlwaysUltGoal<>(this));
-        this.registerGoal(0, new SkillCounterTurnGoal<>(this));
+        //this.registerGoal(0, new SkillCounterTurnGoal<>(this));
+        this.registerGoal(0, new AlwaysSkillGoal<>(this));
         this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
         this.registerGoal(0, new LowestHpGoal<>(this));
     }
@@ -49,7 +55,8 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
                 .filter(p -> !p.lastsForever)
                 .filter(p -> p.type.equals(AbstractPower.PowerType.DEBUFF))
                 .findFirst()
-                .ifPresent(ally::removePower);;
+                .ifPresent(ally::removePower);
+        ;
     }
 
     public void useSkill() {
@@ -60,12 +67,12 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         }
         int idx = this.getAllyTargetIdx();
 
-        double main = this.getFinalHP()*0.21 + 560f;
-        double adj = this.getFinalHP()*0.168 + 448;
+        double main = this.getFinalHP() * 0.21 + 560f;
+        double adj = this.getFinalHP() * 0.168 + 448;
 
-        getBattle().playerCallback(idx-1, c -> this.healAlly(c, adj, false));
+        getBattle().playerCallback(idx - 1, c -> this.healAlly(c, adj, false));
         getBattle().playerCallback(idx, c -> this.healAlly(c, main, true));
-        getBattle().playerCallback(idx+1, c -> this.healAlly(c, adj, false));
+        getBattle().playerCallback(idx + 1, c -> this.healAlly(c, adj, false));
     }
 
     public void useBasic() {
@@ -82,12 +89,14 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         }
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         talentCounter = 1;
         getBattle().registerForPlayers(p -> p.addPower(new HuohuoTalentPower()));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
 
         talentCounter--;
         if (talentCounter <= 0) {
@@ -103,7 +112,7 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         return talentCounter;
     }
 
-    private class HuohuoTalentPower extends AbstractPower {
+    public class HuohuoTalentPower extends AbstractPower {
 
         public static final String NAME = "Possession: Ethereal Metaflow";
 
@@ -119,21 +128,21 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
 
             Huohuo.this.talentProcs.increment();
             Huohuo.this.talentProcCooldown--;
-            double amount = Huohuo.this.getFinalHP()*0.045+120;
+            double amount = Huohuo.this.getFinalHP() * 0.045 + 120;
             Huohuo.this.healAlly((AbstractCharacter<?>) this.owner, amount, removeDebuff);
 
             getBattle().getPlayers().stream()
-                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP()*0.5)
+                    .filter(p -> p.getCurrentHp().get() < p.getFinalHP() * 0.5)
                     .forEach(p -> Huohuo.this.healAlly(p, amount, removeDebuff));
         }
 
-        @Override
-        public void onTurnStart() {
+        @Subscribe
+        public void onTurnStart(TurnStartEvent e) {
             this.trigger();
         }
 
-        @Override
-        public void onUseUltimate() {
+        @Subscribe
+        public void onUseUltimate(PreUltimate e) {
             this.trigger();
         }
     }

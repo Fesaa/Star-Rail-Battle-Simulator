@@ -1,8 +1,10 @@
 package art.ameliah.hsr.lightcones.hunt;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -20,14 +22,14 @@ public class ShadowedByNight extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 56, "Shadowed By Night Break Effect Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().IncreaseSpeed(this.owner, new ShadowedByNightPower());
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        if (!attack.getTypes().contains(DamageType.BREAK)) return;
+    @Subscribe
+    public void beforeAttack(PreAllyAttack event) {
+        if (!event.getAttack().getTypes().contains(DamageType.BREAK)) return;
 
         getBattle().IncreaseSpeed(this.owner, new ShadowedByNightPower());
     }

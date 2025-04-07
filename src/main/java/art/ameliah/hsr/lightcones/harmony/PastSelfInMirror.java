@@ -1,6 +1,9 @@
 package art.ameliah.hsr.lightcones.harmony;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -17,15 +20,15 @@ public class PastSelfInMirror extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.BREAK_EFFECT, 60, "Past Self in Mirror Break Effect Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         getBattle().getPlayers().stream()
                 .filter(c -> c.usesEnergy)
                 .forEach(c -> c.increaseEnergy(10, false, AbstractCharacter.LIGHTCONE_ENERGY_GAIN));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             character.addPower(TempPower.create(PowerStat.DAMAGE_BONUS, 24, 3, "Past Self in Mirror Damage Boost"));
         }

@@ -37,7 +37,7 @@
       "mainStats": ["ATK_PER", "ATK_PER", "ATK_PER", "ERR"],
       "subStats": [
         {"stat":  "ATK_PERCENT", "amount":  20.2},
-        {"stats":  "FLAT_ATK", "amount":  97},
+        {"stat":  "FLAT_ATK", "amount":  97},
         {"stat":  "SPEED", "amount":  11.8}
       ]
     },

@@ -7,5 +7,6 @@ public enum MoveType {
     ENHANCED_BASIC,
     ULTIMATE,
     FOLLOW_UP,
+    MEMOSPRITE_BASIC,
     MEMOSPRITE_SKILL,
 }

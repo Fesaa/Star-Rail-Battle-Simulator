@@ -1,8 +1,6 @@
 package art.ameliah.hsr.characters.hunt.topaz;
 
 import art.ameliah.hsr.battleLogic.AbstractEntity;
-import art.ameliah.hsr.battleLogic.BattleParticipant;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
 import art.ameliah.hsr.characters.ElementType;
@@ -14,6 +12,10 @@ import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.DeathEvent;
+import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -27,10 +29,8 @@ import java.util.List;
 public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoal.FirstTurnTracked, Summoner {
 
     public static final String NAME = "Topaz";
-
-    private final AbstractPower proofOfDebt = new ProofOfDebt();
     final Numby numby;
-
+    private final AbstractPower proofOfDebt = new ProofOfDebt();
     @Getter
     protected CounterMetric<Integer> numbyAttacks = metricRegistry.register(CounterMetric.newIntegerCounter("topaz-numby-attacks", "Numby Attacks"));
     @Getter
@@ -106,7 +106,8 @@ public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoa
         this.addPower(this.stonksPower);
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.addPower(new FireWeaknessBonusDamage());
         getBattle().getActionValueMap().put(numby, numby.getBaseAV());
         getBattle().getRandomEnemy().addPower(proofOfDebt);
@@ -178,7 +179,7 @@ public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoa
         return this.numby;
     }
 
-    private static class FireWeaknessBonusDamage extends AbstractPower {
+    public static class FireWeaknessBonusDamage extends AbstractPower {
         public FireWeaknessBonusDamage() {
             this.setName(this.getClass().getSimpleName());
             lastsForever = true;
@@ -201,8 +202,8 @@ public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoa
             this.type = PowerType.DEBUFF;
         }
 
-        @Override
-        public void onDeath(BattleParticipant source) {
+        @Subscribe
+        public void onDeath(DeathEvent e) {
             getBattle().getRandomEnemy().addPower(this);
         }
 
@@ -216,8 +217,9 @@ public class Topaz extends AbstractCharacter<Topaz> implements SkillFirstTurnGoa
             return 0;
         }
 
-        @Override
-        public void afterAttacked(AttackLogic attack) {
+        @Subscribe
+        public void afterAttacked(PostEnemyAttacked e) {
+            var attack = e.getAttack();
             for (DamageType type : attack.getTypes()) {
                 if (type == DamageType.FOLLOW_UP) {
                     Topaz.this.numby.AdvanceForward();

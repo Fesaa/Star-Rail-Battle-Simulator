@@ -1,8 +1,7 @@
 package art.ameliah.hsr.characters.hunt.march;
 
-import art.ameliah.hsr.battleLogic.BattleEvents;
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
+import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.ExtraHits;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -16,6 +15,14 @@ import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.characters.goal.shared.turn.SkillFirstTurnGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PostBasic;
+import art.ameliah.hsr.events.character.PreAllyAttack;
+import art.ameliah.hsr.events.character.PreBasic;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.BoolMetric;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
@@ -31,14 +38,12 @@ import java.util.Random;
 public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFirstTurnGoal.FirstTurnTracked {
     public static final String NAME = "Sword March";
     public static final int CHARGE_THRESHOLD = 7;
-
+    public AbstractCharacter<?> master;
     protected CounterMetric<Integer> ultEnhancedEBA = this.metricRegistry.register(CounterMetric.newIntegerCounter("EHB boosted by ult"));
     protected CounterMetric<Integer> extraHits = this.metricRegistry.register(CounterMetric.newIntegerCounter("Extra hits during EHB"));
     @Getter
     protected CounterMetric<Integer> chargeCount = this.metricRegistry.register(CounterMetric.newIntegerCounter("Charge count"));
     protected BoolMetric hasUltEnhancement = this.metricRegistry.register("Has ult enchantment", BoolMetric.class);
-
-    public AbstractCharacter<?> master;
     private Random fuaRng;
     private boolean isEnhanced;
     private boolean FUAReady = true;
@@ -94,9 +99,9 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             return;
         }
 
-        this.emit(BattleEvents::onUseBasic);
+        this.eventBus.fire(new PreBasic());
         this.useEnhancedBasicAttack();
-        this.emit(BattleEvents::afterUseBasic);
+        this.eventBus.fire(new PostBasic());
     }
 
     public void useEnhancedBasicAttack() {
@@ -176,7 +181,8 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
                         (e, al) -> al.hit(e, 2.59f, TOUGHNESS_DAMAGE_THREE_UNITs)));
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         FUAReady = true;
         increaseEnergy(5, "from E4");
         if (this.currentEnergy.get() >= this.ultCost) {
@@ -184,8 +190,8 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         }
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.fuaRng = new Random(getBattle().getSeed());
         getBattle().AdvanceEntity(this, 25);
     }
@@ -218,19 +224,20 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
         firstMove = firstTurn;
     }
 
-    private class MarchMasterPower extends PermPower {
+    public class MarchMasterPower extends PermPower {
         public MarchMasterPower() {
             this.setName(this.getClass().getSimpleName());
             this.setStat(PowerStat.SPEED_PERCENT, 10.8f);
         }
 
-        @Override
-        public void beforeAttack(AttackLogic attack) {
+        @Subscribe
+        public void beforeAttack(PreAllyAttack event) {
             SwordMarch.this.gainCharge(1);
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             if (attack.getTypes().contains(DamageType.BASIC) || attack.getTypes().contains(DamageType.SKILL)) {
                 List<AbstractEnemy> nonDead = attack.getTargets().stream().filter(e -> !e.isDead()).toList();
                 AbstractEnemy enemy;
@@ -244,8 +251,8 @@ public class SwordMarch extends AbstractCharacter<SwordMarch> implements SkillFi
             }
         }
 
-        @Override
-        public void onUseUltimate() {
+        @Subscribe
+        public void onUseUltimate(PreUltimate event) {
             if (!master.hasAttackingUltimate) {
                 SwordMarch.this.gainCharge(1);
             }

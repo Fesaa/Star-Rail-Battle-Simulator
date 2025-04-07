@@ -21,7 +21,7 @@ public abstract class RngProvider {
     public final Random aetherRng = new Random(seed);
     public final Random enemyEHRRng = new Random(seed);
 
-    
+
     public long getSeed() {
         return seed;
     }

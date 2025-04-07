@@ -1,13 +1,7 @@
 package art.ameliah.hsr.enemies;
 
-import art.ameliah.hsr.battleLogic.combat.enemy.EnemyAttackLogic;
 import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
-import art.ameliah.hsr.battleLogic.log.lines.enemy.EnemyAction;
-import art.ameliah.hsr.battleLogic.log.lines.enemy.SecondAction;
-import art.ameliah.hsr.characters.AbstractCharacter;
-
-import java.util.function.BiConsumer;
 
 public class PassiveEnemy extends AbstractEnemy {
 

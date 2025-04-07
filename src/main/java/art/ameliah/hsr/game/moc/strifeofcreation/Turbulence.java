@@ -2,6 +2,8 @@ package art.ameliah.hsr.game.moc.strifeofcreation;
 
 import art.ameliah.hsr.battleLogic.wave.moc.MocTurbulence;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.powers.TempPower;
 
 public class Turbulence extends MocTurbulence {
@@ -13,7 +15,7 @@ public class Turbulence extends MocTurbulence {
     @Override
     protected void trigger() {
         getBattle().getPlayers().forEach(p -> {
-            p.getCurrentEnergy().set(p.getCurrentEnergy().get() +  p.maxEnergy * 0.2f);
+            p.getCurrentEnergy().set(p.getCurrentEnergy().get() + p.maxEnergy * 0.2f);
 
             if (p instanceof Memosprite<?, ?> memosprite) {
                 memosprite.addPower(new DoubleTurn());
@@ -26,8 +28,8 @@ public class Turbulence extends MocTurbulence {
             super(1, "DoubleTurn");
         }
 
-        @Override
-        public void onEndTurn() {
+        @Subscribe
+        public void onEndTurn(TurnEndEvent event) {
             getBattle().AdvanceEntity(this.owner, 100);
             this.owner.removePower(this);
         }

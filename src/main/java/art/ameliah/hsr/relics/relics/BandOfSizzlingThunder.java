@@ -1,6 +1,8 @@
 package art.ameliah.hsr.relics.relics;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreSkill;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -20,8 +22,8 @@ public class BandOfSizzlingThunder extends AbstractRelicSetBonus {
         this.owner.addPower(PermPower.create(PowerStat.LIGHTNING_DMG_BOOST, 10, "Band Of Sizzling Thunder Lightning Bonus"));
     }
 
-    @Override
-    public void onUseSkill() {
+    @Subscribe
+    public void onUseSkill(PreSkill event) {
         if (!this.isFullSet) return;
 
         this.owner.addPower(TempPower.create(PowerStat.ATK_PERCENT, 20, 1, "Band of Sizzling Thunder 4PC"));

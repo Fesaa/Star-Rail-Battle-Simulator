@@ -1,8 +1,9 @@
 package art.ameliah.hsr.characters.harmony.robin;
 
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 
-public class DontWastedAAUltGoal extends UltGoal<Robin> {
+public class DontWastedAAUltGoal extends AbstractUltGoal<Robin> {
     public DontWastedAAUltGoal(Robin character) {
         super(character);
     }

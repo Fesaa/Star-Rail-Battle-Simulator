@@ -37,7 +37,7 @@ public class AGroundedAscent extends AbstractLightcone {
             }
         }
 
-        if (this.counter%2==0) {
+        if (this.counter % 2 == 0) {
             getBattle().generateSkillPoint(this.owner, 1);
         }
     }

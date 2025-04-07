@@ -1,6 +1,8 @@
 package art.ameliah.hsr.lightcones.erudition;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -19,8 +21,8 @@ public class GeniusesRepose extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.ATK_PERCENT, 32, "Geniuses Repose Attack Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 48, "Geniuses Repose Crit Damage Boost"));
     }
 }

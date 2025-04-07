@@ -1,7 +1,10 @@
 package art.ameliah.hsr.lightcones.harmony;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.character.PostUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
@@ -24,15 +27,15 @@ public class IfTimeWereAFlower extends AbstractLightcone {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_DAMAGE, 36, "If Time Were a Flower CD Boost"));
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent event) {
         this.owner.increaseEnergy(30, "If Time Were a Flower");
         this.presage.set(60);
         getBattle().registerForPlayers(p -> p.addPower(new IfTimeWereAFlowerListener()));
     }
 
-    @Override
-    public void afterUseUltimate() {
+    @Subscribe
+    public void afterUseUltimate(PostUltimate event) {
         float energy = this.presage.get() * 0.3f;
         float CD = this.presage.get();
 
@@ -46,9 +49,9 @@ public class IfTimeWereAFlower extends AbstractLightcone {
 
     public class IfTimeWereAFlowerListener extends PermPower {
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
-            IfTimeWereAFlower.this.presage.increase(attack.getTargets().size(), 60);
+        @Subscribe
+        public void afterAttack(PostAllyAttack e) {
+            IfTimeWereAFlower.this.presage.increase(e.getAttack().getTargets().size(), 60);
         }
     }
 }

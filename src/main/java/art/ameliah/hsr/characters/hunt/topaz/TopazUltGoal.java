@@ -1,8 +1,9 @@
 package art.ameliah.hsr.characters.hunt.topaz;
 
-import art.ameliah.hsr.characters.goal.UltGoal;
+import art.ameliah.hsr.characters.goal.AbstractUltGoal;
+import art.ameliah.hsr.characters.goal.UltGoalResult;
 
-public class TopazUltGoal extends UltGoal<Topaz> {
+public class TopazUltGoal extends AbstractUltGoal<Topaz> {
     public TopazUltGoal(Topaz character) {
         super(character);
     }

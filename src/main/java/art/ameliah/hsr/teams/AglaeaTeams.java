@@ -1,13 +1,10 @@
 package art.ameliah.hsr.teams;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
-import art.ameliah.hsr.characters.abundance.huohuo.Huohuo;
 import art.ameliah.hsr.characters.harmony.sunday.Sunday;
 import art.ameliah.hsr.characters.harmony.tribbie.Tribbie;
 import art.ameliah.hsr.characters.remembrance.aglaea.Aglaea;
-import art.ameliah.hsr.lightcones.abundance.SharedFeeling;
 import art.ameliah.hsr.lightcones.harmony.AGroundedAscent;
-import art.ameliah.hsr.lightcones.harmony.ButTheBattleIsntOver;
 import art.ameliah.hsr.lightcones.harmony.PoisedToBloom;
 import art.ameliah.hsr.lightcones.remembrance.TimeWovenIntoGold;
 import art.ameliah.hsr.relics.RelicStats;
@@ -16,7 +13,6 @@ import art.ameliah.hsr.relics.ornament.BrokenKeel;
 import art.ameliah.hsr.relics.ornament.SpringhtlyVonwacq;
 import art.ameliah.hsr.relics.ornament.TheWondrousBananAmusementPark;
 import art.ameliah.hsr.relics.relics.HeroOfTriumphantSong;
-import art.ameliah.hsr.relics.relics.PasserbyOfWanderingCloud;
 import art.ameliah.hsr.relics.relics.PoetOfMourningCollapse;
 import art.ameliah.hsr.relics.relics.SacerdosRelivedOrdeal;
 

@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.hunt.feixiao;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.log.lines.character.DoMove;
 import art.ameliah.hsr.battleLogic.log.lines.character.GainEnergy;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -17,6 +16,10 @@ import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingDebuffGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.DontUltMissingPowerGoal;
 import art.ameliah.hsr.characters.goal.shared.ult.UltAtEndOfBattle;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostAllyAttack;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
@@ -31,12 +34,10 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
 
     public static final String NAME = "Feixiao";
     public static final int STACK_THRESHOLD = 2;
-
+    final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
     protected CounterMetric<Float> gainedStacks = metricRegistry.register(CounterMetric.newFloatCounter("Gained stacks", "Amount of Talent Stacks gained"));
     protected CounterMetric<Float> wastedStacks = metricRegistry.register(CounterMetric.newFloatCounter("Wasted stacks", "Amount of overcapped Stacks"));
     protected CounterMetric<Integer> stacks = metricRegistry.register(CounterMetric.newIntegerCounter("Stacks", "Left over stacks"));
-
-    final PermPower ultBreakEffBuff = PermPower.create(PowerStat.WEAKNESS_BREAK_EFF, 100, "Fei Ult Break Eff Buff");
     private Random fuaRng;
     private boolean FUAReady = true;
 
@@ -144,7 +145,8 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
                 }).afterAttackHook(() -> this.removePower(ultBreakEffBuff)).execute();
     }
 
-    public void onTurnStart() {
+    @Subscribe
+    public void onTurnStart(TurnStartEvent e) {
         if (this.currentEnergy.get() >= ultCost) {
             tryUltimate(); // check for ultimate activation at start of turn as well
         }
@@ -154,7 +156,8 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         FUAReady = true;
     }
 
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.fuaRng = new Random(getBattle().getSeed());
         gainStackEnergy(3);
         getBattle().registerForPlayers(p -> p.addPower(new FeiTalentPower()));
@@ -172,7 +175,7 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         this.gainStackEnergy(1);
     }
 
-    private static class FeiCritDmgPower extends AbstractPower {
+    public static class FeiCritDmgPower extends AbstractPower {
         public FeiCritDmgPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
@@ -189,14 +192,15 @@ public class Feixiao extends AbstractCharacter<Feixiao> {
         }
     }
 
-    private class FeiTalentPower extends AbstractPower {
+    public class FeiTalentPower extends AbstractPower {
         public FeiTalentPower() {
             this.setName(this.getClass().getSimpleName());
             this.lastsForever = true;
         }
 
-        @Override
-        public void afterAttack(AttackLogic attack) {
+        @Subscribe
+        public void afterAttack(PostAllyAttack event) {
+            var attack = event.getAttack();
             if (!Feixiao.this.hasPower(ultBreakEffBuff.getName())) {
                 Feixiao.this.increaseStack(1);
             }

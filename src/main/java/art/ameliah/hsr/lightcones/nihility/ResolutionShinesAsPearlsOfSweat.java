@@ -1,8 +1,9 @@
 package art.ameliah.hsr.lightcones.nihility;
 
-import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
@@ -13,9 +14,9 @@ public class ResolutionShinesAsPearlsOfSweat extends AbstractLightcone {
         super(953, 476, 331, owner);
     }
 
-    @Override
-    public void beforeAttack(AttackLogic attack) {
-        for (AbstractEnemy enemy : attack.getTargets()) {
+    @Subscribe
+    public void beforeAttack(PreAllyAttack e) {
+        for (AbstractEnemy enemy : e.getAttack().getTargets()) {
             if (!enemy.hasPower(Ensnared.NAME)) {
                 enemy.addPower(new Ensnared());
             }

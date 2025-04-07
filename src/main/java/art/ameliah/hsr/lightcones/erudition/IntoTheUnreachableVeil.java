@@ -2,8 +2,11 @@ package art.ameliah.hsr.lightcones.erudition;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
-import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.enemies.AbstractEnemy;
+import art.ameliah.hsr.events.Subscribe;
+import art.ameliah.hsr.events.character.PostUltimate;
+import art.ameliah.hsr.events.character.PreUltimate;
+import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -16,18 +19,18 @@ public class IntoTheUnreachableVeil extends AbstractLightcone {
         super(952, 635, 463, owner);
     }
 
-    @Override
-    public void onCombatStart() {
+    @Subscribe
+    public void onCombatStart(CombatStartEvent e) {
         this.owner.addPower(PermPower.create(PowerStat.CRIT_CHANCE, 12, "IntoTheUnreachableVeil CR"));
     }
 
-    @Override
-    public void onUseUltimate() {
+    @Subscribe
+    public void onUseUltimate(PreUltimate e) {
         this.owner.addPower(new IntoTheUnreachableVeilPower());
     }
 
-    @Override
-    public void afterUseUltimate() {
+    @Subscribe
+    public void afterUseUltimate(PostUltimate e) {
         if (this.owner.maxEnergy < 140) {
             return;
         }

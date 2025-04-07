@@ -10,6 +10,8 @@ public class TeamCharacter {
 
     public CharacterConfig character;
 
+    public Integer lcOverwriteId;
+
     public enum TeamCharacterType {
         REFERENCE,
         NEW
