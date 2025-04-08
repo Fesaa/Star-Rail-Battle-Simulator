@@ -39,6 +39,16 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
     private AbstractCharacter<?> multiSource = null;
     private Float computedDmg = null;
     private Float computedToughness = null;
+    @Setter
+    @Nullable
+    private Float overwriteBaseDmg;
+
+    public static AllyHit fixedHit(AttackLogic al, AbstractCharacter<?> source, AbstractEnemy target, float dmg,
+                                   float toughnessDmg, ElementType elementType, List<DamageType> types) {
+        var hit = new AllyHit(al, source, target, 0, MultiplierStat.NONE, types, toughnessDmg, elementType, false);
+        hit.setOverwriteBaseDmg(dmg);
+        return hit;
+    }
 
     public float finalToughnessReduction() {
         if (this.computedToughness != null) {
@@ -194,11 +204,16 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
     }
 
     private float baseDamage() {
+        if (this.overwriteBaseDmg != null) {
+            return this.overwriteBaseDmg;
+        }
+
         AbstractCharacter<?> source = this.multiSource == null ? this.source : this.multiSource;
         return switch (this.stat) {
             case ATK -> source.getFinalAttack();
             case HP -> source.getFinalHP();
             case DEF -> source.getFinalDefense();
+            case NONE -> 0;
         } * this.multiplier;
     }
 

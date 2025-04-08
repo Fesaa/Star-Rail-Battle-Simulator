@@ -8,6 +8,8 @@ import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
 import art.ameliah.hsr.characters.goal.shared.turn.AlwaysBasicGoal;
 import art.ameliah.hsr.events.character.MemospriteDeath;
+import art.ameliah.hsr.events.character.PostMemoSkill;
+import art.ameliah.hsr.events.character.PreMemoSkill;
 import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -68,7 +70,11 @@ public abstract class Memosprite<C extends Memosprite<C, M>, M extends Memomaste
 
         getBattle().addToLog(new DoMove(this, MoveType.MEMOSPRITE_SKILL));
         this.increaseEnergy(10, BASIC_ENERGY_GAIN + " (from memo)");
+        this.getEventBus().fire(new PreMemoSkill());
+        this.getMaster().getEventBus().fire(new PreMemoSkill());
         this.memoSkill();
+        this.getEventBus().fire(new PostMemoSkill());
+        this.getMaster().getEventBus().fire(new PostMemoSkill());
     }
 
     @Override

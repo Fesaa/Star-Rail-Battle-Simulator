@@ -11,6 +11,7 @@ import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.events.character.PostDoHit;
+import art.ameliah.hsr.events.character.PostMemospriteAttack;
 import art.ameliah.hsr.events.character.PreAllyAttack;
 import art.ameliah.hsr.events.character.PreDoHit;
 import art.ameliah.hsr.events.character.PreMemospriteAttack;
@@ -43,8 +44,7 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         AttackLogic attackLogic = new AttackLogic(this.source, this.targets, this.types, this, this::handleHit);
 
         this.source.getEventBus().fire(new PreAllyAttack(attackLogic));
-        if (this.source instanceof Memosprite) {
-            Memosprite<?, ?> memosprite = (Memosprite<?, ?>) source;
+        if (this.source instanceof Memosprite<?, ?> memosprite) {
             memosprite.getMaster().getEventBus().fire(new PreMemospriteAttack(attackLogic));
         }
         this.targets.forEach(t -> t.getEventBus().fire(new PreEnemyAttacked(attackLogic)));
@@ -52,6 +52,9 @@ public class Attack extends AbstractAttack<AbstractCharacter<?>, AbstractEnemy, 
         dh.getLogic().accept(attackLogic);
 
         this.source.getEventBus().fire(new PostAllyAttack(attackLogic));
+        if (this.source instanceof Memosprite<?, ?> memosprite) {
+            memosprite.getMaster().getEventBus().fire(new PostMemospriteAttack(attackLogic, memosprite));
+        }
         this.targets.addAll(attackLogic.getTargets());
 
         this.targets.forEach(t -> t.getEventBus().fire(new PostEnemyAttacked(attackLogic)));

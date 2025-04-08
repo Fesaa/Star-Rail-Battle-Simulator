@@ -430,7 +430,7 @@ public abstract class AbstractCharacter<C extends AbstractCharacter<C>> extends 
         float actual = amount == overflow ? 0 : amount - overflow;
         getBattle().addToLog(new HealthChange(this, actual, amount));
         float gained = amount - overflow;
-        this.eventBus.fire(new HPGain(gained, overflow));
+        this.eventBus.fire(new HPGain(source, this, gained, overflow));
     }
 
     public EnemyHitResult hit(EnemyHit hit) {

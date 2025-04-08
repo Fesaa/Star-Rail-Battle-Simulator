@@ -131,14 +131,17 @@ public class AttackLogic {
     }
 
     public HitResult hit(AbstractCharacter<?> source, AbstractEnemy target, float mul, MultiplierStat stat, float toughness, ElementType elementType, boolean ignoreWeakness, List<DamageType> types) {
-        if (!this.targets.contains(target)) {
-            // This is allowed for fixed dmg
-            throw new IllegalStateException("Cannot hit target that isn't part of Attack");
-        }
-
         var hit = new AllyHit(this, source, target, mul, stat, types, toughness, elementType, ignoreWeakness);
         if (this.multiSource != null) {
             hit.setMultiSource(this.multiSource);
+        }
+        return this.addHit(hit);
+    }
+
+    public HitResult hit(AllyHit hit) {
+        if (!this.targets.contains(hit.getTarget())) {
+            // This is allowed for fixed dmg
+            throw new IllegalStateException("Cannot hit target that isn't part of Attack");
         }
         return this.addHit(hit);
     }

@@ -28,6 +28,7 @@ import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
 import art.ameliah.hsr.characters.preservation.fuxuan.FuXuan;
 import art.ameliah.hsr.characters.remembrance.aglaea.Aglaea;
 import art.ameliah.hsr.characters.remembrance.castorice.Castorice;
+import art.ameliah.hsr.characters.remembrance.hyacine.Hyacine;
 import art.ameliah.hsr.characters.remembrance.trailblazer.Trailblazer;
 
 public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
@@ -64,6 +65,7 @@ public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
         register(8007, Trailblazer.class);
         register(8008, Trailblazer.class);
         register(1406, Cipher.class);
+        register(1409, Hyacine.class);
     }
 
 }

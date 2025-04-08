@@ -93,6 +93,7 @@ import art.ameliah.hsr.lightcones.preservation.ThisIsMe;
 import art.ameliah.hsr.lightcones.preservation.TrendOfTheUniversalMarket;
 import art.ameliah.hsr.lightcones.preservation.WeAreWildfire;
 import art.ameliah.hsr.lightcones.remembrance.MakeFarewellsMoreBeautiful;
+import art.ameliah.hsr.lightcones.remembrance.MayRainbowsRemainInTheSky;
 import art.ameliah.hsr.lightcones.remembrance.TimeWovenIntoGold;
 import art.ameliah.hsr.lightcones.remembrance.VictoryInABlink;
 
@@ -194,6 +195,7 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         register(21050, VictoryInABlink.class);
         register(23040, MakeFarewellsMoreBeautiful.class);
         register(23043, LiesAflutterInTheWind.class);
+        register(23042, MayRainbowsRemainInTheSky.class);
     }
 
     public AbstractLightcone getLightCone(int id, AbstractCharacter<?> owner) throws Exception {
