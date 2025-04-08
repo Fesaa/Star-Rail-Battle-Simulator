@@ -13,6 +13,8 @@ repositories {
 dependencies {
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("com.google.code.gson:gson:2.11.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.24.3")
+    implementation("org.apache.logging.log4j:log4j-api:2.24.3")
 
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")

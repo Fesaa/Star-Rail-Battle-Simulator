@@ -1,0 +1,249 @@
+{
+  "battles": [
+    {
+      "key": "Castorice/RuanMei/RMC/HH",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        }
+      ]
+    },
+    {
+      "key": "Castorice/RuanMei e1/RMC/HH",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 5
+        }
+      ]
+    },
+    {
+      "key": "Castorice/RuanMei/RMC/Hyacine",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        }
+      ]
+    },
+    {
+      "key": "Castorice/RuanMei/RMC/Hyacine E1",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 2
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        }
+      ]
+    },
+    {
+      "key": "Castorice/RuanMei E1/RMC/Hyacine",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 6
+        }
+      ]
+    },
+    {
+      "key": "Castorice/RuanMei E1/RMC/Hyacine E1",
+      "team": [
+        {
+          "type": "REFERENCE",
+          "referenceId": 1,
+          "isDps": true
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 3
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 4
+        },
+        {
+          "type": "REFERENCE",
+          "referenceId": 7
+        }
+      ]
+    }
+  ],
+  "characters": {
+    "1": {
+      "name": "Castorice",
+      "id": 1407,
+      "lcId": 23040,
+      "relics": [
+        {"id":  124, "fullSet":  true},
+        {"id": 319}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "HP_PER", "HP_PER", "HP_PER"],
+      "subStats": [
+        {"stat": "CRIT_CHANCE", "amount": 37.1},
+        {"stat": "CRIT_DAMAGE", "amount": 104.7},
+        {"stat": "HP_PERCENT", "amount": 12},
+        {"stat":  "FLAT_HP", "amount": 117}
+      ]
+    },
+    "2": {
+      "name": "Ruan Mei",
+      "id": 1303,
+      "lcId": 21004,
+      "relics": [
+        {"id":  111, "fullSet":  false},
+        {"id":  118, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["HP_PER", "HP_PER", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "BREAK_EFFECT", "amount": 70.5},
+        {"stat": "FLAT_SPEED", "amount": 11.8},
+        {"stat": "HP_PERCENT", "amount": 12},
+        {"stat": "HP_FLAT", "amount": 405}
+      ]
+    },
+    "3": {
+      "name": "Ruan Mei E1",
+      "id": 1303,
+      "lcId": 21004,
+      "eidolon": 1,
+      "relics": [
+        {"id":  111, "fullSet":  false},
+        {"id":  118, "fullSet":  false},
+        {"id": 308}
+      ],
+      "mainStats": ["HP_PER", "HP_PER", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "BREAK_EFFECT", "amount": 70.5},
+        {"stat": "FLAT_SPEED", "amount": 11.8},
+        {"stat": "HP_PERCENT", "amount": 12},
+        {"stat": "HP_FLAT", "amount": 405}
+      ]
+    },
+    "4": {
+      "name": "Remembrance Trailblazer",
+      "id": 8008,
+      "lcId": 21050,
+      "relics": [
+        {"id":  123, "fullSet":  true},
+        {"id": 302}
+      ],
+      "mainStats": ["CRIT_DAMAGE", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat": "CRIT_DAMAGE", "amount": 35.4},
+        {"stat": "FLAT_SPEED", "amount": 25}
+      ]
+    },
+    "5":{
+      "name": "HuoHuo",
+      "id": 1217,
+      "lcId": 22001,
+      "relics": [
+        { "id": 114, "fullSet": false },
+        { "id": 113, "fullSet": false },
+        { "id": 320}
+      ],
+      "mainStats": ["HEALING", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat":  "HP_PERCENT", "amount":  60},
+        {"stat":  "FLAT_SPEED", "amount":  10}
+      ]
+    },
+    "6":{
+      "name": "Hyacine",
+      "id": 1409,
+      "lcId": 23042,
+      "relics": [
+        { "id": 114, "fullSet": false },
+        { "id": 113, "fullSet": false },
+        { "id": 320}
+      ],
+      "mainStats": ["HEALING", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat":  "HP_PERCENT", "amount":  30},
+        {"stat":  "FLAT_SPEED", "amount":  20}
+      ]
+    },
+    "7":{
+      "name": "Hyacine E1",
+      "id": 1409,
+      "lcId": 23042,
+      "eidolon": 1,
+      "relics": [
+        { "id": 114, "fullSet": false },
+        { "id": 113, "fullSet": false },
+        { "id": 320}
+      ],
+      "mainStats": ["HEALING", "SPEED", "HP_PER", "ERR"],
+      "subStats": [
+        {"stat":  "HP_PERCENT", "amount":  30},
+        {"stat":  "FLAT_SPEED", "amount":  20}
+      ]
+    }
+  }
+}

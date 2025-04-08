@@ -1,10 +1,13 @@
 package art.ameliah.hsr.metrics;
 
+import lombok.extern.log4j.Log4j2;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 public class MetricRegistry {
 
     private final Object owner;
@@ -32,8 +35,7 @@ public class MetricRegistry {
      */
     public <T extends Metric> T register(T metric) {
         if (this.metrics.containsKey(metric.getKey())) {
-            System.out.printf("[WARN] %s is replacing a metric by sharing the same key (%s)\n",
-                    metric.getClass().getSimpleName(), metric.getKey());
+            log.warn("{} is replacing a metric by sharing the same key {}", metric.getClass().getSimpleName(), metric.getKey());
         }
         this.metrics.put(metric.getKey(), metric);
         return metric;

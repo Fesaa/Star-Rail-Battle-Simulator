@@ -43,11 +43,7 @@ public class MayRainbowsRemainInTheSky extends AbstractLightcone {
     @Subscribe
     public void onMemoAttack(PostMemospriteAttack event) {
         event.getAttack().getTargets().forEach(e -> {
-            event.getMemo().doAttack(DamageType.ADDITIONAL_DAMAGE, dl -> {
-                dl.logic(e, al -> {
-                    al.hit(AllyHit.fixedHit(al, event.getMemo(), e, 2.5f * this.tally, 0, ElementType.WIND,  List.of(DamageType.ADDITIONAL_DAMAGE)));
-                });
-            });
+            event.getAttack().hit(AllyHit.fixedHit(event.getAttack(), event.getMemo(), e, 2.5f * this.tally, 0, ElementType.WIND,  List.of(DamageType.ADDITIONAL_DAMAGE)));
         });
     }
 

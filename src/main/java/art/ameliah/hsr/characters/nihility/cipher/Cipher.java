@@ -1,6 +1,5 @@
 package art.ameliah.hsr.characters.nihility.cipher;
 
-import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.combat.ally.AttackLogic;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.battleLogic.log.lines.entity.GainCharge;
@@ -23,9 +22,11 @@ import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Comparators;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.function.BiConsumer;
 
+@Log4j2
 public class Cipher extends AbstractCharacter<Cipher> {
 
     public static final String NAME = "Cipher";
@@ -194,7 +195,7 @@ public class Cipher extends AbstractCharacter<Cipher> {
                     .max(Comparators::CompareHealth);
 
             next.ifPresentOrElse(e -> e.addPower(this), () -> {
-                System.out.println("[WARN] No new enemy to become Regular Customer");
+                log.warn("No new enemy to become Regular Customer");
             });
 
 

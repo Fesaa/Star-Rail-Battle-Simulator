@@ -7,6 +7,9 @@ import art.ameliah.hsr.characters.Eidolon;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
+import art.ameliah.hsr.characters.goal.shared.target.enemy.HighestEnemyTargetGoal;
+import art.ameliah.hsr.characters.goal.shared.turn.AlwaysSkillGoal;
+import art.ameliah.hsr.characters.goal.shared.ult.AlwaysUltGoal;
 import art.ameliah.hsr.characters.remembrance.Memomaster;
 import art.ameliah.hsr.characters.remembrance.Memosprite;
 import art.ameliah.hsr.enemies.AbstractEnemy;
@@ -23,10 +26,12 @@ import art.ameliah.hsr.powers.AbstractPower;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TracePower;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Log4j2
 public class Hyacine extends Memomaster<Hyacine> {
 
     public static final String NAME = "Hyacine";
@@ -48,6 +53,10 @@ public class Hyacine extends Memomaster<Hyacine> {
         this.addPower(PermPower.create(PowerStat.EFFECT_RES, 50, "Gentle Thunderstorm"));
         this.addPower(new CloudyGrin());
         this.addPower(new TempestuousHalt());
+
+        this.registerGoal(0, new AlwaysUltGoal<>(this));
+        this.registerGoal(0, new AlwaysSkillGoal<>(this));
+        this.registerGoal(0, new HighestEnemyTargetGoal<>(this));
     }
 
     @Override
@@ -120,6 +129,7 @@ public class Hyacine extends Memomaster<Hyacine> {
             } else {
                 p.increaseHealth(this, 0.1f * this.getFinalHP() + 200);
             }
+            p.addPower(new WeWhoFlyIntoTwilight());
         });
         this.GentleThunderstorm();
     }
@@ -145,6 +155,7 @@ public class Hyacine extends Memomaster<Hyacine> {
             return;
         }
 
+        log.debug("Ika taking action after Hyacine took action");
         this.ika.takeTurn();
     }
 
@@ -158,6 +169,7 @@ public class Hyacine extends Memomaster<Hyacine> {
             return;
         }
 
+        log.debug("Ika taking action after Hyacine used her ult");
         this.ika.takeTurn();
     }
 

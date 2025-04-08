@@ -12,6 +12,7 @@ import art.ameliah.hsr.enemies.AbstractEnemy;
 import art.ameliah.hsr.enemies.game.amphoreus.NoontideGryphon;
 import art.ameliah.hsr.enemies.game.stellaronhunters.Kafka;
 import art.ameliah.hsr.metrics.DmgContributionMetric;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,12 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+@Log4j2
 public class CastoriceSim {
 
     private static final Map<String, DmgContributionMetric> metrics = new HashMap<>();
 
     public static void run() {
-        var battles = ConfigLoader.loadTeams("castorice_sims");
+        //var battles = ConfigLoader.loadTeams("castorice_sims");
+        var battles = ConfigLoader.loadTeams("hyacine");
         battles.forEach(CastoriceSim::BattleConsumer);
 
         System.out.println();
@@ -62,7 +65,7 @@ public class CastoriceSim {
         Battle battle = getTestBattle();
         battle.setPlayerTeam(cfg.characters);
         battle.setLogger(getLogger(cfg.getKey()));
-        System.out.println("Running: " + cfg.getKey());
+        log.info("Running {}", cfg.getKey());
         battle.Start(250);
         DmgContributionMetric metric = battle.getMetricRegistry().getMetric("battle-dmg-contribution");
         metrics.put(cfg.getKey(), metric);
@@ -77,7 +80,7 @@ public class CastoriceSim {
 
         PrintStream printStream;
         try {
-            printStream = new PrintStream(new FileOutputStream(path + "/" + key + ".log"));
+            printStream = new PrintStream(new FileOutputStream(path + "/" + key.replace("/", "-") + ".log"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

@@ -46,7 +46,9 @@ import art.ameliah.hsr.relics.relics.TheWindSoaringValorous;
 import art.ameliah.hsr.relics.relics.ThiefOfShootingMeteor;
 import art.ameliah.hsr.relics.relics.WastelandOfBanditryDesert;
 import art.ameliah.hsr.relics.relics.WatchMakerMasterOfDreamMachinations;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
 
     public static final RelicSetRegistry INSTANCE = new RelicSetRegistry();
@@ -107,7 +109,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
             try {
                 return relicSet.getConstructor(AbstractCharacter.class, boolean.class).newInstance(owner, fullSet);
             } catch (NoSuchMethodException ignored) {
-                System.out.printf("[WARN] %s is being constructed without fullSet boolean. If this is not an ornament, this may lead to bugs.\n", relicSet.getSimpleName());
+                log.warn("{} is being constructed without fullSet boolean. If this is not an ornament, this may lead to bugs.", relicSet.getSimpleName());
                 return registry.get(id).getConstructor(AbstractCharacter.class).newInstance(owner);
             }
         }

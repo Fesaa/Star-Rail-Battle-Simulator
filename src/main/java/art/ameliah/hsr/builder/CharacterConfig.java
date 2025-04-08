@@ -1,6 +1,7 @@
 package art.ameliah.hsr.builder;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
+import art.ameliah.hsr.characters.Eidolon;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.registry.LightconeRegistry;
@@ -11,14 +12,18 @@ import art.ameliah.hsr.relics.Stats;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
 @Getter
 @Setter
+@Log4j2
 public class CharacterConfig {
 
     public int id;
+
+    public int eidolon;
 
     public int lcId;
 
@@ -55,6 +60,10 @@ public class CharacterConfig {
         }
 
         character.addPower(statsPower);
+
+        Eidolon eidolon = Eidolon.fromValue(this.eidolon);
+        log.debug("Setting eidolon for {} to {}", character.getName(), eidolon);
+        character.setEidolon(eidolon);
         return character;
     }
 

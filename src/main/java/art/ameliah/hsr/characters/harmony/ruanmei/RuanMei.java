@@ -2,6 +2,7 @@ package art.ameliah.hsr.characters.harmony.ruanmei;
 
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.characters.Eidolon;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
@@ -145,6 +146,8 @@ public class RuanMei extends AbstractCharacter<RuanMei> implements SkillCounterT
         public RuanMeiUltPower() {
             super(ULT_POWER_NAME);
             this.setStat(PowerStat.RES_PEN, 25);
+            this.setConditionalStat(PowerStat.DEFENSE_IGNORE,
+                    _ -> RuanMei.this.eidolon.isActivated(Eidolon.E1) ? 20f : 0f);
         }
 
         @Subscribe

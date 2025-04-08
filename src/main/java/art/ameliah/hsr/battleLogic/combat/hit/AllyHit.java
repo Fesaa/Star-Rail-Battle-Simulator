@@ -143,6 +143,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
         for (var power : this.source.powerList) {
             defIgnore += power.getConditionDefenseIgnore(this.source, this.target, this.types);
+            defIgnore += power.getTotalStat(PowerStat.DEFENSE_IGNORE);
         }
 
         float nominator = (this.target.getLevel() + 20) * (1 - defReduction / 100 - defIgnore / 100) + this.source.level + 20;

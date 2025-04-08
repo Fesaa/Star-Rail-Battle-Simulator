@@ -18,4 +18,13 @@ public enum Eidolon {
     public boolean isActivated(Eidolon eidolon) {
         return eidolon.value <= this.value;
     }
+
+    public static Eidolon fromValue(int value) {
+        for (var e : Eidolon.values()) {
+            if (e.value == value) {
+                return e;
+            }
+        }
+        return E0;
+    }
 }
