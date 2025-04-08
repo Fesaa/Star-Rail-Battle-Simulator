@@ -14,6 +14,7 @@ import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.MemospriteDeath;
 import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.events.character.PostSummon;
+import art.ameliah.hsr.events.character.PostUltimate;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnEndEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
@@ -136,6 +137,19 @@ public class Hyacine extends Memomaster<Hyacine> {
 
     @Subscribe
     public void ikaActions(TurnEndEvent e) {
+        if (this.PetrichoricClearSkies.get() == 0) {
+            return;
+        }
+
+        if (this.ika == null) {
+            return;
+        }
+
+        this.ika.takeTurn();
+    }
+
+    @Subscribe
+    public void ikaActionsUlt(PostUltimate e) {
         if (this.PetrichoricClearSkies.get() == 0) {
             return;
         }
