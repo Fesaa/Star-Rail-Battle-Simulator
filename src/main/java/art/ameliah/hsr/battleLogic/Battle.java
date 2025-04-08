@@ -775,6 +775,10 @@ public class Battle extends RngProvider implements IBattle {
 
     @Override
     public void DecreaseSpeed(AbstractEntity entity, AbstractPower speedPower) {
+        if (speedPower == null) {
+            return;
+        }
+
         float baseAV = entity.getBaseAV();
         Float currAV = actionValueMap.get(entity);
         if (currAV == null) {

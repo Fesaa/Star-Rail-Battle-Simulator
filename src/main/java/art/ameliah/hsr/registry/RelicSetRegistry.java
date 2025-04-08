@@ -109,7 +109,7 @@ public class RelicSetRegistry extends AbstractRegistry<AbstractRelicSetBonus> {
             try {
                 return relicSet.getConstructor(AbstractCharacter.class, boolean.class).newInstance(owner, fullSet);
             } catch (NoSuchMethodException ignored) {
-                log.warn("{} is being constructed without fullSet boolean. If this is not an ornament, this may lead to bugs.", relicSet.getSimpleName());
+                log.debug("{} is being constructed without fullSet boolean. If this is not an ornament, this may lead to bugs.", relicSet.getSimpleName());
                 return registry.get(id).getConstructor(AbstractCharacter.class).newInstance(owner);
             }
         }

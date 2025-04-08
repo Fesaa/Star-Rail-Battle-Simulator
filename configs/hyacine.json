@@ -1,7 +1,7 @@
 {
   "battles": [
     {
-      "key": "Castorice/RuanMei/RMC/HH",
+      "key": "Castorice/RuanMei/RMC/HH E1",
       "team": [
         {
           "type": "REFERENCE",
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "key": "Castorice/RuanMei e1/RMC/HH",
+      "key": "Castorice/RuanMei e1/RMC/HH E1",
       "team": [
         {
           "type": "REFERENCE",
@@ -203,6 +203,7 @@
       "name": "HuoHuo",
       "id": 1217,
       "lcId": 22001,
+      "eidolon": 1,
       "relics": [
         { "id": 114, "fullSet": false },
         { "id": 113, "fullSet": false },

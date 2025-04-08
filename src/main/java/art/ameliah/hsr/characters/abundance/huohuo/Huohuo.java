@@ -3,6 +3,7 @@ package art.ameliah.hsr.characters.abundance.huohuo;
 import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import art.ameliah.hsr.characters.Eidolon;
 import art.ameliah.hsr.characters.ElementType;
 import art.ameliah.hsr.characters.MoveType;
 import art.ameliah.hsr.characters.Path;
@@ -17,6 +18,7 @@ import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.AbstractPower;
+import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
 import art.ameliah.hsr.powers.TempPower;
 import art.ameliah.hsr.powers.TracePower;
@@ -24,6 +26,7 @@ import art.ameliah.hsr.powers.TracePower;
 public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTurnGoal.SkillCounterCharacter {
 
     private static final String NAME = "Huohuo";
+    private static final String E1_SPEED_NAME = "Anchored to Vessel, Specters Nestled";
 
     protected CounterMetric<Integer> talentProcs = metricRegistry.register(CounterMetric.newIntegerCounter("hh-talent-proc", "Number of Talent Procs"));
     private int talentProcCooldown = 6;
@@ -60,10 +63,15 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     }
 
     public void useSkill() {
-        this.talentCounter = 2;
+        this.talentCounter = this.eidolon.isActivated(Eidolon.E1) ? 3 : 2;
         this.talentProcCooldown = 6;
         for (AbstractCharacter<?> character : getBattle().getPlayers()) {
             character.addPower(new HuohuoTalentPower());
+
+            if (this.eidolon.isActivated(Eidolon.E1)) {
+                getBattle().IncreaseSpeed(character, PermPower.create(PowerStat.SPEED_PERCENT, 12, E1_SPEED_NAME));
+            }
+
         }
         int idx = this.getAllyTargetIdx();
 
@@ -92,7 +100,13 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
     @Subscribe
     public void onCombatStart(CombatStartEvent e) {
         talentCounter = 1;
-        getBattle().registerForPlayers(p -> p.addPower(new HuohuoTalentPower()));
+        getBattle().doOnceForPlayers(p -> {
+            p.addPower(new HuohuoTalentPower());
+            if (this.eidolon.isActivated(Eidolon.E1)) {
+                getBattle().IncreaseSpeed(p, PermPower.create(PowerStat.SPEED_PERCENT, 12, E1_SPEED_NAME));
+            }
+        });
+
     }
 
     @Subscribe
@@ -102,6 +116,11 @@ public class Huohuo extends AbstractCharacter<Huohuo> implements SkillCounterTur
         if (talentCounter <= 0) {
             for (AbstractCharacter<?> character : getBattle().getPlayers()) {
                 character.removePower(HuohuoTalentPower.NAME);
+
+                if (this.eidolon.isActivated(Eidolon.E1)) {
+                    getBattle().DecreaseSpeed(character, character.getPower(E1_SPEED_NAME));
+                }
+
             }
         }
         tryUltimate();
