@@ -15,6 +15,7 @@ import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.DeathEvent;
+import art.ameliah.hsr.events.combat.WaveStartEvent;
 import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
@@ -33,7 +34,7 @@ public class Cipher extends AbstractCharacter<Cipher> {
     protected final CounterMetric<Integer> fuaCount = metricRegistry.register(CounterMetric.newIntegerCounter("cipher::talent-fua-count"));
 
     public Cipher() {
-        super(NAME, 931, 601, 388, 113, 80, ElementType.QUANTUM, 100, 100, Path.NIHILITY);
+        super(NAME, 931, 640, 509, 106, 80, ElementType.QUANTUM, 100, 100, Path.NIHILITY);
 
         this.addPower(new TracePower()
                 .setStat(PowerStat.FLAT_SPEED, 14)
@@ -42,6 +43,7 @@ public class Cipher extends AbstractCharacter<Cipher> {
         this.hasAttackingUltimate = true;
 
         this.addPower(new InsightForSmiles());
+
     }
 
     @Subscribe
@@ -50,6 +52,16 @@ public class Cipher extends AbstractCharacter<Cipher> {
                 .max(Comparators::CompareHealth)
                 .orElseThrow()
                 .addPower(new HospitableDolos());
+
+        getBattle().registerForEnemy(e -> {
+            e.addPower(PermPower.create(PowerStat.DEFENSE_REDUCTION, 30, "Ultimate Switcheroo"));
+            e.addPower(new Rogues());
+        });
+    }
+
+    @Subscribe
+    public void onWaveStart(WaveStartEvent e) {
+        getBattle().AdvanceEntity(this, 10);
     }
 
     @Override
@@ -89,11 +101,11 @@ public class Cipher extends AbstractCharacter<Cipher> {
         this.startAttack().handle(DamageType.ULTIMATE, dl -> {
             var idx = this.getTargetIdx(MoveType.ULTIMATE);
 
-            dl.logic(idx, this.ultHit(1.25f, TOUGHNESS_DAMAGE_TWO_UNITS));
+            dl.logic(idx, this.ultHit(1.25f, TOUGHNESS_DAMAGE_THREE_UNITs));
 
-            dl.logic(idx-1, this.ultHit(0.4f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dl.logic(idx-1, this.ultHit(0.4f, TOUGHNESS_DAMAGE_TWO_UNITS));
             dl.logic(idx, this.ultHit(0.4f, 0));
-            dl.logic(idx+1, this.ultHit(0.4f, TOUGHNESS_DAMAGE_SINGLE_UNIT));
+            dl.logic(idx+1, this.ultHit(0.4f, TOUGHNESS_DAMAGE_TWO_UNITS));
         }).afterAttackHook(() -> {
             this.tally.set((double) 0);
             this.fuaCount.set(eidolon.isActivated(Eidolon.E1) ? 3 : 1);
@@ -105,6 +117,24 @@ public class Cipher extends AbstractCharacter<Cipher> {
             al.hit(e, mul, t);
             al.hitFixed(Cipher.this, e, (float) (0.25f * tally.get()));
         };
+    }
+
+    public static class GodstepMarvelousShoes extends PermPower {
+        public GodstepMarvelousShoes() {
+            super("Godstep Marvelous Shoes");
+
+            this.setConditionalStat(PowerStat.CRIT_CHANCE, c -> {
+                if (c.getFinalSpeed() >= 170) {
+                    return 50f;
+                }
+
+                if (c.getFinalSpeed() >= 140) {
+                    return 25f;
+                }
+
+                return 0f;
+            });
+        }
     }
 
     public class InsightForSmiles extends PermPower {
@@ -128,10 +158,34 @@ public class Cipher extends AbstractCharacter<Cipher> {
 
     }
 
+    public class Rogues extends PermPower {
+        public Rogues() {
+            super("Rogues");
+        }
+
+        @Subscribe
+        public void afterAttacked(PostEnemyAttacked e) {
+            if (this.getOwner().hasPower(HospitableDolos.NAME)) {
+                return;
+            }
+
+            var dmg = e.getAttack().getAttack().getHitResults().stream()
+                    .filter(hitRes -> !hitRes.getHit().getTypes().contains(DamageType.TRUE_DAMAGE))
+                    .mapToDouble(HitResult::getDmgDealt)
+                    .sum();
+
+            var tallyCount = dmg * 0.05f * HospitableDolos.getGodstepMarvelousShoesMul(Cipher.this);
+            tally.increase(tallyCount);
+            getBattle().addToLog(new GainCharge(Cipher.this, tally, "Hospitable Dolos Tally"));
+        }
+    }
+
     public class HospitableDolos extends PermPower {
 
+        public static final String NAME = "Hospitable Dolos";
+
         public HospitableDolos() {
-            super("Hospitable Dolos");
+            super(NAME);
         }
 
         @Subscribe
@@ -147,19 +201,31 @@ public class Cipher extends AbstractCharacter<Cipher> {
         }
 
         @Subscribe
-        public void afterHit(PostEnemyAttacked e) {
+        public void afterAttacked(PostEnemyAttacked e) {
             var dmg = e.getAttack().getAttack().getHitResults().stream()
                     .filter(hitRes -> !hitRes.getHit().getTypes().contains(DamageType.TRUE_DAMAGE))
                     .mapToDouble(HitResult::getDmgDealt)
                     .sum();
 
-            var tallyCount = dmg*0.2;
+            var tallyCount = dmg * 0.15f * getGodstepMarvelousShoesMul(Cipher.this);
             tally.increase(tallyCount);
             getBattle().addToLog(new GainCharge(Cipher.this, tally, "Hospitable Dolos Tally"));
 
             if (fuaCount.get() > 0 && e.getAttack().getSource() != Cipher.this) {
                 this.doTalentFua();
             }
+        }
+
+        public static float getGodstepMarvelousShoesMul(Cipher c) {
+            if (c.getFinalSpeed() >= 170) {
+                return 2f;
+            }
+
+            if (c.getFinalSpeed() >= 140) {
+                return 1.5f;
+            }
+
+            return 1f;
         }
 
         private void doTalentFua() {
