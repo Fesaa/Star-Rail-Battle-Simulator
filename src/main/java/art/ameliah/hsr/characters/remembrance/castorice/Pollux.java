@@ -40,10 +40,10 @@ public class Pollux extends Memosprite<Pollux, Castorice> {
         this.usesEnergy = false;
 
         if (actionMetric != null) {
-            this.actionMetric = this.metricRegistry.register(actionMetric);
+            this.actionMetric = this.metricRegistry.register(actionMetric, true);
         }
         if (turnsMetric != null) {
-            this.turnsMetric = this.metricRegistry.register(turnsMetric);
+            this.turnsMetric = this.metricRegistry.register(turnsMetric, true);
         }
 
 

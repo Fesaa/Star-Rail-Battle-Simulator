@@ -1,6 +1,7 @@
 package art.ameliah.hsr;
 
 import art.ameliah.hsr.battleLogic.Battle;
+import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.log.DefaultLogger;
 import art.ameliah.hsr.battleLogic.log.LogSupplier;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Log4j2
@@ -41,24 +43,30 @@ public class CastoriceSim {
         System.out.println("==============================");
 
         List<Map.Entry<String, DmgContributionMetric>> list = metrics.entrySet().stream()
-                .sorted(Comparator.comparingDouble(e -> e.getValue().total()))
+                .sorted(Comparator.comparingDouble(e ->
+                        e.getValue().DPAV().values().stream().mapToDouble(Float::floatValue).sum()))
                 .toList()
                 .reversed();
 
-        float min = list.getLast().getValue().total();
-        float max = list.getFirst().getValue().total();
+        double min = score(list.getLast());
+        double max = score(list.getFirst());
         int maxKeyLength = list.stream()
                 .mapToInt(e -> e.getKey().length())
                 .max()
                 .orElse(0);
 
         for (var e : list) {
-            var perMax = e.getValue().total() / max;
-            var perMin = e.getValue().total() / min;
+            var score = score(e);
+            var perMax = score / max * 100;
+            var perMin = score / min * 100;
 
             String paddedKey = String.format("%-" + maxKeyLength + "s", e.getKey());
-            System.out.printf("%s: %,.3f > %,.3f %% > %,.3f %% \n", paddedKey, e.getValue().total(), perMax, perMin);
+            System.out.printf("%s: %,.3f > %,.3f %% > %,.3f %% \n", paddedKey, score, perMax, perMin);
         }
+    }
+
+    private static double score(Map.Entry<String, DmgContributionMetric> e) {
+        return e.getValue().DPAV().values().stream().mapToDouble(Float::floatValue).sum();
     }
 
     private static void BattleConsumer(BattleConfig cfg) {

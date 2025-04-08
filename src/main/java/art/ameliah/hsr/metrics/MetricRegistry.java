@@ -34,7 +34,19 @@ public class MetricRegistry {
      * @return the metric
      */
     public <T extends Metric> T register(T metric) {
-        if (this.metrics.containsKey(metric.getKey())) {
+        return register(metric, false);
+    }
+
+    /**
+     * Register a new metric
+     *
+     * @param metric the metric
+     * @param <T>    type
+     * @param isOverwriting indicate if an overwrite is expected
+     * @return the metric
+     */
+    public <T extends Metric> T register(T metric, boolean isOverwriting) {
+        if (this.metrics.containsKey(metric.getKey()) && !isOverwriting) {
             log.warn("{} is replacing a metric by sharing the same key {}", metric.getClass().getSimpleName(), metric.getKey());
         }
         this.metrics.put(metric.getKey(), metric);

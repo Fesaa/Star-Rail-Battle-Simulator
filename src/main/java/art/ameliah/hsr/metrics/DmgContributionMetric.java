@@ -5,8 +5,10 @@ import art.ameliah.hsr.battleLogic.IBattle;
 import art.ameliah.hsr.battleLogic.combat.result.HitResult;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
+import lombok.Getter;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,9 +16,10 @@ import java.util.stream.Collectors;
 
 public class DmgContributionMetric extends AbstractMetric {
 
-    private final Map<BattleParticipant, Float> map = new ConcurrentHashMap<>();
+    private final Map<BattleParticipant, Float> total = new ConcurrentHashMap<>();
     private final Map<BattleParticipant, TreeMap<DamageType, Float>> dmgPerType = new ConcurrentHashMap<>();
     private final Map<BattleParticipant, Float> overFlowMap = new ConcurrentHashMap<>();
+    @Getter
     private final IBattle battle;
 
     public DmgContributionMetric(IBattle battle, String key, String desc) {
@@ -25,7 +28,7 @@ public class DmgContributionMetric extends AbstractMetric {
     }
 
     public void record(BattleParticipant participant, HitResult res) {
-        this.map.put(participant, this.map.getOrDefault(participant, 0.0f) + res.getHit().finalDmg());
+        this.total.put(participant, this.total.getOrDefault(participant, 0.0f) + res.getHit().finalDmg());
 
         var damageTypeFloatMap = this.dmgPerType.computeIfAbsent(participant, _ -> {
             return new TreeMap<>(Comparator.comparing(DamageType::name));
@@ -40,13 +43,21 @@ public class DmgContributionMetric extends AbstractMetric {
     }
 
     public float total() {
-        return this.map.values().stream().reduce(0f, Float::sum);
+        return this.total.values().stream().reduce(0f, Float::sum);
     }
 
     @Override
     public String representation() {
         return String.format("Damage Contribution: %s \nOverflow damage %s\n%s",
                 this.contribution(), this.overFlowMap, this.characterBreakDown());
+    }
+
+    public Map<BattleParticipant, Float> DPAV() {
+        return new HashMap<>(this.total).entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / this.battle.getActionValueUsed()
+                ));
     }
 
     public String overflow() {
@@ -56,7 +67,7 @@ public class DmgContributionMetric extends AbstractMetric {
                 .entrySet().stream()
                 .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> {
-                    double totalDmg = map.entrySet().stream()
+                    double totalDmg = total.entrySet().stream()
                             .filter(e -> e.getKey().getName().equals(entry.getKey()))
                             .mapToDouble(Map.Entry::getValue)
                             .sum();
@@ -67,7 +78,7 @@ public class DmgContributionMetric extends AbstractMetric {
     }
 
     public String contribution() {
-        return map.entrySet().stream()
+        return total.entrySet().stream()
                 .collect(Collectors.groupingBy(entry -> entry.getKey().getName(),
                         Collectors.summingDouble(Map.Entry::getValue)))
                 .entrySet().stream()
