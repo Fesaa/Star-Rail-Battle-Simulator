@@ -74,6 +74,7 @@ import art.ameliah.hsr.lightcones.nihility.GoodNightAndSleepWell;
 import art.ameliah.hsr.lightcones.nihility.InTheNameOfTheWorld;
 import art.ameliah.hsr.lightcones.nihility.IncessantRain;
 import art.ameliah.hsr.lightcones.nihility.ItsShowtime;
+import art.ameliah.hsr.lightcones.nihility.LiesAflutterInTheWind;
 import art.ameliah.hsr.lightcones.nihility.PatienceIsAllYouNeed;
 import art.ameliah.hsr.lightcones.nihility.ReforgedRemembrance;
 import art.ameliah.hsr.lightcones.nihility.ResolutionShinesAsPearlsOfSweat;
@@ -192,6 +193,7 @@ public class LightconeRegistry extends AbstractRegistry<AbstractLightcone> {
         register(23038, IfTimeWereAFlower.class);
         register(21050, VictoryInABlink.class);
         register(23040, MakeFarewellsMoreBeautiful.class);
+        register(23043, LiesAflutterInTheWind.class);
     }
 
     public AbstractLightcone getLightCone(int id, AbstractCharacter<?> owner) throws Exception {

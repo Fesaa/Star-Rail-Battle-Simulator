@@ -22,6 +22,7 @@ import art.ameliah.hsr.characters.hunt.feixiao.Feixiao;
 import art.ameliah.hsr.characters.hunt.march.SwordMarch;
 import art.ameliah.hsr.characters.hunt.moze.Moze;
 import art.ameliah.hsr.characters.hunt.topaz.Topaz;
+import art.ameliah.hsr.characters.nihility.cipher.Cipher;
 import art.ameliah.hsr.characters.nihility.pela.Pela;
 import art.ameliah.hsr.characters.preservation.aventurine.Aventurine;
 import art.ameliah.hsr.characters.preservation.fuxuan.FuXuan;
@@ -62,6 +63,7 @@ public class PlayerRegistry extends AbstractRegistry<AbstractCharacter<?>> {
         register(1407, Castorice.class);
         register(8007, Trailblazer.class);
         register(8008, Trailblazer.class);
+        register(1406, Cipher.class);
     }
 
 }
