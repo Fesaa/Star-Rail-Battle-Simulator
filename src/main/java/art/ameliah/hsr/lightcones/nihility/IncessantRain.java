@@ -46,7 +46,7 @@ public class IncessantRain extends AbstractLightcone {
         public AetherCode() {
             this.setName(this.getClass().getSimpleName());
             this.turnDuration = 1;
-            this.setStat(PowerStat.DAMAGE_TAKEN, 12);
+            this.setStat(PowerStat.VULNERABILITY, 12);
         }
     }
 }

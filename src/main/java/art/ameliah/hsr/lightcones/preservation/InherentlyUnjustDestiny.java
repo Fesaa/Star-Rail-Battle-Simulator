@@ -41,7 +41,7 @@ public class InherentlyUnjustDestiny extends AbstractLightcone {
             super(2);
             this.setName(this.getClass().getSimpleName());
             this.type = PowerType.DEBUFF;
-            this.setStat(PowerStat.DAMAGE_TAKEN, 10);
+            this.setStat(PowerStat.VULNERABILITY, 10);
         }
     }
 

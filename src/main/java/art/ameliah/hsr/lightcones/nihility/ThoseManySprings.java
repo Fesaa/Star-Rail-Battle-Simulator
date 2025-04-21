@@ -45,7 +45,7 @@ public class ThoseManySprings extends AbstractLightcone {
 
         public Unarmored() {
             super(2, NAME);
-            this.setStat(PowerStat.DAMAGE_TAKEN, 10);
+            this.setStat(PowerStat.VULNERABILITY, 10);
             this.type = PowerType.DEBUFF;
         }
     }
@@ -55,7 +55,7 @@ public class ThoseManySprings extends AbstractLightcone {
 
         public Cornered() {
             super(2, NAME);
-            this.setStat(PowerStat.DAMAGE_TAKEN, 24);
+            this.setStat(PowerStat.VULNERABILITY, 24);
             this.type = PowerType.DEBUFF;
         }
     }

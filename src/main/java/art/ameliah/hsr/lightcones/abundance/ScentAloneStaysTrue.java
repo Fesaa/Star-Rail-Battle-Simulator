@@ -27,7 +27,7 @@ public class ScentAloneStaysTrue extends AbstractLightcone {
 
         attack.getTargets().forEach(e -> {
             float dmg = this.owner.getTotalBreakEffect() >= 150 ? 18 : 10;
-            e.addPower(TempPower.create(PowerStat.DAMAGE_TAKEN, dmg, 2, "Scent Alone Stays True Damage Taken Debuff"));
+            e.addPower(TempPower.create(PowerStat.VULNERABILITY, dmg, 2, "Scent Alone Stays True Damage Taken Debuff"));
         });
     }
 }

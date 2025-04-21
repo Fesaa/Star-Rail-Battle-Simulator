@@ -14,7 +14,7 @@ import art.ameliah.hsr.events.Subscribe;
 import art.ameliah.hsr.events.character.PostAllyAttack;
 import art.ameliah.hsr.events.combat.CombatStartEvent;
 import art.ameliah.hsr.events.combat.DeathEvent;
-import art.ameliah.hsr.events.combat.WaveStartEvent;
+import art.ameliah.hsr.events.combat.TurnStartEvent;
 import art.ameliah.hsr.events.enemy.PostEnemyAttacked;
 import art.ameliah.hsr.metrics.CounterMetric;
 import art.ameliah.hsr.powers.PermPower;
@@ -24,6 +24,7 @@ import art.ameliah.hsr.powers.TracePower;
 import art.ameliah.hsr.utils.Comparators;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 @Log4j2
@@ -40,10 +41,12 @@ public class Cipher extends AbstractCharacter<Cipher> {
         this.addPower(new TracePower()
                 .setStat(PowerStat.FLAT_SPEED, 14)
                 .setStat(PowerStat.QUANTUM_DMG_BOOST, 14)
-                .setStat(PowerStat.HP_PERCENT, 10));
+                .setStat(PowerStat.EFFECT_RES, 10));
         this.hasAttackingUltimate = true;
 
         this.addPower(new InsightForSmiles());
+        this.addPower(new GodstepMarvelousShoes());
+        this.addPower(new SleightOfSky());
 
     }
 
@@ -55,14 +58,14 @@ public class Cipher extends AbstractCharacter<Cipher> {
                 .addPower(new HospitableDolos());
 
         getBattle().registerForEnemy(e -> {
-            e.addPower(PermPower.create(PowerStat.DEFENSE_REDUCTION, 30, "Ultimate Switcheroo"));
+            e.addPower(PermPower.create(PowerStat.VULNERABILITY, 40, "Ultimate Switcheroo"));
             e.addPower(new Rogues());
         });
     }
 
     @Subscribe
-    public void onWaveStart(WaveStartEvent e) {
-        getBattle().AdvanceEntity(this, 10);
+    public void onTurnStart(TurnStartEvent e) {
+        this.fuaCount.set(1);
     }
 
     @Override
@@ -109,15 +112,33 @@ public class Cipher extends AbstractCharacter<Cipher> {
             dl.logic(idx+1, this.ultHit(0.4f, TOUGHNESS_DAMAGE_TWO_UNITS));
         }).afterAttackHook(() -> {
             this.tally.set((double) 0);
-            this.fuaCount.set(eidolon.isActivated(Eidolon.E1) ? 3 : 1);
         }).execute();
     }
 
     private BiConsumer<AbstractEnemy, AttackLogic> ultHit(float mul, float t) {
         return (e, al) -> {
+            float tally = (float) (0.25f * this.tally.get());
+
+            if (this.eidolon.isActivated(Eidolon.E1)) {
+                tally *= 1.5f;
+            }
+
             al.hit(e, mul, t);
-            al.hitFixed(Cipher.this, e, (float) (0.25f * tally.get()));
+            al.hitFixed(Cipher.this, e, tally);
         };
+    }
+
+    public static class SleightOfSky extends PermPower {
+
+        public SleightOfSky() {
+            this.setComplexConditionalStat(PowerStat.CRIT_DAMAGE, hit -> {
+                if (hit.getTypes().contains(DamageType.FOLLOW_UP)) {
+                    return 100f;
+                }
+                return 0f;
+            });
+        }
+
     }
 
     public static class GodstepMarvelousShoes extends PermPower {
@@ -146,13 +167,13 @@ public class Cipher extends AbstractCharacter<Cipher> {
 
         @Subscribe
         public void afterAttack(PostAllyAttack e) {
-            if (!eidolon.isActivated(Eidolon.E1)) {
+            if (!eidolon.isActivated(Eidolon.E2)) {
                 return;
             }
 
             e.getAttack().getTargets().forEach(target -> {
                 if (successFullHit(120, target)) {
-                    target.addPower(TempPower.create(PowerStat.DAMAGE_TAKEN, 25, 2, "Insight for Smiles"));
+                    target.addPower(TempPower.create(PowerStat.VULNERABILITY, 25, 2, "Insight for Smiles"));
                 }
             });
         }
@@ -234,9 +255,14 @@ public class Cipher extends AbstractCharacter<Cipher> {
 
             Cipher.this.doAttack(DamageType.FOLLOW_UP, dl -> {
                 dl.logic((AbstractEnemy) this.getOwner(), (e, al) -> {
-                    al.hit(e, 4, TOUGHNESS_DAMAGE_HALF_UNIT);;
+                    al.hit(e, 2.5f, TOUGHNESS_DAMAGE_HALF_UNIT);;
                 });
             });
+
+            if (Cipher.this.eidolon.isActivated(Eidolon.E1)) {
+                Cipher.this.addPower(TempPower.create(PowerStat.ATK_PERCENT, 80, 2, "Read the Room, Seek the Glee"));
+            }
+
         }
 
     }

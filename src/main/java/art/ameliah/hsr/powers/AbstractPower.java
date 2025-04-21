@@ -3,6 +3,7 @@ package art.ameliah.hsr.powers;
 import art.ameliah.hsr.battleLogic.AbstractEntity;
 import art.ameliah.hsr.battleLogic.BattleParticipant;
 import art.ameliah.hsr.battleLogic.IBattle;
+import art.ameliah.hsr.battleLogic.combat.hit.Hit;
 import art.ameliah.hsr.battleLogic.log.lines.entity.RefreshPower;
 import art.ameliah.hsr.battleLogic.log.lines.entity.StackPower;
 import art.ameliah.hsr.characters.AbstractCharacter;
@@ -26,6 +27,7 @@ public abstract class AbstractPower implements BattleParticipant {
 
     private final Map<PowerStat, Float> stats = new HashMap<>();
     private final Map<PowerStat, Function<AbstractCharacter<?>, Float>> conditionalStats = new HashMap<>();
+    private final Map<PowerStat, Function<Hit, Float>> complexConditionalStats = new HashMap<>();
 
     public int turnDuration;
     public PowerType type = PowerType.BUFF;
@@ -105,6 +107,16 @@ public abstract class AbstractPower implements BattleParticipant {
     }
 
     /**
+     * Set a complex conditional stat, a stat may only have one conditional function
+     *
+     * @param stat      the power stat
+     * @param condition the function returning the conditional value
+     */
+    public void setComplexConditionalStat(PowerStat stat, Function<Hit, Float> condition) {
+        this.complexConditionalStats.put(stat, condition);
+    }
+
+    /**
      * Get the value of a stat
      *
      * @param stat The stat to get
@@ -146,9 +158,14 @@ public abstract class AbstractPower implements BattleParticipant {
         return this.getStat(stat);
     }
 
+    public float getComplexCond(PowerStat stat, Hit hit) {
+        return this.complexConditionalStats.getOrDefault(stat, _ -> 0f).apply(hit);
+    }
+
     /**
      * Increase damage dealt by the character when attacking the enemy
      */
+    @Deprecated
     public float getConditionalDamageBonus(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
@@ -156,6 +173,7 @@ public abstract class AbstractPower implements BattleParticipant {
     /**
      * Increases incoming damage
      */
+    @Deprecated
     public float getConditionalDamageTaken(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
@@ -168,10 +186,12 @@ public abstract class AbstractPower implements BattleParticipant {
         return 0;
     }
 
+    @Deprecated
     public float getConditionalCritDamage(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
 
+    @Deprecated
     public float getConditionalCritRate(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }
@@ -180,6 +200,7 @@ public abstract class AbstractPower implements BattleParticipant {
         return 0;
     }
 
+    @Deprecated
     public float getConditionDefenseIgnore(AbstractCharacter<?> character, AbstractEnemy enemy, List<DamageType> damageTypes) {
         return 0;
     }

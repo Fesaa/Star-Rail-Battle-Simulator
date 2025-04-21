@@ -1,6 +1,5 @@
 package art.ameliah.hsr.lightcones.remembrance;
 
-import art.ameliah.hsr.battleLogic.combat.MultiplierStat;
 import art.ameliah.hsr.battleLogic.combat.hit.AllyHit;
 import art.ameliah.hsr.characters.AbstractCharacter;
 import art.ameliah.hsr.characters.DamageType;
@@ -11,7 +10,6 @@ import art.ameliah.hsr.events.character.PostMemoSkill;
 import art.ameliah.hsr.events.character.PostMemospriteAttack;
 import art.ameliah.hsr.events.character.PostSkill;
 import art.ameliah.hsr.events.character.PostUltimate;
-import art.ameliah.hsr.events.character.PreMemospriteAttack;
 import art.ameliah.hsr.lightcones.AbstractLightcone;
 import art.ameliah.hsr.powers.PermPower;
 import art.ameliah.hsr.powers.PowerStat;
@@ -36,7 +34,7 @@ public class MayRainbowsRemainInTheSky extends AbstractLightcone {
     @Subscribe
     public void afterMemoSkill(PostMemoSkill event) {
         getBattle().getEnemies().forEach(e -> {
-            e.addPower(TempPower.create(PowerStat.DAMAGE_TAKEN, 18, 2, "May Rainbows Remain in the Sky"));
+            e.addPower(TempPower.create(PowerStat.VULNERABILITY, 18, 2, "May Rainbows Remain in the Sky"));
         });
     }
 

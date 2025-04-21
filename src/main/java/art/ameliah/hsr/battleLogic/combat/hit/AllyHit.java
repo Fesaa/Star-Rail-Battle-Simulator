@@ -109,7 +109,8 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
         //float dotVulnerability = 0; // TODO: Add dot
 
         for (var power : this.target.powerList) {
-            allTypeVulnerability += power.getStat(PowerStat.DAMAGE_TAKEN);
+            allTypeVulnerability += power.getStat(PowerStat.VULNERABILITY);
+            allTypeVulnerability += power.getComplexCond(PowerStat.VULNERABILITY, this);
             allTypeVulnerability += power.getConditionalDamageTaken(this.source, this.target, types);
         }
 
@@ -142,6 +143,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
         }
 
         for (var power : this.source.powerList) {
+            defIgnore += power.getComplexCond(PowerStat.DEFENSE_IGNORE, this);
             defIgnore += power.getConditionDefenseIgnore(this.source, this.target, this.types);
             defIgnore += power.getTotalStat(PowerStat.DEFENSE_IGNORE);
         }
@@ -156,6 +158,8 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
         for (var power : this.source.powerList) {
             dmgMultiplier += power.getTotalStat(this.elementType.getStatBoost());
             dmgMultiplier += power.getTotalStat(PowerStat.DAMAGE_BONUS);
+            dmgMultiplier += power.getComplexCond(PowerStat.DAMAGE_BONUS, this);
+
             dmgMultiplier += power.getConditionalDamageBonus(this.source, this.target, this.types);
         }
 
@@ -179,6 +183,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
         float critChance = this.source.getTotalCritChance();
 
         for (var power : this.source.powerList) {
+            critChance += power.getComplexCond(PowerStat.CRIT_CHANCE, this);
             critChance += power.getConditionalCritRate(this.source, this.target, this.types);
         }
         for (var power : this.source.powerList) {
@@ -193,6 +198,7 @@ public class AllyHit implements BattleParticipant, HitHolder, Hit {
 
         for (var power : this.source.powerList) {
             critDamage += power.getConditionalCritDamage(this.source, this.target, this.types);
+            critDamage += power.getComplexCond(PowerStat.CRIT_DAMAGE, this);
         }
         for (var power : this.target.powerList) {
             critDamage += power.receiveConditionalCritDamage(this.source, this.target, this.types);

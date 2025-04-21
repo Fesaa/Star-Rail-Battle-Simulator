@@ -40,7 +40,7 @@ public class BattleHelpers implements BattleParticipant {
         types.add(DamageType.BREAK);
         float damageTaken = 0;
         for (AbstractPower power : target.powerList) {
-            damageTaken += power.getStat(PowerStat.DAMAGE_TAKEN);
+            damageTaken += power.getStat(PowerStat.VULNERABILITY);
             damageTaken += power.getConditionalDamageTaken(source, target, types);
         }
         float damageTakenMultiplier = 1 + damageTaken / 100;
